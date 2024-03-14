@@ -1,0 +1,142 @@
+.container {
+  margin-inline: auto;
+  padding: 2rem;
+  max-width: 1300px;
+  min-width: 65%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.gridContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  justify-content: center;
+  padding-inline: 2rem;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.card {
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+  min-height: 280px;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.4s ease-in-out;
+  display: flex;
+  align-items: flex-end;
+}
+.bgImg {
+  background-image: url("https://www.forestryengland.uk/sites/default/files/media/2024121.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  transition: transform 0.4s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.infoWrapper {
+  padding: 10px;
+  width: 100%;
+  gap: 5px;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 1%,
+    rgba(0, 0, 0, 0.3897934173669467) 18%,
+    rgba(0, 0, 0, 0.49343487394957986) 38%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+.title {
+  font-size: 1.5em;
+}
+.modulesWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  background-color: #00000065;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(100%);
+}
+.btnWrapper {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+}
+
+.card:hover .bgImg {
+  transform: scale(1.2);
+}
+
+.card:hover .modulesWrapper {
+  transform: translateX(0);
+}
+
+.moduleBtn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 5px;
+  border-radius: 5px;
+  padding: 0.5rem;
+  color: #000;
+  cursor: pointer;
+  word-break: normal;
+  font-size: small;
+  transition: transform 0.4s ease-in-out;
+}
+.moduleBtn:hover {
+  transform: scale(1.05);
+}
+.icon {
+  width: 25px;
+}
+
+@media (max-width: 1000px) {
+  .gridContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .container {
+    width: 75%;
+  }
+}
+@media (min-width: 1000px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .container {
+    width: 80%;
+  }
+}
+@media (min-width: 1300px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1550px) {
+  .gridContainer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .card {
+    height: 350px;
+  }
+}

@@ -1,0 +1,23 @@
+.logoWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.logoImg {
+  width: 130px;
+  cursor: pointer;
+}
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+.logoutBtn {
+  background-color: #fff;
+  color: #e10000;
+}
+.logoutBtn:hover {
+  color: #fff;
+  background-color: #e10000;
+  border: 1px solid #fff;
+}
