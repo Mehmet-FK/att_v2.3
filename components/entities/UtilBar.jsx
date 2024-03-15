@@ -16,7 +16,7 @@ const UtilBar = ({ setExistingEntities, entities }) => {
     //updates the entities everytime when the search value changes
     setExistingEntities((prev) =>
       entities?.filter((el) =>
-        el.name.toLowerCase().includes(searchVal.toLowerCase())
+        el.caption.toLowerCase().includes(searchVal.toLowerCase())
       )
     );
   }, [searchVal]);

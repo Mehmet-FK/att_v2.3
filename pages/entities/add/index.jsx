@@ -1,197 +1,189 @@
-import Accordion from "@/components/Accordion";
 import PageHeader from "@/components/PageHeader";
 import styles from "@/styles/entities.module.css";
-import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
-import FieldGroup from "@/components/entities/FieldGroup";
-import { Button, MenuItem } from "@mui/material";
+import { Button } from "@mui/material";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
-import ImageInput from "@/components/ImageInput";
-import Select from "@/components/Select";
-import { useSelector } from "react-redux";
-import { toastWarnNotify } from "@/helpers/ToastNotify";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
+import EntityAccordion from "@/components/entities/EntityAccordion";
+import FieldsAccordion from "@/components/entities/FieldsAccordion";
+import { useSelector } from "react-redux";
+import ToolMenu from "@/components/ToolMenu";
+import ConfirmModal from "@/components/ConfirmModal";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AddEntity = () => {
   const [entity, setEntity] = useState({});
   const [fields, setFields] = useState([]);
 
+  const [openConfirm, setOpenConfirm] = useState({
+    isOpen: false,
+    isConfirmed: false,
+  });
+
   const router = useRouter();
-
-  const { views } = useSelector((state) => state.attensam.data); // DataSource
-  const { token } = useSelector((state) => state.userInfo); //Access Token
-
-  const [dataSource, setDataSource] = useState([]); //Keep the State from Store
-
+  const { query } = router;
   // Fetch functions from custom hook
   const {
-    createNewEntitCall,
-    getViewsCall,
+    deleteEntityCall,
+    deleteFieldCall,
+    updateFieldCall,
+    updateEntityCall,
+    postEntityCall,
+    postFieldCall,
     getViewColumnsCall,
     getSingleEntityCall,
   } = useAttensamCalls();
 
-  const handleImageOnChange = (e) => {
-    const file = e.target.files[0] || null;
-    setEntity({ ...entity, iconUrl: file });
+  const { token } = useSelector((state) => state.userInfo); //Access Token
+  const { entity: singleEntity } = useSelector((state) => state.attensam.data);
 
-    if (!file) {
-      setEntity({ ...entity, iconUrl: null });
-      return;
-    }
+  //Confirm Dialog Props
+  const confirmProps = {
+    dialogTitle: "Title",
+    dialogContent: "Lorem Ipsum",
+    acceptBtnText: "Löschen",
+    acceptFunc: () => setOpenConfirm({ ...openConfirm, isConfirmed: true }),
+    isConfirmed: false,
   };
 
-  // Input onchange function
-  const handleChange = (e) => {
-    setEntity({ ...entity, [e.target.name]: e.target.value });
-  };
-
-  /**
-   * checks if dataSource (View) Value is empty. if empty does not add new field
-   * because fieldGroups need dataSource value to make API Call for View columns
-   */
-  const addNewField = () => {
-    if (!entity?.dataSource) {
-      // if no dataSource selected yet
-      toastWarnNotify("Zuerst das DataSource festlegen!");
-      return;
-    }
-
-    const groupID = `id-${Math.random().toString(36).substr(2, 10)}`; // Id to determine current group in fields array
-    const inx = fields.length;
-    setFields([
-      ...fields,
-      {
-        index: inx,
-        id: groupID,
+  //ToolMenu Buttonlist
+  const toolMenuProps = [
+    {
+      icon: <DeleteIcon />,
+      onClick: () => {
+        setOpenConfirm(true);
+        deleteEntityCall(query?.entityId).then(() => router.push("/entities"));
       },
-    ]);
-  };
+      buttonText: "Löschen",
+    },
+  ];
 
-  const removeField = (id) => {
-    const filtered = fields.filter((f) => f.id !== id);
-    setFields(filtered);
+  const handleUpdate = (entityId, fieldsBase, fieldsEdited, formData) => {
+    const fieldsToPost = [];
+    const fieldsToPut = [];
+    const fieldsToDelete = [];
+
+    // Find in UI edited or created Fields and push them into the right Array
+    fieldsEdited.forEach((item, i) => {
+      const baseElement = fieldsBase.find((el) => el.id === item.id);
+      if (!baseElement) {
+        // Check if element is new created
+        fieldsToPost.push(item);
+      } else {
+        const isEqual = JSON.stringify(baseElement) === JSON.stringify(item);
+        if (!isEqual) {
+          // Check if elements are same or altered
+          fieldsToPut.push(item);
+        }
+      }
+    });
+
+    //Find in UI deleted elements and push them into fieldsToDelete Array
+    fieldsBase.forEach((item) => {
+      const editedElement = fieldsEdited.find((el) => el.id === item.id);
+      if (!editedElement) {
+        fieldsToDelete.push(item);
+      }
+    });
+
+    //POST FIELDS
+    fieldsToPost.forEach((item) => {
+      const fieldForm = new FormData();
+      for (const [key, value] of Object.entries(item)) {
+        if (value) {
+          fieldForm.append(`${key}`, value);
+        }
+      }
+      postFieldCall(entityId, fieldForm);
+    });
+
+    //PUT FIELDS
+    fieldsToPut.forEach((item) => {
+      const fieldForm = new FormData();
+      for (const [key, value] of Object.entries(item)) {
+        if (value) {
+          fieldForm.append(`${key}`, value);
+        }
+      }
+      updateFieldCall(item.id, fieldForm);
+    });
+
+    //DELETE FIELDS
+    fieldsToDelete.forEach((item) => {
+      deleteFieldCall(item.id);
+    });
+
+    console.log("POST_ARR", fieldsToPost);
+    console.log("PUT_ARR", fieldsToPut);
+    console.log("DELETE_ARR", fieldsToDelete);
+    //UPDATE ENTITY
+    const uptData = formData;
+    uptData.delete("fields");
+    updateEntityCall(entityId, uptData);
   };
 
   const handleSubmit = (e) => {
-    e.target.disabled = true;
-
     const formData = new FormData();
     formData.append("Name", entity.name);
     formData.append("Caption", entity.caption);
     formData.append("Icon", entity.iconUrl);
     formData.append("DataSource", entity.dataSource);
 
-    const editedFields = fields.map((f) => {
-      return {
-        name: f.name,
-        caption: f.caption,
-        type: f.type,
-        dataSourceColumn: f.dataSourceColumn,
-        showByDefault: f.showByDefault,
-      };
-    });
-    formData.append("Fields", JSON.stringify(editedFields));
+    formData.append("Fields", JSON.stringify(fields));
 
-    //Fetch function to post new Entity on the Server
-    createNewEntitCall(formData).then((isSuccess) => {
-      if (isSuccess) {
-        setEntity({});
-        setFields([]);
-      }
-    });
-    e.target.disabled = false;
+    //Check if it is edit Entity or create Entity
+    if (query.entityId) {
+      handleUpdate(query.entityId, singleEntity?.fields, fields, formData);
+    } else {
+      postEntityCall(formData);
+    }
+
+    router.back();
   };
 
   useEffect(() => {
     if (!entity?.dataSource) return;
     getViewColumnsCall(entity.dataSource);
+    console.log("viewColumns useEffect");
   }, [entity?.dataSource]);
 
   useEffect(() => {
-    if (!token) return;
-    getViewsCall();
+    if (query.entityId && token) {
+      getSingleEntityCall(query.entityId);
+      console.log("getSingleEntityCall useEffect");
+    }
   }, [token]);
 
   useEffect(() => {
-    setDataSource(views);
-  }, [views]);
-
-  useEffect(() => {
-    if (router.query.entityId) {
-      getSingleEntityCall(router.query.entityId);
+    if (query.entityId && singleEntity) {
+      setEntity(singleEntity);
+      setFields(singleEntity?.fields);
+      console.log("setEntity useEffect");
+      console.log(singleEntity);
     }
-  }, []);
+  }, [singleEntity]);
 
   return (
     <>
+      <ConfirmModal
+        open={openConfirm}
+        setOpen={setOpenConfirm}
+        confirmProps={confirmProps}
+      />
+
       <PageHeader title="Add Entity" />
       <div className={styles.container}>
-        <Accordion expandDefault header={"ENTITIY"}>
-          <div className={styles.entityFormGroup}>
-            <TextField
-              sx={{ width: "100%" }}
-              onChange={handleChange}
-              value={entity?.name || ""}
-              size="small"
-              label="Name"
-              name="name"
-              variant="outlined"
-            />
-            <TextField
-              sx={{ width: "100%" }}
-              onChange={handleChange}
-              value={entity?.caption || ""}
-              size="small"
-              name="caption"
-              label="Caption"
-              variant="outlined"
-            />
+        {""}
+        {query.entityId && <ToolMenu buttonsList={toolMenuProps} />}
+        {""}
 
-            <Select
-              label="DataSource"
-              name="dataSource"
-              width="100%"
-              value={entity?.dataSource}
-              onChange={handleChange}
-              disabled={fields.length}
-            >
-              {dataSource?.map((opt, index) => (
-                <MenuItem key={index} value={opt}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
-
-            <ImageInput
-              name="iconUrl"
-              // img={selectedImage}
-              onChange={handleImageOnChange}
-            />
-          </div>
-        </Accordion>
-        <Accordion header={"FELDER"}>
-          {fields?.map((field, index) => (
-            <FieldGroup
-              key={index}
-              field={field}
-              view={entity?.dataSource}
-              setFields={setFields}
-              removeField={removeField}
-            />
-          ))}
-
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{ alignSelf: "flex-end", fontSize: 20 }}
-            onClick={addNewField}
-          >
-            +
-          </Button>
-        </Accordion>
-
+        <EntityAccordion setEntity={setEntity} entity={entity} />
+        <FieldsAccordion
+          entity={entity}
+          fields={fields}
+          setFields={setFields}
+        />
         <div className={styles.submitBtnWrapper}>
           <Button
             className={styles.submitBtn}
@@ -207,6 +199,7 @@ const AddEntity = () => {
 };
 
 export default AddEntity;
+
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
 

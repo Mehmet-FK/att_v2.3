@@ -6,6 +6,7 @@ import {
   getSuccess,
   stopLoading,
 } from "@/redux/slices/attensamSlice";
+import { toastErrorNotify, toastSuccessNotify } from "@/helpers/ToastNotify";
 
 const useAttensamCalls = () => {
   const { axiosWithToken, axiosFormData } = useAxios();
@@ -18,41 +19,55 @@ const useAttensamCalls = () => {
     dispatch(fetchStart());
     try {
       const { data } = await axiosWithToken.get(url);
-
       dispatch(getSuccess({ data, dataName: dataName }));
-      flag = true;
     } catch (error) {
       console.log(error);
+
       dispatch(fetchFail({ message: "" }));
-      flag = false;
     } finally {
       dispatch(stopLoading());
     }
-    return flag;
   };
 
-  //GET SINGLE ENTITY
-  const getSingleEntity_X = async () => {
-    try {
-      const { data } = await axiosWithToken.get(url);
+  // PUT CALL FOR UPDATE
+  const putAttData = async (url, formData) => {
+    dispatch(fetchStart());
 
-      flag = true;
+    try {
+      const { data } = await axiosFormData.put(url, formData);
+      console.log(data);
+      toastSuccessNotify(data);
     } catch (error) {
-      console.log(error);
-      flag = false;
+      console.log(error.response?.data);
+      toastErrorNotify(error.response?.data);
     } finally {
+      dispatch(stopLoading());
     }
-    return flag;
   };
 
-  //BASE POST CALL
-  const postAttData = async (url, data) => {
+  // DELETE CALL
+  const deleteAttData = async (url) => {
     try {
-      const res = await axiosFormData.post(url, data);
-
-      console.log(res);
+      const { data } = await axiosFormData.delete(url);
+      toastSuccessNotify(data);
     } catch (error) {
       console.log(error);
+      toastErrorNotify(error.response?.data);
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
+  //POST CALL
+  const postAttData = async (url, formData) => {
+    try {
+      const { data } = await axiosFormData.post(url, formData);
+      toastSuccessNotify("Elememt wurde erfolgreich angelegt");
+    } catch (error) {
+      toastErrorNotify(error.response?.data);
+      console.log(error);
+    } finally {
+      dispatch(stopLoading());
     }
   };
 
@@ -63,14 +78,28 @@ const useAttensamCalls = () => {
   const getViewColumnsCall = (view) =>
     getAttData(`DatabaseSchema/views/${view}/columns`, "viewColumns");
   //POST
-  const createNewEntitCall = (data) => postAttData("Entity", data);
+  const postEntityCall = (data) => postAttData("Entity", data);
+  const postFieldCall = (entityId, data) =>
+    postAttData(`Field/${entityId}`, data);
 
+  //PUT
+  const updateEntityCall = (id, data) => putAttData(`Entity/${id}`, data);
+  const updateFieldCall = (id, data) => putAttData(`Field/${id}`, data);
+
+  //DELETE
+  const deleteEntityCall = (id) => deleteAttData(`Entity/${id}`);
+  const deleteFieldCall = (id) => deleteAttData(`Field/${id}`);
   return {
-    createNewEntitCall,
-    getEntitiesCall,
-    getViewsCall,
-    getViewColumnsCall,
-    getSingleEntityCall,
+    postEntityCall, //CREATE Entity
+    postFieldCall, //CREATE Field
+    getEntitiesCall, //READ Entities
+    getSingleEntityCall, //READ Entity
+    getViewsCall, //READ Views
+    getViewColumnsCall, //READ View Columns
+    updateEntityCall, //UPDATE Entity
+    updateFieldCall, //UPDATE Field
+    deleteEntityCall, //DELETE Entity
+    deleteFieldCall, //DELETE Field
   };
 };
 

@@ -3,7 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export const toastWarnNotify = (msg) => {
   toast.warn(msg, {
-    autoClose: 1000,
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -13,7 +13,7 @@ export const toastWarnNotify = (msg) => {
 };
 export const toastSuccessNotify = (msg) => {
   toast.success(msg, {
-    autoClose: 1500,
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,

@@ -6,6 +6,7 @@ import EntityCard from "@/components/entities/EntityCard";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
+import ConfirmModal from "@/components/ConfirmModal";
 
 const Entities = () => {
   const { entities } = useSelector((state) => state.attensam.data);
@@ -16,14 +17,12 @@ const Entities = () => {
   useEffect(() => {
     if (token) {
       getEntitiesCall();
-      // console.log(token);
     }
   }, [token]);
 
   useEffect(() => {
     setExistingEntities(entities);
   }, [entities]);
-
   return (
     <>
       <PageHeader title="ENTITIES" />

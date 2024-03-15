@@ -1,10 +1,8 @@
-import {
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormGroup from "@mui/material/FormGroup";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
 
 import styles from "./entities-comp.module.css";
 import { useEffect, useState } from "react";
@@ -18,7 +16,6 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
 
   const handleChange = (e) => {
     setFieldValue({ ...fieldValue, [e.target.name]: e.target.value });
-    // console.log(fieldValue);
   };
   const handleCheck = (e) => {
     setFieldValue({ ...fieldValue, [e.target.name]: e.target.checked });
@@ -27,7 +24,8 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
   useEffect(() => {
     setFields((prev) => {
       const temp = [...prev];
-      temp[field.index] = fieldValue;
+      const index = temp.findIndex((f) => f.id === field.id);
+      temp[index] = fieldValue;
       return temp;
     });
   }, [fieldValue]);
@@ -99,14 +97,14 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
           ))}
         </Select>
         <Select
-          label="View Spalten"
+          label="DataSource Spalten"
           name="dataSourceColumn"
           width="20%"
           value={field?.dataSourceColumn || ""}
           onChange={handleChange}
         >
           {viewColumns?.map((opt, index) => (
-            <MenuItem key={index} value={opt.columnName}>
+            <MenuItem key={index} value={opt?.columnName}>
               {opt.columnName}
             </MenuItem>
           ))}
@@ -152,3 +150,16 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
 };
 
 export default FieldGroup;
+caption: "fields_f";
+createDate: "2024-03-14T14:13:55.7489243";
+dataSourceColumn: "GAR_Notes";
+decimalPlaces: null;
+entityId: 32;
+groupName: null;
+id: 20;
+isReadOnly: null;
+maxLength: null;
+modifiedDate: "2024-03-14T14:13:55.7489244";
+name: "fields_f";
+showByDefault: null;
+type: 6;

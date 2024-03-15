@@ -79,7 +79,7 @@ const EntityDetail = () => {
       };
     });
     formData.append("Fields", JSON.stringify(editedFields));
-    createNewEntity(formData);
+    postEntityCall(formData);
     e.target.disabled = false;
   };
 
