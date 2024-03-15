@@ -65,11 +65,6 @@ export default function Layout({ children, toggleTheme }) {
       icon: <FeedIcon />,
       nav: "/entities",
     },
-    {
-      text: "Static Page",
-      icon: <FeedIcon />,
-      nav: "/static-pages/asd.html",
-    },
   ];
   return (
     <div style={{ display: "flex" }}>
