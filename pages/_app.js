@@ -63,6 +63,7 @@ export default function App({ Component, pageProps }) {
     setMode(x ? x : "light");
   }, []);
 
+  console.log(pageProps.session);
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>

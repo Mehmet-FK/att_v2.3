@@ -32,12 +32,12 @@ const Login = () => {
         redirect: false,
       });
     } catch (error) {
-      dispatch(fetchFail({ message: `${res.status} ${res.error}` }));
+      console.log(error);
     } finally {
       dispatch(stopLoading());
       const session = await getSession();
       if (session?.user?.token) {
-        // router.push("/");
+        router.push("/");
       }
     }
   };

@@ -13,8 +13,8 @@ export const authOptions = {
       // type: "credentials",
       name: "Credentials",
       credentials: {
-        username: { label: "username", type: "text" },
-        password: { label: "password", type: "password" },
+        // username: { label: "username", type: "text" },
+        // password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
         let res = null;
@@ -40,7 +40,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       console.log("JWT", token);
-      return { ...token, ...user, ciguli: "cigcig" };
+      return { ...token, ...user };
     },
     async session({ session, token, user }) {
       console.log("SESSION", token);
