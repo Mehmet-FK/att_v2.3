@@ -4,16 +4,19 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
-  // session: {
-  //   strategy: "jwt",
-  // },
+  session: {
+    strategy: "jwt",
+  },
 
   providers: [
     CredentialsProvider({
-      type: "credentials",
-      strategy: "jwt",
-      credentials: {},
-      async authorize(credentials, req) {
+      // type: "credentials",
+      name: "Credentials",
+      credentials: {
+        username: { label: "username", type: "text" },
+        password: { label: "password", type: "password" },
+      },
+      async authorize(credentials) {
         let res = null;
 
         const { username, password } = credentials;
@@ -24,7 +27,7 @@ export const authOptions = {
           );
           res = { token: data };
         } catch (error) {
-          console.log("ERRORRRRRRRR===>", error);
+          console.log("ERRORRRRRRRR===>");
         }
 
         return res;
@@ -36,9 +39,11 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      console.log("JWT", token);
+      return { ...token, ...user, ciguli: "cigcig" };
     },
     async session({ session, token, user }) {
+      console.log("SESSION", token);
       session.user = token;
       return session;
     },

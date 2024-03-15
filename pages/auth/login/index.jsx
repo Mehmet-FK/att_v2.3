@@ -24,25 +24,21 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(fetchStart());
-    const res = await signIn("credentials", {
-      username: inputVal.username,
-      password: inputVal.password,
-      redirect: false,
-    });
-    if (res.error) {
+
+    try {
+      const res = await signIn("credentials", {
+        username: inputVal.username,
+        password: inputVal.password,
+        redirect: false,
+      });
+    } catch (error) {
       dispatch(fetchFail({ message: `${res.status} ${res.error}` }));
-    }
-
-    dispatch(stopLoading());
-
-    const session = await getSession();
-    if (session?.user?.token) {
-      // // const { user } = session;
-
-      // dispatch(setUser({ user }));
-      router.push("/");
-    } else {
-      // toastErrorNotify(`Etwas ist schiefgelaufen.. `);
+    } finally {
+      dispatch(stopLoading());
+      const session = await getSession();
+      if (session?.user?.token) {
+        // router.push("/");
+      }
     }
   };
 
