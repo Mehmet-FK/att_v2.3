@@ -33,6 +33,7 @@ const AddEntity = () => {
     postFieldCall,
     getViewColumnsCall,
     getSingleEntityCall,
+    getViewsCall,
   } = useAttensamCalls();
 
   const { token } = useSelector((state) => state.userInfo); //Access Token
@@ -149,20 +150,23 @@ const AddEntity = () => {
   }, [entity?.dataSource]);
 
   useEffect(() => {
-    if (query.entityId && token) {
-      getSingleEntityCall(query.entityId);
-      console.log("getSingleEntityCall useEffect");
+    console.log(query?.entityId);
+    if (token) {
+      getViewsCall();
+      if (query?.entityId) {
+        getSingleEntityCall(query.entityId);
+        console.log("getSingleEntityCall useEffect");
+      }
     }
   }, [token]);
 
   useEffect(() => {
-    if (query.entityId && singleEntity) {
+    if (query?.entityId) {
       setEntity(singleEntity);
       setFields(singleEntity?.fields);
       console.log("setEntity useEffect");
-      console.log(singleEntity);
     }
-  }, [singleEntity]);
+  }, [singleEntity?.id]);
 
   return (
     <>

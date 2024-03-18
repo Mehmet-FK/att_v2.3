@@ -11,9 +11,6 @@ const EntityAccordion = ({ entity, setEntity }) => {
   const [dataSource, setDataSource] = useState([]); //Keep the State from Store
 
   const { views } = useSelector((state) => state.attensam.data); // DataSource
-  const { token } = useSelector((state) => state.userInfo); //Access Token
-
-  const { getViewsCall } = useAttensamCalls();
 
   // Input onchange function
   const handleChange = (e) => {
@@ -29,11 +26,6 @@ const EntityAccordion = ({ entity, setEntity }) => {
       return;
     }
   };
-
-  useEffect(() => {
-    if (!token) return;
-    getViewsCall();
-  }, [token]);
 
   useEffect(() => {
     setDataSource(views);

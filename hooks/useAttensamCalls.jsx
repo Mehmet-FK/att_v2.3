@@ -14,15 +14,12 @@ const useAttensamCalls = () => {
 
   //BASE GET CALL
   const getAttData = async (url, dataName) => {
-    let flag = false;
-
     dispatch(fetchStart());
     try {
       const { data } = await axiosWithToken.get(url);
       dispatch(getSuccess({ data, dataName: dataName }));
     } catch (error) {
       console.log(error);
-
       dispatch(fetchFail({ message: "" }));
     } finally {
       dispatch(stopLoading());
@@ -35,7 +32,7 @@ const useAttensamCalls = () => {
 
     try {
       const { data } = await axiosFormData.put(url, formData);
-      console.log(data);
+      // console.log(data);
       toastSuccessNotify(data);
     } catch (error) {
       console.log(error.response?.data);
@@ -51,7 +48,7 @@ const useAttensamCalls = () => {
       const { data } = await axiosFormData.delete(url);
       toastSuccessNotify(data);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       toastErrorNotify(error.response?.data);
     } finally {
       dispatch(stopLoading());
@@ -62,10 +59,10 @@ const useAttensamCalls = () => {
   const postAttData = async (url, formData) => {
     try {
       const { data } = await axiosFormData.post(url, formData);
-      toastSuccessNotify("Elememt wurde erfolgreich angelegt");
+      toastSuccessNotify("Element wurde erfolgreich angelegt");
     } catch (error) {
       toastErrorNotify(error.response?.data);
-      console.log(error);
+      // console.log(error);
     } finally {
       dispatch(stopLoading());
     }

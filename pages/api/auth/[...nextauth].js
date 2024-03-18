@@ -4,18 +4,14 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions = {
-  session: {
-    strategy: "jwt",
-  },
+  // session: {
+  //   strategy: "jwt",
+  // },
 
   providers: [
     CredentialsProvider({
-      // type: "credentials",
       name: "Credentials",
-      credentials: {
-        // username: { label: "username", type: "text" },
-        // password: { label: "password", type: "password" },
-      },
+      credentials: {},
       async authorize(credentials) {
         let res = null;
 
@@ -39,11 +35,9 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      console.log("JWT", token);
       return { ...token, ...user };
     },
     async session({ session, token, user }) {
-      console.log("SESSION", token);
       session.user = token;
       return session;
     },
