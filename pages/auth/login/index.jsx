@@ -30,6 +30,7 @@ const Login = () => {
         password: inputVal.password,
         redirect: false,
       });
+      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {
