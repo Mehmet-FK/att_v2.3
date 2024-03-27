@@ -115,9 +115,6 @@ const AddEntity = () => {
       deleteFieldCall(item.id);
     });
 
-    console.log("POST_ARR", fieldsToPost);
-    console.log("PUT_ARR", fieldsToPut);
-    console.log("DELETE_ARR", fieldsToDelete);
     //UPDATE ENTITY
     const uptData = formData;
     uptData.delete("fields");

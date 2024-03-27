@@ -9,7 +9,7 @@ import {
   stopLoading,
 } from "@/redux/slices/attensamSlice";
 import Head from "next/head";
-import { getSession, signIn, useSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 
 const Login = () => {
   const [inputVal, setInputVal] = useState({});
@@ -18,7 +18,6 @@ const Login = () => {
 
   const handleChange = (e) => {
     setInputVal({ ...inputVal, [e.target.name]: e.target.value });
-    // console.log(inputVal)
   };
 
   const handleSubmit = async (e) => {
@@ -46,7 +45,6 @@ const Login = () => {
     <>
       <Head>
         <title>Attensam Login</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.container}>
         <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>

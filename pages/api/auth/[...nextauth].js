@@ -12,7 +12,7 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {},
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         let res = null;
 
         const { username, password } = credentials;
@@ -23,7 +23,7 @@ export const authOptions = {
           );
           res = { token: data };
         } catch (error) {
-          console.log("ERRORRRRRRRR===>");
+          console.log("ERRORRRRRRRR===>", error);
         }
 
         return res;
