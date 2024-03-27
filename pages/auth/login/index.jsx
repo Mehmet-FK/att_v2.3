@@ -32,7 +32,7 @@ const Login = () => {
       });
       console.log(res);
     } catch (error) {
-      console.log("CREDENTIALS ERROR=>", error);
+      console.log("CREDENTIALS ERROR=>", JSON.stringify(...error));
     } finally {
       dispatch(stopLoading());
       const session = await getSession();
