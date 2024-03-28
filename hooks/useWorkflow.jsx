@@ -4,7 +4,7 @@ import { useReactFlow } from "reactflow";
 const flowKey = "atina-flow";
 
 const useWorkflow = (setNodes, setEdges, rfInstance) => {
-  const { setViewport } = useReactFlow();
+  const { setViewport, getIntersectingNodes } = useReactFlow();
 
   const onSave = useCallback(() => {
     if (rfInstance) {
@@ -29,7 +29,35 @@ const useWorkflow = (setNodes, setEdges, rfInstance) => {
     restoreFlow();
   }, [setNodes, setViewport]);
 
-  return { onSave, onRestore };
+  const onNodeDragStop = (e, node) => {
+    const interNodes = getIntersectingNodes(node);
+    const wrapper = interNodes.find((n) => n.type === "group");
+
+    if (!wrapper || node.type !== "launch") return;
+
+    node.parentNode = wrapper.id;
+    node.extent = "parent";
+    node.position = {
+      x: node.positionAbsolute.x - wrapper.position.x,
+      y: node.positionAbsolute.y - wrapper.position.y,
+    };
+    setNodes((nodes) =>
+      nodes.map((n) => {
+        if (n.id === node.id) n = node;
+        return n;
+      })
+    );
+  };
+
+  const onDragOver = useCallback((e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  }, []);
+
+  const isValidConnection = (connection) =>
+    connection.target !== connection.source;
+
+  return { onSave, onRestore, onNodeDragStop, onDragOver, isValidConnection };
 };
 
 export default useWorkflow;

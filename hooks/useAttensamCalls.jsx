@@ -74,6 +74,11 @@ const useAttensamCalls = () => {
   const getViewsCall = () => getAttData("DatabaseSchema/views", "views");
   const getViewColumnsCall = (view) =>
     getAttData(`DatabaseSchema/views/${view}/columns`, "viewColumns");
+
+  const getViewTypes = () => getAttData("Enums/viewtypes", "viewTypes");
+  const getLaunchTypes = () =>
+    getAttData("Enums/workflowlaunchtypes", "launchTypes");
+
   //POST
   const postEntityCall = (data) => postAttData("Entity", data);
   const postFieldCall = (entityId, data) =>
@@ -89,8 +94,11 @@ const useAttensamCalls = () => {
   return {
     postEntityCall, //CREATE Entity
     postFieldCall, //CREATE Field
+
     getEntitiesCall, //READ Entities
     getSingleEntityCall, //READ Entity
+    getViewTypes, //READ ViewTypes
+    getLaunchTypes, //READ Launch Types
     getViewsCall, //READ Views
     getViewColumnsCall, //READ View Columns
     updateEntityCall, //UPDATE Entity

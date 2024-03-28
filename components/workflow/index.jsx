@@ -6,32 +6,44 @@ import ReactFlow, {
   MarkerType,
   ReactFlowProvider,
   ConnectionMode,
+  useReactFlow,
 } from "reactflow";
 import nodeTypes from "./NodeTypes";
-import { useCallback, useEffect, useState } from "react";
+import { cloneElement, useCallback, useEffect, useRef, useState } from "react";
 import "reactflow/dist/style.css";
 import useWorkflow from "@/hooks/useWorkflow";
 import edgeTypes from "./EdgeTypes";
-import BottomDrawer from "./BottomDrawer";
-import ToolsDrawer from "./ToolsDrawer";
+import BottomDrawer from "./drawers/BottomDrawer";
+import ToolsDrawer from "./drawers/ToolsDrawer";
 
-const initialNodes = [];
+const initialNodes = [
+  {
+    id: "launch-group",
+    type: "group",
+
+    position: { x: 50, y: 120 },
+    selectable: false,
+    className: "nodrag",
+    style: {
+      width: 250,
+      height: "75%",
+      backgroundColor: "#ccc4",
+      screenLeft: "",
+    },
+  },
+];
 const initialEdges = [];
 
 let id = 0;
 const getId = (type) => `${type}_${id++}`;
 
-const Sheet = () => {
+const Sheet = ({ viewTypes, launchTypes }) => {
   const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-
-  const { onSave, onRestore } = useWorkflow(
-    setNodes,
-    setEdges,
-    reactFlowInstance
-  );
+  const { onSave, onRestore, onNodeDragStop, onDragOver, isValidConnection } =
+    useWorkflow(setNodes, setEdges, reactFlowInstance);
 
   const onConnect = useCallback(
     (params) =>
@@ -40,7 +52,7 @@ const Sheet = () => {
           {
             ...params,
             type: "floating",
-            markerEnd: { type: MarkerType.Arrow },
+            markerEnd: { type: MarkerType.ArrowClosed },
           },
           eds
         )
@@ -48,40 +60,48 @@ const Sheet = () => {
     [setEdges]
   );
 
-  const onDragOver = useCallback((e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  }, []);
-
   const onDrop = useCallback(
     (e) => {
       e.preventDefault();
 
-      const type = e.dataTransfer.getData("application/reactflow");
+      const name = e.dataTransfer.getData("application/reactflow");
       const caption = e.dataTransfer.getData("caption");
+      const type = e.dataTransfer.getData("type");
 
       // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) return;
+      if (typeof name === "undefined" || !name) return;
 
       const position = reactFlowInstance.screenToFlowPosition({
         x: e.clientX,
         y: e.clientY,
       });
-      const newNode = {
-        id: getId(type),
-        type,
-        position,
-        data: { label: `${caption}` },
-      };
 
+      let newNode = {};
+
+      if (type === "launch") {
+        newNode = {
+          id: getId(name),
+          type: "launch",
+          position,
+          attID: launchTypes[name],
+          data: { label: `${caption}` },
+        };
+      } else {
+        newNode = {
+          id: getId(name),
+          type: name,
+          position,
+          attID: viewTypes[name],
+          data: { label: `${caption}` },
+        };
+      }
+      console.log(newNode);
       setNodes((nds) => {
         return nds.concat(newNode);
       });
     },
-    [reactFlowInstance]
+    [reactFlowInstance, launchTypes, viewTypes]
   );
-  const isValidConnection = (connection) =>
-    connection.target !== connection.source;
 
   return (
     <>
@@ -101,12 +121,14 @@ const Sheet = () => {
       >
         Sidebar {openToolsDrawer ? "schließen" : "öffnen"}
       </h4>
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        onNodeDragStop={onNodeDragStop}
         isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
@@ -114,6 +136,10 @@ const Sheet = () => {
         onDrop={onDrop}
         onDragOver={onDragOver}
         connectionMode={ConnectionMode.Loose}
+        snapToGrid
+        snapGrid={[20, 20]}
+        panOnScroll
+        onEdgeDoubleClick={(e, n) => console.log(n)}
       >
         <Background />
         {/* <Controls /> */}
@@ -125,8 +151,4 @@ const Sheet = () => {
   );
 };
 
-export default () => (
-  <ReactFlowProvider>
-    <Sheet />
-  </ReactFlowProvider>
-);
+export default Sheet;

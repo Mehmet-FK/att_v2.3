@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { grey } from "@mui/material/colors";
 import sty from "@/styles/workflow-comp-styles.module.css";
+import { Box } from "@mui/material";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -17,8 +18,7 @@ const Puller = styled("div")(({ theme }) => ({
 const BottomDrawer = ({ edges, onSave, onRestore }) => {
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
-  // const [lastdownY, setLastdownY] = useState(0);
-  const [newHeight, setNewHeight] = useState(35);
+  const [newHeight, setNewHeight] = useState(45);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -26,14 +26,13 @@ const BottomDrawer = ({ edges, onSave, onRestore }) => {
   const handleClose = () => setOpen(false);
   const handleMouseDown = (e) => {
     setIsResizing(true);
-    // setLastdownY(e.clientY);
   };
 
   const handleMouseMove = (e) => {
     if (!isResizing) return;
     let offsetBottom =
       document.body.offsetHeight - (e.clientY - document.body.offsetTop);
-    let minHeight = 25;
+    let minHeight = 45;
     let maxHeight = 650;
     if (offsetBottom > minHeight && offsetBottom < maxHeight) {
       setNewHeight(offsetBottom);
@@ -73,11 +72,11 @@ const BottomDrawer = ({ edges, onSave, onRestore }) => {
         <div onMouseDown={handleMouseDown} className={sty.puller_wrapper}>
           <Puller />
         </div>
-
         <div
           className={sty.console_btn_wrapper}
           style={{
-            display: newHeight > 50 ? "flex" : "none",
+            display: "flex",
+            opacity: newHeight / 150,
           }}
         >
           <div>Lorem ipsum</div>
@@ -93,6 +92,11 @@ const BottomDrawer = ({ edges, onSave, onRestore }) => {
             </div>
           </div>
         </div>
+        <Box
+          sx={{
+            display: newHeight > 50 ? "block" : "none",
+          }}
+        ></Box>
       </Drawer>
     </>
   );

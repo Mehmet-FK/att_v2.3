@@ -8,22 +8,22 @@ const initialHandles = [
   {
     type: "source",
     position: Position.Right,
-    id: Math.random().toString(36).substr(2, 9),
+    id: "a",
   },
   {
     type: "source",
     position: Position.Top,
-    id: Math.random().toString(36).substr(2, 9),
+    id: "b",
   },
   {
     type: "source",
     position: Position.Left,
-    id: Math.random().toString(36).substr(2, 9),
+    id: "c",
   },
   {
     type: "source",
     position: Position.Bottom,
-    id: Math.random().toString(36).substr(2, 9),
+    id: "d",
   },
 ];
 

@@ -2,7 +2,6 @@ import { useState } from "react";
 import styles from "./login.module.css";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/slices/userSlice";
 import {
   fetchFail,
   fetchStart,

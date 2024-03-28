@@ -1,32 +1,36 @@
-import ToolsDrawer from "@/components/workflow/ToolsDrawer";
-import Sheet from "@/components/workflow/Sheet";
-import React, { useState } from "react";
+import ToolsDrawer from "@/components/workflow/drawers/ToolsDrawer";
+import Sheet from "@/components/workflow";
+import React, { useEffect, useState } from "react";
+import useAttensamCalls from "@/hooks/useAttensamCalls";
+import { useSelector } from "react-redux";
+import { ReactFlowProvider } from "reactflow";
 
 const Workflow = () => {
-  const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
-  const [flow, setFlow] = useState([]);
+  const [viewTypes, setViewTypes] = useState({});
+  const [launchTypes, setLaunchTypes] = useState({});
+  const { getViewTypes, getLaunchTypes } = useAttensamCalls();
+
+  const { viewTypes: views, launchTypes: launches } = useSelector(
+    (state) => state.attensam.data
+  );
+
+  useEffect(() => {
+    getViewTypes();
+    getLaunchTypes();
+  }, []);
+
+  useEffect(() => {
+    setViewTypes(views);
+  }, [views]);
+
+  useEffect(() => {
+    setLaunchTypes(launches);
+  }, [launches]);
 
   return (
-    <>
-      {/* <h4
-        style={{
-          position: "absolute",
-          top: 70,
-          zIndex: 200,
-          cursor: "pointer",
-          backgroundColor: "#404040",
-          padding: "6px 20px",
-          borderRadius: "6px",
-          color: "#fff",
-          textAlign: "center",
-        }}
-        onClick={() => setOpenToolsDrawer((prev) => !prev)}
-      >
-        Sidebar {openToolsDrawer ? "schließen" : "öffnen"}
-      </h4> */}
-      <Sheet />
-      {/* <ToolsDrawer open={openToolsDrawer} setOpen={setOpenToolsDrawer} /> */}
-    </>
+    <ReactFlowProvider>
+      <Sheet viewTypes={viewTypes} launchTypes={launches} />
+    </ReactFlowProvider>
   );
 };
 
