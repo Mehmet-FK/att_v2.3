@@ -84,7 +84,7 @@ const Sheet = ({ viewTypes, launchTypes }) => {
           type: "launch",
           position,
           attID: launchTypes[name],
-          data: { label: `${caption}` },
+          data: { label: `${caption}`, attID: launchTypes[name] },
         };
       } else {
         newNode = {
@@ -95,7 +95,6 @@ const Sheet = ({ viewTypes, launchTypes }) => {
           data: { label: `${caption}` },
         };
       }
-      console.log(newNode);
       setNodes((nds) => {
         return nds.concat(newNode);
       });

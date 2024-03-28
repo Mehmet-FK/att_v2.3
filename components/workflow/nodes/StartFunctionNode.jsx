@@ -7,33 +7,31 @@ import {
   ArrowRectangle,
   Circle,
   Cylinder,
+  Diamond,
+  Parallelogram,
+  Plus,
   Triangle,
 } from "./node-comps/Shapes";
 
 const colors = [
-  { name: "blue", value: "#3F8AE2A0" },
-  { name: "orange", value: "#CF4C2CA0" },
-  { name: "yellow", value: "#EBC347a0" },
-  { name: "green", value: "#438D57a0" },
+  { name: "blue", value: "#3F8AE2" },
+  { name: "orange", value: "#CF4C2C" },
+  { name: "yellow", value: "#EBC347" },
+  { name: "green", value: "#438D57" },
+  { name: "purple", value: "#803DEC" },
 ];
 
 const StartFunctionNode = ({ data, isConnectable }) => {
-  const [color, setColor] = useState({ name: "orange", value: "#CF4C2Cbb" });
+  const [color, setColor] = useState(colors[data.attID * 1]);
 
   const handleColor = () => {
     let i = colors.findIndex((c) => c.name === color.name);
-    console.log(i);
 
     if (i < colors.length - 1) i++;
     else i = 0;
 
     setColor(colors[i]);
   };
-
-  useEffect(() => {
-    console.log(color);
-  }, [color]);
-
   return (
     <>
       <div
@@ -41,10 +39,16 @@ const StartFunctionNode = ({ data, isConnectable }) => {
         className={`${sty.launchnode_wrapper} ${sty[color.name]} `}
       >
         <h5 className={sty.shape_node_title}>{data.label}</h5>
-        {/* <Circle color={color.value} /> */}
+        {data.attID === "0" && <Circle color={color.value} />}
+        {data.attID === "1" && <ArrowRectangle color={color.value} />}
+        {data.attID === "2" && <Cylinder color={color.value} />}
+        {data.attID === "3" && <Diamond color={color.value} />}
         {/* <Triangle color={color.value} /> */}
         {/* <ArrowRectangle color={color.value} /> */}
-        <Cylinder color={color.value} />
+        {/* <Cylinder color={color.value} /> */}
+        {/* <Diamond color={color.value} /> */}
+        {/* <Parallelogram color={color.value} /> */}
+        {/* <Plus color={color.value} /> */}
 
         <Handle
           type="source"

@@ -54,8 +54,12 @@ const useWorkflow = (setNodes, setEdges, rfInstance) => {
     e.dataTransfer.dropEffect = "move";
   }, []);
 
-  const isValidConnection = (connection) =>
-    connection.target !== connection.source;
+  const isValidConnection = (connection) => {
+    return (
+      connection.target !== connection.source &&
+      connection.targetHandle !== "start"
+    );
+  };
 
   return { onSave, onRestore, onNodeDragStop, onDragOver, isValidConnection };
 };
