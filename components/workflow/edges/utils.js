@@ -24,11 +24,12 @@ function getParams(nodeA, nodeB) {
 
 function getHandleCoordsByPosition(node, handlePosition) {
   // all handles are from type source, that's why we use handleBounds.source here
+  // return [10, 10];
   const handle = node[internalsSymbol].handleBounds.source.find(
     (h) => h.position === handlePosition
   );
-  let offsetX = handle.width / 2;
-  let offsetY = handle.height / 2;
+  let offsetX = handle?.width / 2 || 10;
+  let offsetY = handle?.height / 2 || 10;
 
   // this is a tiny detail to make the markerEnd of an edge visible.
   // The handle position that gets calculated has the origin top-left, so depending which side we are using, we add a little offset
@@ -38,19 +39,19 @@ function getHandleCoordsByPosition(node, handlePosition) {
       offsetX = 0;
       break;
     case Position.Right:
-      offsetX = handle.width;
+      offsetX = handle?.width || 10;
       break;
     case Position.Top:
       offsetY = 0;
       break;
     case Position.Bottom:
-      offsetY = handle.height;
+      offsetY = handle?.height || 10;
       break;
   }
 
   const x = node.positionAbsolute.x + handle.x + offsetX;
   const y = node.positionAbsolute.y + handle.y + offsetY;
-
+  // console.log(node.positionAbsolute.x + " <=> " + handle.x + " <=> " + offsetX);
   return [x, y];
 }
 

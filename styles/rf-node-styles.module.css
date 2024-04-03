@@ -119,10 +119,7 @@
 .orange:active,
 .orange:hover {
   border: 1px solid #cf4d2c87;
-}
 
-.orange:active,
-.orange:hover {
   border-radius: 0;
   outline: 1px solid #cf4d2c87;
   outline-offset: 2px;
@@ -131,10 +128,6 @@
 .blue:active,
 .blue:hover {
   border: 1px solid #3f8ae2a0;
-}
-
-.blue:active,
-.blue:hover {
   border-radius: 0;
   outline: 1px solid #3f8ae2a0;
   outline-offset: 2px;
@@ -143,22 +136,25 @@
 .yellow:active,
 .yellow:hover {
   border: 1px solid #ebc347a0;
-}
-
-.yellow:active,
-.yellow:hover {
   border-radius: 0;
   outline: 1px solid #ebc347a0;
   outline-offset: 2px;
 }
-.green:active,
-.green:hover {
-  border: 1px solid #438d57a0;
-}
 
 .green:active,
 .green:hover {
+  border: 1px solid #438d57a0;
+
   border-radius: 0;
   outline: 1px solid #438d57a0;
+  outline-offset: 2px;
+}
+
+.purple:active,
+.purple:hover {
+  border: 1px solid #803deca0;
+
+  border-radius: 0;
+  outline: 1px solid #803deca0;
   outline-offset: 2px;
 }

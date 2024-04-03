@@ -7,6 +7,7 @@ import ReactFlow, {
   ReactFlowProvider,
   ConnectionMode,
   useReactFlow,
+  Controls,
 } from "reactflow";
 import nodeTypes from "./NodeTypes";
 import { cloneElement, useCallback, useEffect, useRef, useState } from "react";
@@ -42,24 +43,29 @@ const Sheet = ({ viewTypes, launchTypes }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const { onSave, onRestore, onNodeDragStop, onDragOver, isValidConnection } =
-    useWorkflow(setNodes, setEdges, reactFlowInstance);
+  const {
+    onSave,
+    onRestore,
+    onNodeDragStop,
+    onDragOver,
+    updateHistory,
+    isValidConnection,
+  } = useWorkflow(setNodes, setEdges, reactFlowInstance);
 
-  const onConnect = useCallback(
-    (params) =>
-      setEdges((eds) =>
-        addEdge(
-          {
-            ...params,
-            type: "floating",
-            markerEnd: { type: MarkerType.ArrowClosed },
-          },
-          eds
-        )
-      ),
-    [setEdges]
-  );
-
+  const onConnect = useCallback((params) => {
+    setEdges((eds) =>
+      addEdge(
+        {
+          ...params,
+          type: params.sourceHandle !== "start" ? "floating" : "default",
+          markerEnd: { type: MarkerType.ArrowClosed },
+          style: { strokeWidth: 2 },
+        },
+        eds
+      )
+    );
+    updateHistory();
+  }, []);
   const onDrop = useCallback(
     (e) => {
       e.preventDefault();
@@ -98,6 +104,7 @@ const Sheet = ({ viewTypes, launchTypes }) => {
       setNodes((nds) => {
         return nds.concat(newNode);
       });
+      updateHistory();
     },
     [reactFlowInstance, launchTypes, viewTypes]
   );
@@ -128,6 +135,7 @@ const Sheet = ({ viewTypes, launchTypes }) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDragStop={onNodeDragStop}
+        onNodesDelete={updateHistory}
         isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
@@ -138,10 +146,9 @@ const Sheet = ({ viewTypes, launchTypes }) => {
         snapToGrid
         snapGrid={[20, 20]}
         panOnScroll
-        onEdgeDoubleClick={(e, n) => console.log(n)}
       >
         <Background />
-        {/* <Controls /> */}
+        <Controls style={{ bottom: 55 }} />
       </ReactFlow>
 
       <ToolsDrawer open={openToolsDrawer} setOpen={setOpenToolsDrawer} />
