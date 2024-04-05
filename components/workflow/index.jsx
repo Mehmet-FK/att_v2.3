@@ -50,22 +50,25 @@ const Sheet = ({ viewTypes, launchTypes }) => {
     onDragOver,
     updateHistory,
     isValidConnection,
-  } = useWorkflow(setNodes, setEdges, reactFlowInstance);
+  } = useWorkflow(setNodes, setEdges);
 
-  const onConnect = useCallback((params) => {
-    setEdges((eds) =>
-      addEdge(
-        {
-          ...params,
-          type: params.sourceHandle !== "start" ? "floating" : "default",
-          markerEnd: { type: MarkerType.ArrowClosed },
-          style: { strokeWidth: 2 },
-        },
-        eds
-      )
-    );
-    updateHistory();
-  }, []);
+  const onConnect = useCallback(
+    (params) => {
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: params.sourceHandle !== "start" ? "floating" : "default",
+            markerEnd: { type: MarkerType.ArrowClosed },
+            style: { strokeWidth: 2 },
+          },
+          eds
+        )
+      );
+      updateHistory();
+    },
+    [setEdges]
+  );
   const onDrop = useCallback(
     (e) => {
       e.preventDefault();
@@ -101,9 +104,8 @@ const Sheet = ({ viewTypes, launchTypes }) => {
           data: { label: `${caption}` },
         };
       }
-      setNodes((nds) => {
-        return nds.concat(newNode);
-      });
+
+      setNodes((nds) => nds.concat(newNode));
       updateHistory();
     },
     [reactFlowInstance, launchTypes, viewTypes]
@@ -147,7 +149,7 @@ const Sheet = ({ viewTypes, launchTypes }) => {
         snapGrid={[20, 20]}
         panOnScroll
       >
-        <Background />
+        <Background variant="dots" />
         <Controls style={{ bottom: 55 }} />
       </ReactFlow>
 

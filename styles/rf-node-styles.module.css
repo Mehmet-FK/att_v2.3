@@ -30,33 +30,30 @@
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+  /* border: 2px solid transparent; */
+  outline: 2px solid transparent;
+  outline-offset: 5px;
   box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px,
     rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px,
     rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
-  outline: 2px solid transparent;
 }
 
 .node_body div[data-handleid] {
   background-color: transparent;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .node_body:active div[data-handleid],
 .node_body:hover div[data-handleid] {
-  visibility: visible;
   background-color: #1b192b;
-}
-
-.node_body:active,
-.node_body:hover {
-  border: 2px solid rgb(0, 149, 255);
+  border-color: #fff;
 }
 
 .node_body:active,
 .node_body:hover {
   border-radius: 0;
-  outline: 2px solid rgb(0, 149, 255);
-  outline-offset: 5px;
+  outline-color: rgb(0, 149, 255);
+  border: 2px solid rgb(0, 149, 255);
 }
 
 .record_node {
@@ -102,11 +99,13 @@
   position: relative;
   display: grid;
   place-items: center;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
+  outline: 1px solid transparent;
+  outline-offset: 2px;
 }
 .launchnode_wrapper div[data-handleid] {
   background-color: transparent;
-  border: none;
+  border: 1px solid transparent;
 }
 .launchnode_wrapper:active div[data-handleid],
 .launchnode_wrapper:hover div[data-handleid] {
