@@ -55,7 +55,7 @@ const TileNode = ({ data, isConnectable }) => {
       />
 
       <div
-        className={`${sty.node_body} ${sty.tile_node}`}
+        className={`${sty.node_body} ${sty.tile_node} `}
         onClick={handleOpenDialog}
       >
         <Tooltip title={info} placement="top">

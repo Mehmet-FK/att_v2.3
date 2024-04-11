@@ -27,6 +27,7 @@ const useWorkflow = (setNodes, setEdges) => {
 
       if (isEqual) return;
 
+      console.log(newFlow);
       const index = history.findIndex(
         (item) => item.id === currentflowRef.current
       );

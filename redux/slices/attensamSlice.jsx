@@ -184,7 +184,9 @@ const attensamSlice = createSlice({
     error: false,
     errorMsg: "",
 
-    data: {},
+    data: {
+      
+    },
   },
   reducers: {
     fetchStart: (state) => {

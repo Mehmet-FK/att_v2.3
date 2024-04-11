@@ -6,10 +6,15 @@ import InfoIcon from "@mui/icons-material/Info";
 import {
   ArrowRectangle,
   Circle,
+  Clover,
+  Cube,
   Cylinder,
   Diamond,
+  FourLeaf,
   Parallelogram,
   Plus,
+  Sun,
+  ThornApple,
   Triangle,
 } from "./node-comps/Shapes";
 
@@ -39,10 +44,10 @@ const StartFunctionNode = ({ data, isConnectable }) => {
         className={`${sty.launchnode_wrapper} ${sty[color.name]} `}
       >
         <h5 className={sty.shape_node_title}>{data.label}</h5>
-        {data.attID === "0" && <Circle color={color.value} />}
-        {data.attID === "1" && <ArrowRectangle color={color.value} />}
-        {data.attID === "2" && <Cylinder color={color.value} />}
-        {data.attID === "3" && <Diamond color={color.value} />}
+        {data.attID === "0" && <FourLeaf color={color.value} />}
+        {data.attID === "1" && <ThornApple color={color.value} />}
+        {data.attID === "2" && <Clover color={color.value} />}
+        {data.attID === "3" && <Sun color={color.value} />}
         {/* <Triangle color={color.value} /> */}
         {/* <ArrowRectangle color={color.value} /> */}
         {/* <Cylinder color={color.value} /> */}

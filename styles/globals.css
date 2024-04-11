@@ -94,3 +94,34 @@ a {
 .page-header {
   padding: 2rem 3rem;
 }
+.react-flow__node.selectable {
+  outline-offset: 5px;
+  outline: 2px solid transparent !important;
+  border: 2px solid transparent !important;
+}
+
+.react-flow__node.selectable:focus {
+  outline-offset: 5px;
+  outline-color: rgb(0, 149, 255) !important;
+  border-color: rgb(0, 149, 255) !important;
+  border-radius: 0% !important;
+}
+
+.react-flow__node.selectable:focus div[data-handleid] {
+  background-color: #1b192b;
+  border-color: #fff !important;
+  border-radius: 50% !important;
+}
+
+.react-flow__node.selectable:focus * {
+  border-radius: 0;
+  border: none;
+  outline: none;
+}
+
+/* .selected:active,
+.selected:hover {
+  border: none !important;
+
+  outline: none !important;
+} */

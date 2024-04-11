@@ -19,7 +19,6 @@ import Link from "next/link";
 import styles from "@/styles/layout.module.css";
 import { getSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
 import SchemaSharpIcon from "@mui/icons-material/SchemaSharp";
@@ -58,10 +57,8 @@ export default function Layout({ children, toggleTheme }) {
 
   useEffect(() => {
     getSessionData();
-    console.log(router.pathname);
-    if (router.pathname === "/workflow") setShowLayout(false);
-    else setShowLayout(true);
   }, []);
+
   useEffect(() => {
     if (router.pathname === "/workflow") {
       setShowLayout(false);

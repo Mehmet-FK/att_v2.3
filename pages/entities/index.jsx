@@ -14,15 +14,18 @@ const Entities = () => {
   const { getEntitiesCall } = useAttensamCalls();
 
   const [existingEntities, setExistingEntities] = useState([]);
+
   useEffect(() => {
     if (token) {
       getEntitiesCall();
     }
+    console.log("first");
   }, [token]);
 
   useEffect(() => {
     setExistingEntities(entities);
   }, [entities]);
+
   return (
     <>
       <PageHeader title="ENTITIES" />
