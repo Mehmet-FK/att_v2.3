@@ -1,7 +1,7 @@
 import { useState } from "react";
-import styles from "./login.module.css";
+import css from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   fetchFail,
   fetchStart,
@@ -9,9 +9,16 @@ import {
 } from "@/redux/slices/attensamSlice";
 import Head from "next/head";
 import { getSession, signIn } from "next-auth/react";
+import { setUser } from "@/redux/slices/settingsSlice";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { toastErrorNotify } from "@/helpers/ToastNotify";
+import ErrorModal from "@/components/ErrorModal";
 
 const Login = () => {
   const [inputVal, setInputVal] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const { error, errorMsg } = useSelector((state) => state.attensam);
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -19,25 +26,46 @@ const Login = () => {
     setInputVal({ ...inputVal, [e.target.name]: e.target.value });
   };
 
+  const togglePassword = (e) => {
+    e.preventDefault();
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(fetchStart());
 
-    try {
-      const res = await signIn("credentials", {
-        username: inputVal.username,
-        password: inputVal.password,
-        redirect: false,
-      });
-      console.log(res);
-    } catch (error) {
-      console.log("CREDENTIALS ERROR=>", JSON.stringify(...error));
-    } finally {
+    const res = await signIn("credentials", {
+      username: inputVal.username,
+      password: inputVal.password,
+      redirect: false,
+    });
+
+    if (res.error) {
+      console.log(res.status);
+      const errorMessage =
+        res.status === 401
+          ? "Anmeldedaten sind nicht korrekt!"
+          : "Etwas ist schiefgelaufen!";
+      dispatch(fetchFail({ message: `${res.status} ${errorMessage}` }));
       dispatch(stopLoading());
-      const session = await getSession();
-      if (session?.user?.token) {
-        router.push("/");
-      }
+      return;
+    }
+
+    dispatch(stopLoading());
+    const session = await getSession();
+    if (session) {
+      const { user } = session;
+      const credentials = {
+        avatarUrl: user.avatarUrl,
+        roles: user.roles,
+        token: user.token,
+        ...user.userInfo,
+      };
+      dispatch(setUser({ user: credentials }));
+      router.push("/");
+    } else {
+      toastErrorNotify(`Etwas ist schiefgelaufen.. `);
     }
   };
 
@@ -46,27 +74,43 @@ const Login = () => {
       <Head>
         <title>Attensam Login</title>
       </Head>
-      <div className={styles.container}>
-        <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
+      {error && <ErrorModal error={errorMsg} />}
+      <div className={css.container}>
+        <form className={css.form} onSubmit={(e) => handleSubmit(e)}>
           <h2>Login</h2>
           <input
-            className={styles.inputAll}
+            className={css.inputAll}
             onChange={handleChange}
             type="text"
             name="username"
             placeholder="Benutzername"
             required
           />
+
+          <div className={css.password_wrapper}>
+            <input
+              className={css.inputAll}
+              onChange={handleChange}
+              type={showPassword ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              required
+            />
+            <VisibilityIcon
+              onClick={togglePassword}
+              fontSize="small"
+              sx={{ color: "#000" }}
+              className={css.show_btn}
+            />
+            <span
+              className={`${css.cross_line} ${
+                showPassword && css.cross_line_active
+              } `}
+            ></span>
+          </div>
+
           <input
-            className={styles.inputAll}
-            onChange={handleChange}
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-          />
-          <input
-            className={`${styles.inputAll} ${styles.submit}`}
+            className={`${css.inputAll} ${css.submit}`}
             type="submit"
             value="Login"
           />

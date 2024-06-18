@@ -41,6 +41,7 @@ const EntityAccordion = ({ entity, setEntity }) => {
           label="Name"
           name="name"
           variant="outlined"
+          required
         />
         <TextField
           sx={{ width: "100%" }}
@@ -50,6 +51,7 @@ const EntityAccordion = ({ entity, setEntity }) => {
           name="caption"
           label="Caption"
           variant="outlined"
+          required
         />
 
         <Select

@@ -18,14 +18,16 @@ export const authOptions = {
         const { username, password } = credentials;
         try {
           const { data } = await axios.post(
-            `https://apl.attensam.at/api/auth/login`,
-            { username, password }
+            `https://apl.attensam.at/atina/AtinaUsers/login?username=${username}&password=${password}`
           );
-          res = { token: data };
+          res = data;
         } catch (error) {
-          console.log("ERRORRRRRRRR===>", error);
+          console.log(
+            "ERRORRRRRRRR=====================>\n",
+            error.response,
+            "\n==============================================\n"
+          );
         }
-
         return res;
       },
     }),

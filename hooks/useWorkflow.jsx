@@ -27,7 +27,6 @@ const useWorkflow = (setNodes, setEdges) => {
 
       if (isEqual) return;
 
-      console.log(newFlow);
       const index = history.findIndex(
         (item) => item.id === currentflowRef.current
       );
@@ -42,42 +41,7 @@ const useWorkflow = (setNodes, setEdges) => {
       flowHistoryRef.current = slicedArr;
     }
   };
-  // const updateHistory = () => {
-  //   // let historyArr = flowHistory;
-
-  //   const currentFlow = flowHistory.find(
-  //     (f) => f.id === currentflowRef.current
-  //   );
-  //   // const currentFlow = flowHistory.find(
-  //   //   (f) => f.id === currentflowRef.current
-  //   // );
-
-  //   if (rfInstance) {
-  //     const newFlow = { ...rfInstance.toObject(), id: id() };
-  //     const isEqual =
-  //       JSON.stringify({ ...newFlow, id: "" }) ===
-  //       JSON.stringify({ ...currentFlow, id: "" });
-
-  //     if (isEqual) return;
-
-  //     const index = flowHistory.findIndex(
-  //       (item) => item.id === currentflowRef.current
-  //     );
-  //     const slicedArr = flowHistory.slice(0, index + 1);
-
-  //     // if (slicedArr.length >= capacity) {
-  //     //   slicedArr.shift();
-  //     // }
-
-  //     slicedArr.push(newFlow);
-  //     setFlowHistory(slicedArr);
-  //     currentflowRef.current = newFlow.id;
-
-  //     console.log(flowHistory);
-  //     console.log(flowHistory[flowHistory.length - 1]);
-  //   }
-  // };
-
+ 
   const undo = () => {
     const history = flowHistoryRef.current || [];
 
@@ -95,26 +59,6 @@ const useWorkflow = (setNodes, setEdges) => {
       currentflowRef.current = flow.id;
     }
   };
-  /*  const undo = () => {
-    const index = flowHistory.findIndex(
-      (obj) => obj.id === currentflowRef.current
-    );
-    const flow = flowHistory[index - 1];
-    if (index === 0) {
-      const defaultNode = flowHistory[index].nodes[0];
-      setNodes([defaultNode]);
-      setEdges([]);
-      setViewport({ x: 0, y: 0, zoom: 1 });
-      currentflowRef.current = flowHistory[0].id;
-    }
-    if (flow) {
-      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      setViewport({ x, y, zoom });
-      currentflowRef.current = flow.id;
-    }
-  }; */
 
   const redo = () => {
     const history = flowHistoryRef.current || [];
@@ -128,20 +72,6 @@ const useWorkflow = (setNodes, setEdges) => {
       currentflowRef.current = flow.id;
     }
   };
-
-  /*  const redo = () => {
-    const index = flowHistory.findIndex(
-      (obj) => obj.id === currentflowRef.current
-    );
-    const flow = flowHistory[index + 1];
-    if (flow) {
-      const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      setViewport({ x, y, zoom });
-      currentflowRef.current = flow.id;
-    }
-  }; */
 
   const onKeydown = (e) => {
     if (e.key === "z" && e.ctrlKey) undo();
@@ -217,6 +147,7 @@ const useWorkflow = (setNodes, setEdges) => {
     onDragOver,
     updateHistory,
     isValidConnection,
+    getIntersectingNodes,
   };
 };
 

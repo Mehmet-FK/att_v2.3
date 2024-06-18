@@ -4,7 +4,7 @@ import sty from "@/styles/rf-node-styles.module.css";
 import { Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
-const initialHandles = [
+const handles = [
   {
     type: "source",
     position: Position.Right,
@@ -37,7 +37,7 @@ const handleStyles = {
 const AttachmentNode = ({ data, isConnectable }) => {
   const [info, setInfo] = useState(``);
   const [open, setOpen] = useState(false);
-  const [handles, setHandles] = useState(initialHandles);
+  // const [handles, setHandles] = useState(initialHandles);
 
   const handleOpenDialog = (e) => {
     if (e.detail > 1) setOpen(true);

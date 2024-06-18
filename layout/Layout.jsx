@@ -1,41 +1,48 @@
 import { useTheme } from "@mui/material/styles";
+//ICONS
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import SchemaSharpIcon from "@mui/icons-material/SchemaSharp";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import FeedIcon from "@mui/icons-material/Feed";
+import HomeIcon from "@mui/icons-material/Home";
+//
+//MUI Components
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { Tooltip, Typography } from "@mui/material";
-import TapAndPlayOutlinedIcon from "@mui/icons-material/TapAndPlayOutlined";
+//
+// From nextJS
 import Link from "next/link";
 import styles from "@/styles/layout.module.css";
 import { getSession, signOut } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/redux/slices/userSlice";
-import SchemaSharpIcon from "@mui/icons-material/SchemaSharp";
-import FeedIcon from "@mui/icons-material/Feed";
-import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useRouter } from "next/router";
+//
+// From React & Redux
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "@/redux/slices/settingsSlice";
 import { useEffect, useState } from "react";
+//
+// Custom Components
 import { AppBar, Drawer, DrawerHeader } from "./layout_helpers";
 import ProfileMenu from "@/components/menus/ProfileMenu";
-
-// const ProfileMenu = dynamic(() => import("@/components/menus/ProfileMenu"));
 
 export default function Layout({ children, toggleTheme }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [showLayout, setShowLayout] = useState(true);
+
+  const { user } = useSelector((state) => state.settings);
 
   const dispatch = useDispatch();
 
@@ -51,8 +58,16 @@ export default function Layout({ children, toggleTheme }) {
     setOpen(false);
   };
   const getSessionData = async () => {
-    const tempSession = await getSession();
-    dispatch(setUser({ user: tempSession?.user }));
+    const session = await getSession();
+    const { user } = session;
+    const credentials = {
+      avatarUrl: user.avatarUrl,
+      roles: user.roles,
+      token: user.token,
+      ...user.userInfo,
+    };
+    dispatch(setUser({ user: credentials }));
+    // dispatch(setUser({ user: tempSession?.user }));
   };
 
   useEffect(() => {
@@ -68,15 +83,25 @@ export default function Layout({ children, toggleTheme }) {
 
   const drawerList = [
     {
-      text: "Entities",
+      text: "Home",
+      icon: <HomeIcon />,
+      nav: "/",
+    },
+    {
+      text: "Entitäten",
       icon: <FeedIcon />,
       nav: "/entities",
     },
     {
       text: "Workflow",
-      icon: <FeedIcon />,
+      icon: <AccountTreeIcon />,
       nav: "/workflow",
     },
+    // {
+    //   text: "Table Test",
+    //   icon: <FeedIcon />,
+    //   nav: "/table-test",
+    // },
   ];
   return (
     <div style={{ display: "flex" }}>
@@ -124,7 +149,7 @@ export default function Layout({ children, toggleTheme }) {
                 alignItems: "center",
               }}
             >
-              {/* <Typography
+              <Typography
                 variant="h5"
                 sx={{
                   display: "flex",
@@ -134,7 +159,7 @@ export default function Layout({ children, toggleTheme }) {
                 }}
               >
                 {`${user?.firstname} ${user?.lastname}`}
-              </Typography>{" "} */}
+              </Typography>{" "}
               <Image
                 onClick={handleClick}
                 src={"/assets/emptyAvatar.jpg"}
@@ -210,8 +235,7 @@ export default function Layout({ children, toggleTheme }) {
         component="main"
         sx={{
           flexGrow: 1,
-          height: "calc(100vh)",
-          overflow: "hidden",
+          // overflow: "hidden",
         }}
       >
         {showLayout && <DrawerHeader />}

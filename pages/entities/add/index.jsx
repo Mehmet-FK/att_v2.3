@@ -8,7 +8,7 @@ import { getSession } from "next-auth/react";
 import EntityAccordion from "@/components/entities/EntityAccordion";
 import FieldsAccordion from "@/components/entities/FieldsAccordion";
 import { useSelector } from "react-redux";
-import ToolMenu from "@/components/ToolMenu";
+import ToolMenu from "@/components/menus/ToolMenu";
 import ConfirmModal from "@/components/ConfirmModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -33,11 +33,11 @@ const AddEntity = () => {
     postFieldCall,
     getViewColumnsCall,
     getSingleEntityCall,
-    getViewsCall,
+    getFieldTypes,
   } = useAttensamCalls();
 
-  const { token } = useSelector((state) => state.userInfo); //Access Token
   const { entity: singleEntity } = useSelector((state) => state.attensam.data);
+  const { user } = useSelector((state) => state.settings);
 
   //Confirm Dialog Props
   const confirmProps = {
@@ -122,7 +122,9 @@ const AddEntity = () => {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault();
     const formData = new FormData();
+
     formData.append("Name", entity.name);
     formData.append("Caption", entity.caption);
     formData.append("Icon", entity.iconUrl);
@@ -137,47 +139,45 @@ const AddEntity = () => {
       postEntityCall(formData);
     }
 
-    router.back();
+    router.push("/entities");
   };
 
   useEffect(() => {
     if (!entity?.dataSource) return;
     getViewColumnsCall(entity.dataSource);
     console.log("viewColumns useEffect");
-  }, [entity?.dataSource]);
+  }, [entity?.dataSource, user]);
 
   useEffect(() => {
-    console.log(query?.entityId);
-    if (token) {
-      getViewsCall();
-      if (query?.entityId) {
-        getSingleEntityCall(query.entityId);
-        console.log("getSingleEntityCall useEffect");
-      }
+    getFieldTypes();
+
+    if (query?.entityId) {
+      getSingleEntityCall(query.entityId);
+      console.log("getSingleEntityCall useEffect");
     }
-  }, [token]);
+  }, [user]);
 
   useEffect(() => {
     if (query?.entityId) {
       setEntity(singleEntity);
       setFields(singleEntity?.fields);
       console.log("setEntity useEffect");
+      //TODO: This block renders two times when entityId changes. Optimization needed
     }
-  }, [singleEntity?.id]);
-
+  }, [singleEntity, user]);
   return (
-    <>
+    <form onSubmit={handleSubmit}>
       <ConfirmModal
         open={openConfirm}
         setOpen={setOpenConfirm}
         confirmProps={confirmProps}
       />
 
-      <PageHeader title="Add Entity" />
+      <PageHeader
+        title={`Entität ${query.entityId ? "Bearbeiten" : "Anlegen"}`}
+      />
       <div className={styles.container}>
-        {""}
         {query.entityId && <ToolMenu buttonsList={toolMenuProps} />}
-        {""}
 
         <EntityAccordion setEntity={setEntity} entity={entity} />
         <FieldsAccordion
@@ -188,14 +188,14 @@ const AddEntity = () => {
         <div className={styles.submitBtnWrapper}>
           <Button
             className={styles.submitBtn}
-            onClick={handleSubmit}
             variant="contained"
+            type="submit"
           >
             submit
           </Button>
         </div>
       </div>
-    </>
+    </form>
   );
 };
 

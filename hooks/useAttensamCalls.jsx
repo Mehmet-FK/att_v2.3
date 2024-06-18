@@ -7,9 +7,11 @@ import {
   stopLoading,
 } from "@/redux/slices/attensamSlice";
 import { toastErrorNotify, toastSuccessNotify } from "@/helpers/ToastNotify";
+import { signOut } from "next-auth/react";
 
 const useAttensamCalls = () => {
   const { axiosWithToken, axiosFormData } = useAxios();
+  const { token } = useSelector((state) => state.settings.user);
   const dispatch = useDispatch();
 
   //BASE GET CALL
@@ -17,10 +19,10 @@ const useAttensamCalls = () => {
     dispatch(fetchStart());
     try {
       const { data } = await axiosWithToken.get(url);
+
       dispatch(getSuccess({ data, dataName: dataName }));
     } catch (error) {
-      console.log(error);
-      dispatch(fetchFail({ message: "" }));
+      dispatch(fetchFail({ message: error.response.status }));
     } finally {
       dispatch(stopLoading());
     }
@@ -35,7 +37,7 @@ const useAttensamCalls = () => {
       // console.log(data);
       toastSuccessNotify(data);
     } catch (error) {
-      console.log(error.response?.data);
+      console.log(error.response);
       toastErrorNotify(error.response?.data);
     } finally {
       dispatch(stopLoading());
@@ -44,15 +46,16 @@ const useAttensamCalls = () => {
 
   // DELETE CALL
   const deleteAttData = async (url) => {
+    let isSuccess = false;
     try {
-      const { data } = await axiosFormData.delete(url);
+      const { data } = await axiosWithToken.delete(url);
       toastSuccessNotify(data);
+      isSuccess = true;
     } catch (error) {
-      // console.log(error);
-      toastErrorNotify(error.response?.data);
-    } finally {
-      dispatch(stopLoading());
+      console.log(error);
+      toastErrorNotify("Etwas ist schiefgelaufen");
     }
+    dispatch(stopLoading());
   };
 
   //POST CALL
@@ -75,6 +78,7 @@ const useAttensamCalls = () => {
   const getViewColumnsCall = (view) =>
     getAttData(`DatabaseSchema/views/${view}/columns`, "viewColumns");
 
+  const getFieldTypes = () => getAttData("Enums/fieldtypes", "fieldTypes");
   const getViewTypes = () => getAttData("Enums/viewtypes", "viewTypes");
   const getLaunchTypes = () =>
     getAttData("Enums/workflowlaunchtypes", "launchTypes");
@@ -83,6 +87,9 @@ const useAttensamCalls = () => {
   const postEntityCall = (data) => postAttData("Entity", data);
   const postFieldCall = (entityId, data) =>
     postAttData(`Field/${entityId}`, data);
+
+  //TODO: Do not forget to delete
+  const postWorkflowCall = (data) => postAttData("Workflow", data);
 
   //PUT
   const updateEntityCall = (id, data) => putAttData(`Entity/${id}`, data);
@@ -94,15 +101,19 @@ const useAttensamCalls = () => {
   return {
     postEntityCall, //CREATE Entity
     postFieldCall, //CREATE Field
+    postWorkflowCall, // CREATE Workflow
 
     getEntitiesCall, //READ Entities
     getSingleEntityCall, //READ Entity
     getViewTypes, //READ ViewTypes
     getLaunchTypes, //READ Launch Types
+    getFieldTypes, //READ FieldTypes
     getViewsCall, //READ Views
     getViewColumnsCall, //READ View Columns
+
     updateEntityCall, //UPDATE Entity
     updateFieldCall, //UPDATE Field
+
     deleteEntityCall, //DELETE Entity
     deleteFieldCall, //DELETE Field
   };

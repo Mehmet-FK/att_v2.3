@@ -4,53 +4,43 @@ import React, { useEffect, useState } from "react";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useSelector } from "react-redux";
 import { ReactFlowProvider } from "reactflow";
-
-const selectedStyle = `
-.react-flow__node.selectable:focus {
-  outline-offset: 5px;
-  outline: 2px solid rgb(0, 149, 255);
-  border: 2px solid rgb(0, 149, 255);
-  border-radius: 0 !important;
-}
-.selected:active,
-.selected:hover {
-  border: none !important;
- 
-  outline: none !important;
-}
-
-`;
+import { getSession } from "next-auth/react";
 
 const Workflow = () => {
-  const [viewTypes, setViewTypes] = useState({});
-  const [launchTypes, setLaunchTypes] = useState({});
   const { getViewTypes, getLaunchTypes } = useAttensamCalls();
-
-  const { viewTypes: views, launchTypes: launches } = useSelector(
-    (state) => state.attensam.data
-  );
 
   useEffect(() => {
     getViewTypes();
     getLaunchTypes();
   }, []);
 
-  useEffect(() => {
-    setViewTypes(views);
-  }, [views]);
-
-  useEffect(() => {
-    setLaunchTypes(launches);
-  }, [launches]);
-
   return (
     <>
       {/* <style>{selectedStyle}</style> */}
       <ReactFlowProvider>
-        <Sheet viewTypes={viewTypes} launchTypes={launches} />
+        <Sheet />
       </ReactFlowProvider>
     </>
   );
 };
 
 export default Workflow;
+
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};

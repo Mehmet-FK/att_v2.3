@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import attensamReducer from "../slices/attensamSlice";
-import userReducer from "../slices/userSlice";
-
+import settingsReducer from "../slices/settingsSlice";
+import tableUtilsReducer from "../slices/tableUtilsSlice";
 const store = configureStore({
   reducer: {
     attensam: attensamReducer,
-    userInfo: userReducer,
+    settings: settingsReducer,
+    tableUtils: tableUtilsReducer,
   },
 });
 

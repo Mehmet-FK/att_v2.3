@@ -33,3 +33,35 @@
 .submitBtn:hover {
   background-color: #45a049;
 }
+
+.password_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+
+  /* border: 1px solid red; */
+}
+.show_btn {
+  position: absolute;
+  right: 5px;
+}
+.cross_line {
+  display: block;
+  position: absolute;
+  right: 5px;
+  width: 2px;
+  height: 20px;
+  transition: transform 0.2s, background 0.1s;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.cross_line_active {
+  transform: translateX(-8.5px) rotate(-45deg);
+  background-color: #333;
+
+  /* transform-origin: 100% 100%; */
+  /* right: 5px; */
+  /* right: 13.5px; */
+}

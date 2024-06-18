@@ -19,7 +19,6 @@ const FieldsAccordion = ({ entity, fields, setFields }) => {
       toastWarnNotify("Zuerst das DataSource festlegen!");
       return;
     }
-
     const groupID = `id-${Math.random().toString(36).substr(2, 10)}`; // Id to determine current group in fields array
     const inx = fields.length;
     setFields([
@@ -30,14 +29,29 @@ const FieldsAccordion = ({ entity, fields, setFields }) => {
       },
     ]);
   };
+
+  const handleFieldChange = (e, i, isCheckbox) => {
+    const name = e.target.name;
+    const tempFields = [...fields];
+    const tempF = { ...tempFields[i] };
+    if (isCheckbox) {
+      tempF[name] = e.target.checked;
+    } else {
+      tempF[name] = e.target.value;
+    }
+    tempFields[i] = tempF;
+    setFields(tempFields);
+  };
+
   return (
     <Accordion expandDefault header={"FELDER"}>
       {fields?.map((field, index) => (
         <FieldGroup
           key={index}
           field={field}
+          index={index}
           view={entity?.dataSource}
-          setFields={setFields}
+          handleFieldChange={handleFieldChange}
           removeField={removeField}
         />
       ))}

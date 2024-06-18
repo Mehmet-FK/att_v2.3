@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 // import { signOut } from "next-auth/react";
 import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
+import { signOut } from "next-auth/react";
 const ProfileMenu = ({ anchorEl, setAnchorEl, toggleTheme }) => {
   //   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -51,7 +52,7 @@ const ProfileMenu = ({ anchorEl, setAnchorEl, toggleTheme }) => {
           {/* <DarkModeSwitch toggleTheme={toggleTheme} />{" "} */}
           <p style={{ fontSize: "0.8rem" }}>Darkmode</p>
         </MenuItem>
-        {/* <MenuItem
+        <MenuItem
           onClick={() => {
             handleClose();
             signOut();
@@ -67,7 +68,7 @@ const ProfileMenu = ({ anchorEl, setAnchorEl, toggleTheme }) => {
             <Logout fontSize="small" />
           </IconButton>
           <p style={{ fontSize: "0.8rem" }}>Ausloggen</p>
-        </MenuItem> */}
+        </MenuItem>
       </Menu>
     </>
   );

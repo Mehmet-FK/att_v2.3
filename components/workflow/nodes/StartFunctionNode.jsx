@@ -37,10 +37,15 @@ const StartFunctionNode = ({ data, isConnectable }) => {
 
     setColor(colors[i]);
   };
+
+  const handleClick = () => {
+    handleColor();
+  };
+
   return (
     <>
       <div
-        onClick={() => handleColor()}
+        onClick={handleClick}
         className={`${sty.launchnode_wrapper} ${sty[color.name]} `}
       >
         <h5 className={sty.shape_node_title}>{data.label}</h5>

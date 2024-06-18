@@ -1,9 +1,10 @@
-import Drawer from "@mui/material/Drawer";
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { grey } from "@mui/material/colors";
-import sty from "@/styles/workflow-comp-styles.module.css";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import css from "@/styles/workflow-comp-styles.module.css";
+import InfoForm from "../InfoForm";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -13,9 +14,17 @@ const Puller = styled("div")(({ theme }) => ({
   position: "absolute",
   top: 8,
   left: "calc(50% - 15px)",
+  zIndex: 10,
 }));
 
-const BottomDrawer = ({ edges, onSave, onRestore }) => {
+const BottomDrawer = ({
+  onSave,
+  onRestore,
+  handleSubmit,
+  infoFormValues,
+  setInfoFormValues,
+  nodes,
+}) => {
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
   const [newHeight, setNewHeight] = useState(45);
@@ -38,6 +47,14 @@ const BottomDrawer = ({ edges, onSave, onRestore }) => {
       setNewHeight(offsetBottom);
     }
   };
+
+  const handleDoubleClick = (e) => {
+    if (e.detail === 2) {
+      if (newHeight < 150) setNewHeight(350);
+      else setNewHeight(45);
+    }
+  };
+
   const handleMouseUp = () => {
     setIsResizing(false);
   };
@@ -50,6 +67,9 @@ const BottomDrawer = ({ edges, onSave, onRestore }) => {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   });
+  const selectedNode = nodes.find(
+    (nds) => nds.type !== "launch" && nds.selected
+  );
 
   return (
     <>
@@ -63,40 +83,58 @@ const BottomDrawer = ({ edges, onSave, onRestore }) => {
             height: 100,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
-            zIndex: 300,
+            opacity: newHeight / 250,
+            // zIndex: 0,
           },
         }}
         open={open}
         onClose={handleClose}
       >
-        <div onMouseDown={handleMouseDown} className={sty.puller_wrapper}>
+        <div
+          onMouseDown={handleMouseDown}
+          onClick={handleDoubleClick}
+          className={css.puller_wrapper}
+        >
           <Puller />
         </div>
         <div
-          className={sty.console_btn_wrapper}
+          className={css.console_btn_wrapper}
           style={{
             display: "flex",
             opacity: newHeight / 150,
           }}
         >
-          <div>Lorem ipsum</div>
-          <div style={{ display: "flex", columnGap: "15px" }}>
-            <div className={sty.console_btn} onClick={() => console.log(edges)}>
+          <div>{selectedNode ? "Step" : "Workflow"}</div>
+          <div
+            style={{
+              display: "flex",
+              columnGap: "15px",
+              pointerEvents: newHeight < 80 && "none",
+            }}
+          >
+            <div className={css.console_btn} onClick={handleSubmit}>
               Send
             </div>
-            <div className={sty.console_btn} onClick={onSave}>
+            <div className={css.console_btn} onClick={onSave}>
               Speichern
             </div>
-            <div className={sty.console_btn} onClick={onRestore}>
+            <div className={css.console_btn} onClick={onRestore}>
               Restore
             </div>
           </div>
         </div>
         <Box
           sx={{
-            display: newHeight > 50 ? "block" : "none",
+            display: newHeight > 100 ? "block" : "none",
+            maxHeight: newHeight - 100,
           }}
-        ></Box>
+        >
+          <InfoForm
+            selectedNode={selectedNode}
+            infoFormValues={infoFormValues}
+            setInfoFormValues={setInfoFormValues}
+          />
+        </Box>
       </Drawer>
     </>
   );

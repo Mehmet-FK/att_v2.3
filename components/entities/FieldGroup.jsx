@@ -5,30 +5,13 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 
 import styles from "./entities-comp.module.css";
-import { useEffect, useState } from "react";
 import Select from "../Select";
 import { useSelector } from "react-redux";
 
-const FieldGroup = ({ field, removeField, setFields, view }) => {
-  const [fieldValue, setFieldValue] = useState({ ...field });
-
-  const { viewColumns } = useSelector((state) => state.attensam.data);
-
-  const handleChange = (e) => {
-    setFieldValue({ ...fieldValue, [e.target.name]: e.target.value });
-  };
-  const handleCheck = (e) => {
-    setFieldValue({ ...fieldValue, [e.target.name]: e.target.checked });
-  };
-
-  useEffect(() => {
-    setFields((prev) => {
-      const temp = [...prev];
-      const index = temp.findIndex((f) => f.id === field.id);
-      temp[index] = fieldValue;
-      return temp;
-    });
-  }, [fieldValue]);
+const FieldGroup = ({ field, removeField, handleFieldChange, index }) => {
+  const { viewColumns, fieldTypes } = useSelector(
+    (state) => state.attensam.data
+  );
 
   return (
     <div className={styles.fieldFromGroup}>
@@ -44,7 +27,8 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
           value={field?.name || ""}
           name="name"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
+          required
         />
         <TextField
           sx={{ width: "20%" }}
@@ -53,7 +37,8 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
           value={field?.caption || ""}
           name="caption"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
+          required
         />
 
         <TextField
@@ -63,7 +48,7 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
           value={field?.decimalPlaces || ""}
           name="decimalPlaces"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
         />
         <TextField
           sx={{ width: "10%" }}
@@ -72,7 +57,7 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
           value={field?.maxLength || ""}
           name="maxLength"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
         />
         <TextField
           sx={{ width: "20%" }}
@@ -81,28 +66,32 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
           value={field?.groupName || ""}
           name="groupName"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
         />
         <Select
           label="Typ"
           name="type"
           width="20%"
           value={field?.type || ""}
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
         >
-          {["", "", "", "", "", "", "", "", "", ""].map((opt, index) => (
-            <MenuItem key={index} value={index}>
-              Type {index}
+          {/* <MenuItem value={""}><em>None</em></MenuItem> */}
+          {Object.keys(fieldTypes || {}).map((opt, index) => (
+            <MenuItem key={index} value={fieldTypes[opt]}>
+              {opt}
             </MenuItem>
           ))}
         </Select>
+
         <Select
           label="DataSource Spalten"
           name="dataSourceColumn"
           width="20%"
           value={field?.dataSourceColumn || ""}
-          onChange={handleChange}
+          onChange={(e) => handleFieldChange(e, index)}
+          required
         >
+          <MenuItem value={""}></MenuItem>
           {viewColumns?.map((opt, index) => (
             <MenuItem key={index} value={opt?.columnName}>
               {opt.columnName}
@@ -117,7 +106,7 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
             <Checkbox
               size="small"
               name="showByDefault"
-              onChange={handleCheck}
+              onChange={(e) => handleFieldChange(e, index, true)}
               checked={field?.showByDefault || false}
             />
           }
@@ -129,7 +118,7 @@ const FieldGroup = ({ field, removeField, setFields, view }) => {
             <Checkbox
               size="small"
               name="isReadOnly"
-              onChange={handleCheck}
+              onChange={(e) => handleFieldChange(e, index, true)}
               checked={field?.isReadOnly || false}
             />
           }

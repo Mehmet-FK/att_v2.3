@@ -18,6 +18,7 @@
   padding-inline: 5px;
   font-size: small;
   border-radius: 3px;
+  user-select: none;
 
   background: linear-gradient(#e10000 0 0),
     linear-gradient(rgba(255, 253, 253, 0) 0 0);
@@ -28,4 +29,30 @@
 }
 .console_btn:hover {
   background-size: 100% 100%; /* 100% width on hover */
+}
+
+/* Info Form  */
+.form_container {
+  /* border: 2px solid red; */
+  display: flex;
+  column-gap: 5px;
+  padding: 10px 8px;
+}
+.input_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  row-gap: 5px;
+  height: 220px;
+}
+.multiline_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+}
+/* .form_input {
+}*/
+.form_multiline {
+  height: 100%;
 }

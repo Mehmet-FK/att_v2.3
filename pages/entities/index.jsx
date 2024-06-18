@@ -7,20 +7,21 @@ import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import ConfirmModal from "@/components/ConfirmModal";
+import EntitiesSkeleton from "@/components/entities/EntitiesSkeleton";
 
 const Entities = () => {
   const { entities } = useSelector((state) => state.attensam.data);
-  const { token } = useSelector((state) => state.userInfo);
-  const { getEntitiesCall } = useAttensamCalls();
+  const { user } = useSelector((state) => state.settings);
+  const { getEntitiesCall, getFieldTypes, getViewsCall } = useAttensamCalls();
 
   const [existingEntities, setExistingEntities] = useState([]);
 
   useEffect(() => {
-    if (token) {
-      getEntitiesCall();
-    }
-    console.log("first");
-  }, [token]);
+    if (!user?.token) return;
+    getEntitiesCall();
+    getFieldTypes();
+    getViewsCall();
+  }, [user]);
 
   useEffect(() => {
     setExistingEntities(entities);
@@ -28,16 +29,18 @@ const Entities = () => {
 
   return (
     <>
-      <PageHeader title="ENTITIES" />
+      <PageHeader title="ENTITÄTEN" />
       <div className={styles.container}>
         <UtilBar
           setExistingEntities={setExistingEntities}
           entities={entities}
         />
         <div className={styles.gridContainer}>
-          {existingEntities?.map((entity) => (
-            <EntityCard cardInfo={entity} key={entity.id} />
-          ))}
+          {!entities && <EntitiesSkeleton />}
+          {entities &&
+            existingEntities?.map((entity) => (
+              <EntityCard cardInfo={entity} key={entity.id} />
+            ))}
         </div>
       </div>
     </>

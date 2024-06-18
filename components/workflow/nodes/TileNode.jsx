@@ -3,6 +3,7 @@ import { useState } from "react";
 import sty from "@/styles/rf-node-styles.module.css";
 import { Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
+import InfoIcon from "@mui/icons-material/Info";
 
 const initialHandles = [
   {

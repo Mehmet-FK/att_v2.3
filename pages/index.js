@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { getSession } from "next-auth/react";
-import styles from "@/components/dashboard/dashboard-card.module.css";
+import css from "@/styles/dashboard-card.module.css";
 import { useSelector } from "react-redux";
 import Card from "@/components/dashboard/Card";
 
@@ -18,11 +18,31 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={styles.container}>
-        <div className={styles.gridContainer}>
-          {/* {data.map((module, index) => (
-            <Card key={index} cardInfo={module} />
-          ))} */}
+      <div className={css.container}>
+        <div className={css.gridContainer}>
+          <Card
+            cardInfo={{
+              url: "/mobile-bookings",
+              caption: "Mobile Buchungen",
+              defaultIconUrl: "/assets/dashboard-icons/bookings.svg",
+            }}
+          />
+          <Card
+            cardInfo={{
+              url: "/items",
+
+              caption: "Datensätze",
+              defaultIconUrl: "/assets/dashboard-icons/items.svg",
+            }}
+          />
+          <Card
+            cardInfo={{
+              url: "/users",
+
+              caption: "Benutzer",
+              defaultIconUrl: "/assets/dashboard-icons/users.svg",
+            }}
+          />
         </div>
       </div>
     </>

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const useAxios = () => {
   const BASE_URL = "https://apl.attensam.at/api/";
 
-  const { token } = useSelector((state) => state.userInfo);
+  const { token } = useSelector((state) => state.settings.user);
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -28,10 +28,14 @@ const useAxios = () => {
     },
   });
 
+  const axiosTableData = axios.create({
+    baseURL: "https://pro.attensam.at/atina/",
+  });
+
   // axiosFormWithToken.defaults.headers.common["Content-Type"] =
   //   "multipart/from-data";
 
-  return { axiosInstance, axiosWithToken, axiosFormData };
+  return { axiosInstance, axiosWithToken, axiosFormData, axiosTableData };
 };
 
 export default useAxios;

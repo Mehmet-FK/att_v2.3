@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "./entities-comp.module.css";
+import css from "./entities-comp.module.css";
 const EntityCard = ({ cardInfo }) => {
   return (
     // <Link href={`/entities/add/${cardInfo.id}`}>
@@ -9,19 +9,19 @@ const EntityCard = ({ cardInfo }) => {
         query: { entityId: cardInfo.id },
       }}
     >
-      <div className={styles.card}>
-        <div className={styles.cardBody}>
-          <h5 className={styles.cardTitle}>{cardInfo?.caption}</h5>
+      <div className={css.card}>
+        <div className={css.cardBody}>
+          <h5 className={css.cardTitle}>{cardInfo?.caption}</h5>
 
           <img
-            src={cardInfo?.defaultIconUrl}
-            className={styles.cardIcon}
+            src={cardInfo?.defaultIconUrl || "/assets/no-img.jpg"}
+            className={css.cardIcon}
             alt="icon"
           />
 
-          <h6 className={styles.cardSubtitle}>{cardInfo?.dataSource}</h6>
+          <h6 className={css.cardSubtitle}>{cardInfo?.dataSource}</h6>
 
-          <span className={styles.createdDate}>{cardInfo.createDate}</span>
+          <span className={css.createdDate}>{cardInfo.createDate}</span>
 
           {/* <span className={styles.createdBy}>{cardInfo.createdBy}</span> */}
         </div>

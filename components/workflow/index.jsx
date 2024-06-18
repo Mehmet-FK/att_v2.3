@@ -16,6 +16,8 @@ import useWorkflow from "@/hooks/useWorkflow";
 import edgeTypes from "./EdgeTypes";
 import BottomDrawer from "./drawers/BottomDrawer";
 import ToolsDrawer from "./drawers/ToolsDrawer";
+import { useSelector } from "react-redux";
+import useAttensamCalls from "@/hooks/useAttensamCalls";
 
 const initialNodes = [
   {
@@ -38,11 +40,19 @@ const initialEdges = [];
 let id = 0;
 const getId = (type) => `${type}_${id++}`;
 
-const Sheet = ({ viewTypes, launchTypes }) => {
+//TODO: Should be fetched from API
+const permissionTypes = { User: "0", All: "1" };
+
+const Sheet = () => {
   const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [infoFormValues, setInfoFormValues] = useState({});
+  const { viewTypes, launchTypes } = useSelector(
+    (state) => state.attensam.data
+  );
+
   const {
     onSave,
     onRestore,
@@ -52,8 +62,17 @@ const Sheet = ({ viewTypes, launchTypes }) => {
     isValidConnection,
   } = useWorkflow(setNodes, setEdges);
 
+  const { postWorkflowCall } = useAttensamCalls();
+
   const onConnect = useCallback(
     (params) => {
+      let source = params.source.substring(0, params.source.indexOf("_"));
+      let target = params.target.substring(0, params.target.indexOf("_"));
+
+      if (params.sourceHandle === "start") source = launchTypes[source];
+      else source = viewTypes[source];
+      target = viewTypes[target];
+
       setEdges((eds) =>
         addEdge(
           {
@@ -61,17 +80,21 @@ const Sheet = ({ viewTypes, launchTypes }) => {
             type: params.sourceHandle !== "start" ? "floating" : "default",
             markerEnd: { type: MarkerType.ArrowClosed },
             style: { strokeWidth: 2 },
+            sourceID: source,
+            targetID: target,
           },
           eds
         )
       );
       updateHistory();
     },
-    [setEdges]
+    [setEdges, launchTypes, viewTypes]
   );
+
   const onDrop = useCallback(
     (e) => {
       e.preventDefault();
+      console.log(nodes);
 
       const name = e.dataTransfer.getData("application/reactflow");
       const caption = e.dataTransfer.getData("caption");
@@ -86,33 +109,79 @@ const Sheet = ({ viewTypes, launchTypes }) => {
       });
 
       let newNode = {};
-
+      const currentNodes = reactFlowInstance.getNodes();
+      const isLaunchExists = currentNodes.find((nds) => nds.type === "launch");
       if (type === "launch") {
+        if (isLaunchExists) return;
+
         newNode = {
           id: getId(name),
           type: "launch",
-          position,
+          position: { x: 70, y: 250 },
+          parentNode: "launch-group",
+          extent: "parent",
+          
           attID: launchTypes[name],
-          data: { label: `${caption}`, attID: launchTypes[name] },
+          data: {
+            label: `${caption}`,
+            attID: launchTypes[name],
+          },
         };
       } else {
         newNode = {
           id: getId(name),
           type: name,
+          name: "",
           position,
           attID: viewTypes[name],
           data: { label: `${caption}` },
+          changeEvent: (e, selectedNode) =>
+            setNodes((nds) => [
+              ...nds.filter((n) => n.id !== newNode.id),
+              { ...selectedNode, name: e.target.value },
+            ]),
         };
       }
-
       setNodes((nds) => nds.concat(newNode));
       updateHistory();
     },
     [reactFlowInstance, launchTypes, viewTypes]
   );
 
+  const handleSubmit = () => {
+    if (!edges.length) return;
+    const launchEl = edges.find((el) => el.sourceHandle === "start");
+    if (!launchEl) return;
+
+    const viewport = reactFlowInstance.getViewport();
+    const wfData = {
+      Edges: JSON.stringify(edges),
+      Nodes: JSON.stringify(nodes),
+      Viewport: JSON.stringify(viewport),
+      Steps: JSON.stringify(
+        nodes
+          .filter((n) => n.type !== "group" && n.type !== "launch")
+          .map((n) => ({ Name: n.name }))
+      ),
+      ...infoFormValues,
+      PermissionType: Number(infoFormValues.PermissionType),
+    };
+    wfData["LaunchType"] = launchEl.sourceID;
+    console.log(wfData);
+    const workflowFormData = new FormData();
+    for (const [key, value] of Object.entries(wfData)) {
+      workflowFormData.append(`${key}`, value);
+      console.log(key, " --- ", workflowFormData.get(`${key}`));
+    }
+
+    postWorkflowCall(workflowFormData);
+  };
+
+
+
+
   return (
-    <>
+    <div style={{ width: "100vw", height: "100vh" }}>
       <h4
         style={{
           position: "absolute",
@@ -150,12 +219,19 @@ const Sheet = ({ viewTypes, launchTypes }) => {
         panOnScroll
       >
         <Background variant="dots" />
-        <Controls style={{ bottom: 55 }} />
+        {/* <Controls style={{ bottom: 55 }} /> */}
       </ReactFlow>
 
       <ToolsDrawer open={openToolsDrawer} setOpen={setOpenToolsDrawer} />
-      <BottomDrawer onSave={onSave} onRestore={onRestore} edges={edges} />
-    </>
+      <BottomDrawer
+        onSave={onSave}
+        onRestore={onRestore}
+        nodes={nodes}
+        handleSubmit={handleSubmit}
+        infoFormValues={infoFormValues}
+        setInfoFormValues={setInfoFormValues}
+      />
+    </div>
   );
 };
 

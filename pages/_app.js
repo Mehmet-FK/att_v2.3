@@ -54,6 +54,43 @@ export default function App({ Component, pageProps }) {
             },
           }),
     },
+    components: {
+      MuiInputLabel: {
+        defaultProps: {
+          sx: {
+            "&.MuiInputLabel-shrink": {
+              top: "3px",
+            },
+          },
+        },
+        styleOverrides: {
+          root: {
+            fontSize: "0.7rem",
+          },
+        },
+      },
+      MuiInputBase: {
+        styleOverrides: {
+          root: {
+            fontSize: "0.7rem",
+          },
+        },
+      },
+      MuiSelect: {
+        styleOverrides: {
+          root: {
+            fontSize: "0.7rem",
+          },
+        },
+      },
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            fontSize: "0.7rem",
+          },
+        },
+      },
+    },
   });
 
   const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
