@@ -5,6 +5,7 @@ import {
   setPageSize,
   setSortType,
 } from "@/redux/slices/tableUtilsSlice";
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 const options = {
@@ -36,8 +37,11 @@ const columnOptions = {
   defaultWidth: 150,
 };
 
-const useTable = (table) => {
+const useTable = (tabl) => {
   const dispatch = useDispatch();
+
+  const router = useRouter();
+  const table = router.query.module || router.pathname.replace("/", "");
   const tableParams = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
@@ -80,19 +84,27 @@ const useTable = (table) => {
   };
 
   const initColumnWidths = (columns) => {
+    console.log(columns);
     if (!columns) return;
 
     console.log("initColumnWidths Triggered");
     const widths = {};
     columns.forEach((col) => {
-      widths[col.accessor] = columnOptions.defaultWidth;
+      if (col.accessor) {
+        console.log(col);
+        widths[col.accessor] = columnOptions.defaultWidth;
+      } else {
+        widths[col] = columnOptions.defaultWidth;
+      }
     });
     dispatch(setColumnWidths({ table, widths }));
   };
   // set default width for all visible widths
 
   const adjustColumnWidths = (tableRef, shownColumns) => {
+    console.log("init");
     if (!tableRef || !Object.keys(columnWidths).length) return;
+    console.log("adjustColumnWidths");
     const tableWidth = parseInt(getComputedStyle(tableRef.current).width, 10);
     console.log("adjustColumnWidths Triggered");
     const avgWidth = Math.trunc(tableWidth / shownColumns.length) - 2;
@@ -104,7 +116,10 @@ const useTable = (table) => {
       }
       const isDifferent =
         JSON.stringify(columnWidths) !== JSON.stringify(widths);
-      if (isDifferent) dispatch(setColumnWidths({ table, widths }));
+      if (isDifferent) {
+        dispatch(setColumnWidths({ table, widths }));
+        console.log(columnWidths);
+      }
     }
   };
   const setWidths = (cb) => {

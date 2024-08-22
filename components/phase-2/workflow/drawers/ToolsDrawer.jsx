@@ -9,6 +9,67 @@ import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { DrawerHeader } from "@/layout/layout_helpers";
+import {
+  ArrowRectangle,
+  Circle,
+  Clover,
+  Cube,
+  Cylinder,
+  Diamond,
+  FourLeaf,
+  Parallelogram,
+  Sun,
+  ThornApple,
+  Triangle,
+} from "../nodes/node-comps/Shapes";
+
+const StepElement = ({ onDragStart, tool }) => {
+  return (
+    <>
+      <Box
+        sx={{
+          position: "relative",
+          display: "grid",
+          placeItems: "center",
+          transform: "scale(0.6)",
+          cursor: "pointer",
+        }}
+        title={tool.caption}
+        onDragStart={(e) => onDragStart(e, tool)}
+        draggable
+      >
+        {tool.name === "ListView" && <Parallelogram color={"#6d7def"} />}
+        {tool.name === "TileView" && <Cube color={"#CF4C2C"} />}
+        {tool.name === "RecordView" && <Sun color={"#3F8AE2"} />}
+        {tool.name === "ModalDialog" && <Circle color={"#EBC347"} />}
+        {tool.name === "CaptureImage" && <Cylinder color={"#803DEC"} />}
+        {tool.name === "AttachmentView" && <FourLeaf color={"#438D57"} />}
+        {/* //Launch Elements */}
+        {tool.name === "LaunchDatasetFunction" && (
+          <ThornApple color={"#3F8AE2"} />
+        )}
+        {tool.name === "LaunchEntityFunction" && <Clover color={"#EBC347"} />}
+        {tool.name === "LaunchModule" && <ArrowRectangle color={"#803DEC"} />}
+        {tool.name === "LaunchElementDefaultFunction" && (
+          <Triangle color={"#438D57"} />
+        )}
+        <p
+          style={{
+            textTransform: "capitalize",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            textAlign: "center",
+            fontSize: "0.7em",
+          }}
+        >
+          {tool.caption}
+        </p>{" "}
+      </Box>
+    </>
+  );
+};
 
 const SubList = ({ tools, title }) => {
   const [open, setOpen] = useState(true);
@@ -18,6 +79,7 @@ const SubList = ({ tools, title }) => {
   };
 
   const onDragStart = (e, node) => {
+    e.stopPropagation();
     e.dataTransfer.setData("application/reactflow", node.name);
     e.dataTransfer.setData("caption", node.caption);
     e.dataTransfer.setData("type", node.type);
@@ -33,8 +95,16 @@ const SubList = ({ tools, title }) => {
 
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List>
-          {tools.map((tool) => (
-            <ListItem
+          <Box
+            sx={{
+              display: "flex",
+              flexWrap: "wrap",
+              // gap: "5px",
+              flexDirection: "row",
+            }}
+          >
+            {tools.map((tool) => (
+              /*  <ListItem
               sx={{ paddingLeft: 2 }}
               dense
               key={tool.name}
@@ -48,8 +118,11 @@ const SubList = ({ tools, title }) => {
                   primary={tool.caption}
                 />
               </ListItemButton>
-            </ListItem>
-          ))}
+            </ListItem> */
+
+              <StepElement tool={tool} onDragStart={onDragStart} />
+            ))}
+          </Box>
         </List>
       </Collapse>
     </Box>

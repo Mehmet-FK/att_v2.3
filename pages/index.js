@@ -4,11 +4,21 @@ import { getSession } from "next-auth/react";
 import css from "@/styles/dashboard-card.module.css";
 import { useSelector } from "react-redux";
 import Card from "@/components/dashboard/Card";
-
-const inter = Inter({ subsets: ["latin"] });
+import { useEffect } from "react";
+import useAttensamCalls from "@/hooks/useAttensamCalls";
+import { dummyModules } from "@/helpers/Constants";
 
 export default function Home() {
   const { data } = useSelector((state) => state.attensam);
+  const { user } = useSelector((state) => state.settings);
+
+  const { getModulesCall } = useAttensamCalls();
+
+  useEffect(() => {
+    if (!user?.token) return;
+    getModulesCall();
+  }, [user]);
+
   return (
     <>
       <Head>
@@ -43,6 +53,20 @@ export default function Home() {
               defaultIconUrl: "/assets/dashboard-icons/users.svg",
             }}
           />
+
+          {/* {data?.modules?.map((module) => ( */}
+          {dummyModules?.map((module) => (
+            <Card
+              key={module.id}
+              cardInfo={{
+                url: `/${module.caption}`,
+
+                caption: module.caption,
+                defaultIconUrl:
+                  module.icon || "/assets/dashboard-icons/users.svg",
+              }}
+            />
+          ))}
         </div>
       </div>
     </>

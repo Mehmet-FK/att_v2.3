@@ -1,13 +1,13 @@
 import styles from "@/styles/entities.module.css";
-import UtilBar from "@/components/entities/UtilBar";
-import PageHeader from "@/components/PageHeader";
+import PageHeader from "@/components/others/PageHeader";
 import { useSelector } from "react-redux";
-import EntityCard from "@/components/entities/EntityCard";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
-import ConfirmModal from "@/components/ConfirmModal";
-import EntitiesSkeleton from "@/components/entities/EntitiesSkeleton";
+import ConfirmModal from "@/components/others/ConfirmModal";
+import UtilBar from "@/components/phase-2/entities/UtilBar";
+import EntitiesSkeleton from "@/components/phase-2/entities/EntitiesSkeleton";
+import EntityCard from "@/components/phase-2/entities/EntityCard";
 
 const Entities = () => {
   const { entities } = useSelector((state) => state.attensam.data);

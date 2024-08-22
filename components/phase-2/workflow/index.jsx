@@ -18,6 +18,7 @@ import BottomDrawer from "./drawers/BottomDrawer";
 import ToolsDrawer from "./drawers/ToolsDrawer";
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 
 const initialNodes = [
   {
@@ -48,7 +49,6 @@ const Sheet = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [infoFormValues, setInfoFormValues] = useState({});
   const { viewTypes, launchTypes } = useSelector(
     (state) => state.attensam.data
   );
@@ -63,6 +63,8 @@ const Sheet = () => {
   } = useWorkflow(setNodes, setEdges);
 
   const { postWorkflowCall } = useAttensamCalls();
+  const { createWorkflowStep, deleteWorkflowStep, updateSelectedStep } =
+    useWorkflowForms();
 
   const onConnect = useCallback(
     (params) => {
@@ -94,7 +96,7 @@ const Sheet = () => {
   const onDrop = useCallback(
     (e) => {
       e.preventDefault();
-      console.log(nodes);
+      if (!launchTypes || !viewTypes) return;
 
       const name = e.dataTransfer.getData("application/reactflow");
       const caption = e.dataTransfer.getData("caption");
@@ -110,9 +112,11 @@ const Sheet = () => {
 
       let newNode = {};
       const currentNodes = reactFlowInstance.getNodes();
-      const isLaunchExists = currentNodes.find((nds) => nds.type === "launch");
+      const isLaunchExisting = currentNodes.find(
+        (nds) => nds.type === "launch"
+      );
       if (type === "launch") {
-        if (isLaunchExists) return;
+        if (isLaunchExisting) return;
 
         newNode = {
           id: getId(name),
@@ -120,7 +124,7 @@ const Sheet = () => {
           position: { x: 70, y: 250 },
           parentNode: "launch-group",
           extent: "parent",
-          
+
           attID: launchTypes[name],
           data: {
             label: `${caption}`,
@@ -141,6 +145,7 @@ const Sheet = () => {
               { ...selectedNode, name: e.target.value },
             ]),
         };
+        createWorkflowStep(newNode.id);
       }
       setNodes((nds) => nds.concat(newNode));
       updateHistory();
@@ -148,7 +153,7 @@ const Sheet = () => {
     [reactFlowInstance, launchTypes, viewTypes]
   );
 
-  const handleSubmit = () => {
+  /*   const handleSubmit = (infoFormValues) => {
     if (!edges.length) return;
     const launchEl = edges.find((el) => el.sourceHandle === "start");
     if (!launchEl) return;
@@ -176,9 +181,7 @@ const Sheet = () => {
 
     postWorkflowCall(workflowFormData);
   };
-
-
-
+ */
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -193,6 +196,7 @@ const Sheet = () => {
           borderRadius: "6px",
           color: "#fff",
           textAlign: "center",
+          userSelect: "none",
         }}
         onClick={() => setOpenToolsDrawer((prev) => !prev)}
       >
@@ -206,13 +210,19 @@ const Sheet = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDragStop={onNodeDragStop}
-        onNodesDelete={updateHistory}
+        onNodesDelete={(deleted) => {
+          deleted.forEach((node) => deleteWorkflowStep(node.id));
+          updateHistory();
+        }}
+        onNodeClick={(e, n) => updateSelectedStep(n.id)}
+        onPaneClick={() => updateSelectedStep("")}
         isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         onInit={setReactFlowInstance}
         onDrop={onDrop}
         onDragOver={onDragOver}
+        deleteKeyCode={"Delete"}
         connectionMode={ConnectionMode.Loose}
         snapToGrid
         snapGrid={[20, 20]}
@@ -223,14 +233,7 @@ const Sheet = () => {
       </ReactFlow>
 
       <ToolsDrawer open={openToolsDrawer} setOpen={setOpenToolsDrawer} />
-      <BottomDrawer
-        onSave={onSave}
-        onRestore={onRestore}
-        nodes={nodes}
-        handleSubmit={handleSubmit}
-        infoFormValues={infoFormValues}
-        setInfoFormValues={setInfoFormValues}
-      />
+      <BottomDrawer onSave={onSave} onRestore={onRestore} nodes={nodes} />
     </div>
   );
 };

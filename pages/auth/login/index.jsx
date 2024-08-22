@@ -12,7 +12,7 @@ import { getSession, signIn } from "next-auth/react";
 import { setUser } from "@/redux/slices/settingsSlice";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { toastErrorNotify } from "@/helpers/ToastNotify";
-import ErrorModal from "@/components/ErrorModal";
+import ErrorModal from "@/components/others/ErrorModal";
 
 const Login = () => {
   const [inputVal, setInputVal] = useState({});
@@ -40,7 +40,6 @@ const Login = () => {
       password: inputVal.password,
       redirect: false,
     });
-
     if (res.error) {
       console.log(res.status);
       const errorMessage =
@@ -54,10 +53,11 @@ const Login = () => {
 
     dispatch(stopLoading());
     const session = await getSession();
+    console.log(session);
     if (session) {
       const { user } = session;
       const credentials = {
-        avatarUrl: user.avatarUrl,
+        avatarUrl: user.avatar,
         roles: user.roles,
         token: user.token,
         ...user.userInfo,

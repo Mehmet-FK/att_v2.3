@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { TableRow } from "@mui/material";
 
 const CustomTableRow = ({ rowData, widths, columnOptions, colIDs }) => {
-  const [rowInfo, setRowInfo] = useState({ keys: [...colIDs], values: [] });
+  const [rowInfo, setRowInfo] = useState({ keys: colIDs, values: [] });
 
   const prepareCells = () => {
     let values = [];
@@ -13,9 +13,6 @@ const CustomTableRow = ({ rowData, widths, columnOptions, colIDs }) => {
       values.push(rowData[colID]);
     });
 
-    for (const cellKey in rowData) {
-      values.push(rowData[cellKey]);
-    }
     return values;
   };
   /*   const prepareCells = () => {
@@ -28,16 +25,17 @@ const CustomTableRow = ({ rowData, widths, columnOptions, colIDs }) => {
     return [keys, values];
   }; */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     const values = prepareCells();
 
     setRowInfo((prev) => ({ ...prev, values }));
-  }, []);
-
+    // console.log(colIDs);
+    console.log(rowInfo.values);
+  }, [colIDs]); */
   return (
     <>
       <TableRow className={css.t_row}>
-        {rowInfo.keys.map((key) => (
+        {colIDs.map((key) => (
           <RowCell
             colID={key}
             content={rowData[key]}

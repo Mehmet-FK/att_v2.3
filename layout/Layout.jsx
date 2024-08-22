@@ -61,15 +61,14 @@ export default function Layout({ children, toggleTheme }) {
     const session = await getSession();
     const { user } = session;
     const credentials = {
-      avatarUrl: user.avatarUrl,
+      avatar: user.avatar,
       roles: user.roles,
       token: user.token,
       ...user.userInfo,
     };
     dispatch(setUser({ user: credentials }));
-    // dispatch(setUser({ user: tempSession?.user }));
   };
-
+  const avatar = user.avatar;
   useEffect(() => {
     getSessionData();
   }, []);
@@ -162,7 +161,11 @@ export default function Layout({ children, toggleTheme }) {
               </Typography>{" "}
               <Image
                 onClick={handleClick}
-                src={"/assets/emptyAvatar.jpg"}
+                src={
+                  avatar?.url
+                    ? `${avatar?.url}?${avatar?.lastEdited}`
+                    : "/assets/emptyAvatar.jpg"
+                }
                 width={50}
                 height={50}
                 alt="profilePicture"
@@ -177,7 +180,7 @@ export default function Layout({ children, toggleTheme }) {
           </div>
         </Toolbar>
       </AppBar>
-      {showLayout && (
+      {showLayout && user?.isAdministrator && (
         <Drawer variant="permanent" open={open}>
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>

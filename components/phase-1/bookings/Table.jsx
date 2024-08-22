@@ -16,9 +16,9 @@ import { useSelector } from "react-redux";
 import BookingsTableRow from "./BookingsTableRow";
 import ContextMenu from "../ContextMenu";
 import useContextMenu from "@/hooks/useContextMenu";
-import TableUtilities from "@/components/table_helpers/utils/TableUtilities";
 import useTable from "@/hooks/useTable";
 import useColumns from "@/hooks/useColumns";
+import TableUtilities from "@/components/phase-1/table_helpers/TableUtilities";
 
 const initalContextMenu = {
   show: false,

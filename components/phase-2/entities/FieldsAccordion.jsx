@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import Accordion from "../Accordion";
+import Accordion from "../others/Accordion";
 import FieldGroup from "./FieldGroup";
 import { toastWarnNotify } from "@/helpers/ToastNotify";
 

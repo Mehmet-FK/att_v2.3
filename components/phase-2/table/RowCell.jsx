@@ -30,7 +30,8 @@ const RowCell = ({ columnOptions, widths, colID, content }) => {
         break;
 
       default:
-        editedContent = content;
+        editedContent =
+          content?.length > 35 ? content.substring(0, 35) + "..." : content;
         break;
     }
 
@@ -44,6 +45,8 @@ const RowCell = ({ columnOptions, widths, colID, content }) => {
       style={{
         ...columnOptions?.style,
         width: `${widths[colID]}px`,
+        lineHeight: 0.9,
+        wordBreak: "break-word",
       }}
     >
       {editedContent}

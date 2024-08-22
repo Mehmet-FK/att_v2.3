@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useReactFlow } from "reactflow";
+import useWorkflowForms from "./workflow-hooks/useWorkflowForms";
 
 const flowKey = "atina-flow";
 const capacity = 100;
 const useWorkflow = (setNodes, setEdges) => {
   const { setViewport, getIntersectingNodes } = useReactFlow();
+  const { restoreWorkflowState } = useWorkflowForms();
+  const workflow = useSelector((state) => state.workflow);
 
   const flowHistoryRef = useRef(null);
   const currentflowRef = useRef(null);
@@ -41,7 +45,7 @@ const useWorkflow = (setNodes, setEdges) => {
       flowHistoryRef.current = slicedArr;
     }
   };
- 
+
   const undo = () => {
     const history = flowHistoryRef.current || [];
 
@@ -81,24 +85,30 @@ const useWorkflow = (setNodes, setEdges) => {
   const onSave = useCallback(() => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
-      localStorage.setItem(flowKey, JSON.stringify(flow));
+      const flowInfo = workflow;
+      console.log(workflow);
+      localStorage.setItem(flowKey, JSON.stringify({ flow, flowInfo }));
     }
-  }, [rfInstance]);
+  }, [rfInstance, workflow]);
 
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
-      const flow = JSON.parse(localStorage.getItem(flowKey));
+      const { flow, flowInfo } = JSON.parse(localStorage.getItem(flowKey));
 
+      console.log(flowInfo);
       if (flow) {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         setNodes(flow.nodes || []);
         setEdges(flow.edges || []);
         setViewport({ x, y, zoom });
       }
+      if (flowInfo) {
+        restoreWorkflowState(flowInfo);
+      }
     };
 
     restoreFlow();
-  }, [setNodes, setViewport]);
+  }, [setNodes, setViewport, restoreWorkflowState]);
 
   const onNodeDragStop = (e, node) => {
     const interNodes = getIntersectingNodes(node);

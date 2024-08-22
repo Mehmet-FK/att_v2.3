@@ -66,12 +66,20 @@ const useFilters = () => {
     dispatch(setCurrentPage({ number: 1, table: "users" }));
   };
 
+  const filterGeneric = () => {};
+
   const resetFilter = (table) => {
     dispatch(setFilterParams({ params: "", table }));
     dispatch(setSortType({ field: {}, table }));
   };
 
-  return { filterBookings, filterItems, filterUsers, resetFilter };
+  return {
+    filterBookings,
+    filterItems,
+    filterUsers,
+    filterGeneric,
+    resetFilter,
+  };
 };
 
 export default useFilters;

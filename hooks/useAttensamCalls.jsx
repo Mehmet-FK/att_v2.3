@@ -22,7 +22,7 @@ const useAttensamCalls = () => {
 
       dispatch(getSuccess({ data, dataName: dataName }));
     } catch (error) {
-      dispatch(fetchFail({ message: error.response.status }));
+      dispatch(fetchFail({ message: error?.response?.status }));
     } finally {
       dispatch(stopLoading());
     }
@@ -38,7 +38,7 @@ const useAttensamCalls = () => {
       toastSuccessNotify(data);
     } catch (error) {
       console.log(error.response);
-      toastErrorNotify(error.response?.data);
+      toastErrorNotify(error?.response?.data);
     } finally {
       dispatch(stopLoading());
     }
@@ -64,7 +64,7 @@ const useAttensamCalls = () => {
       const { data } = await axiosFormData.post(url, formData);
       toastSuccessNotify("Element wurde erfolgreich angelegt");
     } catch (error) {
-      toastErrorNotify(error.response?.data);
+      toastErrorNotify(error?.response?.data);
       // console.log(error);
     } finally {
       dispatch(stopLoading());
@@ -73,6 +73,7 @@ const useAttensamCalls = () => {
 
   //GET
   const getEntitiesCall = () => getAttData("Entity", "entities");
+  const getModulesCall = () => getAttData("Modules", "modules");
   const getSingleEntityCall = (id) => getAttData(`Entity/${id}`, "entity");
   const getViewsCall = () => getAttData("DatabaseSchema/views", "views");
   const getViewColumnsCall = (view) =>
@@ -110,6 +111,7 @@ const useAttensamCalls = () => {
     getFieldTypes, //READ FieldTypes
     getViewsCall, //READ Views
     getViewColumnsCall, //READ View Columns
+    getModulesCall, // READ Modules
 
     updateEntityCall, //UPDATE Entity
     updateFieldCall, //UPDATE Field

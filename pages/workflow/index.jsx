@@ -1,5 +1,5 @@
-import ToolsDrawer from "@/components/workflow/drawers/ToolsDrawer";
-import Sheet from "@/components/workflow";
+import ToolsDrawer from "@/components/phase-2/workflow/drawers/ToolsDrawer";
+import Sheet from "@/components/phase-2/workflow";
 import React, { useEffect, useState } from "react";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useSelector } from "react-redux";

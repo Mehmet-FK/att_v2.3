@@ -3,8 +3,8 @@ import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 // import ImageModal from "../../modals/ImageModal";
 import Image from "next/image";
-import Loading_Icon from "@/components/table_helpers/utils/Loading_Icon";
 import ImageModal from "../ImageModal";
+import Loading_Icon from "@/components/phase-2/table/table_helpers/Loading_Icon";
 const BookingImages = ({ image, images, index }) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

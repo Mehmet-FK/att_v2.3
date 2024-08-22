@@ -1,0 +1,90 @@
+.header_container {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid red; */
+  padding-inline: 10px;
+  gap: 5px;
+  width: 100%;
+}
+.flex_row {
+  display: flex;
+  column-gap: 10px;
+  width: 100%;
+}
+.flex_column {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  width: 100%;
+}
+
+.header_title {
+  font-size: smaller;
+}
+.remove_row_btn,
+.remove_column_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  font-size: 0.7rem;
+  /* width: 15px; */
+  height: 10px;
+  background-color: #f00;
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0.1;
+}
+.remove_row_btn {
+  width: 15px;
+  height: 100%;
+}
+
+.remove_column_btn {
+  height: 10px;
+}
+.remove_row_btn:hover,
+.remove_column_btn:hover {
+  opacity: 1;
+}
+
+.imageInputWrapper {
+  border: 1px solid #555;
+  border-radius: 4px;
+  position: relative;
+  width: 100%;
+  padding-block: 5px;
+}
+.imageInput {
+  height: 100%;
+  padding-left: 3rem;
+  cursor: pointer;
+  width: 100%;
+}
+.imageInput::file-selector-button {
+  border: 1px solid red;
+  height: 100%;
+  display: none;
+}
+.imgBtn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 100%;
+  /* padding-inline: 0.5rem; */
+  cursor: pointer;
+  pointer-events: none;
+  transition: background-color 0.2s;
+  overflow: hidden;
+}
+.imageInputWrapper:hover {
+  border: 1px solid #000;
+}
+.imageInputWrapper:hover .imgBtn {
+  background-color: #f2f1f1;
+}

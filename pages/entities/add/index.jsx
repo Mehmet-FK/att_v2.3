@@ -1,4 +1,4 @@
-import PageHeader from "@/components/PageHeader";
+import PageHeader from "@/components/others/PageHeader";
 import styles from "@/styles/entities.module.css";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
@@ -9,7 +9,7 @@ import EntityAccordion from "@/components/entities/EntityAccordion";
 import FieldsAccordion from "@/components/entities/FieldsAccordion";
 import { useSelector } from "react-redux";
 import ToolMenu from "@/components/menus/ToolMenu";
-import ConfirmModal from "@/components/ConfirmModal";
+import ConfirmModal from "@/components/others/ConfirmModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const AddEntity = () => {

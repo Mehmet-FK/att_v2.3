@@ -4,7 +4,11 @@ import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import css from "@/styles/workflow-comp-styles.module.css";
-import InfoForm from "../InfoForm";
+import InfoForm from "../forms/InfoForm";
+import RecordViewForm from "../forms/RecordViewForm";
+import ListViewForm from "../forms/ListViewForm";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import { useSelector } from "react-redux";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -17,21 +21,29 @@ const Puller = styled("div")(({ theme }) => ({
   zIndex: 10,
 }));
 
-const BottomDrawer = ({
-  onSave,
-  onRestore,
-  handleSubmit,
-  infoFormValues,
-  setInfoFormValues,
-  nodes,
-}) => {
+const DisplayForm = ({ selectedNode }) => {
+  if (selectedNode?.type === "RecordView") {
+    return <RecordViewForm stepID={selectedNode.id} />;
+  } else if (selectedNode?.type === "ListView") {
+    return <ListViewForm stepID={selectedNode.id} />;
+  }
+  // else {
+  //   return (
+  //     <InfoForm
+  //       selectedNode={selectedNode}
+  //       // infoFormValues={infoFormValues}
+  //       // setInfoFormValues={setInfoFormValues}
+  //     />
+  //   );
+  // }
+};
+
+const BottomDrawer = ({ onSave, onRestore, nodes }) => {
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
   const [newHeight, setNewHeight] = useState(45);
+  //! const workflow = useSelector((state) => state.workflow);
 
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
   const handleClose = () => setOpen(false);
   const handleMouseDown = (e) => {
     setIsResizing(true);
@@ -42,7 +54,7 @@ const BottomDrawer = ({
     let offsetBottom =
       document.body.offsetHeight - (e.clientY - document.body.offsetTop);
     let minHeight = 45;
-    let maxHeight = 650;
+    let maxHeight = 850;
     if (offsetBottom > minHeight && offsetBottom < maxHeight) {
       setNewHeight(offsetBottom);
     }
@@ -58,7 +70,6 @@ const BottomDrawer = ({
   const handleMouseUp = () => {
     setIsResizing(false);
   };
-
   useEffect(() => {
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
@@ -90,36 +101,37 @@ const BottomDrawer = ({
         open={open}
         onClose={handleClose}
       >
-        <div
-          onMouseDown={handleMouseDown}
-          onClick={handleDoubleClick}
-          className={css.puller_wrapper}
-        >
-          <Puller />
-        </div>
-        <div
-          className={css.console_btn_wrapper}
-          style={{
-            display: "flex",
-            opacity: newHeight / 150,
-          }}
-        >
-          <div>{selectedNode ? "Step" : "Workflow"}</div>
+        <div className={css.fixed_tab}>
           <div
+            onMouseDown={handleMouseDown}
+            onClick={handleDoubleClick}
+            className={css.puller_wrapper}
+          >
+            <Puller />
+          </div>
+
+          <div
+            className={css.console_btn_wrapper}
             style={{
               display: "flex",
-              columnGap: "15px",
-              pointerEvents: newHeight < 80 && "none",
+              opacity: newHeight / 150,
             }}
           >
-            <div className={css.console_btn} onClick={handleSubmit}>
-              Send
-            </div>
-            <div className={css.console_btn} onClick={onSave}>
-              Speichern
-            </div>
-            <div className={css.console_btn} onClick={onRestore}>
-              Restore
+            <div>{selectedNode ? "Step" : "Workflow"}</div>
+            <div
+              style={{
+                display: "flex",
+                columnGap: "15px",
+                pointerEvents: newHeight < 80 && "none",
+              }}
+            >
+              <div className={css.console_btn}>Send</div>
+              <div className={css.console_btn} onClick={onSave}>
+                Speichern
+              </div>
+              <div className={css.console_btn} onClick={onRestore}>
+                Restore
+              </div>
             </div>
           </div>
         </div>
@@ -129,11 +141,21 @@ const BottomDrawer = ({
             maxHeight: newHeight - 100,
           }}
         >
-          <InfoForm
+          {/* <ListViewForm
+            infoFormValues={infoFormValues}
+            setInfoFormValues={setInfoFormValues}
+          /> */}
+          <DisplayForm
+            selectedNode={selectedNode}
+            // infoFormValues={infoFormValues}
+            // setInfoFormValues={setInfoFormValues}
+          />
+
+          {/* <InfoForm
             selectedNode={selectedNode}
             infoFormValues={infoFormValues}
             setInfoFormValues={setInfoFormValues}
-          />
+          /> */}
         </Box>
       </Drawer>
     </>

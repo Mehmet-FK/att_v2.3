@@ -4,6 +4,7 @@ import sty from "@/styles/rf-node-styles.module.css";
 import { Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
+import { Sun } from "./node-comps/Shapes";
 const initialHandles = [
   {
     type: "source",
@@ -54,9 +55,12 @@ const RecordNode = ({ data, isConnectable }) => {
       />
 
       <div
+        // tabIndex={-1}
         className={`${sty.node_body} ${sty.record_node}`}
         onClick={handleOpenDialog}
+        // onKeyDown={(e) => console.log(e.key)}
       >
+        <Sun color={"#3F8AE2"} />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon

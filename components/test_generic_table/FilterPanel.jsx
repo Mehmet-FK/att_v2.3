@@ -4,8 +4,8 @@ import css from "@/styles/filter-panel.module.css";
 import { Collapse } from "@mui/material";
 import { useState } from "react";
 import FilterHead from "./FilterHead";
-import TextInput from "../table_helpers/form-components/TextInput";
-import DateInput from "../table_helpers/form-components/DateInput";
+import TextInput from "../form-elements/TextInput";
+import DateInput from "../form-elements/DateInput";
 
 const FilterPanel = ({ fieldsObject, headers }) => {
   const [open, setOpen] = useState(true);

@@ -23,12 +23,15 @@ const InfoForm = ({ infoFormValues, setInfoFormValues, selectedNode }) => {
     setInfoFormValues({ ...infoFormValues, [e.target.name]: e.target.value });
   };
 
-  const handleBlur = (e)=>
+  // const handleBlur = (e)=>
 
+  // useEffect(() => {
+  //   if (entities || !user?.token) return;
+  //   getEntitiesCall();
+  // }, [user]);
   useEffect(() => {
-    if (entities || !user?.token) return;
-    getEntitiesCall();
-  }, [user]);
+    console.log(infoFormValues);
+  }, [infoFormValues]);
 
   return (
     <>

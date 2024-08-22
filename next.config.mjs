@@ -8,6 +8,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "pro.attensam.at",
       },
+      {
+        protocol: "https",
+        hostname: "apl.attensam.at",
+      },
     ],
   },
 };

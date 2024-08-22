@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 
 import styles from "./entities-comp.module.css";
-import Select from "../Select";
+import Select from "../form-elements/Select";
 import { useSelector } from "react-redux";
 
 const FieldGroup = ({ field, removeField, handleFieldChange, index }) => {

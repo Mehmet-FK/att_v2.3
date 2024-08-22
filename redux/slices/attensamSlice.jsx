@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-export const dummyData = [
+/* export const dummyData = [
   {
     groupTitle: "Schädlingsbekämpfung",
     bgColor: "#e63e10",
@@ -23,10 +23,11 @@ export const dummyData = [
         color: "#41B27C",
         href: "/sb-kontrolle",
       },
+      
     ],
   },
 ];
-
+ */
 const attensamSlice = createSlice({
   name: "attensam",
 

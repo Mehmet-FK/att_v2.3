@@ -7,7 +7,7 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import IconButton from "@mui/material/IconButton";
 import Image from "next/image";
 import css from "@/styles/modals.module.css";
-import Loading_Icon from "@/components/table_helpers/utils/Loading_Icon";
+import Loading_Icon from "@/components/phase-2/table/table_helpers/Loading_Icon";
 
 const ImageModal = ({ open, setOpen, index, images }) => {
   const [imageIndex, setImageIndex] = useState(index);

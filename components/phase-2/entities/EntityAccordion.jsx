@@ -1,8 +1,8 @@
 import styles from "@/styles/entities.module.css";
-import Accordion from "../Accordion";
+import Accordion from "../others/Accordion";
 import { MenuItem, TextField } from "@mui/material";
-import Select from "../Select";
-import ImageInput from "../ImageInput";
+import Select from "../form-elements/Select";
+import ImageInput from "../form-elements/ImageInput";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
