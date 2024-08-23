@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -10,7 +11,6 @@ const Table = dynamic(() => import("@/components/phase-2/table/Table"), {
 
 const Module = () => {
   const router = useRouter();
-  const { data } = useSelector((state) => state.attensam);
 
   return (
     <>
@@ -23,3 +23,22 @@ const Module = () => {
 };
 
 export default Module;
+
+export const getServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};

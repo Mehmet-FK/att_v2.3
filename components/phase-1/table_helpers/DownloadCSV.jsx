@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 const DownloadCSV = ({ rawData, fileName, type, table }) => {
   const date = new Date().toJSON().slice(0, 10).replaceAll("-", "");
   const [url, setUrl] = useState("");
-  const { axiosTableData } = useAxios();
+  const { axiosTableDataPhase1 } = useAxios();
   const { filterParams } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
@@ -87,7 +87,7 @@ const DownloadCSV = ({ rawData, fileName, type, table }) => {
     }
 
     try {
-      axiosTableData(url + filterParams).then((res) => {
+      axiosTableDataPhase1(url + filterParams).then((res) => {
         convertJsonToCsv(res?.data?.entries);
       });
       // convertJsonToCsv(response?.data);

@@ -28,14 +28,24 @@ const useAxios = () => {
     },
   });
 
-  const axiosTableData = axios.create({
+  const axiosTableDataPhase1 = axios.create({
     baseURL: "https://pro.attensam.at/atina/",
+  });
+
+  const axiosTableDataPhase2 = axios.create({
+    baseURL: "https://apl.attensam.at/",
   });
 
   // axiosFormWithToken.defaults.headers.common["Content-Type"] =
   //   "multipart/from-data";
 
-  return { axiosInstance, axiosWithToken, axiosFormData, axiosTableData };
+  return {
+    axiosInstance,
+    axiosWithToken,
+    axiosFormData,
+    axiosTableDataPhase1,
+    axiosTableDataPhase2,
+  };
 };
 
 export default useAxios;

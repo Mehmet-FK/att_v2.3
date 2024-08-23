@@ -1,5 +1,5 @@
 import styles from "@/styles/entities.module.css";
-import Accordion from "../others/Accordion";
+import Accordion from "../ui-components/Accordion";
 import { MenuItem, TextField } from "@mui/material";
 import Select from "../form-elements/Select";
 import ImageInput from "../form-elements/ImageInput";

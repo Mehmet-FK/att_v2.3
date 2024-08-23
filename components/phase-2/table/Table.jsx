@@ -5,7 +5,11 @@ import { Paper, TableBody, TableHead, TableRow } from "@mui/material";
 import ColumnHead from "./ColumnHead";
 import CustomTableRow from "./CustomTableRow";
 import css from "@/styles/table.module.css";
-import { dummyData } from "@/helpers/Constants";
+import {
+  dummyDataItems,
+  dummyDataBookings,
+  dummyData1,
+} from "@/helpers/Constants";
 import useContextMenu from "@/hooks/useContextMenu";
 import useTable from "@/hooks/useTable";
 import ContextMenu from "@/components/phase-2/table/table_helpers/ContextMenu";
@@ -49,18 +53,22 @@ const initalContextMenu = {
 };
 
 const Table = () => {
+  const router = useRouter();
+
   const [dataSets, setDataSets] = useState({ entries: [] });
   const [headers, setHeaders] = useState([]);
-  // const [columnWidths, setColumnWidths] = useState({});
 
   const [hiddenColumns, setHiddenColumns] = useState([]); // User preferred not shown Columns
   const [contextMenu, setContextMenu] = useState(initalContextMenu);
   const [openContextMenu, setOpenContextMenu] = useState(false);
+
   const { handleRightClick } = useContextMenu(contextMenu, setContextMenu);
 
   const tableRef = useRef(null);
-  const router = useRouter();
+  const columnWidthsInitialized = useRef(null);
+
   const module = router.query.module;
+
   const {
     initTableUtilsState,
     makeUrlParams,
@@ -85,14 +93,22 @@ const Table = () => {
     return Object.keys(data).filter((el) => data[el].isVisible);
   };
 
-  useEffect(() => {
-    adjustColumnWidths(tableRef, shownColumns);
-  }, [hiddenColumns]);
-
-  useEffect(() => {
-    const data = dummyData;
-
-    setDataSets(data);
+  useLayoutEffect(() => {
+    const dataArray = [
+      dummyDataItems,
+      dummyDataBookings,
+      dummyData1,
+      dummyData1,
+      dummyDataBookings,
+      dummyData1,
+      dummyDataItems,
+      dummyDataItems,
+    ];
+    const randomIndex = Math.floor(Math.random() * 8);
+    const data = dataArray[randomIndex];
+    setTimeout(() => {
+      setDataSets(data);
+    }, 500);
     if (data) {
       const extractedHeaders = extractHeaders(data.fields);
       setHeaders(extractedHeaders);
@@ -104,7 +120,15 @@ const Table = () => {
     initTableUtilsState();
 
     initColumnWidths(headers);
+    columnWidthsInitialized.current = true;
   }, [dataSets?.fields, module]);
+
+  useEffect(() => {
+    if (columnWidthsInitialized.current) {
+      adjustColumnWidths(tableRef, shownColumns);
+    }
+  }, [columnWidthsInitialized.current, hiddenColumns]);
+
   return (
     <>
       {contextMenu.show && (
@@ -130,7 +154,7 @@ const Table = () => {
         <TableUtilities
           totalEntries={dataSets?.totalEntries}
           totalPages={dataSets?.totalPages}
-          rawData={dataSets?.entries}
+          rawData={dataSets}
           paginationParams={paginationParams}
           loading={loading}
         />
@@ -143,7 +167,9 @@ const Table = () => {
                 table={module}
                 colID={header}
                 columnOptions={columnOptions}
-                content={dataSets?.fields[header].caption}
+                content={
+                  dataSets?.fields ? dataSets?.fields[header].caption : ""
+                }
                 // widths={columnWidths}
                 setWidths={setWidths}
               />

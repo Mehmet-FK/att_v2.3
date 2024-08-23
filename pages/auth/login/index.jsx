@@ -12,7 +12,7 @@ import { getSession, signIn } from "next-auth/react";
 import { setUser } from "@/redux/slices/settingsSlice";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { toastErrorNotify } from "@/helpers/ToastNotify";
-import ErrorModal from "@/components/others/ErrorModal";
+import ErrorModal from "@/components/ui-components/ErrorModal";
 
 const Login = () => {
   const [inputVal, setInputVal] = useState({});

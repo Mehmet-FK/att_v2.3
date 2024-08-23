@@ -8,7 +8,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { SessionProvider, getSession } from "next-auth/react";
 import store from "@/redux/app/store";
 import { ToastContainer } from "react-toastify";
-import Loading from "@/components/others/Loading";
+import Loading from "@/components/ui-components/Loading";
 // import Providers from "@/redux/Provider";
 
 export default function App({ Component, pageProps }) {

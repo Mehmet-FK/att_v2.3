@@ -6,7 +6,6 @@ import DownloadCSV from "./DownloadCSV";
 import { useRouter } from "next/router";
 
 const TableUtilities = ({
-  table,
   totalEntries,
   totalPages,
   paginationParams,
@@ -14,7 +13,7 @@ const TableUtilities = ({
   rawData,
 }) => {
   const router = useRouter();
-  let fileName = router.query.module;
+  let table = router.query.module;
 
   return (
     <div className={css.util_container}>
@@ -27,7 +26,7 @@ const TableUtilities = ({
           totalPages={totalPages}
           table={table}
         />
-        <DownloadCSV rawData={rawData} fileName={fileName} table={table} />
+        <DownloadCSV rawData={rawData} fileName={table} table={table} />
       </div>
     </div>
   );

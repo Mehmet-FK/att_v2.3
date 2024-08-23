@@ -84,10 +84,8 @@ const useTable = (tabl) => {
   };
 
   const initColumnWidths = (columns) => {
-    console.log(columns);
     if (!columns) return;
 
-    console.log("initColumnWidths Triggered");
     const widths = {};
     columns.forEach((col) => {
       if (col.accessor) {
@@ -98,13 +96,12 @@ const useTable = (tabl) => {
       }
     });
     dispatch(setColumnWidths({ table, widths }));
+    console.log("initColumnWidths Triggered");
   };
   // set default width for all visible widths
 
   const adjustColumnWidths = (tableRef, shownColumns) => {
-    console.log("init");
     if (!tableRef || !Object.keys(columnWidths).length) return;
-    console.log("adjustColumnWidths");
     const tableWidth = parseInt(getComputedStyle(tableRef.current).width, 10);
     console.log("adjustColumnWidths Triggered");
     const avgWidth = Math.trunc(tableWidth / shownColumns.length) - 2;
@@ -118,7 +115,6 @@ const useTable = (tabl) => {
         JSON.stringify(columnWidths) !== JSON.stringify(widths);
       if (isDifferent) {
         dispatch(setColumnWidths({ table, widths }));
-        console.log(columnWidths);
       }
     }
   };

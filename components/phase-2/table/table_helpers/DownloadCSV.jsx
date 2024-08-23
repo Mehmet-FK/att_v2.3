@@ -3,70 +3,34 @@
 import React, { useEffect, useRef, useState } from "react";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
 import { IconButton, Tooltip } from "@mui/material";
-import {
-  bookingsTableCSV,
-  itemsTableCSV,
-  nfcTableCSV,
-  sqlTableCSV,
-  userTableCSV,
-} from "@/helpers/DownloadCsvFunctions";
 import useAxios from "@/hooks/useAxios";
 import { useSelector } from "react-redux";
+import { moduleTableCSV } from "@/helpers/DownloadCsvFunctions";
 
 const DownloadCSV = ({ rawData, fileName, type, table }) => {
   const date = new Date().toJSON().slice(0, 10).replaceAll("-", "");
   const [url, setUrl] = useState("");
-  const { axiosTableData } = useAxios();
+
+  const { axiosTableDataPhase2 } = useAxios();
+
+  //* const { data } = useSelector((state) => state.attensam);
+
   const { filterParams } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
   const downloadRef = useRef(null);
-  const convertJsonToCsv = (fltrData) => {
-    let headers;
-    let main;
-    let res;
-    // console.log(fltrData);
-    switch (fileName) {
-      case "benutzer":
-        res = userTableCSV(fltrData || rawData);
-        headers = res.h;
-        main = res.m;
 
-        break;
-      case "mobile_buchungen":
-        res = bookingsTableCSV(fltrData || rawData);
-        headers = res.h;
-        main = res.m;
-        break;
-      case "nfc_tags":
-        res = nfcTableCSV(fltrData || rawData);
-        headers = res.h;
-        main = res.m;
-        break;
-      case "items":
-        res = itemsTableCSV(rawData, type);
+  const fields = Object.values(rawData?.fields || {}).filter(
+    (f) => f?.isVisible
+  );
 
-        headers = res.h;
-        main = res.m;
-        break;
-      // case "protokolle":
-      //   res = protocolTableCSV(rawData, type);
+  const convertJsonToCsv = () => {
+    let res = moduleTableCSV(rawData?.entries, fields);
+    let headers = res.h;
+    let main = res.m;
 
-      //   headers = res.h;
-      //   main = res.m;
-      //   break;
-      case "SQL_Abfrage":
-        res = sqlTableCSV(rawData);
-
-        headers = res.h;
-        main = res.m;
-        break;
-
-      default:
-        return;
-    }
     const csv = [headers, ...main].join("\n");
-    const blob = new Blob([csv], { type: "application/csv" });
+    const blob = new Blob(["\uFEFF" + csv], { type: "application/csv" });
     const url = URL.createObjectURL(blob);
     setUrl(url);
 
@@ -74,20 +38,11 @@ const DownloadCSV = ({ rawData, fileName, type, table }) => {
   };
   const getFilteredData = async () => {
     let url = "";
-    if (table === "users") {
-      url = "AtinaUsers?showPagination=true&pageNumber=1&pageSize=10000";
-    } else if (table === "bookings") {
-      url =
-        "api/AtinaMobileBookings?showPagination=true&pageNumber=1&pageSize=10000";
-    } else if (table === "items") {
-      url =
-        "api/AtinaItems/SearchByKeyValue?onlyWithTagId=false&showPagination=true&pageNumber=1&pageSize=10000";
-    } else if (table === "protocol") {
-      url = "api/AtinaProtocol?showPagination=true&pageNumber=1&pageSize=10000";
-    }
+
+    url = "api/";
 
     try {
-      axiosTableData(url + filterParams).then((res) => {
+      axiosTableDataPhase2(url + filterParams).then((res) => {
         convertJsonToCsv(res?.data?.entries);
       });
       // convertJsonToCsv(response?.data);

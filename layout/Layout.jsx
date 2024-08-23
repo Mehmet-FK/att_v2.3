@@ -59,12 +59,12 @@ export default function Layout({ children, toggleTheme }) {
   };
   const getSessionData = async () => {
     const session = await getSession();
-    const { user } = session;
+    const user = session?.user;
     const credentials = {
-      avatar: user.avatar,
-      roles: user.roles,
-      token: user.token,
-      ...user.userInfo,
+      avatar: user?.avatar,
+      roles: user?.roles,
+      token: user?.token,
+      ...user?.userInfo,
     };
     dispatch(setUser({ user: credentials }));
   };

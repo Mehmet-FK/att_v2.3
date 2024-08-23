@@ -10,7 +10,7 @@ import { toastErrorNotify, toastSuccessNotify } from "@/helpers/ToastNotify";
 
 const useTableDataCalls = () => {
   const dispatch = useDispatch();
-  const { axiosTableData } = useAxios();
+  const { axiosTableDataPhase1 } = useAxios();
 
   //!--------------- GET CALL --------------
   const getAtinaData = async (url, dataName) => {
@@ -19,7 +19,7 @@ const useTableDataCalls = () => {
     let res = null;
     let error = null;
     try {
-      const { data } = await axiosTableData.get(url);
+      const { data } = await axiosTableDataPhase1.get(url);
       dispatch(getSuccess({ data, dataName }));
 
       res = data;

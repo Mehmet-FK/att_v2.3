@@ -298,3 +298,33 @@ export const protocolTableCSV = (rawData) => {
     h: headersCSV.join(";").toUpperCase(),
   };
 };
+
+export const moduleTableCSV = (rawData, headers) => {
+  let headersAPI = [];
+  let headersCSV = [];
+  headers?.forEach((h) => {
+    headersAPI.push(h.name);
+    headersCSV.push(h.caption);
+  });
+
+  let arr = [];
+
+  for (let i = 0; i < rawData.length; i++) {
+    let row = {};
+    Object.keys(rawData[i]).forEach((item) => {
+      if (headersAPI.includes(item)) {
+        row = {
+          ...row,
+          [item]: rawData[i][item] ? rawData[i][item] : " ",
+        };
+      }
+    });
+
+    arr.push(row);
+  }
+
+  return {
+    m: arr.map((item) => Object.values(item).join(";")),
+    h: headersCSV.join(";").toUpperCase(),
+  };
+};
