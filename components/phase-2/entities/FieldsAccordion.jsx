@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import Accordion from "../ui-components/Accordion";
-import FieldGroup from "./FieldGroup";
+import Accordion from "@/components/ui-components/Accordion";
+import FieldGroup from "@/components/phase-2/entities/FieldGroup";
 import { toastWarnNotify } from "@/helpers/ToastNotify";
 
 const FieldsAccordion = ({ entity, fields, setFields }) => {

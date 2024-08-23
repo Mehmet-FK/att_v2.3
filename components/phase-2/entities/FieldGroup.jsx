@@ -4,8 +4,8 @@ import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 
-import styles from "./entities-comp.module.css";
-import Select from "../form-elements/Select";
+import styles from "@/components/phase-2/entities/entities-comp.module.css";
+import Select from "@/components/form-elements/Select";
 import { useSelector } from "react-redux";
 
 const FieldGroup = ({ field, removeField, handleFieldChange, index }) => {

@@ -5,12 +5,12 @@ import { Button } from "@mui/material";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
-import EntityAccordion from "@/components/phase-2/entities/EntityAccordion";
-import FieldsAccordion from "@/components/phase-2/entities/FieldsAccordion";
 import { useSelector } from "react-redux";
 import ToolMenu from "@/components/menus/ToolMenu";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EntityAccordion from "@/components/phase-2/entities/EntityAccordion";
+import FieldsAccordion from "@/components/phase-2/entities/FieldsAccordion";
 
 const AddEntity = () => {
   const [entity, setEntity] = useState({});

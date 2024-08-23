@@ -1,11 +1,10 @@
 import styles from "@/styles/entities.module.css";
-import Accordion from "../ui-components/Accordion";
+import Accordion from "@/components/ui-components/Accordion";
 import { MenuItem, TextField } from "@mui/material";
-import Select from "../form-elements/Select";
-import ImageInput from "../form-elements/ImageInput";
+import Select from "@/components/form-elements/Select";
+import ImageInput from "@/components/form-elements/ImageInput";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import useAttensamCalls from "@/hooks/useAttensamCalls";
 
 const EntityAccordion = ({ entity, setEntity }) => {
   const [dataSource, setDataSource] = useState([]); //Keep the State from Store
