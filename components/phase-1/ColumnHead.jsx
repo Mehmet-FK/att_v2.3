@@ -20,11 +20,15 @@ const ColumnHead = ({
   const cellRef = useRef(null);
   const isResizing = useRef(null);
   const resizer = useRef(null);
-  const [colWidth, setColWidth] = useState(columnOptions.defaultWidth);
+
+  const isColumnAdjusted = useRef(0);
+
   const { columnWidths } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
-
+  const [colWidth, setColWidth] = useState(
+    columnWidths[colID] || columnOptions.defaultWidth
+  );
   useEffect(() => {
     if (!resizer.current || !cellRef.current) return;
     let x = 0;
@@ -41,8 +45,9 @@ const ColumnHead = ({
       const diffX = e.clientX - x;
       x = e.clientX;
       width = width + diffX;
-
-      setColWidth(width);
+      if (width > 150 && width < 800) {
+        setColWidth(width);
+      }
     };
     const handleMouseUp = (e) => {
       e.stopPropagation();
@@ -75,6 +80,10 @@ const ColumnHead = ({
     });
   }, [colWidth]);
 
+  isColumnAdjusted.current++;
+  console.log(isColumnAdjusted.current);
+
+  // console.log(colWidth);
   return (
     <TableCell
       ref={cellRef}

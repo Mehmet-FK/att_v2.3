@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import { useState } from "react";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
@@ -20,7 +19,6 @@ import {
   Parallelogram,
   Sun,
   ThornApple,
-  Triangle,
 } from "../nodes/node-comps/Shapes";
 
 const StepElement = ({ onDragStart, tool }) => {
@@ -51,7 +49,7 @@ const StepElement = ({ onDragStart, tool }) => {
         {tool.name === "LaunchEntityFunction" && <Clover color={"#EBC347"} />}
         {tool.name === "LaunchModule" && <ArrowRectangle color={"#803DEC"} />}
         {tool.name === "LaunchElementDefaultFunction" && (
-          <Triangle color={"#438D57"} />
+          <Diamond color={"#438D57"} />
         )}
         <p
           style={{

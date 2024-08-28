@@ -39,7 +39,7 @@ const StartFunctionNode = ({ data, isConnectable }) => {
   };
 
   const handleClick = () => {
-    handleColor();
+    // handleColor
   };
 
   return (
@@ -49,10 +49,10 @@ const StartFunctionNode = ({ data, isConnectable }) => {
         className={`${sty.launchnode_wrapper} ${sty[color.name]} `}
       >
         <h5 className={sty.shape_node_title}>{data.label}</h5>
-        {data.attID === "0" && <FourLeaf color={color.value} />}
-        {data.attID === "1" && <ThornApple color={color.value} />}
-        {data.attID === "2" && <Clover color={color.value} />}
-        {data.attID === "3" && <Sun color={color.value} />}
+        {data.attID === "0" && <ThornApple color={color.value} />}
+        {data.attID === "1" && <Clover color={"#EBC347"} />}
+        {data.attID === "2" && <ArrowRectangle color={"#803DEC"} />}
+        {data.attID === "3" && <Diamond color={"#438D57"} />}
         {/* <Triangle color={color.value} /> */}
         {/* <ArrowRectangle color={color.value} /> */}
         {/* <Cylinder color={color.value} /> */}
@@ -66,8 +66,9 @@ const StartFunctionNode = ({ data, isConnectable }) => {
           id={"start"}
           isConnectable={isConnectable}
           style={{
-            width: "10px",
-            height: " 10px",
+            width: "15px",
+            height: "15px",
+            right: "-10px",
           }}
         />
       </div>

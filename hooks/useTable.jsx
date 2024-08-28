@@ -89,7 +89,6 @@ const useTable = (tabl) => {
     const widths = {};
     columns.forEach((col) => {
       if (col.accessor) {
-        console.log(col);
         widths[col.accessor] = columnOptions.defaultWidth;
       } else {
         widths[col] = columnOptions.defaultWidth;

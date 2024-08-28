@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import { getSession } from "next-auth/react";
 import css from "@/styles/dashboard-card.module.css";
 import { useSelector } from "react-redux";
@@ -7,12 +7,15 @@ import Card from "@/components/dashboard/Card";
 import { useEffect } from "react";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { dummyModules } from "@/helpers/Constants";
+// import axios from "axios";
+import { getModulesSSR } from "@/helpers/SeerverSideAPICalls";
 
-export default function Home() {
-  const { data } = useSelector((state) => state.attensam);
+export default function Home({ modules }) {
+  // const { data } = useSelector((state) => state.attensam);
   const { user } = useSelector((state) => state.settings);
 
   const { getModulesCall } = useAttensamCalls();
+  const data = modules.length ? modules : dummyModules;
 
   useEffect(() => {
     if (!user?.token) return;
@@ -55,7 +58,7 @@ export default function Home() {
           />
 
           {/* {data?.modules?.map((module) => ( */}
-          {dummyModules?.map((module) => (
+          {modules?.map((module) => (
             <Card
               key={module.id}
               cardInfo={{
@@ -83,7 +86,29 @@ export const getServerSideProps = async (context) => {
       },
     };
   }
+
+  // console.log(session);
+
+  let config = {
+    headers: {
+      Authorization: "Bearer " + session.user.token,
+      accept: "*/*",
+    },
+  };
+
+  const modules = await getModulesSSR(session.user.token);
+
+  /*  try {
+    const { data } = await axios.get(
+      "https://apl.attensam.at/api/Modules",
+      config
+    );
+
+    modules = data;
+  } catch (error) {
+    console.log(error.response);
+  } */
   return {
-    props: { session },
+    props: { session, modules },
   };
 };

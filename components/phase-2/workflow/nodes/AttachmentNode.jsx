@@ -4,6 +4,7 @@ import sty from "@/styles/rf-node-styles.module.css";
 import { Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
+import { FourLeaf } from "./node-comps/Shapes";
 const handles = [
   {
     type: "source",
@@ -53,10 +54,8 @@ const AttachmentNode = ({ data, isConnectable }) => {
         info={info}
         setInfo={setInfo}
       />
-      <div
-        className={`${sty.node_body} ${sty.attachment_node}`}
-        onClick={handleOpenDialog}
-      >
+      <div className={`${sty.node_body} `} onClick={handleOpenDialog}>
+        <FourLeaf color={"#438D57"} />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon
@@ -81,9 +80,9 @@ const AttachmentNode = ({ data, isConnectable }) => {
             id={handle.id}
             isConnectable={isConnectable}
             style={{
-              width: "10px",
-              height: " 10px",
-              [handle.position]: "-10px",
+              width: "20px",
+              height: "20px",
+              [handle.position]: "-15px",
             }}
           />
         ))}

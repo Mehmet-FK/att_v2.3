@@ -27,15 +27,6 @@ const DisplayForm = ({ selectedNode }) => {
   } else if (selectedNode?.type === "ListView") {
     return <ListViewForm stepID={selectedNode.id} />;
   }
-  // else {
-  //   return (
-  //     <InfoForm
-  //       selectedNode={selectedNode}
-  //       // infoFormValues={infoFormValues}
-  //       // setInfoFormValues={setInfoFormValues}
-  //     />
-  //   );
-  // }
 };
 
 const BottomDrawer = ({ onSave, onRestore, nodes }) => {

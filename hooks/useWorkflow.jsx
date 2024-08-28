@@ -93,7 +93,8 @@ const useWorkflow = (setNodes, setEdges) => {
 
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
-      const { flow, flowInfo } = JSON.parse(localStorage.getItem(flowKey));
+      const { flow = null, flowInfo = null } =
+        JSON.parse(localStorage.getItem(flowKey)) || {};
 
       console.log(flowInfo);
       if (flow) {

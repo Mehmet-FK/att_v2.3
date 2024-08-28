@@ -4,6 +4,7 @@ import styles from "@/styles/rf-node-styles.module.css";
 import { Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
+import { Circle } from "./node-comps/Shapes";
 const initialHandles = [
   {
     type: "source",
@@ -54,10 +55,8 @@ const ModalNode = ({ data, isConnectable }) => {
         setInfo={setInfo}
       />
 
-      <div
-        className={`${styles.node_body} ${styles.modal_node}`}
-        onClick={handleOpenDialog}
-      >
+      <div className={`${styles.node_body}`} onClick={handleOpenDialog}>
+        <Circle color={"#EBC347"} />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon
@@ -82,9 +81,9 @@ const ModalNode = ({ data, isConnectable }) => {
             id={handle.id}
             isConnectable={isConnectable}
             style={{
-              width: "10px",
-              height: " 10px",
-              [handle.position]: "-10px",
+              width: "20px",
+              height: "20px",
+              [handle.position]: "-15px",
             }}
           />
         ))}

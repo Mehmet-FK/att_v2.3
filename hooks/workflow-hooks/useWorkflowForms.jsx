@@ -40,7 +40,22 @@ const useWorkflowForms = () => {
   };
 
   const restoreWorkflowState = (workflow) => {
-    dispatch(updateTotalWorkflow({ workflow }));
+    if (workflow) {
+      dispatch(updateTotalWorkflow({ workflow }));
+    } else {
+      dispatch(
+        updateTotalWorkflow({
+          workflow: {
+            selectedStepID: "",
+            launchType: "",
+            caption: "",
+            childAdapter: "",
+            parentAdapter: "",
+            workflowSteps: [],
+          },
+        })
+      );
+    }
   };
 
   return {

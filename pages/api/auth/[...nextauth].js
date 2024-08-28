@@ -24,7 +24,7 @@ export const authOptions = {
         } catch (error) {
           console.log(
             "ERRORRRRRRRR=====================>\n",
-            error.response,
+            error,
             "\n==============================================\n"
           );
         }

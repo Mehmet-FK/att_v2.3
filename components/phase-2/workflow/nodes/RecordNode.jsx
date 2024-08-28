@@ -85,9 +85,9 @@ const RecordNode = ({ data, isConnectable }) => {
             id={handle.id}
             isConnectable={isConnectable}
             style={{
-              width: "10px",
-              height: " 10px",
-              [handle.position]: "-10px",
+              width: "20px",
+              height: "20px",
+              [handle.position]: "-15px",
             }}
           />
         ))}

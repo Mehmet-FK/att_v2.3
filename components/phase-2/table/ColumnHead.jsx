@@ -32,9 +32,9 @@ const ColumnHead = ({
     const handleMouseMove = (e) => {
       if (!isResizing.current) return;
       const diffX = e.clientX - x;
+
       x = e.clientX;
       width = width + diffX;
-
       setColWidth(width);
     };
     const handleMouseUp = (e) => {

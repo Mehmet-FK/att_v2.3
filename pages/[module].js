@@ -26,7 +26,7 @@ export default Module;
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
-
+  console.log(context.query);
   if (!session) {
     return {
       redirect: {

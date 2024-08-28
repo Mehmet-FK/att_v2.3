@@ -67,8 +67,8 @@ const ElementRow = ({
   handleElementsBlur,
 }) => {
   const removeRow = () => {
-    setListElements((prev) =>
-      prev.map((el) =>
+    setListElements((prev) => {
+      let temp = prev.map((el) =>
         el.id === elementID
           ? {
               ...el,
@@ -77,8 +77,20 @@ const ElementRow = ({
               ),
             }
           : el
-      )
-    );
+      );
+
+      return temp.map((el) =>
+        el.id === elementID
+          ? {
+              ...el,
+              listViewRows: el.listViewRows.map((r, index) => ({
+                ...r,
+                listViewRowNumber: index,
+              })),
+            }
+          : el
+      );
+    });
   };
 
   const handleChangeElementRow = (e) => {

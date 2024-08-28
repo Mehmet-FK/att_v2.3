@@ -28,7 +28,7 @@ const initalContextMenu = {
 };
 
 const ItemsTable = () => {
-  const [itemsData, setItemsData] = useState({ entries: [] }); // Data from Redux Store
+  // const [itemsData, setItemsData] = useState({ entries: [] }); // Data from Redux Store
   const [itemType, setItemType] = useState("Order");
   const [contextMenu, setContextMenu] = useState(initalContextMenu);
   const [hiddenColumns, setHiddenColumns] = useState([
@@ -97,16 +97,17 @@ const ItemsTable = () => {
   useEffect(() => {
     const params = makeUrlParams();
     getAtinaItemsData(params + filterParams, itemType);
+    // console.log(paginationParams);
   }, [paginationParams, sortingParams, filterParams]);
 
   useEffect(() => {
     adjustColumnWidths(tableRef, shownColumns);
-  }, [hiddenColumns, tableColumns, itemsData]);
+  }, [hiddenColumns, tableColumns, items]);
 
-  useEffect(() => {
-    if (!items) return;
-    setItemsData(items);
-  }, [items]);
+  // useEffect(() => {
+  //   if (!items) return;
+  //   setItemsData(items);
+  // }, [items]);
 
   return (
     <>
@@ -134,7 +135,7 @@ const ItemsTable = () => {
         <FilterPanel
           type={itemType}
           setType={setItemType}
-          fieldsObject={itemsData?.entries[0]}
+          fieldsObject={items?.entries[0]}
         />
 
         <TableUtilities
@@ -163,7 +164,7 @@ const ItemsTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {itemsData?.entries.map((data, index) => (
+          {items?.entries?.map((data, index) => (
             <ItemsTableRow
               key={index}
               rowData={data}
