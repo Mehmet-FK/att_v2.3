@@ -22,6 +22,15 @@ export default function Home({ modules }) {
     getModulesCall();
   }, [user]);
 
+  useEffect(() => {
+    fetch(
+      "https://pro.attensam.at/atina/AtinaUsers/login?username=mehmet2&password=mehmet2",
+      { method: "POST" }
+    )
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }, []);
+
   return (
     <>
       <Head>
