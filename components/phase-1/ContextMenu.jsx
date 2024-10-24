@@ -65,8 +65,8 @@ const ContextMenu = ({
   contextMenu,
   setContextMenu,
   setOpenModal,
-  //   setOpenColumn,
-  //   openColumn,
+  setOpenColumn,
+  openColumn,
   setHiddenColumns,
   hiddenColumns,
   setOpenMultiEditModal,
@@ -109,12 +109,66 @@ const ContextMenu = ({
       )}
       {setOpenModal !== undefined && contextMenu.point === "body" && (
         <>
-          <MenuItem
+          {/* <MenuItem
             sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
             onClick={() => setOpenModal(true)}
           >
             Neu Anlegen
-          </MenuItem>
+          </MenuItem> */}
+          {setOpenColumn !== undefined && (
+            <>
+              <MenuItem
+                sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
+                onClick={() => {
+                  if (openColumn.isOpen) {
+                    setOpenColumn({
+                      selectedRows: [],
+                      isOpen: false,
+                      data: [],
+                    });
+                  } else {
+                    setOpenColumn((prev) => ({ ...prev, isOpen: true }));
+                  }
+                  closeContextMenu();
+                }}
+              >
+                Mehrfache Auswahl
+              </MenuItem>
+
+              {table === "users" && (
+                <>
+                  {openColumn.selectedRows.length > 0 && (
+                    <MenuItem
+                      onClick={() => setOpenMultiEditModal(true)}
+                      sx={{
+                        width: "100%",
+                        fontSize: "0.9rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Auswahl Bearbeiten
+                    </MenuItem>
+                  )}
+                </>
+              )}
+              {table === "bookings" && (
+                <>
+                  {openColumn.selectedRows.length > 0 && (
+                    <MenuItem
+                      // onClick={() => setOpenMultiEditModal(true)}
+                      sx={{
+                        width: "100%",
+                        fontSize: "0.9rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Importieren
+                    </MenuItem>
+                  )}
+                </>
+              )}
+            </>
+          )}
         </>
       )}
 

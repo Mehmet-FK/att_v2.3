@@ -15,12 +15,15 @@ const useAttensamCalls = () => {
   const dispatch = useDispatch();
 
   //BASE GET CALL
-  const getAttData = async (url, dataName) => {
+  const getAttData = async (url, dataName, reduxFlag) => {
     dispatch(fetchStart());
     try {
       const { data } = await axiosWithToken.get(url);
 
-      dispatch(getSuccess({ data, dataName: dataName }));
+      if (reduxFlag) {
+        dispatch(getSuccess({ data, dataName: dataName }));
+      }
+      return await data;
     } catch (error) {
       dispatch(fetchFail({ message: error?.response?.status }));
     } finally {
@@ -28,7 +31,7 @@ const useAttensamCalls = () => {
     }
   };
 
-  // PUT CALL FOR UPDATE
+  //  PUT CALL FOR UPDATE
   const putAttData = async (url, formData) => {
     dispatch(fetchStart());
 
@@ -58,7 +61,7 @@ const useAttensamCalls = () => {
     dispatch(stopLoading());
   };
 
-  //POST CALL
+  //  POST CALL
   const postAttData = async (url, formData) => {
     try {
       const { data } = await axiosFormData.post(url, formData);
@@ -72,33 +75,43 @@ const useAttensamCalls = () => {
   };
 
   //GET
-  const getEntitiesCall = () => getAttData("Entity", "entities");
-  const getModulesCall = () => getAttData("Modules", "modules");
-  const getSingleEntityCall = (id) => getAttData(`Entity/${id}`, "entity");
-  const getViewsCall = () => getAttData("DatabaseSchema/views", "views");
+  const getEntitiesCall = () => getAttData("/api/Entity", "entities", true);
+  const getEntityDefinitionsCall = () =>
+    getAttData("/api/Entity/GetEntityDefinitions", "entityDefinitions", false);
+  const getModulesCall = () => getAttData("/api/Modules", "modules", true);
+  const getSingleEntityCall = (id) =>
+    getAttData(`/api/Entity/${id}`, "entity", true);
+  const getViewsCall = () =>
+    getAttData("/api/DatabaseSchema/views", "views", true);
   const getViewColumnsCall = (view) =>
-    getAttData(`DatabaseSchema/views/${view}/columns`, "viewColumns");
+    getAttData(
+      `/api/DatabaseSchema/views/${view}/columns`,
+      "viewColumns",
+      true
+    );
 
-  const getFieldTypes = () => getAttData("Enums/fieldtypes", "fieldTypes");
-  const getViewTypes = () => getAttData("Enums/viewtypes", "viewTypes");
+  const getFieldTypes = () =>
+    getAttData("/api/Enums/fieldtypes", "fieldTypes", true);
+  const getViewTypes = () =>
+    getAttData("/api/Enums/viewtypes", "viewTypes", true);
   const getLaunchTypes = () =>
-    getAttData("Enums/workflowlaunchtypes", "launchTypes");
+    getAttData("/api/Enums/workflowlaunchtypes", "launchTypes", true);
 
   //POST
-  const postEntityCall = (data) => postAttData("Entity", data);
+  const postEntityCall = (data) => postAttData("/api/Entity", data);
   const postFieldCall = (entityId, data) =>
-    postAttData(`Field/${entityId}`, data);
+    postAttData(`/api/Field/${entityId}`, data);
 
   //TODO: Do not forget to delete
-  const postWorkflowCall = (data) => postAttData("Workflow", data);
+  const postWorkflowCall = (data) => postAttData("/api/Workflow", data);
 
   //PUT
-  const updateEntityCall = (id, data) => putAttData(`Entity/${id}`, data);
-  const updateFieldCall = (id, data) => putAttData(`Field/${id}`, data);
+  const updateEntityCall = (id, data) => putAttData(`/api/Entity/${id}`, data);
+  const updateFieldCall = (id, data) => putAttData(`/api/Field/${id}`, data);
 
   //DELETE
-  const deleteEntityCall = (id) => deleteAttData(`Entity/${id}`);
-  const deleteFieldCall = (id) => deleteAttData(`Field/${id}`);
+  const deleteEntityCall = (id) => deleteAttData(`/api/Entity/${id}`);
+  const deleteFieldCall = (id) => deleteAttData(`/api/Field/${id}`);
   return {
     postEntityCall, //CREATE Entity
     postFieldCall, //CREATE Field
@@ -112,6 +125,7 @@ const useAttensamCalls = () => {
     getViewsCall, //READ Views
     getViewColumnsCall, //READ View Columns
     getModulesCall, // READ Modules
+    getEntityDefinitionsCall, // READ Entity Definitions with fields
 
     updateEntityCall, //UPDATE Entity
     updateFieldCall, //UPDATE Field

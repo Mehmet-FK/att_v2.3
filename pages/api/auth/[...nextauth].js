@@ -22,11 +22,8 @@ export const authOptions = {
           );
           res = data;
         } catch (error) {
-          console.log(
-            "ERRORRRRRRRR=====================>\n",
-            error,
-            "\n==============================================\n"
-          );
+          let code = error?.response?.status || "";
+          throw Error(code + " Etwas ist schiefgelaufen!");
         }
         return res;
       },

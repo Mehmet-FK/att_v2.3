@@ -1,10 +1,10 @@
 import { Handle, Position } from "reactflow";
 import { useState } from "react";
 import sty from "@/styles/rf-node-styles.module.css";
-import { Tooltip } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
-import { FourLeaf } from "./node-comps/Shapes";
+import { AttachmentShape, FourLeaf } from "./node-comps/Shapes";
 const handles = [
   {
     type: "source",
@@ -54,8 +54,12 @@ const AttachmentNode = ({ data, isConnectable }) => {
         info={info}
         setInfo={setInfo}
       />
-      <div className={`${sty.node_body} `} onClick={handleOpenDialog}>
-        <FourLeaf color={"#438D57"} />
+      <Box
+        className={`${sty.node_body} `}
+        sx={{ bgcolor: "Background" }}
+        onClick={handleOpenDialog}
+      >
+        <AttachmentShape color={"#438D57"} />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon
@@ -86,7 +90,7 @@ const AttachmentNode = ({ data, isConnectable }) => {
             }}
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 };

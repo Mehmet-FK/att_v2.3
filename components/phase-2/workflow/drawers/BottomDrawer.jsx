@@ -9,6 +9,8 @@ import RecordViewForm from "../forms/RecordViewForm";
 import ListViewForm from "../forms/ListViewForm";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { useSelector } from "react-redux";
+import TileViewForm from "../forms/TileViewForm";
+import WorkflowForm from "../forms/WorkflowForm";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -26,14 +28,18 @@ const DisplayForm = ({ selectedNode }) => {
     return <RecordViewForm stepID={selectedNode.id} />;
   } else if (selectedNode?.type === "ListView") {
     return <ListViewForm stepID={selectedNode.id} />;
+  } else if (selectedNode?.type === "TileView") {
+    return <TileViewForm stepID={selectedNode.id} />;
+  } else {
+    return <WorkflowForm />;
   }
 };
 
-const BottomDrawer = ({ onSave, onRestore, nodes }) => {
+const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
   const [newHeight, setNewHeight] = useState(45);
-  //! const workflow = useSelector((state) => state.workflow);
+  const workflow = useSelector((state) => state.workflow);
 
   const handleClose = () => setOpen(false);
   const handleMouseDown = (e) => {
@@ -69,10 +75,12 @@ const BottomDrawer = ({ onSave, onRestore, nodes }) => {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   });
-  const selectedNode = nodes.find(
+  const selectedNode = nodes.find((nds) => nds.selected);
+  /*   const selectedNode = nodes.find(
     (nds) => nds.type !== "launch" && nds.selected
-  );
+  ); */
 
+  const handleSubmit = () => console.log(workflow);
   return (
     <>
       <Drawer
@@ -85,7 +93,7 @@ const BottomDrawer = ({ onSave, onRestore, nodes }) => {
             height: 100,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
-            opacity: newHeight / 250,
+            opacity: newHeight / 150,
             // zIndex: 0,
           },
         }}
@@ -116,7 +124,9 @@ const BottomDrawer = ({ onSave, onRestore, nodes }) => {
                 pointerEvents: newHeight < 80 && "none",
               }}
             >
-              <div className={css.console_btn}>Send</div>
+              <div className={css.console_btn} onClick={() => handleSubmit()}>
+                Send
+              </div>
               <div className={css.console_btn} onClick={onSave}>
                 Speichern
               </div>

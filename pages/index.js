@@ -22,15 +22,6 @@ export default function Home({ modules }) {
     getModulesCall();
   }, [user]);
 
-  useEffect(() => {
-    fetch(
-      "https://pro.attensam.at/atina/AtinaUsers/login?username=mehmet2&password=mehmet2",
-      { method: "POST" }
-    )
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  }, []);
-
   return (
     <>
       <Head>
@@ -67,18 +58,19 @@ export default function Home({ modules }) {
           />
 
           {/* {data?.modules?.map((module) => ( */}
-          {modules?.map((module) => (
-            <Card
-              key={module.id}
-              cardInfo={{
-                url: `/${module.caption}`,
+          {user?.userId === 10 &&
+            modules?.map((module) => (
+              <Card
+                key={module.id}
+                cardInfo={{
+                  url: `/${module.caption}`,
 
-                caption: module.caption,
-                defaultIconUrl:
-                  module.icon || "/assets/dashboard-icons/users.svg",
-              }}
-            />
-          ))}
+                  caption: module.caption,
+                  defaultIconUrl:
+                    module.icon || "/assets/dashboard-icons/users.svg",
+                }}
+              />
+            ))}
         </div>
       </div>
     </>

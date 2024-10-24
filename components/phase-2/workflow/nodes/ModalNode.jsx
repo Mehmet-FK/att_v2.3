@@ -1,10 +1,10 @@
 import { Handle, Position } from "reactflow";
 import { useState } from "react";
-import styles from "@/styles/rf-node-styles.module.css";
-import { Tooltip } from "@mui/material";
+import css from "@/styles/rf-node-styles.module.css";
+import { Box, Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
-import { Circle } from "./node-comps/Shapes";
+import { Circle, ModalShape } from "./node-comps/Shapes";
 const initialHandles = [
   {
     type: "source",
@@ -40,10 +40,10 @@ const ModalNode = ({ data, isConnectable }) => {
   const handleClose = () => setOpen(false);
 
   const handleStyles = {
-    top: `${styles.handle} ${styles.handle_top}`,
-    bottom: `${styles.handle} ${styles.handle_bottom}`,
-    left: `${styles.handle} ${styles.handle_left}`,
-    right: `${styles.handle} ${styles.handle_right}`,
+    top: `${css.handle} ${css.handle_top}`,
+    bottom: `${css.handle} ${css.handle_bottom}`,
+    left: `${css.handle} ${css.handle_left}`,
+    right: `${css.handle} ${css.handle_right}`,
   };
 
   return (
@@ -55,8 +55,12 @@ const ModalNode = ({ data, isConnectable }) => {
         setInfo={setInfo}
       />
 
-      <div className={`${styles.node_body}`} onClick={handleOpenDialog}>
-        <Circle color={"#EBC347"} />
+      <Box
+        className={`${css.node_body} `}
+        sx={{ bgcolor: "Background" }}
+        onClick={handleOpenDialog}
+      >
+        <ModalShape color={"#EBC347"} />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon
@@ -72,7 +76,7 @@ const ModalNode = ({ data, isConnectable }) => {
           )}
         </Tooltip>
 
-        <h5 className={styles.node_title}>{data.label}</h5>
+        <h5 className={css.node_title}>{data.label}</h5>
         {handles.map((handle) => (
           <Handle
             type={handle.type}
@@ -87,7 +91,7 @@ const ModalNode = ({ data, isConnectable }) => {
             }}
           />
         ))}
-      </div>
+      </Box>
     </>
   );
 };

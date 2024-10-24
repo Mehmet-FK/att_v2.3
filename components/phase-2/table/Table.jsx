@@ -18,33 +18,6 @@ import { useRouter } from "next/router";
 import FilterPanel from "./table_helpers/FilterPanel";
 import TableUtilities from "./table_helpers/TableUtilities";
 
-const options = {
-  hiddenColumns: [],
-  sortable: false,
-  resizable: false,
-  pageSizes: [25, 50, 100, 150, 200],
-  defaultPageSize: 25,
-  filteredFields: [],
-  invisibleFields: [
-    "BookingID",
-    "ImportState",
-    "Files",
-    "FileCounter",
-    "Data6",
-    "Data7",
-    "Data8",
-    "Data9",
-    "Data10",
-  ],
-};
-
-const columnOptions = {
-  style: {
-    minWidth: "100px",
-  },
-  defaultWidth: 150,
-};
-
 const initalContextMenu = {
   show: false,
   x: 0,
@@ -80,7 +53,7 @@ const Table = () => {
     columnOptions,
   } = useTable(module);
 
-  const { loading } = useSelector((state) => state.attensam);
+  // const { loading } = useSelector((state) => state.attensam);
 
   const { paginationParams, sortingParams, filterParams, columnWidths } =
     useSelector(
@@ -141,7 +114,6 @@ const Table = () => {
           setOpenModal={setOpenContextMenu}
           setHiddenColumns={setHiddenColumns}
           hiddenColumns={hiddenColumns}
-          table={module}
         />
       )}
       <TableContainer
@@ -156,7 +128,6 @@ const Table = () => {
           totalPages={dataSets?.totalPages}
           rawData={dataSets}
           paginationParams={paginationParams}
-          loading={loading}
         />
 
         <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>

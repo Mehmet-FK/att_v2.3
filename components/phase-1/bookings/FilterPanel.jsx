@@ -169,7 +169,7 @@ const BookingsFilter = () => {
               sx={{ minWidth: 120, width: "calc(100% - 5px)" }}
               size="small"
             >
-              <InputLabel id="importState">Import Status</InputLabel>
+              <InputLabel id="state">Import Status</InputLabel>
               <Select
                 sx={{
                   width: "100%",
@@ -177,12 +177,12 @@ const BookingsFilter = () => {
                   maxHeight: "2rem",
                 }}
                 size="small"
-                labelId="importState"
+                labelId="state"
                 id="demo-select-small"
-                value={filterVal?.importState || ""}
+                value={filterVal?.state || ""}
                 label="Buchungstyp"
                 onChange={(e) =>
-                  setFilterVal({ ...filterVal, importState: e.target.value })
+                  setFilterVal({ ...filterVal, state: e.target.value })
                 }
               >
                 <MenuItem value={""}>

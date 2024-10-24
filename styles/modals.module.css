@@ -120,8 +120,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 450px;
-  height: 600px;
+  width: 650px;
+  height: 700px;
+  max-height: 90vh;
   border: 2px solid #000;
   box-shadow: 24;
   padding: 0 1rem 1rem 1rem;

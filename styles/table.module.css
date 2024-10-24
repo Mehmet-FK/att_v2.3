@@ -49,7 +49,7 @@
   display: flex;
   align-items: center;
   height: 40px;
-  padding: 0;
+  /* padding: 0; */
   margin: 0;
   cursor: pointer;
   /* height: 40px; */
@@ -58,12 +58,12 @@
   height: 100%;
   font-size: var(--t-data-font-size);
   border-right: 0.3px solid var(--table-border);
-  word-wrap: break-word;
+  /* word-wrap: break-word; */
   width: 150px;
   max-width: 800px;
   margin: 0;
   /* overflow: hidden; */
-  display: flex;
+  /* display: flex; */
   align-items: center;
 }
 

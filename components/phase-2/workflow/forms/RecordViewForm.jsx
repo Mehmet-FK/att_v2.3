@@ -398,12 +398,14 @@ const RecordViewFields = ({ fields, setFields, handleFieldsBlur }) => {
 };
 
 const RecordViewForm = ({ stepID }) => {
-  const { entities } = useSelector((state) => state.attensam.data);
+  // const { entityDefinitions } = useSelector((state) => state.attensam.data);
   const { user } = useSelector((state) => state.settings);
   const { workflowSteps } = useSelector((state) => state.workflow);
 
-  const { getEntitiesCall } = useAttensamCalls();
+  const { getEntityDefinitionsCall } = useAttensamCalls();
   const { handleWFStepBlur } = useWorkflowForms();
+
+  const [entityDefinitions, setEntityDefinitions] = useState([]);
 
   const [stepValues, setStepValues] = useState(initialStepValues);
   const [headerValues, setHeaderValues] = useState(initialHeaderValues);
@@ -418,8 +420,9 @@ const RecordViewForm = ({ stepID }) => {
   };
 
   useEffect(() => {
-    if (entities || !user?.token) return;
-    getEntitiesCall();
+    if (!user?.token) return;
+    getEntityDefinitionsCall().then((res) => setEntityDefinitions(res));
+    console.log(entityDefinitions);
   }, [user]);
 
   const handleStepBlur = (e) => {
@@ -503,8 +506,14 @@ const RecordViewForm = ({ stepID }) => {
               <MenuItem value={""}>
                 <em>None</em>
               </MenuItem>
-              {entities?.map((entity) => (
-                <MenuItem value={entity.id}>{entity.caption}</MenuItem>
+              {entityDefinitions?.map((entity) => (
+                <>
+                  {!entity.isSystemEntity && (
+                    <MenuItem value={entity.entityId}>
+                      {entity.caption}
+                    </MenuItem>
+                  )}
+                </>
               ))}
             </Select>
           </FormControl>
@@ -517,6 +526,7 @@ const RecordViewForm = ({ stepID }) => {
           setHeaderValues={setHeaderValues}
         />
         <RecordViewFields
+          entityId={stepValues.entityId}
           fields={fields}
           setFields={setFields}
           handleFieldsBlur={handleFieldsBlur}

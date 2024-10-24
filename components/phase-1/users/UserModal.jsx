@@ -20,6 +20,8 @@ import {
 import RolesList from "./modal-components/RolesList";
 import PasswordDialog from "./modal-components/PasswordDialog";
 import { client, settlement } from "@/helpers/Constants";
+import RolesList_phase2 from "./modal-components/RolesList_phase2";
+import useTableDataCalls from "@/hooks/useTableDataCalls";
 // import placeholder from "/assets/placeholder.jpg";
 
 const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
@@ -39,13 +41,15 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [inputVal, setInputVal] = useState(userInfo);
   const [roleIds, setRoleIds] = useState(userInfo?.roles);
-  const user = { isAdmin: false };
-  // const { user } = useSelector((state) => state.settings);
+  // const user = { isAdmin: true };
+  const { user } = useSelector((state) => state.settings);
   // To keep the value of which tab is selected
   const [tab, setTab] = useState("Allgemein");
   const [tabValue, setTabValue] = useState(0);
 
   // const { client, settlement } = useSelector((state) => state.atina);
+
+  const { putUserData, postUserData } = useTableDataCalls();
 
   const handleClose = () => {
     setOpenUserModal(false);
@@ -65,19 +69,12 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
     reader?.readAsDataURL(selectedFile);
   };
   const handleChange = (e) => {
-    if (!user?.isAdmin) return;
+    if (!user?.isAdministrator) return;
     setInputVal({ ...inputVal, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = () => {
     if (userInfo) {
-      // let parameter = {
-      //   ...inputVal,
-      //   personnelNumber: inputVal.personnelnumber,
-      // };
-      // delete parameter.personnelnumber;
-
-      // console.log(inputVal);
       putUserData(inputVal);
       handleClose();
     } else {
@@ -89,17 +86,18 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
 
   useEffect(() => {
     if (userInfo) {
-      setRoleIds(userInfo?.roles);
+      // setRoleIds(userInfo?.roles);
       setInputVal({ ...userInfo?.userInfo, roleIds: userInfo?.roles });
     } else {
       setInputVal(initInputVal);
-      setRoleIds([]);
+      // setRoleIds([]);
     }
   }, [userInfo]);
   useEffect(() => {
     setTab("Allgemein");
     setTabValue(0);
   }, [openUserModal]);
+  console.log(user);
   return (
     <>
       <PasswordDialog
@@ -123,9 +121,11 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
           {/* if tab is "Allgemein" this part will be shown */}
           {tab === "Allgemein" && (
             <div
-              style={{
-                marginTop: -15,
-              }}
+              style={
+                {
+                  // marginTop: -15,
+                }
+              }
             >
               {/* ============== ⇩ It is going to be necessary ⇩ ========== */}
 
@@ -151,8 +151,8 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                     objectFit: "contain",
                   }}
                   src={
-                    userInfo?.avatarUrl
-                      ? userInfo?.avatarUrl
+                    userInfo?.avatarUrl?.url
+                      ? userInfo?.avatarUrl?.url
                       : "/assets/placeholder.jpg"
                   }
                   alt="profile-pic"
@@ -171,7 +171,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                     <FormControl
                       sx={{ minWidth: 120, width: "100%" }}
                       size="small"
-                      disabled={!user?.isAdmin}
+                      disabled={!user?.isAdministrator}
                     >
                       <InputLabel id="mandant">Mandant</InputLabel>
                       <Select
@@ -180,7 +180,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                         id="demo-select-small"
                         value={inputVal?.client || ""}
                         label="Mandant"
-                        readOnly={!user?.isAdmin}
+                        readOnly={!user?.isAdministrator}
                         onChange={(e) =>
                           setInputVal({ ...inputVal, client: e.target.value })
                         }
@@ -220,7 +220,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                         width: "100%",
                       }}
                       size="small"
-                      disabled={!user?.isAdmin}
+                      disabled={!user?.isAdministrator}
                     >
                       <InputLabel id="standort">Standort</InputLabel>
                       <Select
@@ -229,7 +229,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                         id="demo-select-small"
                         value={inputVal?.settlement || ""}
                         label="standort"
-                        readOnly={!user?.isAdmin}
+                        readOnly={!user?.isAdministrator}
                         onChange={(e) =>
                           setInputVal({
                             ...inputVal,
@@ -276,7 +276,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                     required
                     value={inputVal?.firstname || ""}
                     onChange={handleChange}
-                    disabled={!user?.isAdmin}
+                    disabled={!user?.isAdministrator}
                   />
 
                   <TextField
@@ -287,7 +287,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                     required
                     value={inputVal?.lastname || ""}
                     onChange={handleChange}
-                    disabled={!user?.isAdmin}
+                    disabled={!user?.isAdministrator}
                   />
 
                   <TextField
@@ -298,7 +298,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                     required
                     value={inputVal?.personnelnumber || ""}
                     onChange={handleChange}
-                    disabled={!user?.isAdmin}
+                    disabled={!user?.isAdministrator}
                   />
                 </div>
                 <TextField
@@ -310,7 +310,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                   value={inputVal?.username || ""}
                   onChange={handleChange}
                   required
-                  disabled={!user?.isAdmin}
+                  disabled={!user?.isAdministrator}
                 />{" "}
                 {!userInfo && (
                   <TextField
@@ -343,7 +343,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
                     }}
                   />
                 )}{" "}
-                {user?.isAdmin && userInfo && (
+                {user?.isAdministrator && userInfo && (
                   <div
                     style={{
                       display: "flex",
@@ -377,12 +377,13 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
           )}
           {/* if tab is "Rolle" this part will be shown */}
           {tab === "Rolle" && (
-            <RolesList
-              inputVal={inputVal}
-              setInputVal={setInputVal}
-              setRoleIds={setRoleIds}
-              roleIds={roleIds}
-            />
+            // <RolesList
+            //   inputVal={inputVal}
+            //   setInputVal={setInputVal}
+            //   setRoleIds={setRoleIds}
+            //   roleIds={roleIds}
+            // />
+            <RolesList_phase2 inputVal={inputVal} setInputVal={setInputVal} />
           )}
           <div
             style={{
@@ -391,8 +392,13 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
               columnGap: "10px",
             }}
           >
-            {user?.isAdmin && (
-              <Button onClick={handleSubmit} color="secondary">
+            {user?.isAdministrator && (
+              <Button
+                onClick={handleSubmit}
+                variant="contained"
+                sx={{ width: "100%", bgcolor: "secondary.main" }}
+                color="secondary"
+              >
                 Speichern
               </Button>
             )}
@@ -401,7 +407,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
               variant="contained"
               sx={{ width: "100%", bgcolor: "secondary.main" }}
             >
-              {user?.isAdmin ? "Abbrechen" : "Schließen"}
+              {user?.isAdministrator ? "Abbrechen" : "Schließen"}
             </Button>
           </div>
         </Card>

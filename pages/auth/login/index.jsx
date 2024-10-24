@@ -33,7 +33,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(fetchStart());
+    // dispatch(fetchStart());
 
     const res = await signIn("credentials", {
       username: inputVal.username,
@@ -41,19 +41,19 @@ const Login = () => {
       redirect: false,
     });
     if (res.error) {
-      console.log(res.status);
-      const errorMessage =
-        res.status === 401
-          ? "Anmeldedaten sind nicht korrekt!"
-          : "Etwas ist schiefgelaufen!";
-      dispatch(fetchFail({ message: `${res.status} ${errorMessage}` }));
-      dispatch(stopLoading());
+      console.log(res);
+      toastErrorNotify(res.error);
+      // const errorMessage =
+      //   res.status === 401
+      //     ? "Anmeldedaten sind nicht korrekt!"
+      //     : "Etwas ist schiefgelaufen!";
+      // dispatch(fetchFail({ message: `${res.status} ${errorMessage}` }));
+      // dispatch(stopLoading());
       return;
     }
 
-    dispatch(stopLoading());
+    // dispatch(stopLoading());
     const session = await getSession();
-    console.log(session);
     if (session) {
       const { user } = session;
       const credentials = {
@@ -74,7 +74,7 @@ const Login = () => {
       <Head>
         <title>Attensam Login</title>
       </Head>
-      {error && <ErrorModal error={errorMsg} />}
+      {/* {error && <ErrorModal error={errorMsg} />} */}
       <div className={css.container}>
         <form className={css.form} onSubmit={(e) => handleSubmit(e)}>
           <h2>Login</h2>

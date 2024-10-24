@@ -9,6 +9,10 @@ const RowCell = ({ widths, colID, column, content }) => {
       className={css.t_data}
       style={{
         width: `${widths[colID]}px`,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        display: "flex",
       }}
     >
       {column.hasOwnProperty("Cell")

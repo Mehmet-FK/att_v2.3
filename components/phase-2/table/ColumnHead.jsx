@@ -13,6 +13,7 @@ const ColumnHead = ({
   const cellRef = useRef(null);
   const isResizing = useRef(null);
   const resizer = useRef(null);
+
   const [colWidth, setColWidth] = useState(columnOptions.defaultWidth);
   const { columnWidths } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate

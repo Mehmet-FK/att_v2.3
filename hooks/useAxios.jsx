@@ -2,7 +2,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 const useAxios = () => {
-  const BASE_URL = "https://apl.attensam.at/api/";
+  const BASE_URL = "https://apl.attensam.at";
 
   const { token } = useSelector((state) => state.settings.user);
 

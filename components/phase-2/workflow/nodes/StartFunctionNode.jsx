@@ -1,7 +1,7 @@
 import { Handle, Position } from "reactflow";
 import { useEffect, useState } from "react";
-import sty from "@/styles/rf-node-styles.module.css";
-import { Tooltip } from "@mui/material";
+import css from "@/styles/rf-node-styles.module.css";
+import { Box, Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import {
   ArrowRectangle,
@@ -11,6 +11,11 @@ import {
   Cylinder,
   Diamond,
   FourLeaf,
+  LaunchDatasetShape,
+  LaunchDefaultShape,
+  LaunchEntityShape,
+  LaunchGroupShape,
+  LaunchModuleShape,
   Parallelogram,
   Plus,
   Sun,
@@ -27,38 +32,14 @@ const colors = [
 ];
 
 const StartFunctionNode = ({ data, isConnectable }) => {
-  const [color, setColor] = useState(colors[data.attID * 1]);
-
-  const handleColor = () => {
-    let i = colors.findIndex((c) => c.name === color.name);
-
-    if (i < colors.length - 1) i++;
-    else i = 0;
-
-    setColor(colors[i]);
-  };
-
-  const handleClick = () => {
-    // handleColor
-  };
-
   return (
     <>
-      <div
-        onClick={handleClick}
-        className={`${sty.launchnode_wrapper} ${sty[color.name]} `}
-      >
-        <h5 className={sty.shape_node_title}>{data.label}</h5>
-        {data.attID === "0" && <ThornApple color={color.value} />}
-        {data.attID === "1" && <Clover color={"#EBC347"} />}
-        {data.attID === "2" && <ArrowRectangle color={"#803DEC"} />}
-        {data.attID === "3" && <Diamond color={"#438D57"} />}
-        {/* <Triangle color={color.value} /> */}
-        {/* <ArrowRectangle color={color.value} /> */}
-        {/* <Cylinder color={color.value} /> */}
-        {/* <Diamond color={color.value} /> */}
-        {/* <Parallelogram color={color.value} /> */}
-        {/* <Plus color={color.value} /> */}
+      <Box className={css.launchnode_wrapper} sx={{ bgcolor: "Background" }}>
+        {data.attID === "0" && <LaunchDatasetShape />}
+        {data.attID === "1" && <LaunchEntityShape />}
+        {data.attID === "2" && <LaunchModuleShape />}
+        {data.attID === "3" && <LaunchDefaultShape />}
+        {data.attID === "4" && <LaunchGroupShape />}
 
         <Handle
           type="source"
@@ -71,7 +52,8 @@ const StartFunctionNode = ({ data, isConnectable }) => {
             right: "-10px",
           }}
         />
-      </div>
+        <h5 className={css.shape_node_title}>{data.label}</h5>
+      </Box>
     </>
   );
 };

@@ -20,15 +20,12 @@ const ColumnHead = ({
   const cellRef = useRef(null);
   const isResizing = useRef(null);
   const resizer = useRef(null);
-
-  const isColumnAdjusted = useRef(0);
-
   const { columnWidths } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
-  const [colWidth, setColWidth] = useState(
-    columnWidths[colID] || columnOptions.defaultWidth
-  );
+
+  const [colWidth, setColWidth] = useState();
+  // columnWidths[colID] || columnOptions.defaultWidth
   useEffect(() => {
     if (!resizer.current || !cellRef.current) return;
     let x = 0;
@@ -40,11 +37,13 @@ const ColumnHead = ({
       isResizing.current = true;
       x = e.clientX;
     };
+
     const handleMouseMove = (e) => {
       if (!isResizing.current) return;
       const diffX = e.clientX - x;
       x = e.clientX;
       width = width + diffX;
+
       if (width > 150 && width < 800) {
         setColWidth(width);
       }
@@ -80,9 +79,6 @@ const ColumnHead = ({
     });
   }, [colWidth]);
 
-  isColumnAdjusted.current++;
-  console.log(isColumnAdjusted.current);
-
   // console.log(colWidth);
   return (
     <TableCell
@@ -91,7 +87,7 @@ const ColumnHead = ({
       onMouseDown={(e) => handleSortParams(colID, e)}
       style={{
         ...columnOptions?.style,
-        width: `${columnWidths[colID]}px`,
+        width: columnWidths[colID] ? `${columnWidths[colID]}px` : "auto",
       }}
     >
       {column.Header}

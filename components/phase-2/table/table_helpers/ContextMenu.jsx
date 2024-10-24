@@ -71,7 +71,6 @@ const ContextMenu = ({
   setOpenModal,
   setHiddenColumns,
   hiddenColumns,
-  table,
 }) => {
   const [open, setOpen] = useState({
     columns: false,

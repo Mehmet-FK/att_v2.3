@@ -1,10 +1,10 @@
 import { Handle, Position } from "reactflow";
 import { useState } from "react";
-import sty from "@/styles/rf-node-styles.module.css";
-import { Tooltip } from "@mui/material";
+import css from "@/styles/rf-node-styles.module.css";
+import { Box, Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
-import { Cube } from "./node-comps/Shapes";
+import { Cube, TileShape } from "./node-comps/Shapes";
 
 const initialHandles = [
   {
@@ -30,10 +30,10 @@ const initialHandles = [
 ];
 
 const handleStyles = {
-  top: `${sty.handle} ${sty.handle_top}`,
-  bottom: `${sty.handle} ${sty.handle_bottom}`,
-  left: `${sty.handle} ${sty.handle_left}`,
-  right: `${sty.handle} ${sty.handle_right}`,
+  top: `${css.handle} ${css.handle_top}`,
+  bottom: `${css.handle} ${css.handle_bottom}`,
+  left: `${css.handle} ${css.handle_left}`,
+  right: `${css.handle} ${css.handle_right}`,
 };
 
 const TileNode = ({ data, isConnectable }) => {
@@ -56,8 +56,12 @@ const TileNode = ({ data, isConnectable }) => {
         setInfo={setInfo}
       />
 
-      <div className={`${sty.node_body}  `} onClick={handleOpenDialog}>
-        <Cube color={"#CF4C2C"} />
+      <Box
+        className={`${css.node_body} `}
+        sx={{ bgcolor: "Background" }}
+        onClick={handleOpenDialog}
+      >
+        <TileShape />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon
@@ -73,7 +77,7 @@ const TileNode = ({ data, isConnectable }) => {
           )}
         </Tooltip>
 
-        <h5 className={sty.node_title}>{data.label}</h5>
+        <h5 className={css.node_title}>{data.label}</h5>
         {handles.map((handle) => (
           <Handle
             type={handle.type}
@@ -88,9 +92,9 @@ const TileNode = ({ data, isConnectable }) => {
             }}
           />
         ))}
-      </div>
+      </Box>
       {/* <div
-        className={`${sty.node_body} ${sty.tile_node} `}
+        className={`${css.node_body} ${css.tile_node} `}
         onClick={handleOpenDialog}
       >
         <Tooltip title={info} placement="top">
@@ -108,7 +112,7 @@ const TileNode = ({ data, isConnectable }) => {
           )}
         </Tooltip>
 
-        <h5 className={sty.node_title}>{data.label}</h5>
+        <h5 className={css.node_title}>{data.label}</h5>
         {handles.map((handle) => (
           <Handle
             type={handle.type}

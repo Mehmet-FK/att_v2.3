@@ -1,33 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-/* export const dummyData = [
-  {
-    groupTitle: "Schädlingsbekämpfung",
-    bgColor: "#e63e10",
-    img: "https://einfaches-gaertnern.de/wp-content/uploads/2021/02/header-biologische-schaedlingsbekaempfung-1.jpg",
-    subModules: [
-      {
-        name: "Feedback Management",
-        icon: "https://cdn1.iconfinder.com/data/icons/material-core/18/bug-report-256.png",
-        color: "#ffb800",
-        href: "/feedback-management",
-      },
-      {
-        name: "Mobiler Leistungsschein",
-        icon: "https://cdn1.iconfinder.com/data/icons/material-core/18/bug-report-256.png",
-        color: "#F9E7C0",
-        href: "/mobiler-leistungsschein",
-      },
-      {
-        name: "SB Kontrolle",
-        icon: "https://cdn1.iconfinder.com/data/icons/material-core/18/bug-report-256.png",
-        color: "#41B27C",
-        href: "/sb-kontrolle",
-      },
-      
-    ],
-  },
-];
- */
+
 const attensamSlice = createSlice({
   name: "attensam",
 
@@ -36,7 +8,16 @@ const attensamSlice = createSlice({
     error: false,
     errorMsg: "",
 
-    data: {},
+    data: {
+      userRoles: [],
+      users: {
+        totalEntries: 0,
+        totalPages: 0,
+        currentPage: 0,
+        pageSize: 25,
+        entries: [],
+      },
+    },
   },
   reducers: {
     fetchStart: (state) => {
@@ -47,6 +28,17 @@ const attensamSlice = createSlice({
       state.error = false;
       state.errorMsg = "";
       state.data[dataName] = data;
+    },
+
+    editOneObject: (state, { payload: { data, modul } }) => {
+      if (modul.includes("user")) {
+        const originalArray = state.data.users.entries;
+        const id = data.userInfo.id;
+        const tempArray = originalArray.map((u) =>
+          u.userInfo.id !== id ? u : data
+        );
+        state.data.users.entries = tempArray;
+      }
     },
 
     fetchFail: (state, { payload: { message } }) => {
@@ -60,6 +52,6 @@ const attensamSlice = createSlice({
   },
 });
 
-export const { fetchStart, getSuccess, fetchFail, stopLoading } =
+export const { fetchStart, getSuccess, editOneObject, fetchFail, stopLoading } =
   attensamSlice.actions;
 export default attensamSlice.reducer;

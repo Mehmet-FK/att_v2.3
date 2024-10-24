@@ -37,11 +37,11 @@ const columnOptions = {
   defaultWidth: 150,
 };
 
-const useTable = (tabl) => {
+const useTable = (tableParam) => {
   const dispatch = useDispatch();
 
   const router = useRouter();
-  const table = router.query.module || router.pathname.replace("/", "");
+  const table = router.query.module || tableParam;
   const tableParams = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
@@ -89,9 +89,11 @@ const useTable = (tabl) => {
     const widths = {};
     columns.forEach((col) => {
       if (col.accessor) {
-        widths[col.accessor] = columnOptions.defaultWidth;
+        // widths[col.accessor] = columnOptions.defaultWidth;
+        widths[col.accessor] = undefined;
       } else {
-        widths[col] = columnOptions.defaultWidth;
+        // widths[col] = columnOptions.defaultWidth;
+        widths[col] = undefined;
       }
     });
     dispatch(setColumnWidths({ table, widths }));

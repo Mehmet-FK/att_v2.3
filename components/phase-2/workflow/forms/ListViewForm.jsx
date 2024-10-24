@@ -85,7 +85,7 @@ const ElementRow = ({
               ...el,
               listViewRows: el.listViewRows.map((r, index) => ({
                 ...r,
-                listViewRowNumber: index,
+                listViewRowNumber: index + 1,
               })),
             }
           : el
@@ -178,7 +178,7 @@ const ListElements = ({
   setListElements,
   handleElementsBlur,
 }) => {
-  const addELementRow = () => {
+  const addElementRow = () => {
     const max = Math.max(...element.listViewRows.map((el) => el.id), 0);
     setListElements((prev) =>
       prev.map((el) =>
@@ -201,6 +201,11 @@ const ListElements = ({
     );
   };
 
+  const removeElement = () => {
+    // return;
+    setListElements((prev) => prev.filter((el) => el.id !== element.id));
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setListElements((prev) =>
@@ -215,7 +220,7 @@ const ListElements = ({
           <span
             className={css.remove_element_btn}
             title="Remove Element"
-            onClick={addELementRow}
+            onClick={removeElement}
           >
             ×
           </span>
@@ -239,7 +244,7 @@ const ListElements = ({
           <span
             className={css.add_row_btn}
             title="Add Row"
-            onClick={addELementRow}
+            onClick={addElementRow}
           >
             +
           </span>
@@ -273,7 +278,7 @@ const ListViewForm = ({ stepID }) => {
 
   const handleStepBlur = (e) => {
     const { name, value, type, checked } = e.target;
-    // console.log(name);
+
     handleWFStepBlur(name, type === "checkbox" ? checked : value);
   };
 
@@ -293,15 +298,14 @@ const ListViewForm = ({ stepID }) => {
     ]);
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (entities || !user?.token) return;
     getEntitiesCall();
   }, [user]);
-
+ */
   useEffect(() => {
     const step = workflowSteps.find((step) => step.id === stepID);
-    console.log(stepID);
-    console.log(step);
+
     setStepValues((prev) => ({
       ...prev,
       name: step?.name,

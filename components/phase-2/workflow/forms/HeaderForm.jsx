@@ -199,7 +199,12 @@ const HeaderRow = ({ id, headerValues, setHeaderValues, handleHeaderBlur }) => {
   );
 };
 
-const HeaderForm = ({ headerValues, setHeaderValues, handleHeaderBlur }) => {
+const HeaderForm = ({
+  headerValues,
+  setHeaderValues,
+  handleHeaderBlur,
+  defaultExpanded,
+}) => {
   const addRow = () => {
     const { rows, columns } = headerValues;
     if (rows.length > 4) return;
@@ -235,7 +240,7 @@ const HeaderForm = ({ headerValues, setHeaderValues, handleHeaderBlur }) => {
 
   return (
     <div className={css.header_container}>
-      <Accordion>
+      <Accordion defaultExpanded={defaultExpanded}>
         <AccordionSummary
           sx={{ fontSize: "smaller", paddingBlock: "0" }}
           expandIcon={<ExpandMoreIcon fontSize="small" />}
@@ -269,7 +274,6 @@ const HeaderForm = ({ headerValues, setHeaderValues, handleHeaderBlur }) => {
                   onBlur={handleHeaderBlur}
                   value={headerValues?.gradientStart || ""}
                   variant="outlined"
-                  size="small"
                   label="Gradient Start"
                   name="gradientStart"
                   fullWidth
@@ -279,12 +283,11 @@ const HeaderForm = ({ headerValues, setHeaderValues, handleHeaderBlur }) => {
                   onBlur={handleHeaderBlur}
                   value={headerValues?.gradientEnd || ""}
                   variant="outlined"
-                  size="small"
                   label="Gradient End"
                   name="gradientEnd"
                   fullWidth
                 />
-                <Button
+                {/* <Button
                   variant="outlined"
                   component="label"
                   fullWidth
@@ -310,7 +313,7 @@ const HeaderForm = ({ headerValues, setHeaderValues, handleHeaderBlur }) => {
                     accept="image/*"
                     placeholder="Icon URL"
                   />
-                </Button>
+                </Button> */}
                 {/*   <div className={css.imageInputWrapper}>
                   {headerValues?.icon && (
                     <Image

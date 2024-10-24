@@ -30,12 +30,19 @@
   background-color: #cccccc15;
   box-shadow: 0 3px 4px 2px rgba(255, 254, 254, 0.227),
     0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
+  transition: all ease 0.2s;
 }
 .card:hover {
   box-shadow: 0 3px 4px 2px rgba(31, 81, 255, 0.14),
-    0 3px 3px -2px rgba(31, 81, 255, 0.328),
-    0 1px 8px 0 rgba(31, 80, 255, 0.378);
+    0 3px 3px -2px rgba(31, 81, 255, 0.328), 0 1px 8px 0 #1f50ff60;
+  transform: translateY(1px);
 }
+
+.card:hover .cardIcon {
+  outline-color: #fff;
+  border-radius: 20%;
+}
+
 .cardTitle {
   /* padding-bottom: 0.5rem; */
   font-size: medium;
@@ -55,9 +62,11 @@
   right: 8px;
   outline: 1px solid #ccc;
   outline-offset: 2px;
-  border-radius: 10%;
+  border-radius: 5%;
+
   background-color: #1f50ff11;
   padding: 0.5rem;
+  transition: all ease 0.2s;
 }
 
 @media (max-width: 1000px) {

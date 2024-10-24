@@ -63,10 +63,12 @@ const BookingsTable = () => {
   ); // visible Columns (columns which hiddenColumns State not includes)
 
   const tableRef = useRef(null);
+  const columnWidthsInitialized = useRef(null);
 
   useLayoutEffect(() => {
-    initTableUtilsState();
+    initTableUtilsState("bookings");
     initColumnWidths(bookingsTableColumns);
+    columnWidthsInitialized.current = true;
   }, []);
 
   useEffect(() => {
@@ -75,9 +77,10 @@ const BookingsTable = () => {
   }, [paginationParams, sortingParams, filterParams]);
 
   useEffect(() => {
-    // console.log(shownColumns);
-    adjustColumnWidths(tableRef, shownColumns);
-  }, [hiddenColumns]);
+    if (columnWidthsInitialized.current) {
+      adjustColumnWidths(tableRef, shownColumns);
+    }
+  }, [columnWidthsInitialized.current, hiddenColumns]);
 
   useEffect(() => {
     if (!bookings) return;

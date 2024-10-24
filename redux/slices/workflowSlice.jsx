@@ -5,7 +5,16 @@ const workflowSlice = createSlice({
 
   initialState: {
     selectedStepID: "",
-    launchType: "",
+
+    workflowName: "",
+    workflowCaption: "",
+    workflowIcon: "",
+    permissionType: "",
+    parentWorkflowId: "",
+    entityId: "",
+    launchElementName: "",
+    launchElementDescription: "",
+    launchElementType: "",
     caption: "",
     childAdapter: "",
     parentAdapter: "",
@@ -17,6 +26,7 @@ const workflowSlice = createSlice({
     },
 
     updateTotalWorkflow: (state, { payload: { workflow } }) => {
+      console.log(workflow);
       for (const key in workflow) {
         console.log(key, "<=>", workflow[key]);
         if (workflow[key]) {
@@ -38,7 +48,6 @@ const workflowSlice = createSlice({
     },
     changeStepValue: (state, { payload: { name, value } }) => {
       state.workflowSteps = state.workflowSteps.map((step) => {
-        console.log(step.id === state.selectedStepID);
         if (
           step.id === state.selectedStepID &&
           JSON.stringify(step[name]) !== JSON.stringify(value)

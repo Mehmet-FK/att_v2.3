@@ -4,14 +4,15 @@ import Loading_Icon from "./Loading_Icon";
 import Pagination from "./Pagination";
 import DownloadCSV from "./DownloadCSV";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 const TableUtilities = ({
   totalEntries,
   totalPages,
   paginationParams,
-  loading,
   rawData,
 }) => {
+  const { loading } = useSelector((state) => state.attensam);
   const router = useRouter();
   let table = router.query.module;
 

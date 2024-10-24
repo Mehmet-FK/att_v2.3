@@ -1,6 +1,5 @@
 import css from "@/styles/table.module.css";
 import { TableCell } from "@mui/material";
-import { useEffect } from "react";
 
 const RowCell = ({ columnOptions, widths, colID, content }) => {
   const editContent = (content, colID) => {
@@ -30,8 +29,7 @@ const RowCell = ({ columnOptions, widths, colID, content }) => {
         break;
 
       default:
-        editedContent =
-          content?.length > 35 ? content.substring(0, 35) + "..." : content;
+        editedContent = content;
         break;
     }
 
@@ -47,6 +45,9 @@ const RowCell = ({ columnOptions, widths, colID, content }) => {
         width: `${widths[colID]}px`,
         lineHeight: 0.9,
         wordBreak: "break-word",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }}
     >
       {editedContent}
