@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import css from "@/styles/filter-panel.module.css";
 import { Button, Collapse } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import FilterHead from "./FilterHead";
+import FilterHead from "@components/phase-2/table/table_helpers/FilterHead";
 import TextInput from "@/components/form-elements/TextInput";
 import DateInput from "@/components/form-elements/DateInput";
 import useFilters from "@/hooks/useFilters";
@@ -76,7 +76,7 @@ const FilterPanel = ({ fieldsObject, module }) => {
         timeout="auto"
         unmountOnExit
       >
-        <div className={css.grid}>{...fields}</div>
+        {/* <div className={css.grid}>{...fields}</div> */}
         <div style={filterStyles.buttonWrapper}>
           <Button
             type="submit"
