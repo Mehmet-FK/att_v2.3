@@ -3,10 +3,10 @@ import Paper from "@mui/material/Paper";
 import css from "@/styles/filter-panel.module.css";
 import { Button, Collapse } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
-import FilterHead from "@components/phase-2/table/table_helpers/FilterHead";
 import TextInput from "@/components/form-elements/TextInput";
 import DateInput from "@/components/form-elements/DateInput";
 import useFilters from "@/hooks/useFilters";
+import FilterHead from "@/components/phase-2/table/table_helpers/FilterHead";
 
 const FilterPanel = ({ fieldsObject, module }) => {
   const { filterGeneric, resetFilter } = useFilters();
