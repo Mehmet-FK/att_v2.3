@@ -228,7 +228,6 @@ const HeaderForm = ({
   };
   const handleUploadImage = (e) => {
     const { files } = e.target;
-    console.log(files[0]);
     if (files && files[0]) {
       setHeaderValues((prev) => ({
         ...prev,

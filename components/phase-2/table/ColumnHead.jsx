@@ -72,14 +72,14 @@ const ColumnHead = ({
   return (
     <TableCell
       ref={cellRef}
-      className={CSS.t_head}
+      className={"tab_t_head"}
       style={{
         ...columnOptions?.style,
         width: `${columnWidths[colID]}px`,
       }}
     >
       {content}
-      <div ref={resizer} className={CSS.resizer}></div>
+      <div ref={resizer} className={"tab_resizer"}></div>
     </TableCell>
   );
 };

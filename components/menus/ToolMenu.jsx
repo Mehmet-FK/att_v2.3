@@ -1,7 +1,7 @@
 import { styled, alpha } from "@mui/material/styles";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import styles from "@/styles/entities.module.css";
+// import styles from "@/styles/entities.module.css";
 import { useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -62,7 +62,7 @@ const ToolMenu = ({ buttonsList }) => {
 
   return (
     <Tooltip title="Tool Menu" placement="right" arrow>
-      <div className={styles.toolMenuContainer}>
+      <div className={"ent_toolMenuContainer"}>
         <IconButton
           id="demo-customized-button"
           aria-controls={open ? "demo-customized-menu" : undefined}

@@ -1,4 +1,4 @@
-import styles from "@/styles/entities.module.css";
+// import styles from "@/styles/entities.module.css";
 import PageHeader from "@/components/ui-components/PageHeader";
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
@@ -30,12 +30,12 @@ const Entities = () => {
   return (
     <>
       <PageHeader title="ENTITÄTEN" />
-      <div className={styles.container}>
+      <div className={"ent_container"}>
         <UtilBar
           setExistingEntities={setExistingEntities}
           entities={entities}
         />
-        <div className={styles.gridContainer}>
+        <div className={"ent_gridContainer"}>
           {!entities && <EntitiesSkeleton />}
           {entities &&
             existingEntities?.map((entity) => (

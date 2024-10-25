@@ -61,7 +61,6 @@ const UsersFilter = () => {
         ...filterVal,
         [e.target.name]: e.target.value,
       });
-      // console.log(filterVal);
     },
     [filterVal]
   );

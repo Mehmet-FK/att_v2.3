@@ -1,0 +1,40 @@
+/* HEADER INPUT GROUP */
+.bd_header_container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid red;
+  padding-inline: 10px;
+  gap: 5px;
+  width: 100%;
+}
+.bd_flex_row {
+  display: flex;
+  column-gap: 10px;
+  width: 100%;
+}
+.bd_flex_column {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  width: 100%;
+}
+
+.bd_header_title {
+  font-size: smaller;
+}
+.bd_remove_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  font-size: 0.7rem;
+  /* width: 15px; */
+  height: 10px;
+  background-color: #f00;
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0.1;
+}
+.bd_remove_btn:hover {
+  opacity: 1;
+}

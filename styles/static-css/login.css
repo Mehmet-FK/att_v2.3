@@ -1,0 +1,70 @@
+.log_container {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.log_form {
+  background-color: #f00;
+  padding: 30px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 10px;
+}
+.log_inputAll {
+  width: 100%;
+  padding: 10px;
+  /* margin: 8px 0; */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.log_submit {
+  background-color: #ffffff;
+  /* border: none; */
+  cursor: pointer;
+}
+.log_submit:hover {
+  background-color: #c2c2c2;
+}
+.log_password_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  width: 100%;
+
+  /* border: 1px solid red; */
+}
+.log_show_btn {
+  position: absolute;
+  right: 5px;
+}
+.log_cross_line {
+  display: block;
+  position: absolute;
+  right: 5px;
+  width: 2px;
+  height: 20px;
+  transition: transform 0.2s, background 0.1s;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.log_cross_line_active {
+  transform: translateX(-8.5px) rotate(-45deg);
+  background-color: #333;
+
+  /* transform-origin: 100% 100%; */
+  /* right: 5px; */
+  /* right: 13.5px; */
+}

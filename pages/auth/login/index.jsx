@@ -1,5 +1,5 @@
 import { useState } from "react";
-import css from "@/styles/login.module.css";
+// import css from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
@@ -37,7 +37,6 @@ const Login = () => {
       redirect: false,
     });
     if (res.error) {
-      console.log(res);
       toastErrorNotify(res.error);
       setIsLoading(false);
       // const errorMessage =
@@ -73,12 +72,12 @@ const Login = () => {
         <title>Attensam Login</title>
       </Head>
       {/* {error && <ErrorModal error={errorMsg} />} */}
-      <div className={css.container}>
-        <form className={css.form} onSubmit={(e) => handleSubmit(e)}>
+      <div className={"log_container"}>
+        <form className={"log_form"} onSubmit={(e) => handleSubmit(e)}>
           <img src="/assets/attensam-logo.svg" />
           {/* <h2>Login</h2> */}
           <input
-            className={css.inputAll}
+            className={"log_inputAll"}
             onChange={handleChange}
             type="text"
             name="username"
@@ -86,9 +85,9 @@ const Login = () => {
             required
           />
 
-          <div className={css.password_wrapper}>
+          <div className={"log_password_wrapper"}>
             <input
-              className={css.inputAll}
+              className={"log_inputAll"}
               onChange={handleChange}
               type={showPassword ? "text" : "password"}
               name="password"
@@ -99,11 +98,11 @@ const Login = () => {
               onClick={togglePassword}
               fontSize="small"
               sx={{ color: "#000" }}
-              className={css.show_btn}
+              className={"log_show_btn"}
             />
             <span
-              className={`${css.cross_line} ${
-                showPassword && css.cross_line_active
+              className={`log_cross_line ${
+                showPassword && "log_cross_line_active"
               } `}
             ></span>
           </div>
@@ -114,7 +113,7 @@ const Login = () => {
             type="submit"
             fullWidth
             // startIcon={<SaveIcon />}
-            className={css.submit}
+            className={"log_submit"}
             style={{ color: "#000" }}
           >
             Login

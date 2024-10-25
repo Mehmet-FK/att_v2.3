@@ -1,0 +1,82 @@
+.tab_table_container {
+  margin: auto;
+  padding: 0.5rem 10px;
+  position: relative;
+  max-width: 95vw;
+  /* max-height: 90vh;  */ /** Uncomment if you want to scroll-x on the screen */
+  /* overflow: auto; */
+  /* overflow-y: hidden; */
+}
+.tab_resizer {
+  position: absolute;
+  top: 0;
+  right: -4px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.093) 13%,
+    #e10000 45%,
+    #e10000 55%,
+    rgba(255, 255, 255, 0.097) 87%
+  );
+  transition: all 0.15s ease-in-out;
+  opacity: 0;
+  z-index: 5;
+}
+.tab_resizer:hover,
+.tab_resizer:active {
+  height: 90vh;
+  opacity: 1;
+  cursor: col-resize;
+}
+
+.tab_t_head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  user-select: none;
+  border-right: 0.3px solid var(--table-border);
+  height: 100%;
+  text-transform: capitalize;
+  cursor: pointer;
+  max-width: 800px;
+}
+
+.tab_t_row {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  /* padding: 0; */
+  margin: 0;
+  cursor: pointer;
+  /* height: 40px; */
+}
+.tab_t_data {
+  height: 100%;
+  font-size: var(--t-data-font-size);
+  border-right: 0.3px solid var(--table-border);
+  /* word-wrap: break-word; */
+  width: 150px;
+  max-width: 800px;
+  margin: 0;
+  /* overflow: hidden; */
+  /* display: flex; */
+  align-items: center;
+}
+
+/** ============== TABLE UTILITIES ============== **/
+
+.tab_util_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: sticky;
+  top: -10;
+  left: 0;
+  opacity: 1;
+  z-index: 5;
+}

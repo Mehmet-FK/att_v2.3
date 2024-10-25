@@ -1,4 +1,4 @@
-import css from "@/styles/table.module.css";
+// import css from "@/styles/table.module.css";
 import RowCell from "../RowCell";
 import { TableCell, TableRow } from "@mui/material";
 import { Fragment, useState } from "react";
@@ -11,7 +11,7 @@ import BookingModal from "./BookingModal";
 const ExpandRowCell = ({ widths, colID, content, open, handleOpen }) => {
   return (
     <TableCell
-      className={css.t_data}
+      className={"tab_t_data"}
       style={{ width: `${widths[colID]}px`, position: "relative" }}
     >
       <IconButton
@@ -61,7 +61,6 @@ const BookingsTableRow = ({ rowData, widths, colIDs }) => {
 
   const handleDblClick = (e) => {
     if (e.detail === 2) {
-      console.log(rowData);
       setOpenBookingModal(true);
     }
   };
@@ -73,7 +72,7 @@ const BookingsTableRow = ({ rowData, widths, colIDs }) => {
         setOpenBookingModal={setOpenBookingModal}
         booking={rowData}
       />
-      <TableRow className={css.t_row} onClick={handleDblClick}>
+      <TableRow className={"tab_t_row"} onClick={handleDblClick}>
         {colIDs?.map((col) => (
           <Fragment key={col.accessor}>
             {col.accessor === "FileCounter" ? (

@@ -1,12 +1,11 @@
-import css from "@/styles/table.module.css";
+// import css from "@/styles/table.module.css";
 import { TableCell } from "@mui/material";
 
 const RowCell = ({ widths, colID, column, content }) => {
-  // console.log(content);
   return (
     <TableCell
       title={content}
-      className={css.t_data}
+      className={"tab_t_data"}
       style={{
         width: `${widths[colID]}px`,
         whiteSpace: "nowrap",

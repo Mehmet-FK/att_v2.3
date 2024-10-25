@@ -27,7 +27,6 @@ const useFilters = () => {
         base += `&${key}=${filterVal[key]}`;
       }
     }
-    console.log(base);
     dispatch(setFilterParams({ params: base, table: "bookings" }));
     dispatch(setCurrentPage({ number: 1, table: "bookings" }));
   };
@@ -50,7 +49,6 @@ const useFilters = () => {
         base += `&${capitalizedKey}=${filterVal[key]}`;
       }
     }
-    console.log(base);
 
     dispatch(setFilterParams({ params: base, table: "items" }));
     dispatch(setCurrentPage({ number: 1, table: "items" }));

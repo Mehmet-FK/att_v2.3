@@ -12,7 +12,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import useContextMenu from "@/hooks/useContextMenu";
-import css from "@/styles/menus.module.css";
+// import css from "@/styles/menus.module.css";
 const ColumnMenu = ({ allColumns, setHiddenColumns, hiddenColumns }) => {
   const router = useRouter();
 
@@ -33,11 +33,9 @@ const ColumnMenu = ({ allColumns, setHiddenColumns, hiddenColumns }) => {
     } else {
       setHiddenColumns((prev) => prev.filter((c) => c !== column));
     }
-    // console.log(hiddenColumns);
-    // console.log(column);
   };
   return (
-    <Box className={css.item_wrap}>
+    <Box className={"men_item_wrap"}>
       {allColumns.map((column, i) => (
         <MenuItem
           key={i}
@@ -90,7 +88,7 @@ const ContextMenu = ({
         top: `${Y}px`,
         left: `${X}px`,
       }}
-      className={css.context_menu}
+      className={"men_context_menu"}
       component={Paper}
       ref={contextMenuRef}
     >

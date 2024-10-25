@@ -89,7 +89,7 @@ const Table = () => {
     <>
       <TableContainer
         component={Paper}
-        className={css.table_container}
+        className={"tab_table_container"}
         /* sx={{
           width: "90vw",
           height: "90vh",
@@ -99,7 +99,7 @@ const Table = () => {
         <FilterPanel fieldsObject={bookings.entries[0]} headers={headers} />
 
         <TableHead>
-          <TableRow className={css.t_row}>
+          <TableRow className={"tab_t_row"}>
             {headers.map((header) => (
               <ColumnHead
                 key={header}

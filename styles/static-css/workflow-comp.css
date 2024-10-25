@@ -1,0 +1,37 @@
+.wfc_fixed_tab {
+  position: sticky;
+  top: 0;
+  z-index: 2500;
+}
+.wfc_puller_wrapper {
+  position: relative;
+  height: 25px;
+  background-color: #efefef;
+  cursor: pointer;
+}
+
+.wfc_console_btn_wrapper {
+  padding-inline: 1rem;
+  min-height: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f3f3f38c;
+}
+
+.wfc_console_btn {
+  cursor: pointer;
+  padding-inline: 5px;
+  font-size: small;
+  border-radius: 3px;
+  user-select: none;
+
+  background: linear-gradient(#e10000 0 0),
+    linear-gradient(rgba(255, 253, 253, 0) 0 0);
+  background-size: 0% 0%, 100% 0%;
+  background-position: bottom left;
+  background-repeat: no-repeat;
+  transition: 0.1s;
+}
+.wfc_console_btn:hover {
+  background-size: 100% 100%; /* 100% width on hover */
+}

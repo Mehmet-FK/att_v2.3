@@ -1,4 +1,14 @@
 import "../styles/globals.css";
+import "../styles/static-css/dashboard-card.css";
+import "../styles/static-css/entities.css";
+import "../styles/static-css/filter-panel.css";
+import "../styles/static-css/layout.css";
+import "../styles/static-css/menus.css";
+import "../styles/static-css/modals.css";
+import "../styles/static-css/table.css";
+import "../styles/static-css/skeletons.css";
+import "../styles/static-css/workflow-comp.css";
+
 import Layout from "@/layout/Layout";
 import { useEffect, useMemo, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";

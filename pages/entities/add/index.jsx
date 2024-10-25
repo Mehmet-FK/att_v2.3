@@ -1,5 +1,5 @@
 import PageHeader from "@/components/ui-components/PageHeader";
-import styles from "@/styles/entities.module.css";
+// import styles from "@/styles/entities.module.css";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
@@ -145,7 +145,6 @@ const AddEntity = () => {
   useEffect(() => {
     if (!entity?.dataSource) return;
     getViewColumnsCall(entity.dataSource);
-    console.log("viewColumns useEffect");
   }, [entity?.dataSource, user]);
 
   useEffect(() => {
@@ -153,7 +152,6 @@ const AddEntity = () => {
 
     if (query?.entityId) {
       getSingleEntityCall(query.entityId);
-      console.log("getSingleEntityCall useEffect");
     }
   }, [user]);
 
@@ -161,7 +159,6 @@ const AddEntity = () => {
     if (query?.entityId) {
       setEntity(singleEntity);
       setFields(singleEntity?.fields);
-      console.log("setEntity useEffect");
       //TODO: This block renders two times when entityId changes. Optimization needed
     }
   }, [singleEntity, user]);
@@ -176,7 +173,7 @@ const AddEntity = () => {
       <PageHeader
         title={`Entität ${query.entityId ? "Bearbeiten" : "Anlegen"}`}
       />
-      <div className={styles.container}>
+      <div className={"ent_container"}>
         {query.entityId && <ToolMenu buttonsList={toolMenuProps} />}
 
         <EntityAccordion setEntity={setEntity} entity={entity} />
@@ -185,12 +182,8 @@ const AddEntity = () => {
           fields={fields}
           setFields={setFields}
         />
-        <div className={styles.submitBtnWrapper}>
-          <Button
-            className={styles.submitBtn}
-            variant="contained"
-            type="submit"
-          >
+        <div className={"ent_submitBtnWrapper"}>
+          <Button className={"ent_submitBtn"} variant="contained" type="submit">
             submit
           </Button>
         </div>

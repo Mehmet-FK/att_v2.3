@@ -1,4 +1,4 @@
-import styles from "@/styles/entities.module.css";
+// import styles from "@/styles/entities.module.css";
 import Accordion from "@/components/ui-components/Accordion";
 import { MenuItem, TextField } from "@mui/material";
 import Select from "@/components/form-elements/Select";
@@ -31,7 +31,7 @@ const EntityAccordion = ({ entity, setEntity }) => {
   }, [views]);
   return (
     <Accordion expandDefault header={"ENTITIY"}>
-      <div className={styles.entityFormGroup}>
+      <div className={"ent_entityFormGroup"}>
         <TextField
           sx={{ width: "100%" }}
           onChange={handleChange}

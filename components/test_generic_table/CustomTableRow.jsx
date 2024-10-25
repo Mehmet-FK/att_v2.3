@@ -27,7 +27,7 @@ const CustomTableRow = ({ rowData, widths, columnOptions, colIDs }) => {
 
   return (
     <>
-      <TableRow className={css.t_row}>
+      <TableRow className={"tab_t_row"}>
         {rowInfo.keys.map((key) => (
           <RowCell
             colID={key}

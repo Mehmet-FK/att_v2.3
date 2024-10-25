@@ -97,7 +97,6 @@ const ItemsTable = () => {
   useEffect(() => {
     const params = makeUrlParams();
     getAtinaItemsData(params + filterParams, itemType);
-    // console.log(paginationParams);
   }, [paginationParams, sortingParams, filterParams]);
 
   useEffect(() => {
@@ -130,7 +129,7 @@ const ItemsTable = () => {
       <TableContainer
         component={Paper}
         ref={tableRef}
-        className={css.table_container}
+        className={"tab_table_container"}
       >
         <FilterPanel
           type={itemType}
@@ -148,7 +147,7 @@ const ItemsTable = () => {
         />
 
         <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
-          <TableRow className={css.t_row}>
+          <TableRow className={"tab_t_row"}>
             {shownColumns?.map((header) => (
               <ColumnHead
                 key={header.accessor}

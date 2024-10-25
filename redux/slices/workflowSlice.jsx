@@ -26,9 +26,7 @@ const workflowSlice = createSlice({
     },
 
     updateTotalWorkflow: (state, { payload: { workflow } }) => {
-      console.log(workflow);
       for (const key in workflow) {
-        console.log(key, "<=>", workflow[key]);
         if (workflow[key]) {
           state[key] = workflow[key];
         }
@@ -54,7 +52,6 @@ const workflowSlice = createSlice({
         ) {
           return { ...step, [name]: value };
         } else {
-          console.log("else block");
           return step;
         }
       });

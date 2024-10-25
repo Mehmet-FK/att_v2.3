@@ -25,9 +25,6 @@ const Pagination = ({ paginationParams, table, totalPages }) => {
     gotoPage(1);
   };
 
-  //   useEffect(() => {
-  //     console.log(paginationParams);
-  //   }, [paginationParams]);
   return (
     <div
       style={{

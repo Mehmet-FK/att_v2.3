@@ -49,7 +49,6 @@ const UsersTableRow = ({
           ],
         }));
       }
-      console.log(checkboxColumn);
     },
     [checkboxColumn]
   );
@@ -61,7 +60,7 @@ const UsersTableRow = ({
         userInfo={rowData}
       />
       <TableRow
-        className={css.t_row}
+        className={"tab_t_row"}
         onClick={handleDblClick}
         sx={{
           backgroundColor:
@@ -75,7 +74,7 @@ const UsersTableRow = ({
           in={checkboxColumn.isOpen}
         >
           <TableCell
-            //className={css.t_data}
+            //className={"tab_t_data"}
             sx={{
               width: "5rem",
               textAlign: "center",

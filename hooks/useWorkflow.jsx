@@ -86,7 +86,6 @@ const useWorkflow = (setNodes, setEdges) => {
     if (rfInstance) {
       const flow = rfInstance.toObject();
       const flowInfo = workflow;
-      console.log(flow);
       localStorage.setItem(flowKey, JSON.stringify({ flow, flowInfo }));
     }
   }, [rfInstance, workflow]);
@@ -96,7 +95,6 @@ const useWorkflow = (setNodes, setEdges) => {
       const { flow = null, flowInfo = null } =
         JSON.parse(localStorage.getItem(flowKey)) || {};
 
-      console.log(flowInfo);
       if (flow) {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         setNodes(flow.nodes || []);

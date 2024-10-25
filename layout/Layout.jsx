@@ -22,7 +22,7 @@ import { Tooltip, Typography } from "@mui/material";
 //
 // From nextJS
 import Link from "next/link";
-import styles from "@/styles/layout.module.css";
+// import styles from "@/styles/layout.module.css";
 import { getSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -127,7 +127,7 @@ export default function Layout({ children, toggleTheme }) {
               </IconButton>
             </div>
           )}
-          <div className={styles.logoWrapper}>
+          <div className={"lay_logoWrapper"}>
             <Link href={"/"}>
               <Image
                 src={"/assets/attensam-logo.svg"}
@@ -206,7 +206,7 @@ export default function Layout({ children, toggleTheme }) {
                   }}
                 >
                   <Tooltip title={item.text} placement="right" arrow>
-                    <Link href={item.nav} className={styles.link}>
+                    <Link href={item.nav} className={"lay_link"}>
                       <ListItemButton
                         sx={{
                           minHeight: 48,

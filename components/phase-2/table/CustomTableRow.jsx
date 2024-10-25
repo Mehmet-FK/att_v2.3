@@ -30,11 +30,10 @@ const CustomTableRow = ({ rowData, widths, columnOptions, colIDs }) => {
 
     setRowInfo((prev) => ({ ...prev, values }));
     // console.log(colIDs);
-    console.log(rowInfo.values);
   }, [colIDs]); */
   return (
     <>
-      <TableRow className={css.t_row}>
+      <TableRow className={"tab_t_row"}>
         {colIDs.map((key) => (
           <RowCell
             colID={key}

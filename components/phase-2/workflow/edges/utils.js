@@ -51,7 +51,6 @@ function getHandleCoordsByPosition(node, handlePosition) {
 
   const x = node.positionAbsolute.x + handle.x + offsetX;
   const y = node.positionAbsolute.y + handle.y + offsetY;
-  // console.log(node.positionAbsolute.x + " <=> " + handle.x + " <=> " + offsetX);
   return [x, y];
 }
 

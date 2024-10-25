@@ -21,7 +21,6 @@ import FilterPanel from "./FilterPanel";
 import useTableDataCalls from "@/hooks/useTableDataCalls";
 import ColumnHead from "../ColumnHead";
 import { useSelector } from "react-redux";
-// import BookingsTableRow from "./BookingsTableRow";
 import ContextMenu from "../ContextMenu";
 import useContextMenu from "@/hooks/useContextMenu";
 import useTable from "@/hooks/useTable";
@@ -131,7 +130,7 @@ const UsersTable = () => {
       <TableContainer
         component={Paper}
         ref={tableRef}
-        className={css.table_container}
+        className={"tab_table_container"}
       >
         <FilterPanel fieldsObject={users?.entries[0]} />
 
@@ -145,7 +144,7 @@ const UsersTable = () => {
         />
 
         <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
-          <TableRow className={css.t_row}>
+          <TableRow className={"tab_t_row"}>
             {checkboxColumn && (
               <Collapse
                 sx={{ p: 0 }}

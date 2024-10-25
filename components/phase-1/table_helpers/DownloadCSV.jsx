@@ -25,7 +25,6 @@ const DownloadCSV = ({ rawData, fileName, type, table }) => {
     let headers;
     let main;
     let res;
-    // console.log(fltrData);
     switch (fileName) {
       case "benutzer":
         res = userTableCSV(fltrData || rawData);

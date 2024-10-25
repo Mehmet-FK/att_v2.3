@@ -361,10 +361,6 @@ const RecordViewFields = ({ fields, setFields, handleFieldsBlur }) => {
     );
   };
 
-  // useEffect(() => {
-  //   console.log(fields);
-  // }, [fields]);
-
   return (
     <div className={css.fields_container}>
       <Accordion>
@@ -422,7 +418,6 @@ const RecordViewForm = ({ stepID }) => {
   useEffect(() => {
     if (!user?.token) return;
     getEntityDefinitionsCall().then((res) => setEntityDefinitions(res));
-    console.log(entityDefinitions);
   }, [user]);
 
   const handleStepBlur = (e) => {

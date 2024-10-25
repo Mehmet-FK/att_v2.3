@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import TapAndPlayIcon from "@mui/icons-material/TapAndPlay";
-import css from "@/styles/modals.module.css";
+// import css from "@/styles/modals.module.css";
 
 const VehicleModal = ({
   item,
@@ -25,7 +25,7 @@ const VehicleModal = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Card sx={{ height: 440 }} className={css.card}>
+      <Card sx={{ height: 440 }} className={"mod_card"}>
         <div
           style={{
             display: "flex",
@@ -50,7 +50,7 @@ const VehicleModal = ({
             </IconButton>
           </div>
         </div>
-        <CardContent className={css.content}>
+        <CardContent className={"mod_content"}>
           {item && (
             <Grid
               container
@@ -210,7 +210,7 @@ const VehicleModal = ({
           <div style={{ display: "flex", justifyContent: "space-around" }}>
             {isAdmin && (
               <Button
-                className={css.content}
+                className={"mod_content"}
                 variant="contained"
                 color="secondary"
               >
@@ -218,7 +218,7 @@ const VehicleModal = ({
               </Button>
             )}
             <Button
-              className={css.content}
+              className={"mod_content"}
               //   onClick={handleDelete}
               onClick={handleClose}
               variant="contained"

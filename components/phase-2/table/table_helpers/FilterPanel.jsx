@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import css from "@/styles/filter-panel.module.css";
+// import css from "@/styles/filter-panel.module.css";
 import { Button, Collapse } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import TextInput from "@/components/form-elements/TextInput";
@@ -67,7 +67,7 @@ const FilterPanel = ({ fieldsObject, module }) => {
   const fields = extractFilterFields(fieldsObject);
 
   return (
-    <Box component={Paper} className={css.container}>
+    <Box component={Paper} className={"fp_container"}>
       <FilterHead open={open} setOpen={setOpen} pageTitle={module} />
       <Collapse
         component="form"

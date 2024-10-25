@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ModalTabs from "./modal-components/ModalTabs";
-import css from "@/styles/modals.module.css";
+// import css from "@/styles/modals.module.css";
 import { useSelector } from "react-redux";
 import {
   FormControl,
@@ -62,7 +62,6 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
       const fileContent = e.target.result;
 
       const base64String = fileContent.split(",")[1];
-      // console.log(base64String);
       setSelectedImage(fileContent);
       setInputVal({ ...inputVal, image: base64String });
     };
@@ -97,7 +96,6 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
     setTab("Allgemein");
     setTabValue(0);
   }, [openUserModal]);
-  console.log(user);
   return (
     <>
       <PasswordDialog
@@ -112,7 +110,7 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card className={css.user_card}>
+        <Card className={"mod_user_card"}>
           <ModalTabs
             setTab={setTab}
             tabValue={tabValue}
@@ -160,8 +158,8 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
               </div>
 
               {/* </label> */}
-              <CardContent className={css.user_content}>
-                <div className={css.user_inputgroup}>
+              <CardContent className={"mod_user_content"}>
+                <div className={"mod_user_inputgroup"}>
                   <div
                     style={{
                       display: "flex",

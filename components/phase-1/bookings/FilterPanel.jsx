@@ -64,7 +64,6 @@ const BookingsFilter = () => {
         ...filterVal,
         [e.target.name]: e.target.value,
       });
-      // console.log(filterVal);
     },
     [filterVal]
   );

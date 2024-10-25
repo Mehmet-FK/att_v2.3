@@ -97,14 +97,12 @@ const useTable = (tableParam) => {
       }
     });
     dispatch(setColumnWidths({ table, widths }));
-    console.log("initColumnWidths Triggered");
   };
   // set default width for all visible widths
 
   const adjustColumnWidths = (tableRef, shownColumns) => {
     if (!tableRef || !Object.keys(columnWidths).length) return;
     const tableWidth = parseInt(getComputedStyle(tableRef.current).width, 10);
-    console.log("adjustColumnWidths Triggered");
     const avgWidth = Math.trunc(tableWidth / shownColumns.length) - 2;
     const minWidth = parseInt(columnOptions.style.minWidth, 10);
     if (avgWidth > minWidth && avgWidth < 18000) {

@@ -1,0 +1,126 @@
+.container {
+  margin-inline: auto;
+  padding: 2rem;
+  max-width: 1300px;
+  min-width: 65%;
+  /* max-height: 95%; */
+  /* overflow-x: hidden; */
+  /* overflow-y: auto; */
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+    rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+
+  position: relative;
+}
+.ent_gridContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  justify-content: center;
+  /* padding-inline: 2rem; */
+}
+
+@media (max-width: 1000px) {
+  .ent_gridContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .ent_container {
+    width: 75%;
+  }
+}
+@media (min-width: 1000px) {
+  .ent_gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ent_container {
+    width: 80%;
+  }
+}
+@media (min-width: 1300px) {
+  .ent_gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* @media (min-width: 1550px) {
+      .ent_gridContainer {
+          grid-template-columns: repeat(4, 1fr);
+      }
+      .ent_card {
+          height: 350px;
+      }
+  } */
+
+/*?================================================ */
+/*! ADD ENTITY STYLES */
+/*?================================================ */
+
+.ent_entityFormGroup {
+  display: flex;
+  column-gap: 5px;
+}
+
+.ent_imageInputWrapper {
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  position: relative;
+  width: 100%;
+}
+.ent_imageInput {
+  height: 100%;
+  padding-left: 3rem;
+  cursor: pointer;
+  width: 100%;
+}
+.ent_imageInput::file-selector-button {
+  border: 1px solid red;
+  height: 100%;
+  display: none;
+}
+.ent_imgBtn {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 100%;
+  /* padding-inline: 0.5rem; */
+  cursor: pointer;
+  pointer-events: none;
+  transition: background-color 0.2s;
+  overflow: hidden;
+}
+.ent_imageInputWrapper:hover {
+  border: 1px solid #000;
+}
+.ent_imageInputWrapper:hover .imgBtn {
+  background-color: #f2f1f1;
+}
+
+.ent_selectedImage {
+  max-width: 100%;
+  max-height: 100%;
+}
+.ent_submitBtnWrapper {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+.ent_submitBtn {
+  padding-inline: 3rem;
+}
+
+/*?================================================ */
+/*! Delete Button */
+/*?================================================ */
+
+.ent_toolMenuContainer {
+  position: absolute;
+  right: 0.3rem;
+  top: 0.3rem;
+  z-index: 5;
+}

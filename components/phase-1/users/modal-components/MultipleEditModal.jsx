@@ -1,4 +1,4 @@
-import css from "@/styles/modals.module.css";
+// import css from "@/styles/modals.module.css";
 import RolesList_phase2 from "./RolesList_phase2";
 import { useSelector } from "react-redux";
 import { useState } from "react";
@@ -41,7 +41,7 @@ const MultipleEditModal = ({ openModal, setOpenModal, checkboxColumn }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card component="form" className={css.user_card}>
+        <Card component="form" className={"mod_user_card"}>
           <div
             style={{
               display: "flex",

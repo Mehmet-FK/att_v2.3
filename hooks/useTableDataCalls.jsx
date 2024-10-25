@@ -85,7 +85,6 @@ const useTableDataCalls = () => {
 
   const putUserData = async (info) => {
     const roles = info?.roleIds;
-    console.log(info);
     try {
       const editedData = {
         id: info.id,
@@ -98,7 +97,6 @@ const useTableDataCalls = () => {
         settlement: info.settlement,
         roleIds: roles,
       };
-      console.log(editedData);
       await axiosWithToken.post("/atina/AtinaUsers/update", editedData);
 
       const xData = {
@@ -133,10 +131,6 @@ const useTableDataCalls = () => {
   };
 
   const assignMultipleUserRoles = (userids, roleIds, users) => {
-    console.log("USER IDS ==>", userids);
-    console.log("ROLE IDS ==>", roleIds);
-    console.log("USERS ==>", users);
-
     dispatch(fetchStart());
     try {
       //Post Call to assign user roles

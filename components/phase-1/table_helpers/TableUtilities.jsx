@@ -18,7 +18,7 @@ const TableUtilities = ({
   else if (table === "items") fileName = "datensaetze";
 
   return (
-    <div className={css.util_container}>
+    <div className={"tab_util_container"}>
       <TotalEntries totalEntries={totalEntries} />
       <div style={{ display: "flex" }}>
         {loading && <Loading_Icon />}

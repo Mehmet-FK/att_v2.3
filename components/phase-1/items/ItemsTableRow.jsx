@@ -16,7 +16,6 @@ const ItemsTableRow = ({ rowData, widths, colIDs, type }) => {
 
   const handleDblClick = (e) => {
     if (e.detail === 2) {
-      console.log(type);
       setOpenItemsModal(true);
     }
   };
@@ -29,7 +28,7 @@ const ItemsTableRow = ({ rowData, widths, colIDs, type }) => {
         item={rowData}
         type={type}
       />
-      <TableRow className={css.t_row} onClick={handleDblClick}>
+      <TableRow className={"tab_t_row"} onClick={handleDblClick}>
         {colIDs?.map((col) => (
           <RowCell
             key={col.accessor}

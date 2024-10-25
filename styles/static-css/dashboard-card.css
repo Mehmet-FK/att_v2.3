@@ -1,0 +1,97 @@
+.dc_container {
+  margin-inline: auto;
+  padding: 2rem;
+  max-width: 1300px;
+  min-width: 65%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.dc_gridContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 15px;
+  flex-wrap: wrap;
+  row-gap: 15px;
+  justify-content: center;
+  /* padding-inline: 2rem; */
+}
+
+.dc_link {
+  text-decoration: none;
+}
+
+.dc_card {
+  position: relative;
+  border: 1px solid transparent;
+  padding: 2.5rem 1rem;
+  border-radius: 5px;
+  background-color: #cccccc15;
+  box-shadow: 0 3px 4px 2px rgba(255, 254, 254, 0.227),
+    0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
+  transition: all ease 0.2s;
+}
+.dc_card:hover {
+  box-shadow: 0 3px 4px 2px rgba(31, 81, 255, 0.14),
+    0 3px 3px -2px rgba(31, 81, 255, 0.328), 0 1px 8px 0 #1f50ff60;
+  transform: translateY(1px);
+}
+
+.dc_card:hover .cardIcon {
+  outline-color: #fff;
+  border-radius: 20%;
+}
+
+.dc_cardTitle {
+  /* padding-bottom: 0.5rem; */
+  font-size: medium;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.dc_cardBody {
+  margin-right: 5rem;
+}
+
+.dc_cardIcon {
+  width: 5rem;
+  height: 5rem;
+  position: absolute;
+  top: 0.8rem;
+  right: 8px;
+  outline: 1px solid #ccc;
+  outline-offset: 2px;
+  border-radius: 5%;
+
+  background-color: #1f50ff11;
+  padding: 0.5rem;
+  transition: all ease 0.2s;
+}
+
+@media (max-width: 1000px) {
+  .dc_gridContainer {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  .dc_container {
+    width: 75%;
+  }
+}
+@media (min-width: 1000px) {
+  .dc_gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dc_container {
+    width: 80%;
+  }
+}
+@media (min-width: 1300px) {
+  .dc_gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1650px) {
+  .dc_gridContainer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

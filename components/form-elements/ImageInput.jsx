@@ -1,9 +1,9 @@
-import styles from "@/styles/entities.module.css";
+// import styles from "@/styles/entities.module.css";
 import ImageIcon from "@mui/icons-material/Image";
 
 const ImageInput = ({ id, name, value, onChange }) => {
   return (
-    <div className={styles.imageInputWrapper}>
+    <div className={"ent_imageInputWrapper"}>
       {value && (
         <Image
           src={value}
@@ -16,14 +16,14 @@ const ImageInput = ({ id, name, value, onChange }) => {
       )}
       <input
         id={id}
-        className={styles.imageInput}
+        className={"ent_imageInput"}
         onChange={onChange}
         name={name}
         type="file"
         accept="image/*"
         placeholder="Icon URL"
       />
-      <span className={styles.imgBtn}>{<ImageIcon />}</span>
+      <span className={"ent_imgBtn"}>{<ImageIcon />}</span>
     </div>
   );
 };
