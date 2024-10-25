@@ -2,23 +2,18 @@ import { useState } from "react";
 import css from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchFail,
-  fetchStart,
-  stopLoading,
-} from "@/redux/slices/attensamSlice";
 import Head from "next/head";
 import { getSession, signIn } from "next-auth/react";
 import { setUser } from "@/redux/slices/settingsSlice";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { toastErrorNotify } from "@/helpers/ToastNotify";
-import ErrorModal from "@/components/ui-components/ErrorModal";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Login = () => {
   const [inputVal, setInputVal] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const { error, errorMsg } = useSelector((state) => state.attensam);
-
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -34,6 +29,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // dispatch(fetchStart());
+    setIsLoading(true);
 
     const res = await signIn("credentials", {
       username: inputVal.username,
@@ -43,6 +39,7 @@ const Login = () => {
     if (res.error) {
       console.log(res);
       toastErrorNotify(res.error);
+      setIsLoading(false);
       // const errorMessage =
       //   res.status === 401
       //     ? "Anmeldedaten sind nicht korrekt!"
@@ -66,6 +63,7 @@ const Login = () => {
       router.push("/");
     } else {
       toastErrorNotify(`Etwas ist schiefgelaufen.. `);
+      setIsLoading(false);
     }
   };
 
@@ -77,7 +75,8 @@ const Login = () => {
       {/* {error && <ErrorModal error={errorMsg} />} */}
       <div className={css.container}>
         <form className={css.form} onSubmit={(e) => handleSubmit(e)}>
-          <h2>Login</h2>
+          <img src="/assets/attensam-logo.svg" />
+          {/* <h2>Login</h2> */}
           <input
             className={css.inputAll}
             onChange={handleChange}
@@ -109,11 +108,22 @@ const Login = () => {
             ></span>
           </div>
 
-          <input
+          <LoadingButton
+            loading={isLoading}
+            loadingPosition="start"
+            type="submit"
+            fullWidth
+            // startIcon={<SaveIcon />}
+            className={css.submit}
+            style={{ color: "#000" }}
+          >
+            Login
+          </LoadingButton>
+          {/* <input
             className={`${css.inputAll} ${css.submit}`}
             type="submit"
             value="Login"
-          />
+          /> */}
         </form>
       </div>
     </>
