@@ -169,6 +169,7 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
             {subWorkflows?.map((swf) => {
               return (
                 <WfSection
+                  key={swf?.id}
                   workflow={swf}
                   data={data}
                   roleIds={roleIds}
@@ -185,36 +186,30 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
 
 const RolesList_phase2 = ({ inputVal, setInputVal }) => {
   const { userRoles } = useSelector((state) => state.attensam.data);
-  const user = { isAdmin: false };
-  // const [checkedList, setCheckedList] = useState([]);
 
   const roleIds = inputVal.roleIds;
 
   return (
     <div style={{ padding: 0 }}>
-      {/* <CardContent className={"mod_user_content"}> */}
       {nfcRoleDefinitions.map((item) => (
         <WfSection
+          key={item?.id}
           workflow={item}
           data={nfcRoleDefinitions}
           roleIds={roleIds}
           setInputVal={setInputVal}
-          // checkedList={checkedList}
-          // setCheckedList={setCheckedList}
         />
       ))}
 
       {userRoles.map((item) => (
         <WfSection
+          key={item?.id}
           workflow={item}
           data={userRoles}
           roleIds={roleIds}
           setInputVal={setInputVal}
-          // checkedList={checkedList}
-          // setCheckedList={setCheckedList}
         />
       ))}
-      {/* </CardContent> */}
     </div>
   );
 };

@@ -67,6 +67,7 @@ const UsersTable = () => {
   } = useTable("users");
 
   const users = useSelector((state) => state.attensam?.data?.users); // Users Data From Redux Store
+  const { user } = useSelector((state) => state.settings);
   const { loading } = useSelector((state) => state.attensam);
 
   const { paginationParams, sortingParams, filterParams, columnWidths } =
@@ -86,8 +87,10 @@ const UsersTable = () => {
   }, []);
 
   useEffect(() => {
+    if (!user?.token) return;
     getWorkflowsForUserRoles();
-  }, []);
+    console.log("first");
+  }, [user]);
 
   useEffect(() => {
     const params = makeUrlParams();
