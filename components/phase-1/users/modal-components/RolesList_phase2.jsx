@@ -192,29 +192,29 @@ const RolesList_phase2 = ({ inputVal, setInputVal }) => {
 
   return (
     <div style={{ padding: 0, height: "auto" }}>
-      <CardContent className={"mod_user_content"}>
-        {nfcRoleDefinitions.map((item) => (
-          <WfSection
-            workflow={item}
-            data={nfcRoleDefinitions}
-            roleIds={roleIds}
-            setInputVal={setInputVal}
-            // checkedList={checkedList}
-            // setCheckedList={setCheckedList}
-          />
-        ))}
+      {/* <CardContent className={"mod_user_content"}> */}
+      {nfcRoleDefinitions.map((item) => (
+        <WfSection
+          workflow={item}
+          data={nfcRoleDefinitions}
+          roleIds={roleIds}
+          setInputVal={setInputVal}
+          // checkedList={checkedList}
+          // setCheckedList={setCheckedList}
+        />
+      ))}
 
-        {userRoles.map((item) => (
-          <WfSection
-            workflow={item}
-            data={userRoles}
-            roleIds={roleIds}
-            setInputVal={setInputVal}
-            // checkedList={checkedList}
-            // setCheckedList={setCheckedList}
-          />
-        ))}
-      </CardContent>
+      {userRoles.map((item) => (
+        <WfSection
+          workflow={item}
+          data={userRoles}
+          roleIds={roleIds}
+          setInputVal={setInputVal}
+          // checkedList={checkedList}
+          // setCheckedList={setCheckedList}
+        />
+      ))}
+      {/* </CardContent> */}
     </div>
   );
 };
