@@ -191,8 +191,8 @@ const RolesList_phase2 = ({ inputVal, setInputVal }) => {
   const roleIds = inputVal.roleIds;
 
   return (
-    <div style={{ padding: 0, minHeight: "100%" }}>
-      <CardContent>
+    <div style={{ padding: 0 }}>
+      <CardContent className={"mod_user_content"}>
         {nfcRoleDefinitions.map((item) => (
           <WfSection
             workflow={item}

@@ -386,8 +386,9 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
           <div
             style={{
               display: "flex",
-              justifyContent: "space-around",
+              // justifyContent: "space-around",
               columnGap: "10px",
+              paddingTop: "20px",
             }}
           >
             {user?.isAdministrator && (
