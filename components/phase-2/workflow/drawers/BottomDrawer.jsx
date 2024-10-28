@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-// import css from "@/styles/workflow-comp-styles.module.css";
+import css from "@/styles/workflow-comp-styles.module.css";
 import InfoForm from "../forms/InfoForm";
 import RecordViewForm from "../forms/RecordViewForm";
 import ListViewForm from "../forms/ListViewForm";
@@ -100,17 +100,17 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
         open={open}
         onClose={handleClose}
       >
-        <div className={"wfc_fixed_tab"}>
+        <div className={css.fixed_tab}>
           <div
             onMouseDown={handleMouseDown}
             onClick={handleDoubleClick}
-            className={"wfc_puller_wrapper"}
+            className={"css.puller_wrapper"}
           >
             <Puller />
           </div>
 
           <div
-            className={"wfc_console_btn_wrapper"}
+            className={css.console_btn_wrapper}
             style={{
               display: "flex",
               opacity: newHeight / 150,
@@ -124,13 +124,13 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
                 pointerEvents: newHeight < 80 && "none",
               }}
             >
-              <div className={"wfc_console_btn"} onClick={() => handleSubmit()}>
+              <div className={css.console_btn} onClick={() => handleSubmit()}>
                 Send
               </div>
-              <div className={"wfc_console_btn"} onClick={onSave}>
+              <div className={css.console_btn} onClick={onSave}>
                 Speichern
               </div>
-              <div className={"wfc_console_btn"} onClick={onRestore}>
+              <div className={css.console_btn} onClick={onRestore}>
                 Restore
               </div>
             </div>

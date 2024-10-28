@@ -18,7 +18,7 @@ const TableUtilities = ({
   else if (table === "items") fileName = "datensaetze";
 
   return (
-    <div className={"tab_util_container"}>
+    <span className={css.util_container}>
       <TotalEntries totalEntries={totalEntries} />
       <div style={{ display: "flex" }}>
         {loading && <Loading_Icon />}
@@ -30,7 +30,7 @@ const TableUtilities = ({
         />
         <DownloadCSV rawData={rawData} fileName={fileName} table={table} />
       </div>
-    </div>
+    </span>
   );
 };
 

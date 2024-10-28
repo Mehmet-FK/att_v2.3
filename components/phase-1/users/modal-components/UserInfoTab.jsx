@@ -52,7 +52,7 @@ const UserInfoTab = ({
           alt="profile-pic"
         />
       </div>
-      <div className={"mod_user_inputgroup"}>
+      <div className={css.user_inputgroup}>
         <div
           style={{
             display: "flex",

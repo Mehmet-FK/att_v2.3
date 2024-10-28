@@ -17,7 +17,7 @@ const TableUtilities = ({
   let table = router.query.module;
 
   return (
-    <div className={"tab_util_container"}>
+    <div className={css.util_container}>
       <TotalEntries totalEntries={totalEntries} />
       <div style={{ display: "flex" }}>
         {loading && <Loading_Icon />}

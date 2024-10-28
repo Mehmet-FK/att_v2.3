@@ -127,9 +127,9 @@ const ItemsTable = () => {
         />
       )}
       <TableContainer
-        component={Paper}
+        // component={"table"}
         ref={tableRef}
-        className={"tab_table_container"}
+        className={css.table_container}
       >
         <FilterPanel
           type={itemType}
@@ -147,7 +147,7 @@ const ItemsTable = () => {
         />
 
         <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
-          <TableRow className={"tab_t_row"}>
+          <TableRow className={css.t_row}>
             {shownColumns?.map((header) => (
               <ColumnHead
                 key={header.accessor}

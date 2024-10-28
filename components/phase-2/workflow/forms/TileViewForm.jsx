@@ -1,25 +1,7 @@
-import useAttensamCalls from "@/hooks/useAttensamCalls";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import Divider from "@mui/material/Divider";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/workflow-forms/list-view-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import HeaderForm from "./HeaderForm";
-import IconSelect from "@/components/form-elements/IconSelect";
 
 const initialStepValues = {
   entityId: "",

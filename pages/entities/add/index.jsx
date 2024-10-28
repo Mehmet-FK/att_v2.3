@@ -1,5 +1,5 @@
 import PageHeader from "@/components/ui-components/PageHeader";
-// import styles from "@/styles/entities.module.css";
+import css from "@/styles/entities.module.css";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
@@ -173,7 +173,7 @@ const AddEntity = () => {
       <PageHeader
         title={`Entität ${query.entityId ? "Bearbeiten" : "Anlegen"}`}
       />
-      <div className={"ent_container"}>
+      <div className={css.container}>
         {query.entityId && <ToolMenu buttonsList={toolMenuProps} />}
 
         <EntityAccordion setEntity={setEntity} entity={entity} />
@@ -182,8 +182,8 @@ const AddEntity = () => {
           fields={fields}
           setFields={setFields}
         />
-        <div className={"ent_submitBtnWrapper"}>
-          <Button className={"ent_submitBtn"} variant="contained" type="submit">
+        <div className={css.submitBtnWrapper}>
+          <Button className={css.submitBtn} variant="contained" type="submit">
             submit
           </Button>
         </div>

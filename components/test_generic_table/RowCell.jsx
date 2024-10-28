@@ -37,7 +37,7 @@ const RowCell = ({ columnOptions, widths, colID, content }) => {
 
   return (
     <TableCell
-      className={"tab_t_data"}
+      className={css.t_data}
       style={{
         ...columnOptions?.style,
         width: `${widths[colID]}px`,

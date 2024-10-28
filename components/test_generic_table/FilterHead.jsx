@@ -4,15 +4,15 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import IconButton from "@mui/material/IconButton";
-// import css from "@/styles/filter-panel.module.css";
+import css from "@/styles/filter-panel.module.css";
 
 const FilterHead = ({ open, setOpen, pageTitle }) => {
   return (
-    <Box className={"fp_icon_wrapper"} onClick={() => setOpen(!open)}>
-      <h2 className={"fp_filter_title"}>
+    <Box className={css.icon_wrapper} onClick={() => setOpen(!open)}>
+      <h2 className={css.filter_title}>
         <em>{pageTitle}</em>
       </h2>
-      <div className={"fp_f_head_content"}>
+      <div className={css.f_head_content}>
         <Typography
           fontSize={12}
           sx={{ display: open && "none", width: open ? "0px" : "auto" }}
@@ -20,7 +20,7 @@ const FilterHead = ({ open, setOpen, pageTitle }) => {
           Suche öffnen
         </Typography>
         <IconButton>
-          <Typography className={"fp_icon"}>
+          <Typography className={css.icon}>
             {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </Typography>
         </IconButton>

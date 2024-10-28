@@ -23,7 +23,6 @@
 .log_inputAll {
   width: 100%;
   padding: 10px;
-  /* margin: 8px 0; */
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
@@ -41,8 +40,6 @@
   align-items: center;
   padding: 0;
   width: 100%;
-
-  /* border: 1px solid red; */
 }
 .log_show_btn {
   position: absolute;

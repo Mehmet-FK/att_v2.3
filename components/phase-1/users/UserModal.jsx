@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ModalTabs from "./modal-components/ModalTabs";
-// import css from "@/styles/modals.module.css";
+import css from "@/styles/modals.module.css";
 import { useSelector } from "react-redux";
 
 import RolesList from "./modal-components/RolesList";
@@ -101,8 +101,8 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card className={"mod_user_card"}>
-          <CardContent className={"mod_user_content"}>
+        <Card className={css.user_card}>
+          <CardContent className={css.user_content}>
             <ModalTabs
               setTab={setTab}
               tabValue={tabValue}

@@ -8,7 +8,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import TapAndPlayIcon from "@mui/icons-material/TapAndPlay";
-// import css from "@/styles/modals.module.css";
+import css from "@/styles/modals.module.css";
 
 const OrderModal = ({
   item,
@@ -26,7 +26,7 @@ const OrderModal = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card sx={{ height: 440 }} className={"mod_card"}>
+        <Card sx={{ height: 440 }} className={css.card}>
           <div
             style={{
               display: "flex",
@@ -50,7 +50,7 @@ const OrderModal = ({
               </IconButton>
             </div>
           </div>
-          <CardContent className={"mod_content"}>
+          <CardContent className={css.content}>
             {item && (
               <Grid
                 container
@@ -351,7 +351,7 @@ const OrderModal = ({
             <div style={{ display: "flex", justifyContent: "space-around" }}>
               {isAdmin && (
                 <Button
-                  className={"mod_button"}
+                  className={css.button}
                   variant="contained"
                   color="secondary"
                 >
@@ -359,7 +359,7 @@ const OrderModal = ({
                 </Button>
               )}
               <Button
-                className={"mod_button"}
+                className={css.button}
                 //   onClick={handleDelete}
                 onClick={handleClose}
                 variant="contained"

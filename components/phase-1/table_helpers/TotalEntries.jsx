@@ -1,6 +1,6 @@
 const TotalEntries = ({ totalEntries }) => {
   return (
-    <div
+    <span
       style={{
         display: "flex",
         columnGap: "5px",
@@ -12,7 +12,7 @@ const TotalEntries = ({ totalEntries }) => {
       <span style={{ fontSize: "0.8rem" }}>
         {totalEntries?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
       </span>
-    </div>
+    </span>
   );
 };
 

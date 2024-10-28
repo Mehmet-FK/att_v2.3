@@ -1,6 +1,6 @@
 import { Handle, Position } from "reactflow";
 import { useState } from "react";
-import sty from "@/styles/rf-node-styles.module.css";
+import css from "@/styles/rf-node-styles.module.css";
 import { Box, Tooltip } from "@mui/material";
 import NodeDescriptionDialog from "../NodeDescriptionDialog";
 import InfoIcon from "@mui/icons-material/Info";
@@ -29,10 +29,10 @@ const handles = [
 ];
 
 const handleStyles = {
-  top: `${sty.handle} ${sty.handle_top}`,
-  bottom: `${sty.handle} ${sty.handle_bottom}`,
-  left: `${sty.handle} ${sty.handle_left}`,
-  right: `${sty.handle} ${sty.handle_right}`,
+  top: `${css.handle} ${css.handle_top}`,
+  bottom: `${css.handle} ${css.handle_bottom}`,
+  left: `${css.handle} ${css.handle_left}`,
+  right: `${css.handle} ${css.handle_right}`,
 };
 
 const AttachmentNode = ({ data, isConnectable }) => {
@@ -55,7 +55,7 @@ const AttachmentNode = ({ data, isConnectable }) => {
         setInfo={setInfo}
       />
       <Box
-        className={`${sty.node_body} `}
+        className={`${css.node_body} `}
         sx={{ bgcolor: "Background" }}
         onClick={handleOpenDialog}
       >
@@ -75,7 +75,7 @@ const AttachmentNode = ({ data, isConnectable }) => {
           )}
         </Tooltip>
 
-        <h5 className={sty.node_title}>{data.label}</h5>
+        <h5 className={css.node_title}>{data.label}</h5>
         {handles.map((handle) => (
           <Handle
             type={handle.type}

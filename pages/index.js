@@ -31,8 +31,8 @@ export default function Home({ modules }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={"dc_container"}>
-        <div className={"dc_gridContainer"}>
+      <div className={css.container}>
+        <div className={css.gridContainer}>
           <Card
             cardInfo={{
               url: "/mobile-bookings",

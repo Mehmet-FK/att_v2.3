@@ -1,6 +1,6 @@
 import { Box, TableCell, TableHead } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import CSS from "@/styles/table.module.css";
+import css from "@/styles/table.module.css";
 import { useSelector } from "react-redux";
 const ColumnHead = ({
   colID,
@@ -72,14 +72,14 @@ const ColumnHead = ({
   return (
     <TableCell
       ref={cellRef}
-      className={"tab_t_head"}
+      className={css.t_head}
       style={{
         ...columnOptions?.style,
         width: `${columnWidths[colID]}px`,
       }}
     >
       {content}
-      <div ref={resizer} className={"tab_resizer"}></div>
+      <div ref={resizer} className={css.resizer}></div>
     </TableCell>
   );
 };

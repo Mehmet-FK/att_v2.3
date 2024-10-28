@@ -28,7 +28,7 @@ const ItemsTableRow = ({ rowData, widths, colIDs, type }) => {
         item={rowData}
         type={type}
       />
-      <TableRow className={"tab_t_row"} onClick={handleDblClick}>
+      <TableRow className={css.t_row} onClick={handleDblClick}>
         {colIDs?.map((col) => (
           <RowCell
             key={col.accessor}

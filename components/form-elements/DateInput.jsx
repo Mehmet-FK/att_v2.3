@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import React, { useState } from "react";
-// import css from "@/styles/filter-panel.module.css";
+import css from "@/styles/filter-panel.module.css";
 
 const regex = /^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/;
 let validDate = "31.01.2024";
@@ -40,7 +40,7 @@ const DateInput = ({ filterValue, setFilterValue, label, name }) => {
   return (
     <TextField
       onChange={handleChange}
-      className={"fp_dateinput"}
+      className={css.dateinput}
       name={name}
       value={filterValue[name] || ""}
       label={label}

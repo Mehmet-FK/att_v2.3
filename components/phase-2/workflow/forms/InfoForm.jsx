@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-// import css from "@/styles/workflow-comp-styles.module.css";
+import css from "@/styles/workflow-comp-styles.module.css";
 
 const permissionTypes = { User: "0", All: "1" };
 
@@ -33,8 +33,8 @@ const InfoForm = ({ infoFormValues, setInfoFormValues, selectedNode }) => {
   return (
     <>
       {selectedNode && (
-        <div className={"wfc_form_container"}>
-          <div className={"wfc_input_wrapper"}>
+        <div className={css.form_container}>
+          <div className={css.input_wrapper}>
             <TextField
               onChange={(e) => selectedNode.changeEvent(e, selectedNode)}
               value={selectedNode.name || ""}
@@ -45,7 +45,7 @@ const InfoForm = ({ infoFormValues, setInfoFormValues, selectedNode }) => {
               placeholder={selectedNode.type}
             />
           </div>
-          <div className={"wfc_input_wrapper"}>
+          <div className={css.input_wrapper}>
             <FormControl sx={{ minWidth: 120, width: "100%" }} size="medium">
               <InputLabel id="EntityId">Entität</InputLabel>
               <Select
@@ -71,8 +71,8 @@ const InfoForm = ({ infoFormValues, setInfoFormValues, selectedNode }) => {
         </div>
       )}
       {!selectedNode && (
-        <div className={"wfc_form_container"}>
-          <div className={"wfc_input_wrapper"}>
+        <div className={css.form_container}>
+          <div className={css.input_wrapper}>
             <TextField
               onChange={handleChange}
               value={infoFormValues.Name || ""}
@@ -132,9 +132,9 @@ const InfoForm = ({ infoFormValues, setInfoFormValues, selectedNode }) => {
               </Select>
             </FormControl>
           </div>
-          <div className={"wfc_multiline_wrapper"}>
+          <div className={css.multiline_wrapper}>
             <TextField
-              className={"wfc_form_multiline"}
+              className={css.form_multiline}
               onChange={handleChange}
               value={infoFormValues.Description || ""}
               variant="outlined"

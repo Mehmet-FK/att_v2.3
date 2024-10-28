@@ -2,7 +2,7 @@ import { Box, TableCell, TableHead } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-// import css from "@/styles/table.module.css";
+import css from "@/styles/table.module.css";
 import { useSelector } from "react-redux";
 
 const ColumnHead = ({
@@ -82,7 +82,7 @@ const ColumnHead = ({
   return (
     <TableCell
       ref={cellRef}
-      className={"tab_t_head"}
+      className={css.t_head}
       onMouseDown={(e) => handleSortParams(colID, e)}
       style={{
         ...columnOptions?.style,
@@ -94,7 +94,7 @@ const ColumnHead = ({
         <ArrowDownwardIcon fontSize="small" />
       )}
       {sortingParams[colID] === "asc" && <ArrowUpwardIcon fontSize="small" />}
-      <div ref={resizer} className={"tab_resizer"}></div>
+      <div ref={resizer} className={css.resizer}></div>
     </TableCell>
   );
 };

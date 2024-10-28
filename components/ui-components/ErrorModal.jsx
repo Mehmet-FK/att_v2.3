@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
-// import css from "@/styles/modals.module.css";
+import css from "@/styles/modals.module.css";
 import { useEffect, useState } from "react";
 
 const ErrorModal = ({ error }) => {
@@ -27,7 +27,7 @@ const ErrorModal = ({ error }) => {
       }}
     >
       <Fade in={open}>
-        <div className={"mod_error_modal"}>
+        <div className={css.error_modal}>
           <div>
             <Typography id="transition-modal-title" variant="h6" component="h2">
               Fehler

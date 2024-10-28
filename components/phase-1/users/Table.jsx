@@ -133,7 +133,7 @@ const UsersTable = () => {
       <TableContainer
         component={Paper}
         ref={tableRef}
-        className={"tab_table_container"}
+        className={css.table_container}
       >
         <FilterPanel fieldsObject={users?.entries[0]} />
 
@@ -147,7 +147,7 @@ const UsersTable = () => {
         />
 
         <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
-          <TableRow className={"tab_t_row"}>
+          <TableRow className={css.t_row}>
             {checkboxColumn && (
               <Collapse
                 sx={{ p: 0 }}

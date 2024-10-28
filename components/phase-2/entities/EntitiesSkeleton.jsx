@@ -1,18 +1,16 @@
 import css from "@/styles/skeletons.module.css";
 const SkeletonCard = () => {
   return (
-    <div className={"skel_box"}>
-      <div className={"skel_skeleton"}>
-        <div className={"skel_skeleton_left"}>
-          <div
-            className={`${"skel_line"} ${"skel_h17"} ${"skel_w40"} ${"skel_m10"}`}
-          ></div>
-          <div className={"skel_line"}></div>
-          <div className={`${"skel_line"} ${"skel_h8"} ${"skel_w50"}`}></div>
-          <div className={`${"skel_line"} ${"skel_w75"}`}></div>
+    <div className={css.box}>
+      <div className={css.skeleton}>
+        <div className={css.skeleton_left}>
+          <div className={`${css.line} ${css.h17} ${css.w40} ${css.m10}`}></div>
+          <div className={css.line}></div>
+          <div className={`${css.line} ${css.h8} ${css.w50}`}></div>
+          <div className={`${css.line} ${css.w75}`}></div>
         </div>
-        <div className={"skel_skeleton_right"}>
-          <div className={`${"skel_square"} ${"skel_circle"}`}></div>
+        <div className={css.skeleton_right}>
+          <div className={`${css.square} ${css.circle}`}></div>
         </div>
       </div>
     </div>

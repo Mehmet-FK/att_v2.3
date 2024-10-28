@@ -6,7 +6,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import IconButton from "@mui/material/IconButton";
 import Image from "next/image";
-// import css from "@/styles/modals.module.css";
+import css from "@/styles/modals.module.css";
 import Loading_Icon from "@/components/phase-2/table/table_helpers/Loading_Icon";
 
 const ImageModal = ({ open, setOpen, index, images }) => {
@@ -47,14 +47,14 @@ const ImageModal = ({ open, setOpen, index, images }) => {
         // outlineOffset: "-100px",
       }}
     >
-      <Box component={Paper} className={"mod_book_img_card"}>
-        <Box className={"mod_button_wrap_left"} onClick={handlePrevImage}>
+      <Box component={Paper} className={css.book_img_card}>
+        <Box className={css.button_wrap_left} onClick={handlePrevImage}>
           <IconButton>
             <NavigateBeforeIcon sx={{ color: "#000" }} />
           </IconButton>
         </Box>
         {isLoading && (
-          <div className={"mod_loader_wrap"}>
+          <div className={css.loader_wrap}>
             <Loading_Icon />
           </div>
         )}
@@ -80,7 +80,7 @@ const ImageModal = ({ open, setOpen, index, images }) => {
           }}
         />
 
-        <Box className={"mod_button_wrap_right"} onClick={handleNextImage}>
+        <Box className={css.button_wrap_right} onClick={handleNextImage}>
           <IconButton>
             <NavigateNextIcon sx={{ color: "#000" }} />
           </IconButton>

@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useSelector } from "react-redux";
-// import css from "@/styles/modals.module.css";
+import css from "@/styles/modals.module.css";
 
 const BookingModal = ({ setOpenBookingModal, openBookingModal, booking }) => {
   const { bookingTypes } = useSelector((state) => state.attensam.data);
@@ -57,7 +57,7 @@ const BookingModal = ({ setOpenBookingModal, openBookingModal, booking }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Card sx={{ height: 440 }} className={"mod_card"}>
+        <Card sx={{ height: 440 }} className={css.card}>
           <div
             style={{
               display: "flex",
@@ -82,7 +82,7 @@ const BookingModal = ({ setOpenBookingModal, openBookingModal, booking }) => {
               </IconButton>
             </div>
           </div>
-          <CardContent className={"mod_content"}>
+          <CardContent className={css.content}>
             <div
               style={{
                 display: "flex",
@@ -90,7 +90,7 @@ const BookingModal = ({ setOpenBookingModal, openBookingModal, booking }) => {
                 rowGap: "8px",
               }}
             >
-              <div className={"mod_book_inputgroup"}>
+              <div className={css.book_inputgroup}>
                 {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateField
                     disabled={true}
@@ -230,7 +230,7 @@ const BookingModal = ({ setOpenBookingModal, openBookingModal, booking }) => {
                 </Button>
               )} */}
               <Button
-                className={"mod_button"}
+                className={css.button}
                 onClick={handleClose}
                 variant="contained"
                 color="secondary"

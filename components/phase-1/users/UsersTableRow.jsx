@@ -60,7 +60,7 @@ const UsersTableRow = ({
         userInfo={rowData}
       />
       <TableRow
-        className={"tab_t_row"}
+        className={css.t_row}
         onClick={handleDblClick}
         sx={{
           backgroundColor:
@@ -74,7 +74,7 @@ const UsersTableRow = ({
           in={checkboxColumn.isOpen}
         >
           <TableCell
-            //className={"tab_t_data"}
+            //className={css.t_data}
             sx={{
               width: "5rem",
               textAlign: "center",

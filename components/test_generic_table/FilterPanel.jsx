@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-// import css from "@/styles/filter-panel.module.css";
+import css from "@/styles/filter-panel.module.css";
 import { Collapse } from "@mui/material";
 import { useState } from "react";
 import FilterHead from "./FilterHead";
@@ -48,7 +48,7 @@ const FilterPanel = ({ fieldsObject, headers }) => {
   const fields = extractFilterFields(fieldsObject);
 
   return (
-    <Box component={Paper} className={"fp_container"}>
+    <Box component={Paper} className={css.container}>
       <FilterHead open={open} setOpen={setOpen} pageTitle="Mobile Buchungen" />
       <Collapse
         component="form"
@@ -57,7 +57,7 @@ const FilterPanel = ({ fieldsObject, headers }) => {
         timeout="auto"
         unmountOnExit
       >
-        <div className={"fp_grid"}>{...fields}</div>
+        <div className={css.grid}>{...fields}</div>
       </Collapse>
     </Box>
   );

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import css from "@/styles/dashboard-card.module.css";
 const Card = ({ cardInfo }) => {
   return (
     <Link
@@ -6,13 +7,13 @@ const Card = ({ cardInfo }) => {
         pathname: cardInfo.url,
       }}
     >
-      <div className="dc_card">
-        <div className={"dc_cardBody"}>
-          <h5 className={"dc_cardTitle"}>{cardInfo?.caption}</h5>
+      <div className={css.card}>
+        <div className={css.cardBody}>
+          <h5 className={css.cardTitle}>{cardInfo?.caption}</h5>
 
           <img
             src={cardInfo?.defaultIconUrl}
-            className={"dc_cardIcon"}
+            className={css.cardIcon}
             alt="icon"
           />
         </div>

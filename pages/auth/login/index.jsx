@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import css from "@/styles/login.module.css";
+import css from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
@@ -64,11 +64,11 @@ const Login = () => {
       <Head>
         <title>Attensam Login</title>
       </Head>
-      <div className={"log_container"}>
-        <form className={"log_form"} onSubmit={(e) => handleSubmit(e)}>
+      <div className={css.container}>
+        <form className={css.form} onSubmit={(e) => handleSubmit(e)}>
           <img src="/assets/attensam-logo.svg" />
           <input
-            className={"log_inputAll"}
+            className={css.inputAll}
             onChange={handleChange}
             type="text"
             name="username"
@@ -76,9 +76,9 @@ const Login = () => {
             required
           />
 
-          <div className={"log_password_wrapper"}>
+          <div className={css.password_wrapper}>
             <input
-              className={"log_inputAll"}
+              className={css.inputAll}
               onChange={handleChange}
               type={showPassword ? "text" : "password"}
               name="password"
@@ -89,11 +89,11 @@ const Login = () => {
               onClick={togglePassword}
               fontSize="small"
               sx={{ color: "#000" }}
-              className={"log_show_btn"}
+              className={css.show_btn}
             />
             <span
-              className={`log_cross_line ${
-                showPassword && "log_cross_line_active"
+              className={`${css.cross_line} ${
+                showPassword && css.cross_line_active
               } `}
             ></span>
           </div>
@@ -103,7 +103,7 @@ const Login = () => {
             loadingPosition="start"
             type="submit"
             fullWidth
-            className={"log_submit"}
+            className={css.submit}
             style={{ color: "#000" }}
           >
             Login

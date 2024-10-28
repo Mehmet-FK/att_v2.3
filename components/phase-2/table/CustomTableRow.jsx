@@ -33,7 +33,7 @@ const CustomTableRow = ({ rowData, widths, columnOptions, colIDs }) => {
   }, [colIDs]); */
   return (
     <>
-      <TableRow className={"tab_t_row"}>
+      <TableRow className={css.t_row}>
         {colIDs.map((key) => (
           <RowCell
             colID={key}

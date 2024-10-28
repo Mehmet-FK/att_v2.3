@@ -119,7 +119,7 @@ const Table = () => {
       <TableContainer
         component={Paper}
         ref={tableRef}
-        className={"tab_table_container"}
+        className={css.table_container}
       >
         <FilterPanel fieldsObject={dataSets.fields || {}} module={module} />
 
@@ -131,7 +131,7 @@ const Table = () => {
         />
 
         <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
-          <TableRow className={"tab_t_row"}>
+          <TableRow className={css.t_row}>
             {shownColumns.map((header) => (
               <ColumnHead
                 key={header}
