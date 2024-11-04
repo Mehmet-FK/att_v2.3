@@ -3,6 +3,7 @@ import TotalEntries from "./TotalEntries";
 import Loading_Icon from "./Loading_Icon";
 import Pagination from "./Pagination";
 import DownloadCSV from "./DownloadCSV";
+import { tableNameConstants } from "@/helpers/Constants";
 
 const TableUtilities = ({
   table,
@@ -13,9 +14,9 @@ const TableUtilities = ({
   rawData,
 }) => {
   let fileName = "";
-  if (table === "users") fileName = "benutzer";
-  else if (table === "bookings") fileName = "mobile_buchungen";
-  else if (table === "items") fileName = "datensaetze";
+  if (table === tableNameConstants.USERS) fileName = "benutzer";
+  else if (table === tableNameConstants.BOOKINGS) fileName = "mobile_buchungen";
+  else if (table === tableNameConstants.ITEMS) fileName = "datensaetze";
 
   return (
     <span className={css.util_container}>

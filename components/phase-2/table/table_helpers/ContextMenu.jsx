@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import useContextMenu from "@/hooks/useContextMenu";
 import css from "@/styles/menus.module.css";
 import useOnClickOutside from "@/hooks/useOnClickOutside";
+import { contextMenuConstants } from "@/helpers/Constants";
 const ColumnMenu = ({ allColumns, setHiddenColumns, hiddenColumns }) => {
   const router = useRouter();
 
@@ -82,10 +83,14 @@ const ContextMenu = ({
   const contextMenuRef = useRef(null);
 
   useOnClickOutside(contextMenuRef, closeContextMenu);
+
+  const hideContextMenuIfBodyPointed =
+    contextMenu.point === contextMenuConstants.BODY ? "none" : "flex";
+
   return (
     <Box
       sx={{
-        display: contextMenu.point === "body" ? "none" : "flex",
+        display: hideContextMenuIfBodyPointed,
         top: `${Y}px`,
         left: `${X}px`,
       }}
@@ -93,7 +98,7 @@ const ContextMenu = ({
       component={Paper}
       ref={contextMenuRef}
     >
-      {contextMenu.point === "head" && (
+      {contextMenu.point === contextMenuConstants.HEAD && (
         <MenuItem
           sx={{
             width: "100%",
@@ -106,16 +111,17 @@ const ContextMenu = ({
           Spalten Verwalten
         </MenuItem>
       )}
-      {setOpenModal !== undefined && contextMenu.point === "body" && (
-        <>
-          <MenuItem
-            sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
-            onClick={() => setOpenModal(true)}
-          >
-            Neu Anlegen
-          </MenuItem>
-        </>
-      )}
+      {setOpenModal !== undefined &&
+        contextMenu.point === contextMenuConstants.BODY && (
+          <>
+            <MenuItem
+              sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
+              onClick={() => setOpenModal(true)}
+            >
+              Neu Anlegen
+            </MenuItem>
+          </>
+        )}
 
       {open.columns && (
         <ColumnMenu

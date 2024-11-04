@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import useContextMenu from "@/hooks/useContextMenu";
 import css from "@/styles/menus.module.css";
+import { contextMenuConstants, tableNameConstants } from "@/helpers/Constants";
 const ColumnMenu = ({ allColumns, setHiddenColumns, hiddenColumns }) => {
   const router = useRouter();
 
@@ -81,10 +82,13 @@ const ContextMenu = ({
 
   useOnClickOutside(contextMenuRef, closeContextMenu);
 
+  const hideContextMenuIfBodyPointed =
+    contextMenu.point === contextMenuConstants.BODY ? "none" : "flex";
+
   return (
     <Box
       sx={{
-        display: contextMenu.point === "body" ? "none" : "flex",
+        display: hideContextMenuIfBodyPointed,
         top: `${Y}px`,
         left: `${X}px`,
       }}
@@ -92,7 +96,7 @@ const ContextMenu = ({
       component={Paper}
       ref={contextMenuRef}
     >
-      {contextMenu.point === "head" && (
+      {contextMenu.point === contextMenuConstants.HEAD && (
         <MenuItem
           sx={{
             width: "100%",
@@ -105,70 +109,65 @@ const ContextMenu = ({
           Spalten Verwalten
         </MenuItem>
       )}
-      {setOpenModal !== undefined && contextMenu.point === "body" && (
-        <>
-          {/* <MenuItem
-            sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
-            onClick={() => setOpenModal(true)}
-          >
-            Neu Anlegen
-          </MenuItem> */}
-          {setOpenColumn !== undefined && (
-            <>
-              <MenuItem
-                sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
-                onClick={() => {
-                  if (openColumn.isOpen) {
-                    setOpenColumn({
-                      selectedRows: [],
-                      isOpen: false,
-                      data: [],
-                    });
-                  } else {
-                    setOpenColumn((prev) => ({ ...prev, isOpen: true }));
-                  }
-                  closeContextMenu();
-                }}
-              >
-                Mehrfache Auswahl
-              </MenuItem>
+      {setOpenModal !== undefined &&
+        contextMenu.point === contextMenuConstants.BODY && (
+          <>
+            {setOpenColumn !== undefined && (
+              <>
+                <MenuItem
+                  sx={{ width: "100%", fontSize: "0.9rem", fontWeight: "600" }}
+                  onClick={() => {
+                    if (openColumn.isOpen) {
+                      setOpenColumn({
+                        selectedRows: [],
+                        isOpen: false,
+                        data: [],
+                      });
+                    } else {
+                      setOpenColumn((prev) => ({ ...prev, isOpen: true }));
+                    }
+                    closeContextMenu();
+                  }}
+                >
+                  Mehrfache Auswahl
+                </MenuItem>
 
-              {table === "users" && (
-                <>
-                  {openColumn.selectedRows.length > 0 && (
-                    <MenuItem
-                      onClick={() => setOpenMultiEditModal(true)}
-                      sx={{
-                        width: "100%",
-                        fontSize: "0.9rem",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Auswahl Bearbeiten
-                    </MenuItem>
-                  )}
-                </>
-              )}
-              {table === "bookings" && (
-                <>
-                  {openColumn.selectedRows.length > 0 && (
-                    <MenuItem
-                      // onClick={() => setOpenMultiEditModal(true)}
-                      sx={{
-                        width: "100%",
-                        fontSize: "0.9rem",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Importieren
-                    </MenuItem>
-                  )}
-                </>
-              )}
-            </>
-          )}
-        </>
-      )}
+                {table === tableNameConstants.USERS && (
+                  <>
+                    {openColumn.selectedRows.length > 0 && (
+                      <MenuItem
+                        onClick={() => setOpenMultiEditModal(true)}
+                        sx={{
+                          width: "100%",
+                          fontSize: "0.9rem",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Auswahl Bearbeiten
+                      </MenuItem>
+                    )}
+                  </>
+                )}
+                {table === tableNameConstants.BOOKINGS && (
+                  <>
+                    {openColumn.selectedRows.length > 0 && (
+                      <MenuItem
+                        // onClick={() => setOpenMultiEditModal(true)}
+                        sx={{
+                          width: "100%",
+                          fontSize: "0.9rem",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Importieren
+                      </MenuItem>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </>
+        )}
 
       {open.columns && (
         <ColumnMenu

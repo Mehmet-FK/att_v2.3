@@ -12,6 +12,7 @@ import {
 } from "@/helpers/DownloadCsvFunctions";
 import useAxios from "@/hooks/useAxios";
 import { useSelector } from "react-redux";
+import { tableNameConstants } from "@/helpers/Constants";
 
 const DownloadCSV = ({ rawData, fileName, type, table }) => {
   const date = new Date().toJSON().slice(0, 10).replaceAll("-", "");
@@ -73,12 +74,12 @@ const DownloadCSV = ({ rawData, fileName, type, table }) => {
   };
   const getFilteredData = async () => {
     let url = "";
-    if (table === "users") {
+    if (table === tableNameConstants.USERS) {
       url = "AtinaUsers?showPagination=true&pageNumber=1&pageSize=10000";
-    } else if (table === "bookings") {
+    } else if (table === tableNameConstants.BOOKINGS) {
       url =
         "api/AtinaMobileBookings?showPagination=true&pageNumber=1&pageSize=10000";
-    } else if (table === "items") {
+    } else if (table === tableNameConstants.ITEMS) {
       url =
         "api/AtinaItems/SearchByKeyValue?onlyWithTagId=false&showPagination=true&pageNumber=1&pageSize=10000";
     } else if (table === "protocol") {

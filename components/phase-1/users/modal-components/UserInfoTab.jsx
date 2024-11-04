@@ -11,6 +11,7 @@ import { client, settlement } from "@/helpers/Constants";
 
 import React from "react";
 import { useSelector } from "react-redux";
+import css from "@/styles/modals.module.css";
 
 const UserInfoTab = ({
   userInfo,

@@ -28,6 +28,7 @@ import useColumns from "@/hooks/useColumns";
 import UsersTableRow from "./UsersTableRow";
 import TableUtilities from "@/components/phase-1/table_helpers/TableUtilities";
 import MultipleEditModal from "./modal-components/MultipleEditModal";
+import { contextMenuConstants, tableNameConstants } from "@/helpers/Constants";
 
 const initalContextMenu = {
   show: false,
@@ -43,6 +44,7 @@ const UsersTable = () => {
   const [contextMenu, setContextMenu] = useState(initalContextMenu);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [openMultiEditModal, setOpenMultiEditModal] = useState(false);
+  const [triggerAPICall, setTriggerAPICall] = useState(false);
 
   const [hiddenColumns, setHiddenColumns] = useState([]); // User preferred not shown Columns
 
@@ -64,7 +66,7 @@ const UsersTable = () => {
     setWidths,
     //* variables
     columnOptions,
-  } = useTable("users");
+  } = useTable(tableNameConstants.USERS);
 
   const users = useSelector((state) => state.attensam?.data?.users); // Users Data From Redux Store
   const { user } = useSelector((state) => state.settings);
@@ -89,13 +91,12 @@ const UsersTable = () => {
   useEffect(() => {
     if (!user?.token) return;
     getWorkflowsForUserRoles();
-    console.log("first");
   }, [user]);
 
   useEffect(() => {
     const params = makeUrlParams();
     getUsersData(params + filterParams);
-  }, [paginationParams, sortingParams, filterParams]);
+  }, [paginationParams, sortingParams, filterParams, triggerAPICall]);
 
   useEffect(() => {
     adjustColumnWidths(tableRef, shownColumns);
@@ -124,10 +125,9 @@ const UsersTable = () => {
           setOpenColumn={setCheckboxColumn}
           openColumn={checkboxColumn}
           setOpenMultiEditModal={setOpenMultiEditModal}
-          // tableColumns={tableColumns}
           setHiddenColumns={setHiddenColumns}
           hiddenColumns={hiddenColumns}
-          table="users"
+          table={tableNameConstants.USERS}
         />
       )}
       <TableContainer
@@ -135,10 +135,13 @@ const UsersTable = () => {
         ref={tableRef}
         className={css.table_container}
       >
-        <FilterPanel fieldsObject={users?.entries[0]} />
+        <FilterPanel
+          fieldsObject={users?.entries[0]}
+          setTriggerAPICall={setTriggerAPICall}
+        />
 
         <TableUtilities
-          table="users"
+          table={tableNameConstants.USERS}
           totalEntries={users?.totalEntries}
           totalPages={users?.totalPages}
           rawData={users?.entries}
@@ -146,7 +149,9 @@ const UsersTable = () => {
           loading={loading}
         />
 
-        <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
+        <TableHead
+          onContextMenu={(e) => handleRightClick(e, contextMenuConstants.HEAD)}
+        >
           <TableRow className={css.t_row}>
             {checkboxColumn && (
               <Collapse
@@ -169,11 +174,9 @@ const UsersTable = () => {
                       textAlign: "center",
                       textTransform: "capitalize",
                       fontWeight: "600",
-                      // color: "#888",
                       fontSize: "0.7rem",
                       cursor: "pointer",
                       borderRight: "0.3px solid #ccc",
-                      // borderLeft: "0.4px solid #ccc0",
                       userSelect: "none",
                       padding: "7.5px 0 7.5px 0",
                     }}
@@ -193,7 +196,7 @@ const UsersTable = () => {
             {shownColumns?.map((header) => (
               <ColumnHead
                 key={header.accessor}
-                table={"users"}
+                table={tableNameConstants.USERS}
                 colID={header.accessor}
                 column={header}
                 columnOptions={columnOptions}
@@ -204,7 +207,9 @@ const UsersTable = () => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody onContextMenu={(e) => handleRightClick(e, "body")}>
+        <TableBody
+          onContextMenu={(e) => handleRightClick(e, contextMenuConstants.BODY)}
+        >
           {usersData?.entries.map((data, index) => (
             <UsersTableRow
               rowData={data}

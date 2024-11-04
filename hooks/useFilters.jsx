@@ -1,3 +1,4 @@
+import { tableNameConstants } from "@/helpers/Constants";
 import {
   setCurrentPage,
   setFilterParams,
@@ -27,8 +28,10 @@ const useFilters = () => {
         base += `&${key}=${filterVal[key]}`;
       }
     }
-    dispatch(setFilterParams({ params: base, table: "bookings" }));
-    dispatch(setCurrentPage({ number: 1, table: "bookings" }));
+    dispatch(
+      setFilterParams({ params: base, table: tableNameConstants.BOOKINGS })
+    );
+    dispatch(setCurrentPage({ number: 1, table: tableNameConstants.BOOKINGS }));
   };
 
   const filterItems = (filterVal) => {
@@ -50,8 +53,10 @@ const useFilters = () => {
       }
     }
 
-    dispatch(setFilterParams({ params: base, table: "items" }));
-    dispatch(setCurrentPage({ number: 1, table: "items" }));
+    dispatch(
+      setFilterParams({ params: base, table: tableNameConstants.ITEMS })
+    );
+    dispatch(setCurrentPage({ number: 1, table: tableNameConstants.ITEMS }));
   };
 
   const filterUsers = (filterVal) => {
@@ -60,8 +65,10 @@ const useFilters = () => {
       if (!filterVal[key]) continue;
       base += `&${key}=${filterVal[key]}`;
     }
-    dispatch(setFilterParams({ params: base, table: "users" }));
-    dispatch(setCurrentPage({ number: 1, table: "users" }));
+    dispatch(
+      setFilterParams({ params: base, table: tableNameConstants.USERS })
+    );
+    dispatch(setCurrentPage({ number: 1, table: tableNameConstants.USERS }));
   };
 
   const filterGeneric = () => {};

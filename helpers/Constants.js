@@ -2930,3 +2930,26 @@ export const dummyData1 = {
     },
   ],
 };
+
+export const tableNameConstants = {
+  BOOKINGS: "bookings",
+  USERS: "users",
+  ITEMS: "items",
+};
+
+export const contextMenuConstants = {
+  HEAD: "head",
+  BODY: "body",
+};
+
+export const itemTableTypeConstants = {
+  ORDER: "Order",
+  METER: "Meter",
+  VEHICLE: "Vehicle",
+};
+
+export const pageTitleConstants = {
+  BOOKINGS_TABLE: "Mobile Buchungen",
+  ITEMS_TABLE: "Datensätze",
+  USERS_TABLE: "Benutzer",
+};

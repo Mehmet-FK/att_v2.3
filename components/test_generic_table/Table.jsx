@@ -7,7 +7,7 @@ import CustomTableRow from "./CustomTableRow";
 import css from "@/styles/table.module.css";
 
 //TODO: the Import below is only for testing do not forget to delete
-import { dummyData } from "@/helpers/Constants";
+import { dummyData, tableNameConstants } from "@/helpers/Constants";
 import { useDispatch } from "react-redux";
 import {
   fetchStart,
@@ -77,7 +77,9 @@ const Table = () => {
       ],
     });
     //set data to redux store
-    dispatch(getSuccess({ data: dummyData, dataName: "bookings" }));
+    dispatch(
+      getSuccess({ data: dummyData, dataName: tableNameConstants.BOOKINGS })
+    );
     const extractedHeaders = extractHeaders(dummyData.entries[0]);
     setHeaders(extractedHeaders);
     // console.log(extractedHeaders);

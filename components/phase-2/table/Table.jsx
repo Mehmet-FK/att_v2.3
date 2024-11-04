@@ -9,6 +9,7 @@ import {
   dummyDataItems,
   dummyDataBookings,
   dummyData1,
+  contextMenuConstants,
 } from "@/helpers/Constants";
 import useContextMenu from "@/hooks/useContextMenu";
 import useTable from "@/hooks/useTable";
@@ -130,7 +131,9 @@ const Table = () => {
           paginationParams={paginationParams}
         />
 
-        <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
+        <TableHead
+          onContextMenu={(e) => handleRightClick(e, contextMenuConstants.HEAD)}
+        >
           <TableRow className={css.t_row}>
             {shownColumns.map((header) => (
               <ColumnHead

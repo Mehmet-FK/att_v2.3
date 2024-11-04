@@ -19,6 +19,7 @@ import useContextMenu from "@/hooks/useContextMenu";
 import useTable from "@/hooks/useTable";
 import useColumns from "@/hooks/useColumns";
 import TableUtilities from "@/components/phase-1/table_helpers/TableUtilities";
+import { contextMenuConstants, tableNameConstants } from "@/helpers/Constants";
 
 const initalContextMenu = {
   show: false,
@@ -30,11 +31,10 @@ const initalContextMenu = {
 const BookingsTable = () => {
   const [bookingsData, setBookingsData] = useState({ entries: [] }); // Data from Redux Store
   const [headers, setHeaders] = useState([]); // Dynamic Headers, extracted from first element of JSON Array
-  // const [columnWidths, setColumnWidths] = useState({}); // Column Resize widths
   const [contextMenu, setContextMenu] = useState(initalContextMenu);
   const [openBookingModal, setOpenBookingModal] = useState(false);
-
   const [hiddenColumns, setHiddenColumns] = useState([]); // User preferred not shown Columns
+  const [triggerAPICall, setTriggerAPICall] = useState(false);
 
   const { bookingsTableColumns } = useColumns();
   const { getMobileBookingsData } = useTableDataCalls();
@@ -48,7 +48,7 @@ const BookingsTable = () => {
     setWidths,
     //* variables
     columnOptions,
-  } = useTable("bookings");
+  } = useTable(tableNameConstants.BOOKINGS);
 
   const bookings = useSelector((state) => state.attensam?.data?.bookings); // Bookings Data From Redux Store
   const { loading } = useSelector((state) => state.attensam);
@@ -65,16 +65,19 @@ const BookingsTable = () => {
   const tableRef = useRef(null);
   const columnWidthsInitialized = useRef(null);
 
+  const columnWidthInitializedFlag = () =>
+    (columnWidthsInitialized.current = true);
+
   useLayoutEffect(() => {
-    initTableUtilsState("bookings");
+    initTableUtilsState(tableNameConstants.BOOKINGS);
     initColumnWidths(bookingsTableColumns);
-    columnWidthsInitialized.current = true;
+    columnWidthInitializedFlag();
   }, []);
 
   useEffect(() => {
     const params = makeUrlParams();
     getMobileBookingsData(params + filterParams);
-  }, [paginationParams, sortingParams, filterParams]);
+  }, [paginationParams, sortingParams, filterParams, triggerAPICall]);
 
   useEffect(() => {
     if (columnWidthsInitialized.current) {
@@ -97,12 +100,9 @@ const BookingsTable = () => {
           contextMenu={contextMenu}
           setContextMenu={setContextMenu}
           setOpenModal={setOpenBookingModal}
-          //   setOpenColumn={setCheckboxColumn}
-          //   openColumn={checkboxColumn}
-          // tableColumns={tableColumns}
           setHiddenColumns={setHiddenColumns}
           hiddenColumns={hiddenColumns}
-          table="bookings"
+          table={tableNameConstants.BOOKINGS}
         />
       )}
       <TableContainer
@@ -110,10 +110,13 @@ const BookingsTable = () => {
         ref={tableRef}
         className={css.table_container}
       >
-        <FilterPanel fieldsObject={bookingsData?.entries[0]} />
+        <FilterPanel
+          fieldsObject={bookingsData?.entries[0]}
+          setTriggerAPICall={setTriggerAPICall}
+        />
 
         <TableUtilities
-          table="bookings"
+          table={tableNameConstants.BOOKINGS}
           totalEntries={bookings?.totalEntries}
           totalPages={bookings?.totalPages}
           rawData={bookings?.entries}
@@ -121,12 +124,14 @@ const BookingsTable = () => {
           loading={loading}
         />
 
-        <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
+        <TableHead
+          onContextMenu={(e) => handleRightClick(e, contextMenuConstants.HEAD)}
+        >
           <TableRow className={css.t_row}>
             {shownColumns?.map((header) => (
               <ColumnHead
                 key={header.accessor}
-                table={"bookings"}
+                table={tableNameConstants.BOOKINGS}
                 colID={header.accessor}
                 column={header}
                 columnOptions={columnOptions}

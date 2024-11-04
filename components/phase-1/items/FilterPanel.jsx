@@ -2,33 +2,40 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import FilterHead from "../FilterHead";
 import useFilters from "@/hooks/useFilters";
+import {
+  itemTableTypeConstants,
+  pageTitleConstants,
+  tableNameConstants,
+} from "@/helpers/Constants";
 
-const ItemsFilter = ({ type, setType }) => {
+const ItemsFilter = ({ type, setType, setTriggerAPICall }) => {
   const { filterItems, resetFilter } = useFilters();
   const [open, setOpen] = useState(false);
 
-  const [filterVal, setFilterVal] = useState({ itemType: "Order" });
+  const [filterVal, setFilterVal] = useState({
+    itemType: itemTableTypeConstants.ORDER,
+  });
 
   const handleFilter = (e) => {
     e.preventDefault();
     setType(filterVal.itemType);
     filterItems(filterVal);
+    setTriggerAPICall((prev) => !prev);
   };
 
   const handleReset = useCallback(() => {
-    setFilterVal({ itemType: "Order" });
-    resetFilter("items");
-    setType("Order");
+    setFilterVal({ itemType: itemTableTypeConstants.ORDER });
+    resetFilter(tableNameConstants.ITEMS);
+    setType(itemTableTypeConstants.ORDER);
   }, []);
 
   const handleChange = useCallback(
@@ -43,7 +50,11 @@ const ItemsFilter = ({ type, setType }) => {
 
   return (
     <Box component={Paper} sx={filterStyles.container}>
-      <FilterHead open={open} setOpen={setOpen} pageTitle={"Datensätze"} />
+      <FilterHead
+        open={open}
+        setOpen={setOpen}
+        pageTitle={pageTitleConstants.ITEMS_TABLE}
+      />
       <Collapse sx={{ width: "100%" }} in={open} timeout="auto" unmountOnExit>
         <Box style={filterStyles.insideWrapper} component="form">
           {/* //? == ROW 1 == */}
@@ -54,17 +65,20 @@ const ItemsFilter = ({ type, setType }) => {
                 <Select
                   labelId="itemType"
                   id="demo-select-small"
-                  value={filterVal?.itemType || "Order"}
+                  value={filterVal?.itemType || itemTableTypeConstants.ORDER}
                   label="Itemtyp"
                   name="itemType"
                   onChange={handleChange}
                 >
-                  {/* <MenuItem value={""}>
-                    <Typography component="em">None</Typography>
-                  </MenuItem> */}
-                  <MenuItem value={"Order"}>Auftrag</MenuItem>
-                  <MenuItem value={"Meter"}>Zähler</MenuItem>
-                  <MenuItem value={"Vehicle"}>KFZ</MenuItem>
+                  <MenuItem value={itemTableTypeConstants.ORDER}>
+                    Auftrag
+                  </MenuItem>
+                  <MenuItem value={itemTableTypeConstants.METER}>
+                    Zähler
+                  </MenuItem>
+                  <MenuItem value={itemTableTypeConstants.VEHICLE}>
+                    KFZ
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -103,7 +117,7 @@ const ItemsFilter = ({ type, setType }) => {
               </FormControl>
             </Grid>
             <Grid item md={4} />
-            {filterVal.itemType !== "Vehicle" && (
+            {filterVal.itemType !== itemTableTypeConstants.VEHICLE && (
               <>
                 <Grid item md={2}>
                   <TextField
@@ -171,9 +185,9 @@ const ItemsFilter = ({ type, setType }) => {
                 variant="outlined"
                 size="small"
                 label={
-                  filterVal.itemType === "Order"
+                  filterVal.itemType === itemTableTypeConstants.ORDER
                     ? "Mandant"
-                    : filterVal.itemType == "Meter"
+                    : filterVal.itemType == itemTableTypeConstants.METER
                     ? "Letzte Ablesung am"
                     : "Mandant"
                 }
@@ -188,16 +202,16 @@ const ItemsFilter = ({ type, setType }) => {
                 variant="outlined"
                 size="small"
                 label={
-                  filterVal.itemType === "Order"
+                  filterVal.itemType === itemTableTypeConstants.ORDER
                     ? "Auftragsart"
-                    : filterVal.itemType === "Meter"
+                    : filterVal.itemType === itemTableTypeConstants.METER
                     ? "Letzte Ablesung"
                     : "Standort"
                 }
                 name="data2"
               />
             </Grid>
-            {filterVal.itemType !== "Meter" && (
+            {filterVal.itemType !== itemTableTypeConstants.METER && (
               <Grid item md={2}>
                 <TextField
                   onChange={handleChange}
@@ -206,15 +220,16 @@ const ItemsFilter = ({ type, setType }) => {
                   variant="outlined"
                   size="small"
                   label={
-                    filterVal.itemType === "Order"
+                    filterVal.itemType === itemTableTypeConstants.ORDER
                       ? "Auftragsbetreff"
-                      : filterVal.itemType === "Vehicle" && "Kennzeichen"
+                      : filterVal.itemType === itemTableTypeConstants.VEHICLE &&
+                        "Kennzeichen"
                   }
                   name="data3"
                 />
               </Grid>
             )}
-            {filterVal.itemType !== "Meter" && (
+            {filterVal.itemType !== itemTableTypeConstants.METER && (
               <Grid item md={2}>
                 <TextField
                   onChange={handleChange}
@@ -223,15 +238,16 @@ const ItemsFilter = ({ type, setType }) => {
                   variant="outlined"
                   size="small"
                   label={
-                    filterVal.itemType === "Order"
+                    filterVal.itemType === itemTableTypeConstants.ORDER
                       ? "Kundennummer"
-                      : filterVal.itemType === "Vehicle" && "Modell"
+                      : filterVal.itemType === itemTableTypeConstants.VEHICLE &&
+                        "Modell"
                   }
                   name="data4"
                 />
               </Grid>
             )}
-            {filterVal.itemType === "Order" && (
+            {filterVal.itemType === itemTableTypeConstants.ORDER && (
               <Grid item md={2}>
                 <TextField
                   onChange={handleChange}
@@ -278,15 +294,13 @@ export const filterStyles = {
     alignItems: "center",
     justifyContent: "start",
     transition: "all 0.3s",
-    // position: "sticky",
-    // zIndex: "3",
+
     border: "1px solid #ddd5",
     borderRadius: "0 1rem 0 0",
   },
   icon: {
     fontSize: "1.5rem",
     fontWeight: "900",
-    // paddingInline: "0.5rem",
     width: "2rem",
     height: "2rem",
     borderRadius: "50%",
@@ -301,7 +315,6 @@ export const filterStyles = {
   insideWrapper: {
     width: "100%",
     transition: "all 0.3s",
-    // display: open ? "flex" : "none",
     flexDirection: "column",
     rowGap: "8px",
     paddingInline: "1rem",
@@ -320,8 +333,6 @@ export const filterStyles = {
     columnGap: "5px",
     justifyContent: "end",
     padding: "0.5rem 3rem",
-    // paddingInline: "0.5rem 3rem",
-    // paddingBottom: "",
   },
   button: {
     bgcolor: "primary",

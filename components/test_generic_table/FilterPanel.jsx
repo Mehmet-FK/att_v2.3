@@ -6,6 +6,7 @@ import { useState } from "react";
 import FilterHead from "./FilterHead";
 import TextInput from "../form-elements/TextInput";
 import DateInput from "../form-elements/DateInput";
+import { pageTitleConstants } from "@/helpers/Constants";
 
 const FilterPanel = ({ fieldsObject, headers }) => {
   const [open, setOpen] = useState(true);
@@ -49,7 +50,11 @@ const FilterPanel = ({ fieldsObject, headers }) => {
 
   return (
     <Box component={Paper} className={css.container}>
-      <FilterHead open={open} setOpen={setOpen} pageTitle="Mobile Buchungen" />
+      <FilterHead
+        open={open}
+        setOpen={setOpen}
+        pageTitle={pageTitleConstants.BOOKINGS_TABLE}
+      />
       <Collapse
         component="form"
         in={open}

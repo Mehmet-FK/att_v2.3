@@ -5,22 +5,19 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { useSelector } from "react-redux";
-import CheckIcon from "@mui/icons-material/Check";
-import LoopIcon from "@mui/icons-material/Loop";
-import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import FilterHead from "../FilterHead";
-import DateInput from "@/components/form-elements/DateInput";
-import TimeInput from "@/components/form-elements/TimeInput";
-import useTableDataCalls from "@/hooks/useTableDataCalls";
 import useFilters from "@/hooks/useFilters";
-import { client, settlement } from "@/helpers/Constants";
-// import useFilters from "@/hooks/useFilters";
+import {
+  client,
+  pageTitleConstants,
+  settlement,
+  tableNameConstants,
+} from "@/helpers/Constants";
 const usersFilterParams = {
   bookingType: null,
   street: null,
@@ -36,23 +33,21 @@ const usersFilterParams = {
   timeTo: null,
 };
 
-const UsersFilter = () => {
+const UsersFilter = ({ setTriggerAPICall }) => {
   const { filterUsers, resetFilter } = useFilters();
   const [open, setOpen] = useState(false);
 
   const [filterVal, setFilterVal] = useState(usersFilterParams);
 
-  const handleFilter = useCallback(
-    (e) => {
-      e.preventDefault();
-      filterUsers(filterVal);
-    },
-    [filterVal]
-  );
+  const handleFilter = (e) => {
+    e.preventDefault();
+    setTriggerAPICall((prev) => !prev);
+    filterUsers(filterVal);
+  };
 
   const handleReset = useCallback(() => {
     setFilterVal(usersFilterParams);
-    resetFilter("users");
+    resetFilter(tableNameConstants.USERS);
   }, []);
 
   const handleChange = useCallback(
@@ -67,7 +62,11 @@ const UsersFilter = () => {
 
   return (
     <Box component={Paper} style={filterStyles.container}>
-      <FilterHead open={open} setOpen={setOpen} pageTitle={"Benutzer"} />
+      <FilterHead
+        open={open}
+        setOpen={setOpen}
+        pageTitle={pageTitleConstants.USERS_TABLE}
+      />
       <Collapse sx={{ width: "100%" }} in={open} timeout="auto" unmountOnExit>
         <Box component="form" style={filterStyles.insideWrapper}>
           <Grid container sx={filterStyles.grid.container}>
@@ -101,15 +100,6 @@ const UsersFilter = () => {
                   })}
                 </Select>
               </FormControl>
-              {/* <TextField
-                sx={filterStyles.textField}
-                onChange={handleChange}
-                value={filterVal.client || ""}
-                variant="outlined"
-                size="small"
-                label="Mandant"
-                name="client"
-              /> */}
             </Grid>
             <Grid item md={2}>
               <FormControl sx={{ minWidth: 120, width: "100%" }} size="small">

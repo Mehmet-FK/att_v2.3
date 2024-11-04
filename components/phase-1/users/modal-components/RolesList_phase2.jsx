@@ -1,11 +1,7 @@
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
-
-import CardContent from "@mui/material/CardContent";
 import { useEffect, useState } from "react";
-// import { userRoles } from "@/helpers/Constants";
 import {
   Accordion,
   AccordionDetails,
@@ -13,6 +9,7 @@ import {
   IconButton,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 const nfcRoleDefinitions = [
   {
     id: "NFC_1",

@@ -19,6 +19,11 @@ import DateInput from "@/components/form-elements/DateInput";
 import TimeInput from "@/components/form-elements/TimeInput";
 import useTableDataCalls from "@/hooks/useTableDataCalls";
 import useFilters from "@/hooks/useFilters";
+import {
+  itemTableTypeConstants,
+  pageTitleConstants,
+  tableNameConstants,
+} from "@/helpers/Constants";
 // import useFilters from "@/hooks/useFilters";
 const bookingsFilterParams = {
   bookingType: null,
@@ -35,7 +40,7 @@ const bookingsFilterParams = {
   timeTo: null,
 };
 
-const BookingsFilter = () => {
+const BookingsFilter = ({ setTriggerAPICall }) => {
   const { filterBookings, resetFilter } = useFilters();
   // const { bookingTypes } = useSelector((state) => state.atina);
   const [open, setOpen] = useState(false);
@@ -45,17 +50,14 @@ const BookingsFilter = () => {
   const { bookingTypes } = useSelector((state) => state.attensam.data);
   const { getBookingTypes } = useTableDataCalls();
 
-  const handleFilter = useCallback(
-    (e) => {
-      e.preventDefault();
-      filterBookings(filterVal);
-    },
-    [filterVal]
-  );
-
+  const handleFilter = (e) => {
+    e.preventDefault();
+    setTriggerAPICall((prev) => !prev);
+    filterBookings(filterVal);
+  };
   const handleReset = useCallback(() => {
     setFilterVal(bookingsFilterParams);
-    resetFilter("bookings");
+    resetFilter(tableNameConstants.BOOKINGS);
   }, []);
 
   const handleChange = useCallback(
@@ -76,7 +78,7 @@ const BookingsFilter = () => {
       <FilterHead
         open={open}
         setOpen={setOpen}
-        pageTitle={"Mobile Buchungen"}
+        pageTitle={pageTitleConstants.BOOKINGS_TABLE}
       />
       <Collapse
         component={"form"}
@@ -151,13 +153,13 @@ const BookingsFilter = () => {
                     None{" "}
                   </Typography>
                 </MenuItem>
-                <MenuItem value={"Order"}>
+                <MenuItem value={itemTableTypeConstants.ORDER}>
                   <Typography sx={{ fontSize: "0.7rem" }}>Auftrag </Typography>
                 </MenuItem>
-                <MenuItem value={"Meter"}>
+                <MenuItem value={itemTableTypeConstants.METER}>
                   <Typography sx={{ fontSize: "0.7rem" }}>Zähler </Typography>
                 </MenuItem>
-                <MenuItem value={"Vehicle"}>
+                <MenuItem value={itemTableTypeConstants.VEHICLE}>
                   <Typography sx={{ fontSize: "0.7rem" }}>KFZ </Typography>
                 </MenuItem>
               </Select>
@@ -388,7 +390,6 @@ const BookingsFilter = () => {
           sx={{
             ...filterStyles.insideWrapper,
             flexDirection: "row",
-            // columnGap: "5px",
           }}
         >
           <Grid item md={12 / 5}>

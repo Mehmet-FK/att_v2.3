@@ -1,3 +1,4 @@
+import { itemTableTypeConstants } from "@/helpers/Constants";
 import CheckIcon from "@mui/icons-material/Check";
 import LoopIcon from "@mui/icons-material/Loop";
 import SyncProblemIcon from "@mui/icons-material/SyncProblem";
@@ -243,11 +244,11 @@ const useColumns = () => {
       accessor: "itemType",
       Header: "typ",
       Cell: ({ value }) => {
-        if (value === "Order") {
+        if (value === itemTableTypeConstants.ORDER) {
           return "Auftrag";
-        } else if (value === "Meter") {
+        } else if (value === itemTableTypeConstants.METER) {
           return "Zähler";
-        } else if (value === "Vehicle") {
+        } else if (value === itemTableTypeConstants.VEHICLE) {
           return "KFZ";
         }
       },
@@ -387,11 +388,11 @@ const useColumns = () => {
       accessor: "ItemType",
       Header: "typ",
       Cell: ({ value }) => {
-        if (value === "Order") {
+        if (value === itemTableTypeConstants.ORDER) {
           return "Auftrag";
-        } else if (value === "Meter") {
+        } else if (value === itemTableTypeConstants.METER) {
           return "Zähler";
-        } else if (value === "Vehicle") {
+        } else if (value === itemTableTypeConstants.VEHICLE) {
           return "KFZ";
         }
       },

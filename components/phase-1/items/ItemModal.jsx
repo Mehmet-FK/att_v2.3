@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import MeterModal from "./item-modals/MeterModal";
 import OrderModal from "./item-modals/OrderModal";
 import VehicleModal from "./item-modals/VehicleModal";
+import { itemTableTypeConstants } from "@/helpers/Constants";
 
 const ItemsModal = ({ setOpenItemsModal, openItemsModal, item, type }) => {
   const [inputVal, setInputVal] = useState(item ? item : {});
@@ -24,7 +25,7 @@ const ItemsModal = ({ setOpenItemsModal, openItemsModal, item, type }) => {
 
   return (
     <>
-      {type === "Order" && (
+      {type === itemTableTypeConstants.ORDER && (
         <OrderModal
           item={item}
           handleClose={handleClose}
@@ -36,7 +37,7 @@ const ItemsModal = ({ setOpenItemsModal, openItemsModal, item, type }) => {
           setInputVal={setInputVal}
         />
       )}
-      {type === "Meter" && (
+      {type === itemTableTypeConstants.METER && (
         <MeterModal
           item={item}
           handleClose={handleClose}
@@ -48,7 +49,7 @@ const ItemsModal = ({ setOpenItemsModal, openItemsModal, item, type }) => {
           setInputVal={setInputVal}
         />
       )}
-      {type === "Vehicle" && (
+      {type === itemTableTypeConstants.VEHICLE && (
         <VehicleModal
           item={item}
           handleClose={handleClose}

@@ -1,3 +1,5 @@
+import { itemTableTypeConstants } from "./Constants";
+
 export const userTableCSV = (rawData) => {
   const headersAPI = [
     "username",
@@ -96,11 +98,11 @@ export const bookingsTableCSV = (rawData) => {
     let row = {};
     Object.keys(rawData[i]).forEach((item) => {
       if (headersAPI.includes(item)) {
-        if (rawData[i][item] === "Order") {
+        if (rawData[i][item] === itemTableTypeConstants.ORDER) {
           row = { ...row, [item]: "Auftrag" };
-        } else if (rawData[i][item] === "Vehicle") {
+        } else if (rawData[i][item] === itemTableTypeConstants.VEHICLE) {
           row = { ...row, [item]: "KFZ" };
-        } else if (rawData[i][item] === "Meter") {
+        } else if (rawData[i][item] === itemTableTypeConstants.METER) {
           row = { ...row, [item]: "Zähler" };
         } else {
           row = { ...row, [item]: rawData[i][item] };
@@ -152,11 +154,11 @@ export const nfcTableCSV = (rawData) => {
     let row = {};
     Object.keys(rawData[i]).forEach((item) => {
       if (headersAPI.includes(item)) {
-        if (rawData[i][item] === "Order") {
+        if (rawData[i][item] === itemTableTypeConstants.ORDER) {
           row = { ...row, [item]: "Auftrag" };
-        } else if (rawData[i][item] === "Vehicle") {
+        } else if (rawData[i][item] === itemTableTypeConstants.VEHICLE) {
           row = { ...row, [item]: "KFZ" };
-        } else if (rawData[i][item] === "Meter") {
+        } else if (rawData[i][item] === itemTableTypeConstants.METER) {
           row = { ...row, [item]: "Zähler" };
         } else {
           row = { ...row, [item]: rawData[i][item] };
@@ -231,11 +233,11 @@ export const itemsTableCSV = (rawData, type) => {
     let row = {};
     Object.keys(rawData[i]).forEach((item) => {
       if (headersAPI.includes(item)) {
-        if (rawData[i][item] === "Order") {
+        if (rawData[i][item] === itemTableTypeConstants.ORDER) {
           row = { ...row, [item]: "Auftrag" };
-        } else if (rawData[i][item] === "Vehicle") {
+        } else if (rawData[i][item] === itemTableTypeConstants.VEHICLE) {
           row = { ...row, [item]: "KFZ" };
-        } else if (rawData[i][item] === "Meter") {
+        } else if (rawData[i][item] === itemTableTypeConstants.METER) {
           row = { ...row, [item]: "Zähler" };
         } else if (rawData[i][item] === null) {
           row = { ...row, [item]: "" };
@@ -250,9 +252,9 @@ export const itemsTableCSV = (rawData, type) => {
   return {
     m: arr.map((item) => Object.values(item).join(";")),
     h:
-      type === "Order"
+      type === itemTableTypeConstants.ORDER
         ? headersOrderCSV.join(";").toUpperCase()
-        : type === "Meter"
+        : type === itemTableTypeConstants.METER
         ? headersMeterCSV.join(";").toUpperCase()
         : headersVehicleCSV.join(";").toUpperCase(),
   };

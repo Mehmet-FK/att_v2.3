@@ -6,9 +6,8 @@ import React, {
   useState,
 } from "react";
 import TableContainer from "@mui/material/TableContainer";
-import { Paper, TableBody, TableHead, TableRow } from "@mui/material";
+import { TableBody, TableHead, TableRow } from "@mui/material";
 import css from "@/styles/table.module.css";
-
 import FilterPanel from "./FilterPanel";
 import useTableDataCalls from "@/hooks/useTableDataCalls";
 import ColumnHead from "../ColumnHead";
@@ -19,6 +18,11 @@ import useContextMenu from "@/hooks/useContextMenu";
 import useTable from "@/hooks/useTable";
 import useColumns from "@/hooks/useColumns";
 import TableUtilities from "@/components/phase-1/table_helpers/TableUtilities";
+import {
+  contextMenuConstants,
+  itemTableTypeConstants,
+  tableNameConstants,
+} from "@/helpers/Constants";
 
 const initalContextMenu = {
   show: false,
@@ -28,8 +32,7 @@ const initalContextMenu = {
 };
 
 const ItemsTable = () => {
-  // const [itemsData, setItemsData] = useState({ entries: [] }); // Data from Redux Store
-  const [itemType, setItemType] = useState("Order");
+  const [itemType, setItemType] = useState(itemTableTypeConstants.ORDER);
   const [contextMenu, setContextMenu] = useState(initalContextMenu);
   const [hiddenColumns, setHiddenColumns] = useState([
     "city",
@@ -47,6 +50,7 @@ const ItemsTable = () => {
   ]); // User preferred not shown Columns
 
   const [openItemModal, setOpenItemModal] = useState(false);
+  const [triggerAPICall, setTriggerAPICall] = useState(false);
 
   const {
     ItemsTableOrderColumns,
@@ -64,7 +68,7 @@ const ItemsTable = () => {
     setWidths,
     //variables
     columnOptions,
-  } = useTable("items");
+  } = useTable(tableNameConstants.ITEMS);
 
   const items = useSelector((state) => state.attensam?.data?.items); // Items Data From Redux Store
   const { loading } = useSelector((state) => state.attensam);
@@ -74,11 +78,11 @@ const ItemsTable = () => {
     );
 
   const tableColumns = useMemo(() => {
-    if (itemType === "Order") {
+    if (itemType === itemTableTypeConstants.ORDER) {
       return ItemsTableOrderColumns;
-    } else if (itemType === "Meter") {
+    } else if (itemType === itemTableTypeConstants.METER) {
       return ItemsTableMeterColumns;
-    } else if (itemType === "Vehicle") {
+    } else if (itemType === itemTableTypeConstants.VEHICLE) {
       return ItemsTableVehicleColumns;
     }
   }, [itemType]);
@@ -97,16 +101,11 @@ const ItemsTable = () => {
   useEffect(() => {
     const params = makeUrlParams();
     getAtinaItemsData(params + filterParams, itemType);
-  }, [paginationParams, sortingParams, filterParams]);
+  }, [paginationParams, sortingParams, filterParams, triggerAPICall]);
 
   useEffect(() => {
     adjustColumnWidths(tableRef, shownColumns);
   }, [hiddenColumns, tableColumns, items]);
-
-  // useEffect(() => {
-  //   if (!items) return;
-  //   setItemsData(items);
-  // }, [items]);
 
   return (
     <>
@@ -118,27 +117,21 @@ const ItemsTable = () => {
           contextMenu={contextMenu}
           setContextMenu={setContextMenu}
           setOpenModal={setOpenItemModal}
-          //   setOpenColumn={setCheckboxColumn}
-          //   openColumn={checkboxColumn}
-          // tableColumns={tableColumns}
           setHiddenColumns={setHiddenColumns}
           hiddenColumns={hiddenColumns}
-          table="items"
+          table={tableNameConstants.ITEMS}
         />
       )}
-      <TableContainer
-        // component={"table"}
-        ref={tableRef}
-        className={css.table_container}
-      >
+      <TableContainer ref={tableRef} className={css.table_container}>
         <FilterPanel
           type={itemType}
           setType={setItemType}
           fieldsObject={items?.entries[0]}
+          setTriggerAPICall={setTriggerAPICall}
         />
 
         <TableUtilities
-          table="items"
+          table={tableNameConstants.ITEMS}
           totalEntries={items?.totalEntries}
           totalPages={items?.totalPages}
           rawData={items?.entries}
@@ -146,12 +139,14 @@ const ItemsTable = () => {
           loading={loading}
         />
 
-        <TableHead onContextMenu={(e) => handleRightClick(e, "head")}>
+        <TableHead
+          onContextMenu={(e) => handleRightClick(e, contextMenuConstants.HEAD)}
+        >
           <TableRow className={css.t_row}>
             {shownColumns?.map((header) => (
               <ColumnHead
                 key={header.accessor}
-                table={"items"}
+                table={tableNameConstants.ITEMS}
                 colID={header.accessor}
                 column={header}
                 columnOptions={columnOptions}

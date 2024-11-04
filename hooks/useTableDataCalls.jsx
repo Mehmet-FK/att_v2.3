@@ -8,6 +8,10 @@ import {
   stopLoading,
 } from "@/redux/slices/attensamSlice";
 import { toastErrorNotify, toastSuccessNotify } from "@/helpers/ToastNotify";
+import {
+  itemTableTypeConstants,
+  tableNameConstants,
+} from "@/helpers/Constants";
 
 const useTableDataCalls = () => {
   const dispatch = useDispatch();
@@ -117,8 +121,7 @@ const useTableDataCalls = () => {
         roles: info?.roleIds,
       };
 
-      dispatch(editOneObject({ data: xData, modul: "users" }));
-      // dispatch(setSearchTrigger({ table: "users" }));
+      dispatch(editOneObject({ data: xData, modul: tableNameConstants.USERS }));
 
       toastSuccessNotify(`Erfolgreich durchgeführt..`);
     } catch (err) {
@@ -160,7 +163,9 @@ const useTableDataCalls = () => {
           },
           roles: roleIds,
         };
-        dispatch(editOneObject({ data: xData, modul: "users" }));
+        dispatch(
+          editOneObject({ data: xData, modul: tableNameConstants.USERS })
+        );
       });
       toastSuccessNotify(`Erfolgreich aktualisiert..`);
     } catch (error) {
@@ -170,7 +175,6 @@ const useTableDataCalls = () => {
       console.log(error?.message);
     } finally {
       dispatch(stopLoading());
-      // dispatch(setSearchTrigger({ table: "users" }));
     }
   };
 
@@ -182,25 +186,32 @@ const useTableDataCalls = () => {
   const getMobileBookingsData = (params = "") => {
     getAtinaData(
       "api/AtinaMobileBookings?showPagination=true&" + params,
-      "bookings",
+      tableNameConstants.BOOKINGS,
       1
     );
   };
 
   //* ITEMS
 
-  const getAtinaItemsData = (params = "", type = "Order") =>
+  const getAtinaItemsData = (
+    params = "",
+    type = itemTableTypeConstants.ORDER
+  ) =>
     getAtinaData(
       `api/AtinaItems/SearchByKeyValue?ItemType=${type}&onlyWithTagId=false&showPagination=true&` +
         params,
-      "items",
+      tableNameConstants.ITEMS,
       1
     );
 
   //* USERS
 
   const getUsersData = (params = "") =>
-    getAtinaData("/atina/AtinaUsers?showPagination=true&" + params, "users", 2);
+    getAtinaData(
+      "/atina/AtinaUsers?showPagination=true&" + params,
+      tableNameConstants.USERS,
+      2
+    );
 
   const getWorkflowsForUserRoles = () =>
     getAtinaData("/api/Workflow/GetWorkflowsForUserRoles", "userRoles", 2);
