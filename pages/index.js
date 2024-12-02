@@ -17,10 +17,10 @@ export default function Home({ modules }) {
   const { getModulesCall } = useAttensamCalls();
   const data = modules.length ? modules : dummyModules;
 
-  useEffect(() => {
-    if (!user?.token) return;
-    getModulesCall();
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user?.token) return;
+  //   getModulesCall();
+  // }, [user]);
 
   return (
     <>
@@ -57,8 +57,7 @@ export default function Home({ modules }) {
             }}
           />
 
-          {/* {data?.modules?.map((module) => ( */}
-          {user?.userId === 10 &&
+          {[5573, 12459].includes(user?.userId || null) &&
             modules?.map((module) => (
               <Card
                 key={module.id}
@@ -97,18 +96,7 @@ export const getServerSideProps = async (context) => {
     },
   };
 
-  const modules = await getModulesSSR(session.user.token);
-
-  /*  try {
-    const { data } = await axios.get(
-      "https://apl.attensam.at/api/Modules",
-      config
-    );
-
-    modules = data;
-  } catch (error) {
-    console.log(error.response);
-  } */
+  let modules = (await getModulesSSR(session.user.token)) || [];
   return {
     props: { session, modules },
   };

@@ -49,8 +49,10 @@ const Login = () => {
         avatarUrl: user.avatar,
         roles: user.roles,
         token: user.token,
+        refreshToken: user.refreshToken,
         ...user.userInfo,
       };
+
       dispatch(setUser({ user: credentials }));
       router.push("/");
     } else {

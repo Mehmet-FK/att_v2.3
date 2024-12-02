@@ -10,6 +10,7 @@ import { SessionProvider, getSession } from "next-auth/react";
 import store from "@/redux/app/store";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/ui-components/Loading";
+import SessionHandler from "@/components/handlers/SessionHandler";
 // import Providers from "@/redux/Provider";
 
 export default function App({ Component, pageProps }) {
@@ -101,11 +102,17 @@ export default function App({ Component, pageProps }) {
     setMode(x ? x : "light");
   }, []);
 
+  const [refetchInterval, setRefetchInterval] = useState(12 * 60);
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Loading />
-        <SessionProvider session={pageProps.session}>
+        <SessionProvider
+          session={pageProps.session}
+          refetchInterval={refetchInterval}
+        >
+          <SessionHandler setRefetchInterval={setRefetchInterval} />
           {router.pathname.includes("login") && <Component {...pageProps} />}
           {!router.pathname.includes("login") && (
             <Layout toggleTheme={toggleTheme}>

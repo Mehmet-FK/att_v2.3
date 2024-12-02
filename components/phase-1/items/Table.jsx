@@ -34,20 +34,7 @@ const initalContextMenu = {
 const ItemsTable = () => {
   const [itemType, setItemType] = useState(itemTableTypeConstants.ORDER);
   const [contextMenu, setContextMenu] = useState(initalContextMenu);
-  const [hiddenColumns, setHiddenColumns] = useState([
-    "city",
-    "country",
-    "street",
-    "streetnumber",
-    "itemType",
-    "tagID",
-    "zip",
-    // "data1",
-    // "data2",
-    // "data3",
-    // "data4",
-    // "data5",
-  ]); // User preferred not shown Columns
+  const [hiddenColumns, setHiddenColumns] = useState([]); // User preferred not shown Columns
 
   const [openItemModal, setOpenItemModal] = useState(false);
   const [triggerAPICall, setTriggerAPICall] = useState(false);

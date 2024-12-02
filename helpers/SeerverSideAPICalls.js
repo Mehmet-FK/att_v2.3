@@ -19,7 +19,7 @@ export const getModulesSSR = async (token) => {
     const { data } = await axiosToken(token).get("Modules");
     modules = data;
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
   }
   return modules;
 };
