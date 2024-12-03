@@ -73,8 +73,6 @@ const ImageModal = ({ open, setOpen, index, images }) => {
             // maxHeight: "70vh",
             width: "90%",
             height: "90%",
-
-            // boxShadow: "-2px 19px 48px -24px rgba(66, 68, 90, 1)",
             userSelect: "none",
             borderRadius: "8px",
           }}

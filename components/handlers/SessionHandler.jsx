@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "@/redux/slices/settingsSlice";
 
-const SessionHandler = ({ setRefetchInterval }) => {
+const SessionHandler = () => {
   const { data: session, status } = useSession();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.settings);

@@ -101,8 +101,7 @@ export const authOptions = {
 
         return { ...token, token: accessToken, refreshToken: refreshToken };
       }
-      console.log("Session Call with same token");
-      console.log(datetime);
+
       return token;
     },
 

@@ -102,9 +102,6 @@ const BookingImages = ({ image, images, index }) => {
             right: 0,
             left: 0,
             bottom: 0,
-            // right: 3.5,
-            // left: 3.5,
-            // bottom: 0,
             textAlign: "center",
             color: "#fff",
           }}
