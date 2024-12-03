@@ -67,8 +67,8 @@ export default function Layout({ children, toggleTheme }) {
       token: user?.token,
       ...user?.userInfo,
     };
+
     dispatch(setUser({ user: credentials }));
-    console.log(session);
   };
   const avatar = user.avatar;
   useEffect(() => {

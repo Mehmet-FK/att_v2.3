@@ -108,10 +108,7 @@ export default function App({ Component, pageProps }) {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Loading />
-        <SessionProvider
-          session={pageProps.session}
-          refetchInterval={refetchInterval}
-        >
+        <SessionProvider session={pageProps.session} refetchInterval={12 * 60}>
           <SessionHandler setRefetchInterval={setRefetchInterval} />
           {router.pathname.includes("login") && <Component {...pageProps} />}
           {!router.pathname.includes("login") && (

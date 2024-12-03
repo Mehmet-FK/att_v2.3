@@ -6,7 +6,6 @@ const useWorkflowCalls = () => {
   const postWorkflowData = async (url, formData) => {
     try {
       const { data } = axiosFormData.post(url, formData);
-      console.log(data);
       toastSuccessNotify("Element wurde erfolgreich angelegt");
     } catch (error) {
       console.log(error);

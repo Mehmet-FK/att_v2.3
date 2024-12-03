@@ -15,14 +15,32 @@ const isTokenExpired = (token) => {
   return exp < currentTimeInSeconds;
 };
 
+const logSessionUpdate = () => {
+  const currentdate = new Date();
+  const datetime =
+    "Last Sync: " +
+    currentdate.getDate() +
+    "/" +
+    (currentdate.getMonth() + 1) +
+    "/" +
+    currentdate.getFullYear() +
+    " @ " +
+    currentdate.getHours() +
+    ":" +
+    currentdate.getMinutes() +
+    ":" +
+    currentdate.getSeconds();
+  return datetime;
+};
+
 const refreshAccessToken = async (accessTokenOld, refreshTokenOld) => {
-  console.log("refreshToken triggered!!!");
+  console.log("refreshToken triggered");
+  console.log(logSessionUpdate());
   try {
     const { data } = await axios.post(
       "https://apl.attensam.at/atina/AtinaUsers/refresh",
       { accessToken: accessTokenOld, refreshToken: refreshTokenOld }
     );
-    console.log(data);
     return data;
   } catch (error) {
     console.log(error.message);
@@ -64,8 +82,11 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      const datetime = logSessionUpdate();
+
       if (user) {
-        console.log("JWT 1");
+        console.log("First Login");
+        console.log(datetime);
 
         return { ...token, ...user };
       }
@@ -75,11 +96,13 @@ export const authOptions = {
           token.token,
           token.refreshToken
         );
-        console.log("JWT 2");
+        console.log("Update after expiration");
+        console.log(datetime);
 
         return { ...token, token: accessToken, refreshToken: refreshToken };
       }
-      console.log("JWT 3");
+      console.log("Session Call with same token");
+      console.log(datetime);
       return token;
     },
 

@@ -9,9 +9,9 @@ const SessionHandler = ({ setRefetchInterval }) => {
   const { user } = useSelector((state) => state.settings);
 
   useEffect(() => {
+    console.log(user);
     if (status === "authenticated" && session?.user) {
       // Update Redux store with session data
-      console.log("session-handler");
       dispatch(
         setUser({
           user: {
