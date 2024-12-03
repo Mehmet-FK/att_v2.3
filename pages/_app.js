@@ -102,14 +102,12 @@ export default function App({ Component, pageProps }) {
     setMode(x ? x : "light");
   }, []);
 
-  const [refetchInterval, setRefetchInterval] = useState(12 * 60);
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <Loading />
-        <SessionProvider session={pageProps.session} refetchInterval={12 * 60}>
-          <SessionHandler setRefetchInterval={setRefetchInterval} />
+        <SessionProvider session={pageProps.session} refetchInterval={13 * 60}>
+          <SessionHandler />
           {router.pathname.includes("login") && <Component {...pageProps} />}
           {!router.pathname.includes("login") && (
             <Layout toggleTheme={toggleTheme}>
