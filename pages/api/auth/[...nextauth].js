@@ -22,6 +22,7 @@ const refreshAccessToken = async (accessTokenOld, refreshTokenOld) => {
       "https://apl.attensam.at/atina/AtinaUsers/refresh",
       { accessToken: accessTokenOld, refreshToken: refreshTokenOld }
     );
+    console.log(data);
     return data;
   } catch (error) {
     console.log(error.message);
@@ -76,10 +77,9 @@ export const authOptions = {
         );
         console.log("JWT 2");
 
-        return { ...token, token: accessToken, refreshToken };
+        return { ...token, token: accessToken, refreshToken: refreshToken };
       }
       console.log("JWT 3");
-
       return token;
     },
 

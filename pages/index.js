@@ -10,18 +10,7 @@ import { dummyModules } from "@/helpers/Constants";
 // import axios from "axios";
 import { getModulesSSR } from "@/helpers/SeerverSideAPICalls";
 
-export default function Home({ modules }) {
-  // const { data } = useSelector((state) => state.attensam);
-  const { user } = useSelector((state) => state.settings);
-
-  const { getModulesCall } = useAttensamCalls();
-  const data = modules.length ? modules : dummyModules;
-
-  // useEffect(() => {
-  //   if (!user?.token) return;
-  //   getModulesCall();
-  // }, [user]);
-
+export default function Home() {
   return (
     <>
       <Head>
@@ -56,20 +45,6 @@ export default function Home({ modules }) {
               defaultIconUrl: "/assets/dashboard-icons/users.svg",
             }}
           />
-
-          {[5573, 12459].includes(user?.userId || null) &&
-            modules?.map((module) => (
-              <Card
-                key={module.id}
-                cardInfo={{
-                  url: `/${module.caption}`,
-
-                  caption: module.caption,
-                  defaultIconUrl:
-                    module.icon || "/assets/dashboard-icons/users.svg",
-                }}
-              />
-            ))}
         </div>
       </div>
     </>
@@ -87,17 +62,7 @@ export const getServerSideProps = async (context) => {
     };
   }
 
-  // console.log(session);
-
-  let config = {
-    headers: {
-      Authorization: "Bearer " + session.user.token,
-      accept: "*/*",
-    },
-  };
-
-  let modules = (await getModulesSSR(session.user.token)) || [];
   return {
-    props: { session, modules },
+    props: { session },
   };
 };
