@@ -24,7 +24,7 @@ const useAxios = () => {
         const { token, refreshToken } = session.user;
 
         const { data } = await axios.post(
-          "https://pro.attensam.at/atina/AtinaUsers/refresh",
+          "https://apl.attensam.at/atina/AtinaUsers/refresh",
           {
             accessToken: token,
             refreshToken: refreshToken,

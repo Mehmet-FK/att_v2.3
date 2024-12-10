@@ -165,12 +165,12 @@ export default function Layout({ children, toggleTheme }) {
               </Typography>{" "}
               <Image
                 onClick={handleClick}
-                // src={"/assets/emptyAvatar.jpg"}
-                src={
-                  avatar
-                    ? `${avatar}?${new Date().getTime()}`
-                    : "/assets/emptyAvatar.jpg"
-                }
+                src={"/assets/emptyAvatar.jpg"}
+                // src={
+                //   avatar
+                //     ? `${avatar}?${new Date().getTime()}`
+                //     : "/assets/emptyAvatar.jpg"
+                // }
                 width={50}
                 height={50}
                 alt="profilePicture"

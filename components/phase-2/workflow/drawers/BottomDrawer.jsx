@@ -100,12 +100,12 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
         open={open}
         onClose={handleClose}
       >
-        <div className={css.fixed_tab}>
-          <div
-            onMouseDown={handleMouseDown}
-            onClick={handleDoubleClick}
-            className={"css.puller_wrapper"}
-          >
+        <div
+          className={css.fixed_tab + " " + css.puller_wrapper}
+          onMouseDown={handleMouseDown}
+          onClick={handleDoubleClick}
+        >
+          <div>
             <Puller />
           </div>
 
@@ -116,7 +116,9 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
               opacity: newHeight / 150,
             }}
           >
-            <div>{selectedNode ? "Step" : "Workflow"}</div>
+            <div style={{ userSelect: "none" }}>
+              {selectedNode ? "Step" : "Workflow"}
+            </div>
             <div
               style={{
                 display: "flex",
