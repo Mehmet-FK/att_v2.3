@@ -45,11 +45,7 @@ const UserInfoTab = ({
             height: "100%",
             objectFit: "contain",
           }}
-          src={
-            userInfo?.avatarUrl?.url
-              ? userInfo?.avatarUrl?.url
-              : "/assets/placeholder.jpg"
-          }
+          src={userInfo?.avatar ? userInfo?.avatar : "/assets/placeholder.jpg"}
           alt="profile-pic"
         />
       </div>

@@ -46,7 +46,7 @@ const Login = () => {
     if (session) {
       const { user } = session;
       const credentials = {
-        avatarUrl: user.avatar,
+        avatar: user.avatar,
         roles: user.roles,
         token: user.token,
         refreshToken: user.refreshToken,

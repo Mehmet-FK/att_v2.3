@@ -166,8 +166,8 @@ export default function Layout({ children, toggleTheme }) {
               <Image
                 onClick={handleClick}
                 src={
-                  avatar?.url
-                    ? `${avatar?.url}?${avatar?.lastEdited}`
+                  avatar
+                    ? `${avatar}?${new Date().getTime()}`
                     : "/assets/emptyAvatar.jpg"
                 }
                 width={50}

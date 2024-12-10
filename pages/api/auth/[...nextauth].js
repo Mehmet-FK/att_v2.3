@@ -62,13 +62,14 @@ export const authOptions = {
         const { username, password } = credentials;
         try {
           const { data } = await axios.post(
-            `https://apl.attensam.at/atina/AtinaUsers/login`,
+            `https://pro.attensam.at/atina/AtinaUsers/login`,
             {
               username,
               password,
             }
           );
           res = data;
+          console.log(data);
         } catch (error) {
           let code = error?.response?.status || "";
           throw Error(code + " Etwas ist schiefgelaufen!");
@@ -92,12 +93,19 @@ export const authOptions = {
       }
 
       if (isTokenExpired(token.token)) {
-        const { accessToken, refreshToken } = await refreshAccessToken(
+        const response = await refreshAccessToken(
           token.token,
           token.refreshToken
         );
         console.log("Update after expiration");
         console.log(datetime);
+
+        if (!response) {
+          console.log("Login required!!");
+          return null;
+        }
+
+        const { accessToken, refreshToken } = response;
 
         return { ...token, token: accessToken, refreshToken: refreshToken };
       }

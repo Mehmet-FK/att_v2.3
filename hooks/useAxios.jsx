@@ -30,6 +30,11 @@ const useAxios = () => {
 
   const axiosTableDataPhase1 = axios.create({
     baseURL: "https://pro.attensam.at/atina/",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "/*",
+      "Content-Type": "application/json",
+    },
   });
 
   const axiosTableDataPhase2 = axios.create({
