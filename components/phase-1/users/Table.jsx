@@ -91,7 +91,7 @@ const UsersTable = () => {
   useEffect(() => {
     if (!user?.token) return;
     getWorkflowsForUserRoles();
-  }, [user]);
+  }, [user?.token]);
 
   useEffect(() => {
     const params = makeUrlParams();

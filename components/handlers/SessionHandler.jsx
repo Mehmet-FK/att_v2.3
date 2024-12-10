@@ -22,7 +22,15 @@ const SessionHandler = () => {
       );
     } else if (status === "unauthenticated") {
       // Clear Redux store when user logs out
-      dispatch(setUser({ user: null }));
+      dispatch(
+        setUser({
+          user: {
+            ...user,
+            token: "",
+            refreshToken: "",
+          },
+        })
+      );
     }
   }, [session, status, dispatch]);
 

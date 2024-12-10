@@ -70,7 +70,7 @@ export default function Layout({ children, toggleTheme }) {
 
     dispatch(setUser({ user: credentials }));
   };
-  const avatar = user.avatar;
+  const avatar = user?.avatar;
   useEffect(() => {
     getSessionData();
   }, []);
@@ -165,6 +165,7 @@ export default function Layout({ children, toggleTheme }) {
               </Typography>{" "}
               <Image
                 onClick={handleClick}
+                // src={"/assets/emptyAvatar.jpg"}
                 src={
                   avatar
                     ? `${avatar}?${new Date().getTime()}`

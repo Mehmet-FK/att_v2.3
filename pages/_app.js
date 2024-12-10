@@ -105,10 +105,10 @@ export default function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Loading />
         <SessionProvider session={pageProps.session} refetchInterval={13 * 60}>
           <SessionHandler />
           {router.pathname.includes("login") && <Component {...pageProps} />}
+          {!router.pathname.includes("login") && <Loading />}
           {!router.pathname.includes("login") && (
             <Layout toggleTheme={toggleTheme}>
               <Component {...pageProps} />

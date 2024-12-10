@@ -8,12 +8,15 @@ import { useSelector } from "react-redux";
 
 const Loading = ({ init }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(init == undefined ? true : init);
 
-  const { loading: isLoading } = useSelector((state) => state.attensam);
-
-  const handleStart = (url) => url !== router.asPath && setLoading(true);
-  const handleComplete = (url) => url === router.asPath && setLoading(false);
+  const handleStart = (url) => /* url !== router.asPath && */ setLoading(true);
+  const handleComplete = (url) => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 300);
+  };
+  /* url === router.asPath &&  setLoading(false);*/
 
   useEffect(() => {
     router.events.on("routeChangeStart", handleStart);
@@ -33,7 +36,7 @@ const Loading = ({ init }) => {
   }, [router.pathname]);
 
   return (
-    <Fade in={loading} timeout={300}>
+    <Fade in={loading} timeout={{ enter: 150, exit: 500 }}>
       <Backdrop
         sx={{
           backgroundColor: "#000000ef",
@@ -42,7 +45,7 @@ const Loading = ({ init }) => {
           zIndex: (theme) => theme.zIndex.drawer + 3,
           margin: "-5rem",
         }}
-        open={true}
+        open={loading}
       >
         <CircularProgress color="inherit" size={45} />
       </Backdrop>

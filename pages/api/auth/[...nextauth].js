@@ -4,6 +4,7 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const isTokenExpired = (token) => {
+  if (!token) return false;
   const tokenParts = token.split(".");
 
   const payload = JSON.parse(
@@ -57,8 +58,6 @@ export const authOptions = {
       credentials: {},
 
       async authorize(credentials, req) {
-        let res = null;
-
         const { username, password } = credentials;
         try {
           const { data } = await axios.post(
@@ -68,13 +67,11 @@ export const authOptions = {
               password,
             }
           );
-          res = data;
-          console.log(data);
+          return data;
         } catch (error) {
           let code = error?.response?.status || "";
           throw Error(code + " Etwas ist schiefgelaufen!");
         }
-        return res;
       },
     }),
   ],
@@ -82,7 +79,7 @@ export const authOptions = {
     signIn: "/auth/login",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       const datetime = logSessionUpdate();
 
       if (user) {
@@ -91,24 +88,34 @@ export const authOptions = {
 
         return { ...token, ...user };
       }
+      if (trigger === "update" && session?.user?.token) {
+        console.log("Update after expiration");
+        console.log(datetime);
+        return {
+          ...token,
+          token: session.user.token,
+          refreshToken: session.user.refreshToken,
+        };
+      }
 
-      if (isTokenExpired(token.token)) {
+      /*   if (isTokenExpired(token.token)) {
         const response = await refreshAccessToken(
           token.token,
-          token.refreshToken
+          "token.refreshToken"
         );
         console.log("Update after expiration");
         console.log(datetime);
 
-        if (!response) {
-          console.log("Login required!!");
-          return null;
-        }
+        //    if (!response) {
+        //   console.log("Login required!!");
+        //   console.log("RESPONSE=>", response);
+        //   return { ...token, token: "", refreshToken: "" };
+        // } 
 
         const { accessToken, refreshToken } = response;
 
         return { ...token, token: accessToken, refreshToken: refreshToken };
-      }
+      } */
 
       return token;
     },
