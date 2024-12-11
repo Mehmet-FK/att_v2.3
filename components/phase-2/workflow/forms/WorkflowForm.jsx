@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Checkbox,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -12,6 +13,8 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import css from "@/styles/workflow-forms/workflow-form.module.css";
 import IconSelect from "@/components/form-elements/IconSelect";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import { useSelector } from "react-redux";
 
 const WorkflowSection = () => {
   return (
@@ -21,7 +24,7 @@ const WorkflowSection = () => {
           <TextField
             //   onChange={handleChange}
             //   onBlur={handleStepBlur}
-            //   value={stepValues.name || ""}
+            //   value={name || ""}
             variant="outlined"
             size="medium"
             label="Name"
@@ -31,7 +34,7 @@ const WorkflowSection = () => {
           <TextField
             //   onChange={handleChange}
             //   onBlur={handleStepBlur}
-            //   value={stepValues.caption || ""}
+            //   value={caption || ""}
             variant="outlined"
             size="medium"
             label="Caption"
@@ -55,7 +58,7 @@ const WorkflowSection = () => {
               id="demo-select-permissionType"
               label="Berechtigungstyp"
               name="permissionType"
-              // value={stepValues?.entityId || ""}
+              // value={entityId || ""}
               // onChange={handleChange}
               // onBlur={handleStepBlur}
             >
@@ -77,7 +80,7 @@ const WorkflowSection = () => {
               id="demo-select-small"
               label="Parent Workflow"
               name="parentWorkflowId"
-              // value={stepValues?.entityId || ""}
+              // value={entityId || ""}
               // onChange={handleChange}
               // onBlur={handleStepBlur}
             >
@@ -99,7 +102,7 @@ const WorkflowSection = () => {
               id="demo-select-small"
               label="Entität"
               name="entityId"
-              // value={stepValues?.entityId || ""}
+              // value={entityId || ""}
               // onChange={handleChange}
               // onBlur={handleStepBlur}
             >
@@ -117,7 +120,7 @@ const WorkflowSection = () => {
           <TextField
             //   onChange={handleChange}
             //   onBlur={handleStepBlur}
-            //   value={stepValues.name || ""}
+            //   value={name || ""}
             variant="outlined"
             size="medium"
             label="Launch Element Name"
@@ -127,7 +130,7 @@ const WorkflowSection = () => {
           <TextField
             //   onChange={handleChange}
             //   onBlur={handleStepBlur}
-            //   value={stepValues.caption || ""}
+            //   value={caption || ""}
             variant="outlined"
             size="medium"
             label="Launch Element Beschreibung"
@@ -161,7 +164,7 @@ const LaunchElementSection = () => {
               <TextField
                 //   onChange={handleChange}
                 //   onBlur={handleStepBlur}
-                //   value={stepValues.name || ""}
+                //   value={name || ""}
                 variant="outlined"
                 size="medium"
                 label="Name"
@@ -171,7 +174,7 @@ const LaunchElementSection = () => {
               <TextField
                 //   onChange={handleChange}
                 //   onBlur={handleStepBlur}
-                //   value={stepValues.caption || ""}
+                //   value={caption || ""}
                 variant="outlined"
                 size="medium"
                 label="Beschreibung"
@@ -190,7 +193,7 @@ const LaunchElementSection = () => {
                   id="demo-select-launchElementType"
                   label="Start Element Typ"
                   name="launchElementType"
-                  // value={stepValues?.entityId || ""}
+                  // value={entityId || ""}
                   // onChange={handleChange}
                   // onBlur={handleStepBlur}
                 >
@@ -211,14 +214,28 @@ const LaunchElementSection = () => {
 };
 
 const WorkflowForm = () => {
+  const {
+    name,
+    caption,
+    entityId,
+    description,
+    icon,
+    isActive,
+    isProduction,
+    permissionType,
+    parentWorkflowId,
+  } = useSelector((state) => state.workflow);
+
+  const { handleWorkflowBlur } = useWorkflowForms();
+
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>
         <div className={css.flex_row}>
           <TextField
             //   onChange={handleChange}
-            //   onBlur={handleStepBlur}
-            //   value={stepValues.name || ""}
+            onBlur={handleWorkflowBlur}
+            value={name || ""}
             variant="outlined"
             size="medium"
             label="Name"
@@ -227,43 +244,24 @@ const WorkflowForm = () => {
           />
           <TextField
             //   onChange={handleChange}
-            //   onBlur={handleStepBlur}
-            //   value={stepValues.caption || ""}
+            onBlur={handleWorkflowBlur}
+            value={caption || ""}
             variant="outlined"
             size="medium"
             label="Caption"
             name="caption"
             fullWidth
           />
-          <IconSelect
-            size={"medium"}
-            handleChange={() => console.log("change")}
-            handleBlur={() => console.log("blur")}
+          <TextField
+            //   onChange={handleChange}
+            onBlur={handleWorkflowBlur}
+            value={description || ""}
+            variant="outlined"
+            size="medium"
+            label="Beschreibung"
+            name="description"
+            fullWidth
           />
-        </div>
-        <div className={css.flex_row}>
-          <FormControl className={css.form_control} size="medium">
-            <InputLabel id="permissionType">Berechtigungstyp</InputLabel>
-            <Select
-              MenuProps={{
-                style: { zIndex: 35001 },
-              }}
-              labelId="permissionType"
-              id="demo-select-permissionType"
-              label="Berechtigungstyp"
-              name="permissionType"
-              // value={stepValues?.entityId || ""}
-              // onChange={handleChange}
-              // onBlur={handleStepBlur}
-            >
-              <MenuItem value={""}>
-                <em>None</em>
-              </MenuItem>
-              {["entities"]?.map((entity) => (
-                <MenuItem value={entity}>{entity}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <FormControl className={css.form_control} size="medium">
             <InputLabel id="ParentWorkflowId">Parent Workflow</InputLabel>
             <Select
@@ -274,31 +272,9 @@ const WorkflowForm = () => {
               id="demo-select-small"
               label="Parent Workflow"
               name="parentWorkflowId"
-              // value={stepValues?.entityId || ""}
+              value={parentWorkflowId || ""}
               // onChange={handleChange}
-              // onBlur={handleStepBlur}
-            >
-              <MenuItem value={""}>
-                <em>None</em>
-              </MenuItem>
-              {["entities"]?.map((entity) => (
-                <MenuItem value={entity}>{entity}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl className={css.form_control} size="medium">
-            <InputLabel id="EntityId">Entität</InputLabel>
-            <Select
-              MenuProps={{
-                style: { zIndex: 35001 },
-              }}
-              labelId="EntityId"
-              id="demo-select-small"
-              label="Entität"
-              name="entityId"
-              // value={stepValues?.entityId || ""}
-              // onChange={handleChange}
-              // onBlur={handleStepBlur}
+              onBlur={handleWorkflowBlur}
             >
               <MenuItem value={""}>
                 <em>None</em>
@@ -309,14 +285,92 @@ const WorkflowForm = () => {
             </Select>
           </FormControl>
         </div>
+        <div className={css.flex_row}>
+          <IconSelect
+            size={"medium"}
+            handleChange={() => console.log("change")}
+            handleBlur={() => console.log("blur")}
+          />
+          <FormControl className={css.form_control} size="medium">
+            <InputLabel id="permissionType">Berechtigungstyp</InputLabel>
+            <Select
+              MenuProps={{
+                style: { zIndex: 35001 },
+              }}
+              labelId="permissionType"
+              id="demo-select-permissionType"
+              label="Berechtigungstyp"
+              name="permissionType"
+              value={permissionType || ""}
+              // onChange={handleChange}
+              onBlur={handleWorkflowBlur}
+            >
+              <MenuItem value={""}>
+                <em>None</em>
+              </MenuItem>
+              {["0", "1"]?.map((perm) => (
+                <MenuItem value={perm}>{perm}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <LaunchElementSection />
+          <FormControl className={css.form_control} size="medium">
+            <InputLabel id="EntityId">Entität</InputLabel>
+            <Select
+              MenuProps={{
+                style: { zIndex: 35001 },
+              }}
+              labelId="EntityId"
+              id="demo-select-small"
+              label="Entität"
+              name="entityId"
+              value={entityId || ""}
+              // onChange={handleChange}
+              onBlur={handleWorkflowBlur}
+            >
+              <MenuItem value={""}>
+                <em>None</em>
+              </MenuItem>
+              {["entities"]?.map((entity) => (
+                <MenuItem value={entity}>{entity}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <FormControlLabel
+              sx={{
+                width: "100%",
+              }}
+              control={<Checkbox name="hasLookup" checked={isActive} />}
+              label={<span style={{ fontSize: "smaller" }}>isActive</span>}
+              labelPlacement="end"
+            />
+            <FormControlLabel
+              sx={{
+                width: "100%",
+              }}
+              control={<Checkbox name="hasLookup" checked={isProduction} />}
+              label={<span style={{ fontSize: "smaller" }}>isProduction</span>}
+              labelPlacement="end"
+            />
+          </div>
+        </div>
+
+        {/* <LaunchElementSection /> */}
+
+        <div className={css.flex_row} style={{ paddingBlock: "10px" }} />
         <div className={css.flex_row}>
           <TextField
             //   onChange={handleChange}
-            //   onBlur={handleStepBlur}
-            //   value={stepValues.name || ""}
+            onBlur={handleWorkflowBlur}
+            value={name || ""}
             variant="outlined"
             size="medium"
             label="Launch Element Name"
@@ -325,14 +379,18 @@ const WorkflowForm = () => {
           />
           <TextField
             //   onChange={handleChange}
-            //   onBlur={handleStepBlur}
-            //   value={stepValues.caption || ""}
+            onBlur={handleWorkflowBlur}
+            value={caption || ""}
             variant="outlined"
             size="medium"
             label="Launch Element Beschreibung"
             name="launchElementDescription"
             fullWidth
           />
+
+          <div style={{ visibility: "hidden", width: "100%" }}>
+            THIS DIV WILL NOT APPEAR IN DOM IT IS JUST A PLACEHOLDER
+          </div>
           <div style={{ visibility: "hidden", width: "100%" }}>
             THIS DIV WILL NOT APPEAR IN DOM IT IS JUST A PLACEHOLDER
           </div>

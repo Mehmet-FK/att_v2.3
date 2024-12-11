@@ -46,9 +46,15 @@ const IconSelect = ({ handleChange, handleBlur, size }) => {
                 src={icon}
                 width={25}
                 height={25}
-                style={{ borderRadius: "5px" }}
+                style={{ borderRadius: "5px", padding: 0 }}
               />
-              <span style={{ fontSize: "smaller", marginLeft: "5px" }}>
+              <span
+                style={{
+                  fontSize: "smaller",
+                  marginLeft: "5px",
+                  display: "inline-block",
+                }}
+              >
                 {icon}
               </span>
             </MenuItem>

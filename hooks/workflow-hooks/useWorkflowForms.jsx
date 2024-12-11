@@ -31,7 +31,7 @@ const useWorkflowForms = () => {
   const dispatch = useDispatch();
   const { selectedStepID } = useSelector((state) => state.workflow);
 
-  const handleWorkflowChange = (e) => {
+  const handleWorkflowBlur = (e) => {
     const { value, name } = e.target;
     dispatch(changeWorkflowValue({ value, name }));
   };
@@ -73,8 +73,8 @@ const useWorkflowForms = () => {
   };
 
   return {
-    handleWorkflowChange,
     handleWFStepBlur,
+    handleWorkflowBlur,
     createWorkflowStep,
     deleteWorkflowStep,
     updateSelectedStep,

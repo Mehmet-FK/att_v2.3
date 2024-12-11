@@ -1,24 +1,56 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+/*
+============BACKUP============
+initialState: {
+  selectedStepID: "",
+  workflowName: "",
+  workflowCaption: "",
+  workflowIcon: "",
+  permissionType: "",
+  parentWorkflowId: "",
+  entityId: "",
+  launchElementName: "",
+  launchElementDescription: "",
+  launchElementType: "",
+  caption: "",
+  childAdapter: "",
+  parentAdapter: "",
+  workflowSteps: [],
+  ============BACKUP============
+}, */
+
 const workflowSlice = createSlice({
   name: "workflow",
 
   initialState: {
     selectedStepID: "",
-
-    workflowName: "",
-    workflowCaption: "",
-    workflowIcon: "",
-    permissionType: "",
-    parentWorkflowId: "",
+    workflowId: "new-wf",
     entityId: "",
-    launchElementName: "",
-    launchElementDescription: "",
-    launchElementType: "",
+    name: "",
     caption: "",
-    childAdapter: "",
-    parentAdapter: "",
+    description: "",
+    icon: "",
+    isActive: true,
+    isProduction: false,
+    permissionType: "0",
+    parentWorkflowId: "",
+    edges: "",
+    nodes: "",
+    viewport: "",
     workflowSteps: [],
+    launchElements: [],
+    scannerDialogs: [],
+    listViews: [],
+    listViewElements: [],
+    listViewElementRows: [],
+    recordViews: [],
+    recordViewFunctions: [],
+    modalDialogs: [],
+    headers: [],
+    headerRows: [],
+    headerColumns: [],
+    itemsToDelete: null,
   },
   reducers: {
     updateSelectedStep: (state, { payload: { stepID } }) => {

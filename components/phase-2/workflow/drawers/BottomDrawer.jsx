@@ -76,9 +76,6 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
     };
   });
   const selectedNode = nodes.find((nds) => nds.selected);
-  /*   const selectedNode = nodes.find(
-    (nds) => nds.type !== "launch" && nds.selected
-  ); */
 
   const handleSubmit = () => console.log(workflow);
   return (
@@ -144,21 +141,11 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
             maxHeight: newHeight - 100,
           }}
         >
-          {/* <ListViewForm
-            infoFormValues={infoFormValues}
-            setInfoFormValues={setInfoFormValues}
-          /> */}
           <DisplayForm
             selectedNode={selectedNode}
             // infoFormValues={infoFormValues}
             // setInfoFormValues={setInfoFormValues}
           />
-
-          {/* <InfoForm
-            selectedNode={selectedNode}
-            infoFormValues={infoFormValues}
-            setInfoFormValues={setInfoFormValues}
-          /> */}
         </Box>
       </Drawer>
     </>
