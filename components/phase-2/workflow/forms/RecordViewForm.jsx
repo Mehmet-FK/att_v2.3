@@ -16,7 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms/record-view-form.module.css";
-import HeaderForm from "./HeaderForm";
+import HeaderForm from "./header-form";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 
 const permissionTypes = { User: "0", All: "1" };

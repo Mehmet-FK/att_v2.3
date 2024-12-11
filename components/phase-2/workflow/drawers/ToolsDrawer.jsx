@@ -159,22 +159,26 @@ const ToolsDrawer = ({ open, setOpen }) => {
       name: "LaunchDatasetFunction",
       caption: "Dataset Function",
       type: "launch",
+      id: 0,
     },
     {
       name: "LaunchEntityFunction",
       caption: "Entity Function",
       type: "launch",
+      id: 1,
     },
-    { name: "LaunchModule", caption: "Module", type: "launch" },
+    { name: "LaunchModule", caption: "Module", type: "launch", id: 2 },
     {
       name: "LaunchElementDefaultFunction",
       caption: "Element Default",
       type: "launch",
+      id: 3,
     },
     {
       name: "LaunchGroupView",
       caption: "Group View",
       type: "launch",
+      id: 4,
     },
   ];
 

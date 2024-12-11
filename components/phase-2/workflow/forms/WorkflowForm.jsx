@@ -15,6 +15,7 @@ import css from "@/styles/workflow-forms/workflow-form.module.css";
 import IconSelect from "@/components/form-elements/IconSelect";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const WorkflowSection = () => {
   return (
@@ -214,38 +215,60 @@ const LaunchElementSection = () => {
 };
 
 const WorkflowForm = () => {
-  const {
-    name,
-    caption,
-    entityId,
-    description,
-    icon,
-    isActive,
-    isProduction,
-    permissionType,
-    parentWorkflowId,
-  } = useSelector((state) => state.workflow);
+  // const {
+  //   name,
+  //   caption,
+  //   entityId,
+  //   description,
+  //   icon,
+  //   isActive,
+  //   isProduction,
+  //   permissionType,
+  //   parentWorkflowId,
+  // }
+
+  const workflowState = useSelector((state) => state.workflow);
 
   const { handleWorkflowBlur } = useWorkflowForms();
+  const [workflowFormValues, setWorkflowFormValues] = useState({
+    entityId: workflowState?.entityId || "",
+    name: workflowState?.name || "",
+    caption: workflowState?.caption || "",
+    description: workflowState?.description || "",
+    icon: workflowState?.icon || "",
+    isActive: workflowState?.isActive || true,
+    isProduction: workflowState?.isProduction || false,
+    permissionType: workflowState?.permissionType || "0",
+    parentWorkflowId: workflowState?.parentWorkflowId || "",
+  });
+  const handleChange = (e) => {
+    const { value, name, type, checked } = e.target;
+    console.log;
+    setWorkflowFormValues({
+      ...workflowFormValues,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
 
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>
         <div className={css.flex_row}>
           <TextField
-            //   onChange={handleChange}
+            onChange={handleChange}
             onBlur={handleWorkflowBlur}
-            value={name || ""}
+            value={workflowFormValues.name || ""}
             variant="outlined"
             size="medium"
             label="Name"
             name="name"
             fullWidth
+            style={{ userSelect: "none" }}
           />
           <TextField
-            //   onChange={handleChange}
+            onChange={handleChange}
             onBlur={handleWorkflowBlur}
-            value={caption || ""}
+            value={workflowFormValues.caption || ""}
             variant="outlined"
             size="medium"
             label="Caption"
@@ -253,9 +276,9 @@ const WorkflowForm = () => {
             fullWidth
           />
           <TextField
-            //   onChange={handleChange}
+            onChange={handleChange}
             onBlur={handleWorkflowBlur}
-            value={description || ""}
+            value={workflowFormValues.description || ""}
             variant="outlined"
             size="medium"
             label="Beschreibung"
@@ -272,8 +295,8 @@ const WorkflowForm = () => {
               id="demo-select-small"
               label="Parent Workflow"
               name="parentWorkflowId"
-              value={parentWorkflowId || ""}
-              // onChange={handleChange}
+              value={workflowFormValues.parentWorkflowId || ""}
+              onChange={handleChange}
               onBlur={handleWorkflowBlur}
             >
               <MenuItem value={""}>
@@ -301,8 +324,8 @@ const WorkflowForm = () => {
               id="demo-select-permissionType"
               label="Berechtigungstyp"
               name="permissionType"
-              value={permissionType || ""}
-              // onChange={handleChange}
+              value={workflowFormValues.permissionType || ""}
+              onChange={handleChange}
               onBlur={handleWorkflowBlur}
             >
               <MenuItem value={""}>
@@ -324,8 +347,8 @@ const WorkflowForm = () => {
               id="demo-select-small"
               label="Entität"
               name="entityId"
-              value={entityId || ""}
-              // onChange={handleChange}
+              value={workflowFormValues.entityId || ""}
+              onChange={handleChange}
               onBlur={handleWorkflowBlur}
             >
               <MenuItem value={""}>
@@ -345,18 +368,32 @@ const WorkflowForm = () => {
             }}
           >
             <FormControlLabel
+              onChange={handleChange}
+              onBlur={handleWorkflowBlur}
               sx={{
                 width: "100%",
               }}
-              control={<Checkbox name="hasLookup" checked={isActive} />}
+              control={
+                <Checkbox
+                  name="isActive"
+                  checked={workflowFormValues.isActive}
+                />
+              }
               label={<span style={{ fontSize: "smaller" }}>isActive</span>}
               labelPlacement="end"
             />
             <FormControlLabel
+              onChange={handleChange}
+              onBlur={handleWorkflowBlur}
               sx={{
                 width: "100%",
               }}
-              control={<Checkbox name="hasLookup" checked={isProduction} />}
+              control={
+                <Checkbox
+                  name="isProduction"
+                  checked={workflowFormValues.isProduction}
+                />
+              }
               label={<span style={{ fontSize: "smaller" }}>isProduction</span>}
               labelPlacement="end"
             />
@@ -368,9 +405,9 @@ const WorkflowForm = () => {
         <div className={css.flex_row} style={{ paddingBlock: "10px" }} />
         <div className={css.flex_row}>
           <TextField
-            //   onChange={handleChange}
+            onChange={handleChange}
             onBlur={handleWorkflowBlur}
-            value={name || ""}
+            value={workflowFormValues.name || ""}
             variant="outlined"
             size="medium"
             label="Launch Element Name"
@@ -378,9 +415,9 @@ const WorkflowForm = () => {
             fullWidth
           />
           <TextField
-            //   onChange={handleChange}
+            onChange={handleChange}
             onBlur={handleWorkflowBlur}
-            value={caption || ""}
+            value={workflowFormValues.caption || ""}
             variant="outlined"
             size="medium"
             label="Launch Element Beschreibung"

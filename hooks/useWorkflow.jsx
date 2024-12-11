@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useReactFlow } from "reactflow";
 import useWorkflowForms from "./workflow-hooks/useWorkflowForms";
 
@@ -9,7 +9,6 @@ const useWorkflow = (setNodes, setEdges) => {
   const { setViewport, getIntersectingNodes } = useReactFlow();
   const { restoreWorkflowState } = useWorkflowForms();
   const workflow = useSelector((state) => state.workflow);
-
   const flowHistoryRef = useRef(null);
   const currentflowRef = useRef(null);
 
@@ -108,6 +107,18 @@ const useWorkflow = (setNodes, setEdges) => {
 
     restoreFlow();
   }, [setNodes, setViewport, restoreWorkflowState]);
+
+  // const setPreviousAndNextStepsOnConnect = (params) => {
+  //   const previousStepId = params.source;
+  //   const nextStepId = params.target;
+  //   console.log(params);
+  //   dispatch(
+  //     changeNextAndPreviousStep({
+  //       nextStepId: nextStepId,
+  //       previousStepId: previousStepId,
+  //     })
+  //   );
+  // };
 
   const onNodeDragStop = (e, node) => {
     const interNodes = getIntersectingNodes(node);

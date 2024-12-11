@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import { useEffect, useState } from "react";
+import ViewHeaderRow from "./ViewHeaderRow";
+import { useSelector } from "react-redux";
 
 const replaceItem = (arr, item, id) => {
   const index = arr.findIndex((el) => el.id === id);
@@ -22,7 +24,7 @@ const replaceItem = (arr, item, id) => {
   return arr;
 };
 
-const HeaderColumn = ({
+/* const HeaderColumn = ({
   headerValues,
   setHeaderValues,
   id,
@@ -158,9 +160,9 @@ const HeaderColumn = ({
       </div>
     </div>
   );
-};
+}; */
 
-const HeaderRow = ({ id, headerValues, setHeaderValues, handleHeaderBlur }) => {
+/* const HeaderRow = ({ id, headerValues, setHeaderValues, handleHeaderBlur }) => {
   const removeRow = () => {
     setHeaderValues((prev) => ({
       ...prev,
@@ -197,17 +199,25 @@ const HeaderRow = ({ id, headerValues, setHeaderValues, handleHeaderBlur }) => {
       ))}
     </div>
   );
+}; */
+
+const initialViewHeaderValues = {
+  headerId: "",
+  viewType: 0,
+  viewId: "",
+  caption: "",
+  defaultIcon: "",
+  gradientStart: "",
+  gradientEnd: "",
 };
 
-const HeaderForm = ({
-  headerValues,
-  setHeaderValues,
-  handleHeaderBlur,
-  defaultExpanded,
-}) => {
+const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
+  const [headerValues, setHeaderValues] = useState(initialViewHeaderValues);
+  const { headerRows } = useSelector((state) => state.workflow);
+
   const addRow = () => {
-    const { rows, columns } = headerValues;
-    if (rows.length > 4) return;
+    const { rows } = headerValues;
+
     const rowMax = Math.max(...rows.map((r) => r.id)) || 1;
     const colMax = Math.max(...columns.map((c) => c.id)) || 1;
     setHeaderValues((prev) => ({
@@ -254,7 +264,7 @@ const HeaderForm = ({
               <div className={css.flex_column}>
                 <TextField
                   onChange={handleChange}
-                  onBlur={handleHeaderBlur}
+                  // onBlur={handleHeaderBlur}
                   value={headerValues?.caption || ""}
                   variant="outlined"
                   size="medium"
@@ -264,13 +274,13 @@ const HeaderForm = ({
                 />
                 <IconSelect
                   handleChange={handleChange}
-                  handleBlur={handleHeaderBlur}
+                  // handleBlur={handleHeaderBlur}
                 />
               </div>
               <div className={css.flex_column}>
                 <TextField
                   onChange={handleChange}
-                  onBlur={handleHeaderBlur}
+                  // onBlur={handleHeaderBlur}
                   value={headerValues?.gradientStart || ""}
                   variant="outlined"
                   label="Gradient Start"
@@ -279,7 +289,7 @@ const HeaderForm = ({
                 />
                 <TextField
                   onChange={handleChange}
-                  onBlur={handleHeaderBlur}
+                  // onBlur={handleHeaderBlur}
                   value={headerValues?.gradientEnd || ""}
                   variant="outlined"
                   label="Gradient End"
@@ -343,20 +353,17 @@ const HeaderForm = ({
                 rowGap: "10px",
               }}
             >
-              {headerValues.rows.map((row) => (
-                <HeaderRow
-                  key={row}
-                  id={row.id}
-                  headerValues={headerValues}
-                  handleHeaderBlur={handleHeaderBlur}
-                  setHeaderValues={setHeaderValues}
+              {headerRows.map((rowValue) => (
+                <ViewHeaderRow
+                  key={rowValue.headerRowId}
+                  rowId={rowValue.headerRowId}
+                  headerId={headerValues.headerId}
+                  // handleHeaderBlur={handleHeaderBlur}
+                  // setHeaderValues={setHeaderValues}
                 />
               ))}
 
-              <button
-                disabled={headerValues.rows.length > 4}
-                onClick={() => addRow()}
-              >
+              <button disabled={headerRows.length > 4} onClick={() => addRow()}>
                 add row
               </button>
             </div>
@@ -367,4 +374,4 @@ const HeaderForm = ({
   );
 };
 
-export default HeaderForm;
+export default ViewHeaderForm;

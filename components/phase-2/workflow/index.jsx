@@ -63,18 +63,27 @@ const Sheet = () => {
   } = useWorkflow(setNodes, setEdges);
 
   const { postWorkflowCall } = useAttensamCalls();
-  const { createWorkflowStep, deleteWorkflowStep, updateSelectedStep } =
-    useWorkflowForms();
-
+  const {
+    createWorkflowStep,
+    createViewOnDrop,
+    deleteWorkflowStep,
+    updateSelectedStep,
+    setPreviousAndNextStepsOnConnect,
+  } = useWorkflowForms();
+  /* 
+========== BACKUP ==============
+*/
+  /*
   const onConnect = useCallback(
     (params) => {
       let source = params.source.substring(0, params.source.indexOf("_"));
       let target = params.target.substring(0, params.target.indexOf("_"));
-
-      if (params.sourceHandle === "start") source = launchTypes[source];
-      else source = viewTypes[source];
+      if (params.sourceHandle === "start") {
+        source = launchTypes[source];
+      } else {
+        source = viewTypes[source];
+      }
       target = viewTypes[target];
-
       setEdges((eds) =>
         addEdge(
           {
@@ -82,16 +91,82 @@ const Sheet = () => {
             type: params.sourceHandle !== "start" ? "floating" : "default",
             markerEnd: { type: MarkerType.ArrowClosed },
             style: { strokeWidth: 2 },
-            sourceID: source,
-            targetID: target,
+            sourceID: params.source,
+            targetID: params.target,
           },
           eds
         )
       );
       updateHistory();
     },
-    [setEdges, launchTypes, viewTypes]
+    [edges, launchTypes, viewTypes]
   );
+
+  ========== BACKUP ==============
+  */
+
+  const targetAlreadyExist = (params) => {
+    const targetExists = edges.find((edge) => edge.target === params.target);
+    return targetExists !== undefined;
+  };
+  const sourceAlreadyExist = (params) => {
+    const sourceExists = edges.find((edge) => edge.source === params.source);
+    return sourceExists !== undefined;
+  };
+
+  const onConnect = useCallback(
+    (params) => {
+      if (targetAlreadyExist(params) || sourceAlreadyExist(params)) return;
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: params.sourceHandle !== "start" ? "floating" : "default",
+            markerEnd: { type: MarkerType.ArrowClosed },
+            style: { strokeWidth: 2 },
+            sourceID: params.source,
+            targetID: params.target,
+          },
+          eds
+        )
+      );
+
+      updateHistory();
+      setPreviousAndNextStepsOnConnect(params);
+    },
+    [edges, launchTypes, viewTypes]
+  );
+
+  const createNewLaunchNode = (name, caption) => {
+    return {
+      id: getId(name),
+      type: "launch",
+      position: { x: 70, y: 250 },
+      parentNode: "launch-group",
+      extent: "parent",
+
+      attID: launchTypes[name],
+      data: {
+        label: `${caption}`,
+        attID: launchTypes[name],
+      },
+    };
+  };
+  const createNewReqularNode = (name, caption, position) => {
+    return {
+      id: getId(name),
+      type: name,
+      name: "",
+      position,
+      attID: viewTypes[name],
+      data: { label: `${caption}` },
+      changeEvent: (e, selectedNode) =>
+        setNodes((nds) => [
+          ...nds.filter((n) => n.id !== newNode.id),
+          { ...selectedNode, name: e.target.value },
+        ]),
+    };
+  };
 
   const onDrop = useCallback(
     (e) => {
@@ -101,7 +176,6 @@ const Sheet = () => {
       const name = e.dataTransfer.getData("application/reactflow");
       const caption = e.dataTransfer.getData("caption");
       const type = e.dataTransfer.getData("type");
-
       // check if the dropped element is valid
       if (typeof name === "undefined" || !name) return;
 
@@ -118,70 +192,23 @@ const Sheet = () => {
       if (type === "launch") {
         if (isLaunchExisting) return;
 
-        newNode = {
-          id: getId(name),
-          type: "launch",
-          position: { x: 70, y: 250 },
-          parentNode: "launch-group",
-          extent: "parent",
-
-          attID: launchTypes[name],
-          data: {
-            label: `${caption}`,
-            attID: launchTypes[name],
-          },
-        };
+        newNode = createNewLaunchNode(name, caption);
       } else {
-        newNode = {
-          id: getId(name),
-          type: name,
-          name: "",
-          position,
-          attID: viewTypes[name],
-          data: { label: `${caption}` },
-          changeEvent: (e, selectedNode) =>
-            setNodes((nds) => [
-              ...nds.filter((n) => n.id !== newNode.id),
-              { ...selectedNode, name: e.target.value },
-            ]),
-        };
-        createWorkflowStep(newNode.id);
+        newNode = createNewReqularNode(name, caption, position);
       }
       setNodes((nds) => nds.concat(newNode));
+      createWorkflowStep(newNode.id);
+      createViewOnDrop(name, newNode.id);
       updateHistory();
     },
     [reactFlowInstance, launchTypes, viewTypes]
   );
 
-  /*   const handleSubmit = (infoFormValues) => {
-    if (!edges.length) return;
-    const launchEl = edges.find((el) => el.sourceHandle === "start");
-    if (!launchEl) return;
-
-    const viewport = reactFlowInstance.getViewport();
-    const wfData = {
-      Edges: JSON.stringify(edges),
-      Nodes: JSON.stringify(nodes),
-      Viewport: JSON.stringify(viewport),
-      Steps: JSON.stringify(
-        nodes
-          .filter((n) => n.type !== "group" && n.type !== "launch")
-          .map((n) => ({ Name: n.name }))
-      ),
-      ...infoFormValues,
-      PermissionType: Number(infoFormValues.PermissionType),
-    };
-    wfData["LaunchType"] = launchEl.sourceID;
-    console.log(wfData);
-    const workflowFormData = new FormData();
-    for (const [key, value] of Object.entries(wfData)) {
-      workflowFormData.append(`${key}`, value);
-      console.log(key, " --- ", workflowFormData.get(`${key}`));
-    }
-
-    postWorkflowCall(workflowFormData);
+  const handleDeleteNode = (deleted) => {
+    console.log(deleted);
+    deleted.forEach((node) => deleteWorkflowStep(node.id));
+    updateHistory();
   };
- */
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -210,10 +237,7 @@ const Sheet = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDragStop={onNodeDragStop}
-        onNodesDelete={(deleted) => {
-          deleted.forEach((node) => deleteWorkflowStep(node.id));
-          updateHistory();
-        }}
+        onNodesDelete={handleDeleteNode}
         onNodeClick={(e, n) => updateSelectedStep(n.id)}
         onPaneClick={() => updateSelectedStep("")}
         isValidConnection={isValidConnection}

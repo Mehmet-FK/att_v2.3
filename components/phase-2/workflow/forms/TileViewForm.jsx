@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
-import HeaderForm from "./HeaderForm";
+import HeaderForm from "./header-form";
 
 const initialStepValues = {
   entityId: "",
