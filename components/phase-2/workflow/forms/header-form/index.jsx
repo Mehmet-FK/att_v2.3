@@ -17,6 +17,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import { useEffect, useState } from "react";
 import ViewHeaderRow from "./ViewHeaderRow";
 import { useSelector } from "react-redux";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 
 const replaceItem = (arr, item, id) => {
   const index = arr.findIndex((el) => el.id === id);
@@ -213,24 +214,14 @@ const initialViewHeaderValues = {
 
 const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
   const [headerValues, setHeaderValues] = useState(initialViewHeaderValues);
-  const { headerRows } = useSelector((state) => state.workflow);
+  const { headerRows, headers } = useSelector((state) => state.workflow);
+  const { createViewHeaderRow } = useWorkflowForms();
+
+  const header = headers.find((h) => h.viewId === viewId);
 
   const addRow = () => {
-    const { rows } = headerValues;
-
-    const rowMax = Math.max(...rows.map((r) => r.id)) || 1;
-    const colMax = Math.max(...columns.map((c) => c.id)) || 1;
-    setHeaderValues((prev) => ({
-      ...prev,
-      rows: [...prev.rows, { id: rowMax + 1 }],
-      columns: [
-        ...columns,
-        { rowId: rowMax + 1, id: colMax + 1 },
-        { rowId: rowMax + 1, id: colMax + 2 },
-        { rowId: rowMax + 1, id: colMax + 3 },
-      ],
-    }));
-    handleHeaderBlur();
+    const headerId = header.headerId;
+    createViewHeaderRow(headerId);
   };
 
   const handleChange = (e) => {

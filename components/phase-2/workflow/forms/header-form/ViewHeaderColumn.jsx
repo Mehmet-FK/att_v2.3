@@ -1,5 +1,6 @@
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import css from "@/styles/workflow-forms/header-form.module.css";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import {
   FormControl,
   InputLabel,
@@ -7,7 +8,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ViewHeaderColumn = ({ columnValues }) => {
   const columnTypes = {
@@ -16,12 +17,10 @@ const ViewHeaderColumn = ({ columnValues }) => {
     Icon: "2",
     Variable: "3",
   };
-
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
 
-  const { updateViewHeaderColumnValue } = useWorkflowForms();
-
-  const removeCol = () => {};
+  const { updateViewHeaderColumnValue, deleteViewHeaderColumn } =
+    useWorkflowForms();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,6 +31,14 @@ const ViewHeaderColumn = ({ columnValues }) => {
     const { name, value } = e.target;
     updateViewHeaderColumnValue(name, value, columnValues.headerColumnId);
   };
+  const removeColumn = () => {
+    const columnId = columnValues.headerColumnId;
+    console.log(columnId);
+    deleteViewHeaderColumn(columnId);
+  };
+  useEffect(() => {
+    setColumnFormValues(columnValues);
+  }, [columnValues.headerColumnId]);
 
   const columnKeys = Object.keys(columnTypes);
   return (
@@ -43,6 +50,25 @@ const ViewHeaderColumn = ({ columnValues }) => {
       }}
       className={css.flex_column}
     >
+      <HighlightOffIcon
+        onClick={removeColumn}
+        title="remove column"
+        sx={{
+          position: "absolute",
+          right: "0",
+          top: "0",
+          opacity: "0.3",
+          color: "#fff",
+          backgroundColor: "#f00",
+          zIndex: 5,
+          cursor: "pointer",
+          padding: "2px",
+          borderRadius: "2px 2px 2px 8px",
+          transition: "all 0.1s ease-in-out",
+
+          "&:hover": { opacity: 1, color: "#fff", backgroundColor: "#f00" },
+        }}
+      />
       <div className={css.flex_row}>
         <FormControl size="small" fullWidth>
           <InputLabel size="small" id="demo-simple-select-label">
@@ -124,15 +150,6 @@ const ViewHeaderColumn = ({ columnValues }) => {
           name="fontColor"
           fullWidth
         />
-      </div>
-      <div>
-        <span
-          title="remove column"
-          className={css.remove_column_btn}
-          onClick={removeCol}
-        >
-          ×
-        </span>
       </div>
     </div>
   );

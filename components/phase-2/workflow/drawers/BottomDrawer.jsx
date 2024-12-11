@@ -90,6 +90,7 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
             opacity: newHeight / 150,
+            userSelect: "none",
             // zIndex: 0,
           },
         }}

@@ -21,6 +21,32 @@
 .header_title {
   font-size: smaller;
 }
+
+.add_row_btn,
+.add_column_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  font-size: 0.7rem;
+  height: 10px;
+  background-color: #00f;
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0.1;
+  transition: all 0.1s ease-in-out;
+}
+
+.add_column_btn {
+  height: 15px;
+  width: 100%;
+}
+
+.add_column_btn:hover {
+  height: 25px;
+  font-size: large;
+}
+
 .remove_row_btn,
 .remove_column_btn {
   display: flex;
@@ -28,12 +54,11 @@
   justify-content: center;
   align-self: stretch;
   font-size: 0.7rem;
-  /* width: 15px; */
-  height: 10px;
   background-color: #f00;
   cursor: pointer;
   border-radius: 3px;
   opacity: 0.1;
+  transition: all 0.1s ease-in-out;
 }
 .remove_row_btn {
   width: 15px;
@@ -41,10 +66,18 @@
 }
 
 .remove_column_btn {
-  height: 10px;
+  height: 15px;
+  width: 100%;
 }
+.remove_row_btn:hover {
+  width: 25px;
+  font-size: large;
+}
+
 .remove_row_btn:hover,
-.remove_column_btn:hover {
+.remove_column_btn:hover,
+.add_row_btn:hover,
+.add_column_btn:hover {
   opacity: 1;
 }
 

@@ -137,7 +137,16 @@ const workflowSlice = createSlice({
       });
     },
     deleteViewHeader: (state, { payload: { viewHeaderId } }) => {
-      //TODO: Delete All ViewHeader, ViewHeaderRows, ViewHeaderColumns
+      const rowIds = state.headerRows.map(
+        (vhr) => vhr.headerId === rowId && vhr.headerRowId
+      );
+
+      state.headerColumns = state.headerColumns.filter((vhc) =>
+        rows.includes(vhc.headerRowId)
+      );
+      state.headerRows = state.headerRows.filter(
+        (vhr) => vhr.headerRowId !== rowId
+      );
     },
     addViewHeaderRow: (state, { payload: { viewHeaderRow } }) => {
       state.headerRows = [...state.headerRows, viewHeaderRow];
@@ -147,15 +156,20 @@ const workflowSlice = createSlice({
       { payload: { name, value, viewHeaderRowId } }
     ) => {
       state.headerRows = state.headerRows.map((vhr) => {
-        if (vhr.rowId === viewHeaderRowId) {
+        if (vhr.headerRowId === viewHeaderRowId) {
           return { ...vhr, [name]: value };
         } else {
           return vhr;
         }
       });
     },
-    deleteViewHeaderRow: (state, { payload: { viewHeaderRowId } }) => {
-      //TODO: Delete All ViewHeaderRows, ViewHeaderColumns
+    removeViewHeaderRow: (state, { payload: { rowId } }) => {
+      state.headerRows = state.headerRows.filter(
+        (vhr) => vhr.headerRowId !== rowId
+      );
+      state.headerColumns = state.headerColumns.filter(
+        (vhc) => vhc.headerRowId !== rowId
+      );
     },
 
     addViewHeaderColumn: (state, { payload: { viewHeaderColumn } }) => {
@@ -173,8 +187,10 @@ const workflowSlice = createSlice({
         }
       });
     },
-    deleteViewHeaderColumn: (state, { payload: { viewHeaderColumnId } }) => {
-      //TODO: Delete All ViewHeaderRows, ViewHeaderColumns
+    removeViewHeaderColumn: (state, { payload: { columnId } }) => {
+      state.headerColumns = state.headerColumns.filter(
+        (vhc) => vhc.headerColumnId !== columnId
+      );
     },
   },
 });
@@ -196,5 +212,7 @@ export const {
   updateTotalWorkflow,
   removeWorkflowStep,
   removeListView,
+  removeViewHeaderRow,
+  removeViewHeaderColumn,
 } = workflowSlice.actions;
 export default workflowSlice.reducer;

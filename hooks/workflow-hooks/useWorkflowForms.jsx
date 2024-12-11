@@ -10,6 +10,8 @@ import {
   changeStepValue,
   changeViewHeaderColumnValue,
   changeWorkflowValue,
+  removeViewHeaderColumn,
+  removeViewHeaderRow,
   removeWorkflowStep,
   updateSelectedStep as updateStep,
   updateTotalWorkflow,
@@ -81,9 +83,7 @@ const useWorkflowForms = () => {
   const createViewHeaderWithRowsAndColumnsOnDrop = (viewId, viewType) => {
     const headerId = `${viewId}-vh`;
     createViewHeader(viewId, viewType, headerId);
-    const rowId = headerId + "-default";
-    createViewHeaderRow(rowId, headerId);
-    createViewHeaderColumn(rowId);
+    createViewHeaderRow(headerId);
   };
 
   const createViewHeader = (viewId, viewType, headerId) => {
@@ -100,7 +100,8 @@ const useWorkflowForms = () => {
     dispatch(addViewHeader({ viewHeader: template }));
   };
 
-  const createViewHeaderRow = (rowId, headerId) => {
+  const createViewHeaderRow = (headerId) => {
+    const rowId = "vhr-" + generateRandomId();
     const template = {
       headerRowId: rowId,
       headerId: headerId,
@@ -108,14 +109,20 @@ const useWorkflowForms = () => {
     };
 
     dispatch(addViewHeaderRow({ viewHeaderRow: template }));
+    createViewHeaderColumn(rowId);
+  };
+
+  const deleteViewHeaderRow = (rowId) => {
+    dispatch(removeViewHeaderRow({ rowId }));
   };
 
   const createViewHeaderColumn = (headerRowId) => {
+    const tempID = "vhc" + generateRandomId();
     const template = {
-      headerColumnId: "vhc" + generateRandomId(),
-      headerRowID: headerRowId,
+      headerColumnId: tempID,
+      headerRowId: headerRowId,
       columnType: 3,
-      columnValue: "",
+      columnValue: tempID,
       colSpan: 2,
       rowSpan: 1,
       fontColor: "#FFFFFF",
@@ -128,6 +135,10 @@ const useWorkflowForms = () => {
 
   const updateViewHeaderColumnValue = (name, value, columnId) => {
     dispatch(changeViewHeaderColumnValue({ name, value, columnId }));
+  };
+
+  const deleteViewHeaderColumn = (columnId) => {
+    dispatch(removeViewHeaderColumn({ columnId }));
   };
 
   const createViewOnDrop = (viewName, workflowStepId) => {
@@ -187,12 +198,17 @@ const useWorkflowForms = () => {
   };
 
   return {
+    generateRandomId,
     handleWFStepBlur,
     handleWorkflowBlur,
     createWorkflowStep,
     createViewOnDrop,
     createViewHeaderWithRowsAndColumnsOnDrop,
+    createViewHeaderRow,
+    createViewHeaderColumn,
     deleteWorkflowStep,
+    deleteViewHeaderRow,
+    deleteViewHeaderColumn,
     updateSelectedStep,
     updateListView,
     updateViewHeaderColumnValue,
