@@ -1,63 +1,78 @@
 import IconSelect from "@/components/form-elements/IconSelect";
 import ListViewElementRow from "./ListViewElementRow";
 import css from "@/styles/workflow-forms/list-view-form.module.css";
-import { Divider } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { useSelector } from "react-redux";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useState } from "react";
 
 const ListViewElement = ({ element, listViewId }) => {
-  const { listViewElements } = useSelector((state) => state.workflow);
+  const [elementValues, setElementValues] = useState(element);
 
-  const addListViewElementRow = () => {};
+  const { listViewElementRows } = useSelector((state) => state.workflow);
 
-  const removeElement = () => {
-    // return;
-    setListElements((prev) => prev.filter((el) => el.id !== element.id));
+  const { createListViewElementRow, updateListViewElementValue } =
+    useWorkflowForms();
+
+  const elementRows = listViewElementRows.filter(
+    (lver) => lver.listViewElementId === element.listViewElementId
+  );
+  const addListViewElementRow = () => {
+    createListViewElementRow(element.listViewElementId);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setListElements((prev) =>
-      prev.map((el) => (el.id === element.id ? { ...el, [name]: value } : el))
-    );
+    setElementValues({ ...elementValues, [name]: value });
   };
 
-  const handleBlur = () => {};
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    updateListViewElementValue(name, value, element.listViewElementId);
+  };
   return (
     <>
       <div className={css.elements_container}>
-        <div className={css.flex_row}>
-          <span
-            className={css.remove_element_btn}
-            title="Remove Element"
-            onClick={removeElement}
+        <Accordion>
+          <AccordionSummary
+            sx={{ fontSize: "smaller", paddingBlock: "0" }}
+            expandIcon={<ExpandMoreIcon fontSize="small" />}
+            aria-controls="panel2-content"
+            id="panel2-header"
           >
-            ×
-          </span>
-          <div className={css.flex_column}>
-            <IconSelect
-              size={"small"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-            />
-            {element.listViewRows.map((elementRow) => (
-              <ListViewElementRow
-                key={elementRow.id}
-                elementID={element.id}
-                elementRowValues={elementRow}
-                // setListElements={setListElements}
-              />
-            ))}
-          </div>
-          <span
-            className={css.add_row_btn}
-            title="Add Row"
-            onClick={addListViewElementRow}
-          >
-            +
-          </span>
-        </div>
+            List View Element
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className={css.flex_column} style={{ rowGap: "10px" }}>
+              <div className={css.flex_row}>
+                <div className={css.flex_column}>
+                  <IconSelect
+                    size={"small"}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    value={elementValues?.icon || ""}
+                  />
+                  {elementRows.map((row) => (
+                    <ListViewElementRow
+                      key={row.id}
+                      elementID={element.id}
+                      elementRowValues={row}
+                    />
+                  ))}
+                </div>
+                <span
+                  className={css.add_row_btn}
+                  title="Add Row"
+                  onClick={addListViewElementRow}
+                >
+                  +
+                </span>
+              </div>{" "}
+            </div>
+          </AccordionDetails>
+        </Accordion>
       </div>
-      <Divider />
     </>
   );
 };

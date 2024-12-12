@@ -1,55 +1,34 @@
 import { TextField } from "@mui/material";
 import css from "@/styles/workflow-forms/list-view-form.module.css";
+import { useState } from "react";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import { useEffect } from "react";
 
-const ListViewElementRow = ({
-  elementID,
-  elementRowValues,
-  setListElements,
-  handleElementsBlur,
-}) => {
+const ListViewElementRow = ({ elementRowValues }) => {
+  const [rowValues, setRowValues] = useState(elementRowValues);
+
+  const { updateListViewElementRowValue, deleteListViewElementRowByRowId } =
+    useWorkflowForms();
+
   const removeRow = () => {
-    setListElements((prev) => {
-      let temp = prev.map((el) =>
-        el.id === elementID
-          ? {
-              ...el,
-              listViewRows: el.listViewRows.filter(
-                (r) => r.id !== elementRowValues.id
-              ),
-            }
-          : el
-      );
-
-      return temp.map((el) =>
-        el.id === elementID
-          ? {
-              ...el,
-              listViewRows: el.listViewRows.map((r, index) => ({
-                ...r,
-                listViewRowNumber: index + 1,
-              })),
-            }
-          : el
-      );
-    });
+    const rowId = elementRowValues.listViewElementRowId;
+    deleteListViewElementRowByRowId(rowId);
   };
 
-  const handleChangeElementRow = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setListElements((prev) =>
-      prev.map((el) =>
-        el.id === elementID
-          ? {
-              ...el,
-              listViewRows: el.listViewRows.map((row) =>
-                row.id === elementRowValues.id ? { ...row, [name]: value } : row
-              ),
-            }
-          : el
-      )
-    );
+    setRowValues({ ...rowValues, [name]: value });
   };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const rowId = elementRowValues.listViewElementRowId;
+
+    updateListViewElementRowValue(name, value, rowId);
+  };
+  useEffect(() => {
+    setRowValues(elementRowValues);
+  }, [elementRowValues.listViewElementRowId]);
 
   return (
     <div
@@ -62,9 +41,9 @@ const ListViewElementRow = ({
     >
       <div className={css.flex_row}>
         <TextField
-          onChange={(e) => handleChangeElementRow(e, elementRowValues.id)}
-          onBlur={handleElementsBlur}
-          value={elementRowValues?.text || ""}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={rowValues?.text || ""}
           variant="outlined"
           size="small"
           label="Text"
@@ -72,9 +51,9 @@ const ListViewElementRow = ({
           fullWidth
         />
         <TextField
-          onChange={(e) => handleChangeElementRow(e, elementRowValues.id)}
-          onBlur={handleElementsBlur}
-          value={elementRowValues?.listViewRowNumber || ""}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={rowValues?.listViewRowNumber || ""}
           variant="outlined"
           size="small"
           label="Row Number"
@@ -82,9 +61,9 @@ const ListViewElementRow = ({
           fullWidth
         />
         <TextField
-          onChange={(e) => handleChangeElementRow(e, elementRowValues.id)}
-          onBlur={handleElementsBlur}
-          value={elementRowValues?.fontFamily || ""}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={rowValues?.fontFamily || ""}
           variant="outlined"
           size="small"
           label="Font Family"
@@ -92,9 +71,9 @@ const ListViewElementRow = ({
           fullWidth
         />
         <TextField
-          onChange={(e) => handleChangeElementRow(e, elementRowValues.id)}
-          onBlur={handleElementsBlur}
-          value={elementRowValues?.fontColor || ""}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={rowValues?.fontColor || ""}
           variant="outlined"
           size="small"
           label="Font Color"

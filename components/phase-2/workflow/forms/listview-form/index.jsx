@@ -19,8 +19,6 @@ import ViewHeaderForm from "../header-form";
 import ListViewElement from "./ListViewElement";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
-const permissionTypes = { User: "0", All: "1" };
-
 const initialStepValues = {
   entityId: "",
   name: "",
@@ -28,22 +26,6 @@ const initialStepValues = {
   hasLookup: false,
 };
 
-const initialHeaderValues = {
-  caption: "",
-  icon: "",
-  gradientStart: "",
-  gradientEnd: "",
-  rows: [
-    {
-      id: 1,
-    },
-  ],
-  columns: [
-    { id: 1, rowId: 1 },
-    { id: 2, rowId: 1 },
-    { id: 3, rowId: 1 },
-  ],
-};
 const initialListElement = {
   id: 1,
   icon: "",
@@ -60,10 +42,17 @@ const initialListElement = {
 
 const ListViewForm = ({ stepID }) => {
   const { entities } = useSelector((state) => state.attensam.data);
-
+  const { listViewElements, listViews } = useSelector(
+    (state) => state.workflow
+  );
   const [listViewValues, setListViewValues] = useState(initialStepValues);
   const [listElements, setListElements] = useState([initialListElement]);
 
+  const viewId = stepID + "-listview";
+  const listView = listViews.find((lv) => lv.listViewId === viewId);
+  const listViewElement = listViewElements.find(
+    (lve) => lve.listViewElementId === listView.listViewElementId
+  );
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
 
@@ -73,17 +62,11 @@ const ListViewForm = ({ stepID }) => {
     });
   };
 
-  const viewId = stepID + "-listview";
-
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
 
     const inputValue = type === "checkbox" ? checked : value;
     updateListView(name, inputValue, viewId);
-  };
-
-  const addListElement = () => {
-    // TODO: ListViewElement Creation Logic
   };
 
   return (
@@ -172,31 +155,8 @@ const ListViewForm = ({ stepID }) => {
       <div className={css.header_form_wrapper}>
         <ViewHeaderForm viewId={viewId} />
       </div>
-      <div className={css.elements_container}>
-        <Accordion>
-          <AccordionSummary
-            sx={{ fontSize: "smaller", paddingBlock: "0" }}
-            expandIcon={<ExpandMoreIcon fontSize="small" />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            List View Elements
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={css.flex_column} style={{ rowGap: "10px" }}>
-              {listElements.map((element) => (
-                <ListViewElement
-                  key={element.listViewElementId}
-                  element={element}
-                  listViewId={viewId}
-                />
-              ))}
 
-              <button onClick={addListElement}>Add List Element</button>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      </div>
+      <ListViewElement element={listViewElement} listViewId={viewId} />
     </>
   );
 };

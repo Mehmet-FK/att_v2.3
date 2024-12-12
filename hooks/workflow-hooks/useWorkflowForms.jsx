@@ -7,6 +7,8 @@ import {
   addViewHeaderColumn,
   addViewHeaderRow,
   addWorkflowStep,
+  changeListViewElementRowValue,
+  changeListViewElementValue,
   changeListViewValue,
   changeNextAndPreviousStep,
   changeStepValue,
@@ -14,7 +16,8 @@ import {
   changeWorkflowValue,
   removeListView,
   removeListViewElement,
-  removeListViewElementRow,
+  removeListViewElementRowByElementId,
+  removeListViewElementRowByRowId,
   removeViewHeader,
   removeViewHeaderColumn,
   removeViewHeaderRow,
@@ -92,8 +95,19 @@ const useWorkflowForms = () => {
     dispatch(addListViewElementRow({ elementRow: template }));
   };
 
-  const deleteListViewElementRow = (listViewElementId) => {
-    dispatch(removeListViewElementRow({ elementId: listViewElementId }));
+  const updateListViewElementRowValue = (name, value, elementRowId) => {
+    dispatch(
+      changeListViewElementRowValue({ name, value, rowId: elementRowId })
+    );
+  };
+
+  const deleteListViewElementRowByElementId = (listViewElementId) => {
+    dispatch(
+      removeListViewElementRowByElementId({ elementId: listViewElementId })
+    );
+  };
+  const deleteListViewElementRowByRowId = (listViewElementRowId) => {
+    dispatch(removeListViewElementRowByRowId({ rowId: listViewElementRowId }));
   };
 
   const createListViewElement = (listViewElementId) => {
@@ -106,8 +120,15 @@ const useWorkflowForms = () => {
     createListViewElementRow(listViewElementId);
   };
 
+  const updateListViewElementValue = (name, value, listViewElementId) => {
+    dispatch(
+      changeListViewElementValue({ name, value, elementId: listViewElementId })
+    );
+  };
+
   const deleteListViewElement = (listViewElementId) => {
     dispatch(removeListViewElement({ elementId: listViewElementId }));
+    deleteListViewElementRowByElementId(listViewElementId);
   };
 
   const createListViewOnDrop = (workflowStepId, listViewId, headerId) => {
@@ -127,14 +148,11 @@ const useWorkflowForms = () => {
 
     createListViewElement(listViewElementId);
     dispatch(addListView({ listView: template }));
-
-    // TODO: Create ListViewRow onDrop
   };
 
   const deleteListView = (listViewId, listViewElementId) => {
     dispatch(removeListView({ viewId: listViewId }));
     deleteListViewElement(listViewElementId);
-    deleteListViewElementRow(listViewElementId);
   };
 
   const createViewHeaderWithRowsAndColumnsOnDrop = (
@@ -300,15 +318,20 @@ const useWorkflowForms = () => {
     handleWorkflowBlur,
     createWorkflowStep,
     createViewOnDrop,
+    createListViewElementRow,
     createViewHeaderWithRowsAndColumnsOnDrop,
     createViewHeaderRow,
     createViewHeaderColumn,
     deleteWorkflowStep,
     deleteView,
+    deleteListViewElementRowByElementId,
+    deleteListViewElementRowByRowId,
     deleteViewHeaderRow,
     deleteViewHeaderColumn,
     updateSelectedStep,
     updateListView,
+    updateListViewElementValue,
+    updateListViewElementRowValue,
     updateViewHeaderColumnValue,
     restoreWorkflowState,
     setPreviousAndNextStepsOnConnect,

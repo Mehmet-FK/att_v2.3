@@ -127,6 +127,19 @@ const workflowSlice = createSlice({
       state.listViewElements = [...state.listViewElements, listViewElement];
     },
 
+    changeListViewElementValue: (
+      state,
+      { payload: { name, value, elementId } }
+    ) => {
+      state.listViewElements = state.listViewElements.map((lve) => {
+        if (lve.listViewElementId === elementId) {
+          return { ...lve, [name]: value };
+        } else {
+          return lve;
+        }
+      });
+    },
+
     removeListViewElement: (state, { payload: { elementId } }) => {
       state.listViewElements = state.listViewElements.filter(
         (lve) => lve.listViewElementId !== elementId
@@ -136,9 +149,31 @@ const workflowSlice = createSlice({
     addListViewElementRow: (state, { payload: { elementRow } }) => {
       state.listViewElementRows = [...state.listViewElementRows, elementRow];
     },
-    removeListViewElementRow: (state, { payload: { elementId } }) => {
+
+    changeListViewElementRowValue: (
+      state,
+      { payload: { name, value, rowId } }
+    ) => {
+      state.listViewElementRows = state.listViewElementRows.map((lver) => {
+        if (lver.listViewElementRowId === rowId) {
+          return { ...lver, [name]: value };
+        } else {
+          return lver;
+        }
+      });
+    },
+
+    removeListViewElementRowByElementId: (
+      state,
+      { payload: { elementId } }
+    ) => {
       state.listViewElementRows = state.listViewElementRows.filter(
         (lver) => lver.listViewElementId !== elementId
+      );
+    },
+    removeListViewElementRowByRowId: (state, { payload: { rowId } }) => {
+      state.listViewElementRows = state.listViewElementRows.filter(
+        (lver) => lver.listViewElementRowId !== rowId
       );
     },
 
@@ -221,6 +256,8 @@ export const {
   changeNextAndPreviousStep,
   changeStepValue,
   changeListViewValue,
+  changeListViewElementValue,
+  changeListViewElementRowValue,
   changeViewHeaderValue,
   changeViewHeaderRowValue,
   changeViewHeaderColumnValue,
@@ -229,7 +266,8 @@ export const {
   removeWorkflowStep,
   removeListView,
   removeListViewElement,
-  removeListViewElementRow,
+  removeListViewElementRowByElementId,
+  removeListViewElementRowByRowId,
   removeViewHeader,
   removeViewHeaderRow,
   removeViewHeaderColumn,
