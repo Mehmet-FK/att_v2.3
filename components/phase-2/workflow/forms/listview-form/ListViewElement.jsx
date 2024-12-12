@@ -2,35 +2,12 @@ import IconSelect from "@/components/form-elements/IconSelect";
 import ListViewElementRow from "./ListViewElementRow";
 import css from "@/styles/workflow-forms/list-view-form.module.css";
 import { Divider } from "@mui/material";
+import { useSelector } from "react-redux";
 
-const ListViewElement = ({
-  element,
-  listElements,
-  setListElements,
-  handleElementsBlur,
-}) => {
-  const addElementRow = () => {
-    const max = Math.max(...element.listViewRows.map((el) => el.id), 0);
-    setListElements((prev) =>
-      prev.map((el) =>
-        el.id === element.id
-          ? {
-              ...el,
-              listViewRows: [
-                ...el.listViewRows,
-                {
-                  listViewRowNumber: el.listViewRows.length + 1,
-                  text: "",
-                  fontFamily: "",
-                  fontColor: "",
-                  id: max + 1,
-                },
-              ],
-            }
-          : el
-      )
-    );
-  };
+const ListViewElement = ({ element, listViewId }) => {
+  const { listViewElements } = useSelector((state) => state.workflow);
+
+  const addListViewElementRow = () => {};
 
   const removeElement = () => {
     // return;
@@ -44,6 +21,7 @@ const ListViewElement = ({
     );
   };
 
+  const handleBlur = () => {};
   return (
     <>
       <div className={css.elements_container}>
@@ -59,23 +37,21 @@ const ListViewElement = ({
             <IconSelect
               size={"small"}
               handleChange={handleChange}
-              handleBlur={handleElementsBlur}
+              handleBlur={handleBlur}
             />
             {element.listViewRows.map((elementRow) => (
               <ListViewElementRow
                 key={elementRow.id}
                 elementID={element.id}
                 elementRowValues={elementRow}
-                setListElements={setListElements}
-                // handleChangeElementRow={handleChangeElementRow}
-                handleElementsBlur={handleElementsBlur}
+                // setListElements={setListElements}
               />
             ))}
           </div>
           <span
             className={css.add_row_btn}
             title="Add Row"
-            onClick={addElementRow}
+            onClick={addListViewElementRow}
           >
             +
           </span>

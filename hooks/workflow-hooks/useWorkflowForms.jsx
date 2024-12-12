@@ -1,6 +1,8 @@
 import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 import {
   addListView,
+  addListViewElement,
+  addListViewElementRow,
   addViewHeader,
   addViewHeaderColumn,
   addViewHeaderRow,
@@ -10,6 +12,10 @@ import {
   changeStepValue,
   changeViewHeaderColumnValue,
   changeWorkflowValue,
+  removeListView,
+  removeListViewElement,
+  removeListViewElementRow,
+  removeViewHeader,
   removeViewHeaderColumn,
   removeViewHeaderRow,
   removeWorkflowStep,
@@ -39,7 +45,14 @@ const initialWorkflowState = {
 
 const useWorkflowForms = () => {
   const dispatch = useDispatch();
-  const { selectedStepId, workflowId } = useSelector((state) => state.workflow);
+  const {
+    selectedStepId,
+    workflowId,
+    listViews,
+    headers,
+    headerRows,
+    headerColumns,
+  } = useSelector((state) => state.workflow);
 
   const generateRandomId = () => {
     return `${Math.floor(Math.random() * 1000) + Date.now()}`;
@@ -66,7 +79,40 @@ const useWorkflowForms = () => {
     dispatch(addWorkflowStep({ step }));
   };
 
+  const createListViewElementRow = (listViewElementId) => {
+    const template = {
+      listViewElementRowId: "lvr-" + generateRandomId(),
+      listViewElementId: listViewElementId,
+      listViewRowNumber: 1,
+      text: "",
+      fontFamily: 3,
+      fontColor: "#1D1D1D",
+    };
+
+    dispatch(addListViewElementRow({ elementRow: template }));
+  };
+
+  const deleteListViewElementRow = (listViewElementId) => {
+    dispatch(removeListViewElementRow({ elementId: listViewElementId }));
+  };
+
+  const createListViewElement = (listViewElementId) => {
+    const template = {
+      listViewElementId: listViewElementId,
+      icon: "",
+    };
+
+    dispatch(addListViewElement({ listViewElement: template }));
+    createListViewElementRow(listViewElementId);
+  };
+
+  const deleteListViewElement = (listViewElementId) => {
+    dispatch(removeListViewElement({ elementId: listViewElementId }));
+  };
+
   const createListViewOnDrop = (workflowStepId, listViewId, headerId) => {
+    const listViewElementId = listViewId + "-lve";
+
     const template = {
       listViewId: listViewId,
       workflowStepId: workflowStepId,
@@ -76,12 +122,27 @@ const useWorkflowForms = () => {
       elementBackgroundColor: "",
       elementIconPath: "",
       headerId: headerId || "",
-      listViewElementId: "",
+      listViewElementId: listViewElementId,
     };
+
+    createListViewElement(listViewElementId);
     dispatch(addListView({ listView: template }));
+
+    // TODO: Create ListViewRow onDrop
   };
-  const createViewHeaderWithRowsAndColumnsOnDrop = (viewId, viewType) => {
-    const headerId = `${viewId}-vh`;
+
+  const deleteListView = (listViewId, listViewElementId) => {
+    dispatch(removeListView({ viewId: listViewId }));
+    deleteListViewElement(listViewElementId);
+    deleteListViewElementRow(listViewElementId);
+  };
+
+  const createViewHeaderWithRowsAndColumnsOnDrop = (
+    viewId,
+    viewType,
+    headerId
+  ) => {
+    // const headerId = `${viewId}-vh`;
     createViewHeader(viewId, viewType, headerId);
     createViewHeaderRow(headerId);
   };
@@ -98,6 +159,24 @@ const useWorkflowForms = () => {
     };
 
     dispatch(addViewHeader({ viewHeader: template }));
+  };
+
+  const deleteViewHeader = (viewHeaderId) => {
+    const headerRowIds = headerRows
+      .filter((vhr) => vhr.headerId === viewHeaderId)
+      .flatMap((vhr) => vhr.headerRowId);
+    const headerColumnIds = headerColumns
+      .filter((vhc) => headerRowIds.includes(vhc.headerRowID))
+      .flatMap((vhc) => vhc.headerColumnId);
+
+    headerRowIds.forEach((vhrId) => deleteViewHeaderRow(vhrId));
+    headerColumnIds.forEach((vhcId) => deleteViewHeaderColumn(vhcId));
+
+    dispatch(
+      removeViewHeader({
+        viewHeaderId: viewHeaderId,
+      })
+    );
   };
 
   const createViewHeaderRow = (headerId) => {
@@ -120,7 +199,7 @@ const useWorkflowForms = () => {
     const tempID = "vhc" + generateRandomId();
     const template = {
       headerColumnId: tempID,
-      headerRowId: headerRowId,
+      headerRowID: headerRowId,
       columnType: 3,
       columnValue: tempID,
       colSpan: 2,
@@ -141,28 +220,47 @@ const useWorkflowForms = () => {
     dispatch(removeViewHeaderColumn({ columnId }));
   };
 
-  const createViewOnDrop = (viewName, workflowStepId) => {
-    if (viewName === viewTypeConstants.LISTVIEW) {
-      const listViewId = workflowStepId + "-listView";
-      createListViewOnDrop(workflowStepId, listViewId);
+  const createViewOnDrop = (viewType, workflowStepId) => {
+    if (viewType === viewTypeConstants.LISTVIEW) {
+      const listViewId = workflowStepId + "-listview";
+      const headerId = `${listViewId}-vh`;
+      createListViewOnDrop(workflowStepId, listViewId, headerId);
       createViewHeaderWithRowsAndColumnsOnDrop(
         listViewId,
-        workflowStepTypeIds.LISTVIEW
+        workflowStepTypeIds.LISTVIEW,
+        headerId
       );
     }
   };
 
-  const deleteWorkflowStep = (stepID) => {
-    dispatch(removeWorkflowStep({ id: stepID }));
+  const deleteView = (viewType, workflowStepId) => {
+    if (viewType === viewTypeConstants.LISTVIEW) {
+      const listViewToDelete = listViews.find(
+        (lv) => lv.workflowStepId === workflowStepId
+      );
+      const listViewId = listViewToDelete.listViewId;
+      const listViewElementId = listViewToDelete.listViewElementId;
+
+      deleteListView(listViewId, listViewElementId);
+
+      const headerId = headers.find((vh) => vh.viewId === listViewId).headerId;
+      deleteViewHeader(headerId);
+    }
+  };
+
+  const deleteWorkflowStep = (step) => {
+    const workflowStepId = step.id;
+    const viewType = step.type;
+    console.log(step);
+    deleteView(viewType, workflowStepId);
+    dispatch(removeWorkflowStep({ id: workflowStepId }));
   };
 
   const handleWFStepBlur = (name, value) => {
-    // console.log(value);
     dispatch(changeStepValue({ name, value }));
   };
 
   const updateListView = (name, value, viewId) => {
-    console.log(viewId);
     dispatch(changeListViewValue({ name, value, viewId }));
   };
 
@@ -174,7 +272,6 @@ const useWorkflowForms = () => {
   const setPreviousAndNextStepsOnConnect = (params) => {
     const previousStepId = params.source;
     const nextStepId = params.target;
-    console.log(params);
     dispatch(
       changeNextAndPreviousStep({
         nextStepId: nextStepId,
@@ -207,6 +304,7 @@ const useWorkflowForms = () => {
     createViewHeaderRow,
     createViewHeaderColumn,
     deleteWorkflowStep,
+    deleteView,
     deleteViewHeaderRow,
     deleteViewHeaderColumn,
     updateSelectedStep,

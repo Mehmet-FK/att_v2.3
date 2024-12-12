@@ -44,9 +44,13 @@ const ViewHeaderColumn = ({ columnValues }) => {
   return (
     <div
       style={{
-        border: "1px solid #aaa5",
+        border: "1px solid #ddd",
+        // border: "1px solid #0f0",
         padding: "5px",
         position: "relative",
+        maxWidth: "40%",
+        borderRadius: "5px",
+        overflow: "hidden",
       }}
       className={css.flex_column}
     >

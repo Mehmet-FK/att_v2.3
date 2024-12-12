@@ -1,5 +1,8 @@
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -13,6 +16,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms/list-view-form.module.css";
 import ViewHeaderForm from "../header-form";
+import ListViewElement from "./ListViewElement";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const permissionTypes = { User: "0", All: "1" };
 
@@ -57,7 +62,6 @@ const ListViewForm = ({ stepID }) => {
   const { entities } = useSelector((state) => state.attensam.data);
 
   const [listViewValues, setListViewValues] = useState(initialStepValues);
-  const [headerValues, setHeaderValues] = useState(initialHeaderValues);
   const [listElements, setListElements] = useState([initialListElement]);
 
   const handleChange = (e) => {
@@ -69,9 +73,9 @@ const ListViewForm = ({ stepID }) => {
     });
   };
 
-  const viewId = stepID + "-listView";
+  const viewId = stepID + "-listview";
 
-  const handleListViewFormBlur = (e) => {
+  const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
 
     const inputValue = type === "checkbox" ? checked : value;
@@ -79,36 +83,8 @@ const ListViewForm = ({ stepID }) => {
   };
 
   const addListElement = () => {
-    const max = Math.max(...listElements.map((el) => el.id), 0);
-    setListElements((prev) => [
-      ...prev,
-      { ...initialListElement, id: max + 1 },
-    ]);
+    // TODO: ListViewElement Creation Logic
   };
-
-  /*   useEffect(() => {
-    if (entities || !user?.token) return;
-    getEntitiesCall();
-  }, [user]);
- */
-  /*   useEffect(() => {
-    const step = workflowSteps.find((step) => step.id === viewId);
-
-    setListViewValues((prev) => ({
-      ...prev,
-      name: step?.name,
-      entityId: step?.entityId,
-      caption: step?.caption,
-      hasLookup: step?.hasLookup,
-    }));
-
-    setHeaderValues((prev) =>
-      step?.header ? { ...prev, ...step?.header } : initialHeaderValues
-    );
-    setListElements((prev) =>
-      step?.listViewElements ? step?.listViewElements : [initialListElement]
-    );
-  }, [viewId]); */
 
   return (
     <>
@@ -117,7 +93,7 @@ const ListViewForm = ({ stepID }) => {
           <div className={css.flex_row}>
             <TextField
               onChange={handleChange}
-              onBlur={handleListViewFormBlur}
+              onBlur={handleBlur}
               value={listViewValues.name || ""}
               variant="outlined"
               size="medium"
@@ -127,7 +103,7 @@ const ListViewForm = ({ stepID }) => {
             />
             <TextField
               onChange={handleChange}
-              onBlur={handleListViewFormBlur}
+              onBlur={handleBlur}
               value={listViewValues.caption || ""}
               variant="outlined"
               size="medium"
@@ -145,7 +121,7 @@ const ListViewForm = ({ stepID }) => {
                     name="hasLookup"
                     checked={listViewValues.hasLookup}
                     onChange={handleChange}
-                    onBlur={handleListViewFormBlur}
+                    onBlur={handleBlur}
                   />
                 }
                 label={<span style={{ fontSize: "smaller" }}>hasLookup</span>}
@@ -160,7 +136,7 @@ const ListViewForm = ({ stepID }) => {
                     name="onlyOnline"
                     checked={listViewValues.onlyOnline}
                     onChange={handleChange}
-                    onBlur={handleListViewFormBlur}
+                    onBlur={handleBlur}
                   />
                 }
                 label={<span style={{ fontSize: "smaller" }}>onlyOnline</span>}
@@ -181,7 +157,7 @@ const ListViewForm = ({ stepID }) => {
               label="Entität"
               name="entityId"
               onChange={handleChange}
-              onBlur={handleListViewFormBlur}
+              onBlur={handleBlur}
             >
               <MenuItem value={""}>
                 <em>None</em>
@@ -194,40 +170,32 @@ const ListViewForm = ({ stepID }) => {
         </div>
       </div>
       <div className={css.header_form_wrapper}>
-        <ViewHeaderForm
-          viewId={viewId}
-          headerValues={headerValues}
-          setHeaderValues={setHeaderValues}
-        />
-        {/*
-        <div className={css.elements_container}>
-          <Accordion>
-            <AccordionSummary
-              sx={{ fontSize: "smaller", paddingBlock: "0" }}
-              expandIcon={<ExpandMoreIcon fontSize="small" />}
-              aria-controls="panel2-content"
-              id="panel2-header"
-            >
-              List View Elements
-            </AccordionSummary>
-            <AccordionDetails>
-              <div className={css.flex_column} style={{ rowGap: "10px" }}>
-                {listElements.map((element) => (
-                  <ListViewElement
-                    key={element.id}
-                    id={element.id}
-                    element={element}
-                    listElements={listElements}
-                    setListElements={setListElements}
-                    handleElementsBlur={handleElementsBlur}
-                  />
-                ))}
+        <ViewHeaderForm viewId={viewId} />
+      </div>
+      <div className={css.elements_container}>
+        <Accordion>
+          <AccordionSummary
+            sx={{ fontSize: "smaller", paddingBlock: "0" }}
+            expandIcon={<ExpandMoreIcon fontSize="small" />}
+            aria-controls="panel2-content"
+            id="panel2-header"
+          >
+            List View Elements
+          </AccordionSummary>
+          <AccordionDetails>
+            <div className={css.flex_column} style={{ rowGap: "10px" }}>
+              {listElements.map((element) => (
+                <ListViewElement
+                  key={element.listViewElementId}
+                  element={element}
+                  listViewId={viewId}
+                />
+              ))}
 
-                <button onClick={addListElement}>Add List Element</button>
-              </div>
-            </AccordionDetails>
-          </Accordion>
-        </div>*/}
+              <button onClick={addListElement}>Add List Element</button>
+            </div>
+          </AccordionDetails>
+        </Accordion>
       </div>
     </>
   );

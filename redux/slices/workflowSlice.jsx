@@ -118,9 +118,30 @@ const workflowSlice = createSlice({
       });
     },
     removeListView: (state, { payload: { viewId } }) => {
-      //TODO: Delete All ListView, ListViewElements, ListViewElementRows, ListViewHeader, WorkflowStep
-      //TODO: Update previousStep, nextStep values of WorkflowSteps
+      state.listViews = state.listViews.filter(
+        (lv) => lv.listViewId !== viewId
+      );
     },
+
+    addListViewElement: (state, { payload: { listViewElement } }) => {
+      state.listViewElements = [...state.listViewElements, listViewElement];
+    },
+
+    removeListViewElement: (state, { payload: { elementId } }) => {
+      state.listViewElements = state.listViewElements.filter(
+        (lve) => lve.listViewElementId !== elementId
+      );
+    },
+
+    addListViewElementRow: (state, { payload: { elementRow } }) => {
+      state.listViewElementRows = [...state.listViewElementRows, elementRow];
+    },
+    removeListViewElementRow: (state, { payload: { elementId } }) => {
+      state.listViewElementRows = state.listViewElementRows.filter(
+        (lver) => lver.listViewElementId !== elementId
+      );
+    },
+
     addViewHeader: (state, { payload: { viewHeader } }) => {
       state.headers = [...state.headers, viewHeader];
     },
@@ -136,16 +157,9 @@ const workflowSlice = createSlice({
         }
       });
     },
-    deleteViewHeader: (state, { payload: { viewHeaderId } }) => {
-      const rowIds = state.headerRows.map(
-        (vhr) => vhr.headerId === rowId && vhr.headerRowId
-      );
-
-      state.headerColumns = state.headerColumns.filter((vhc) =>
-        rows.includes(vhc.headerRowId)
-      );
-      state.headerRows = state.headerRows.filter(
-        (vhr) => vhr.headerRowId !== rowId
+    removeViewHeader: (state, { payload: { viewHeaderId } }) => {
+      state.headers = state.headers.filter(
+        (vh) => vh.headerId !== viewHeaderId
       );
     },
     addViewHeaderRow: (state, { payload: { viewHeaderRow } }) => {
@@ -168,7 +182,7 @@ const workflowSlice = createSlice({
         (vhr) => vhr.headerRowId !== rowId
       );
       state.headerColumns = state.headerColumns.filter(
-        (vhc) => vhc.headerRowId !== rowId
+        (vhc) => vhc.headerRowID !== rowId
       );
     },
 
@@ -198,6 +212,8 @@ const workflowSlice = createSlice({
 export const {
   addWorkflowStep,
   addListView,
+  addListViewElement,
+  addListViewElementRow,
   addViewHeader,
   addViewHeaderRow,
   addViewHeaderColumn,
@@ -212,6 +228,9 @@ export const {
   updateTotalWorkflow,
   removeWorkflowStep,
   removeListView,
+  removeListViewElement,
+  removeListViewElementRow,
+  removeViewHeader,
   removeViewHeaderRow,
   removeViewHeaderColumn,
 } = workflowSlice.actions;

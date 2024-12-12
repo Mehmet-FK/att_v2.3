@@ -12,16 +12,24 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
     deleteViewHeaderRow(rowId);
   };
 
-  const columns = headerColumns.filter((col) => col.headerRowId === rowId);
+  const columns = headerColumns.filter((col) => col.headerRowID === rowId);
   const addColumn = () => {
     if (columns.length > 2) return;
     createViewHeaderColumn(rowId);
   };
   return (
-    <>
+    <div
+      style={{
+        // border: "1px solid red",
+        padding: "5px 8px",
+      }}
+    >
       <div
         className={css.flex_row}
-        style={{ position: "relative", columnGap: "0" }}
+        style={{
+          position: "relative",
+          columnGap: "10px",
+        }}
       >
         <div>
           <span
@@ -52,7 +60,7 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
           ×
         </span> */}
       </div>
-    </>
+    </div>
   );
 };
 

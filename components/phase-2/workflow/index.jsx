@@ -205,8 +205,7 @@ const Sheet = () => {
   );
 
   const handleDeleteNode = (deleted) => {
-    console.log(deleted);
-    deleted.forEach((node) => deleteWorkflowStep(node.id));
+    deleted.forEach((node) => deleteWorkflowStep(node));
     updateHistory();
   };
 
