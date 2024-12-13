@@ -7,12 +7,14 @@ import { ReactFlowProvider } from "reactflow";
 import { getSession } from "next-auth/react";
 
 const Workflow = () => {
-  const { getViewTypes, getLaunchTypes, getEntitiesCall } = useAttensamCalls();
+  const { getViewTypes, getLaunchTypes, getEntitiesCall, getWorkflowsCall } =
+    useAttensamCalls();
 
   useEffect(() => {
     getViewTypes();
     getLaunchTypes();
     getEntitiesCall();
+    getWorkflowsCall();
   }, []);
 
   return (

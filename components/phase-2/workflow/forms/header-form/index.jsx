@@ -14,35 +14,41 @@ import {
   TextField,
 } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ViewHeaderRow from "./ViewHeaderRow";
 import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 
-const initialViewHeaderValues = {
-  headerId: "",
-  viewType: 0,
-  viewId: "",
-  caption: "",
-  defaultIcon: "",
-  gradientStart: "",
-  gradientEnd: "",
-};
-
 const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
-  const [headerValues, setHeaderValues] = useState(initialViewHeaderValues);
   const { headerRows, headers } = useSelector((state) => state.workflow);
-  const { createViewHeaderRow } = useWorkflowForms();
+  const { createViewHeaderRow, updateViewHeaderValue } = useWorkflowForms();
 
-  const header = headers.find((h) => h.viewId === viewId);
+  const header = useMemo(
+    () => headers.find((h) => h.viewId === viewId),
+    [viewId, headers]
+  );
 
-  const addRow = () => {
+  const viewHeaderRows = useMemo(
+    () => headerRows.filter((vhr) => vhr.headerId === header?.headerId),
+    [headerRows, header]
+  );
+
+  const [headerValues, setHeaderValues] = useState(header);
+
+  const addViewHeaderRow = () => {
     const headerId = header.headerId;
     createViewHeaderRow(headerId);
   };
 
   const handleChange = (e) => {
-    setHeaderValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setHeaderValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const headerId = header.headerId;
+    updateViewHeaderValue(name, value, headerId);
   };
   const handleUploadImage = (e) => {
     const { files } = e.target;
@@ -53,7 +59,10 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
       }));
     }
   };
-  // URL.createObjectURL(files[0])
+
+  useEffect(() => {
+    setHeaderValues(header);
+  }, [viewId]);
 
   return (
     <div className={css.header_container}>
@@ -72,7 +81,7 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
               <div className={css.flex_column}>
                 <TextField
                   onChange={handleChange}
-                  // onBlur={handleHeaderBlur}
+                  onBlur={handleBlur}
                   value={headerValues?.caption || ""}
                   variant="outlined"
                   size="medium"
@@ -82,13 +91,15 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
                 />
                 <IconSelect
                   handleChange={handleChange}
-                  // handleBlur={handleHeaderBlur}
+                  handleBlur={handleBlur}
+                  value={headerValues?.defaultIcon || ""}
+                  name={"defaultIcon"}
                 />
               </div>
               <div className={css.flex_column}>
                 <TextField
                   onChange={handleChange}
-                  // onBlur={handleHeaderBlur}
+                  onBlur={handleBlur}
                   value={headerValues?.gradientStart || ""}
                   variant="outlined"
                   label="Gradient Start"
@@ -97,61 +108,13 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
                 />
                 <TextField
                   onChange={handleChange}
-                  // onBlur={handleHeaderBlur}
+                  onBlur={handleBlur}
                   value={headerValues?.gradientEnd || ""}
                   variant="outlined"
                   label="Gradient End"
                   name="gradientEnd"
                   fullWidth
                 />
-                {/* <Button
-                  variant="outlined"
-                  component="label"
-                  fullWidth
-                  startIcon={
-                    headerValues?.uploadIcon ? (
-                      <Avatar
-                        sx={{ width: "25px", height: "25px" }}
-                        src={URL.createObjectURL(headerValues?.uploadIcon)}
-                      />
-                    ) : (
-                      <ImageIcon />
-                    )
-                  }
-                >
-                  Upload Icon
-                  <input
-                    // className={css.imageInput}
-                    hidden
-                    onChange={handleUploadImage}
-                    onBlur={handleHeaderBlur}
-                    name="uploadIcon"
-                    type="file"
-                    accept="image/*"
-                    placeholder="Icon URL"
-                  />
-                </Button> */}
-                {/*   <div className={css.imageInputWrapper}>
-                  {headerValues?.icon && (
-                    <Image
-                      src={headerValues?.icon}
-                      alt="icon"
-                      loading="eager"
-                      width={40}
-                      height={40}
-                      priority
-                    />
-                  )}
-                  <input
-                    className={css.imageInput}
-                    onChange={handleUploadImage}
-                    name="icon"
-                    type="file"
-                    accept="image/*"
-                    placeholder="Icon URL"
-                  />
-                  <span className={css.imgBtn}>{<ImageIcon />}</span>
-                </div> */}
               </div>
             </div>
             <div
@@ -161,17 +124,18 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
                 rowGap: "10px",
               }}
             >
-              {headerRows.map((rowValue) => (
+              {viewHeaderRows.map((rowValue) => (
                 <ViewHeaderRow
                   key={rowValue.headerRowId}
                   rowId={rowValue.headerRowId}
                   headerId={headerValues.headerId}
-                  // handleHeaderBlur={handleHeaderBlur}
-                  // setHeaderValues={setHeaderValues}
                 />
               ))}
 
-              <button disabled={headerRows.length > 4} onClick={() => addRow()}>
+              <button
+                disabled={headerRows.length > 4}
+                onClick={addViewHeaderRow}
+              >
                 add row
               </button>
             </div>

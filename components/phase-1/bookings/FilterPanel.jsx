@@ -24,6 +24,7 @@ import {
   pageTitleConstants,
   tableNameConstants,
 } from "@/helpers/Constants";
+import AutoCompleteSelect from "@/components/phase-2/workflow/forms/common-form-elements/AutoCompleteSelect";
 // import useFilters from "@/hooks/useFilters";
 const bookingsFilterParams = {
   bookingType: null,
@@ -165,6 +166,7 @@ const BookingsFilter = ({ setTriggerAPICall }) => {
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item md={12 / 5}>
             <FormControl
               sx={{ minWidth: 120, width: "calc(100% - 5px)" }}

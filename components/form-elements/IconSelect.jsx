@@ -8,7 +8,7 @@ import {
   Select,
 } from "@mui/material";
 import Image from "next/image";
-const IconSelect = ({ handleChange, handleBlur, size }) => {
+const IconSelect = ({ handleChange, handleBlur, size, value, name }) => {
   const icons = [
     "https://apl.attensam.at/icons/GF_Erfassung_Icon_small.png",
     "https://apl.attensam.at/icons/Large_ic_categoty@MDPI.png",
@@ -32,7 +32,8 @@ const IconSelect = ({ handleChange, handleBlur, size }) => {
           id="demo-simple-select"
           label="Icon"
           size={size ? size : "medium"}
-          name="icon"
+          name={name || "icon"}
+          value={value}
         >
           <MenuItem value={""}>None</MenuItem>
 

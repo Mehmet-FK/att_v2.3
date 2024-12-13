@@ -5,11 +5,13 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import css from "@/styles/workflow-comp-styles.module.css";
 import InfoForm from "../forms/InfoForm";
-import RecordViewForm from "../forms/RecordViewForm";
+import RecordViewForm from "../forms/recordview-form";
 import ListViewForm from "@/components/phase-2/workflow/forms/listview-form";
 import { useSelector } from "react-redux";
 import TileViewForm from "../forms/TileViewForm";
-import WorkflowForm from "../forms/WorkflowForm";
+import WorkflowForm from "../forms/workflow-form";
+import { viewTypeConstants } from "@/helpers/Constants";
+import ScannerDialogForm from "../forms/scanner-dialog-form";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -22,6 +24,13 @@ const Puller = styled("div")(({ theme }) => ({
   zIndex: 10,
 }));
 
+const isScannerDialog = (viewType) => {
+  return (
+    viewType === viewTypeConstants.SCANNER_DIALOG_NFC ||
+    viewType === viewTypeConstants.SCANNER_DIALOG_QR
+  );
+};
+
 const DisplayForm = ({ selectedNode }) => {
   if (selectedNode?.type === "RecordView") {
     return <RecordViewForm stepID={selectedNode.id} />;
@@ -29,6 +38,8 @@ const DisplayForm = ({ selectedNode }) => {
     return <ListViewForm stepID={selectedNode.id} />;
   } else if (selectedNode?.type === "TileView") {
     return <TileViewForm stepID={selectedNode.id} />;
+  } else if (isScannerDialog(selectedNode?.type)) {
+    return <ScannerDialogForm stepID={selectedNode.id} />;
   } else {
     return <WorkflowForm />;
   }

@@ -108,18 +108,6 @@ const useWorkflow = (setNodes, setEdges) => {
     restoreFlow();
   }, [setNodes, setViewport, restoreWorkflowState]);
 
-  // const setPreviousAndNextStepsOnConnect = (params) => {
-  //   const previousStepId = params.source;
-  //   const nextStepId = params.target;
-  //   console.log(params);
-  //   dispatch(
-  //     changeNextAndPreviousStep({
-  //       nextStepId: nextStepId,
-  //       previousStepId: previousStepId,
-  //     })
-  //   );
-  // };
-
   const onNodeDragStop = (e, node) => {
     const interNodes = getIntersectingNodes(node);
     const wrapper = interNodes.find((n) => n.type === "group");

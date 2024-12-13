@@ -18,44 +18,29 @@ import css from "@/styles/workflow-forms/list-view-form.module.css";
 import ViewHeaderForm from "../header-form";
 import ListViewElement from "./ListViewElement";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
-const initialStepValues = {
-  entityId: "",
-  name: "",
-  caption: "",
-  hasLookup: false,
-};
-
-const initialListElement = {
-  id: 1,
-  icon: "",
-  listViewRows: [
-    {
-      id: 1,
-      listViewRowNumber: 1,
-      text: "",
-      fontFamily: "",
-      fontColor: "",
-    },
-  ],
-};
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import CheckBox from "../common-form-elements/CheckBox";
 
 const ListViewForm = ({ stepID }) => {
-  const { entities } = useSelector((state) => state.attensam.data);
+  // const { entities } = useSelector((state) => state.attensam.data);
+  const entities = [];
   const { listViewElements, listViews } = useSelector(
     (state) => state.workflow
   );
-  const [listViewValues, setListViewValues] = useState(initialStepValues);
-  const [listElements, setListElements] = useState([initialListElement]);
 
   const viewId = stepID + "-listview";
   const listView = listViews.find((lv) => lv.listViewId === viewId);
+
   const listViewElement = listViewElements.find(
-    (lve) => lve.listViewElementId === listView.listViewElementId
+    (lve) => lve.listViewElementId === listView?.listViewElementId
   );
+
+  const [listViewValues, setListViewValues] = useState(listView);
+
+  const { updateListViewValue } = useWorkflowForms();
+
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
-
     setListViewValues({
       ...listViewValues,
       [name]: type === "checkbox" ? checked : value,
@@ -66,8 +51,12 @@ const ListViewForm = ({ stepID }) => {
     const { name, value, type, checked } = e.target;
 
     const inputValue = type === "checkbox" ? checked : value;
-    updateListView(name, inputValue, viewId);
+    updateListViewValue(name, inputValue, viewId);
   };
+
+  useEffect(() => {
+    setListViewValues(listView);
+  }, [stepID]);
 
   return (
     <>
@@ -95,35 +84,25 @@ const ListViewForm = ({ stepID }) => {
               fullWidth
             />
             <div style={{ display: "flex", width: "50%" }}>
-              <FormControlLabel
+              <CheckBox
                 sx={{
                   width: "100%",
                 }}
-                control={
-                  <Checkbox
-                    name="hasLookup"
-                    checked={listViewValues.hasLookup}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                }
-                label={<span style={{ fontSize: "smaller" }}>hasLookup</span>}
-                labelPlacement="end"
+                name="hasLookup"
+                checked={listViewValues.hasLookup}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                label={"hasLookup"}
               />
-              <FormControlLabel
+              <CheckBox
                 sx={{
                   width: "100%",
                 }}
-                control={
-                  <Checkbox
-                    name="onlyOnline"
-                    checked={listViewValues.onlyOnline}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                }
-                label={<span style={{ fontSize: "smaller" }}>onlyOnline</span>}
-                labelPlacement="end"
+                name="onlyOnline"
+                checked={listViewValues.onlyOnline}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                label={"onlyOnline"}
               />
             </div>
           </div>

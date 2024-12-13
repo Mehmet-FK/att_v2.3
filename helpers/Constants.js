@@ -78,6 +78,19 @@ export const userRoles = [
 
 export const viewTypeConstants = {
   LISTVIEW: "ListView",
+  TILEVIEW: "TileView",
+  RECORDVIEW: "RecordView",
+  MODALDIALOG: "ModalDialog",
+  CAPTURE_IMAGE: "CaptureImage",
+  ATTACHMENT_VIEW: "AttachmentView",
+  SCANNER_DIALOG: "ScannerDialog",
+  SCANNER_DIALOG_NFC: "ScannerDialogNFC",
+  SCANNER_DIALOG_QR: "ScannerDialogQR",
+  LAUNCH_DATASET_FUNCTION: "LaunchDatasetFunction",
+  LAUNCH_ENTITY_FUNCTION: "LaunchEntityFunction",
+  LAUNCH_MODULE: "LaunchModule",
+  LAUNCH_ELEMENT_DEFAULT_FUNCTION: "LaunchElementDefaultFunction",
+  LAUNCH_GROUPVIEW: "LaunchGroupView",
 };
 
 export const workflowStepTypeIds = {
@@ -87,7 +100,13 @@ export const workflowStepTypeIds = {
   MODAL_DIALOG: 3,
   CAPTURE_IMAGE: 4,
   ATTACHMENT_VIEW: 5,
+  SCANNER_DIALOG: 6,
   LAUNCH_WORKFLOW: 99,
+};
+
+export const scannerTypeConstants = {
+  NFC: 0,
+  QR_CODE: 1,
 };
 
 export const tableNameConstants = {

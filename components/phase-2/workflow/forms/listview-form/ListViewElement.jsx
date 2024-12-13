@@ -16,7 +16,7 @@ const ListViewElement = ({ element, listViewId }) => {
     useWorkflowForms();
 
   const elementRows = listViewElementRows.filter(
-    (lver) => lver.listViewElementId === element.listViewElementId
+    (lver) => lver.listViewElementId === element?.listViewElementId
   );
   const addListViewElementRow = () => {
     createListViewElementRow(element.listViewElementId);
@@ -55,8 +55,8 @@ const ListViewElement = ({ element, listViewId }) => {
                   />
                   {elementRows.map((row) => (
                     <ListViewElementRow
-                      key={row.id}
-                      elementID={element.id}
+                      key={row.listViewElementRowId}
+                      elementID={element.listViewElementRowId}
                       elementRowValues={row}
                     />
                   ))}

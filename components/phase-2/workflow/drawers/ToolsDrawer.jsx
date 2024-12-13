@@ -10,14 +10,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { DrawerHeader } from "@/layout/layout_helpers";
 import css from "@/styles/tools-drawer.module.css";
 import {
-  ArrowRectangle,
   AttachmentShape,
-  Circle,
-  Clover,
-  Cube,
-  Cylinder,
-  Diamond,
-  FourLeaf,
   ImageShape,
   LaunchDatasetShape,
   LaunchDefaultShape,
@@ -26,15 +19,22 @@ import {
   LaunchModuleShape,
   ListShape,
   ModalShape,
-  Parallelogram,
   RecordShape,
-  Sun,
-  ThornApple,
   TileShape,
 } from "../nodes/node-comps/Shapes";
 import { Typography } from "@mui/material";
 
-const StepElement = ({ onDragStart, tool }) => {
+const StepElement = ({ tool }) => {
+  const onDragStart = (e) => {
+    e.stopPropagation();
+    e.dataTransfer.setData("application/reactflow", tool.name);
+    e.dataTransfer.setData("caption", tool.caption);
+    e.dataTransfer.setData("type", tool.type);
+    e.dataTransfer.setData("typeId", tool?.typeId);
+
+    e.dataTransfer.effectAllowed = "move";
+  };
+
   return (
     <>
       <Box
@@ -52,7 +52,7 @@ const StepElement = ({ onDragStart, tool }) => {
         }}
         className={css.tool_element}
         title={tool.caption}
-        onDragStart={(e) => onDragStart(e, tool)}
+        onDragStart={onDragStart}
         draggable
       >
         <Typography
@@ -66,35 +66,22 @@ const StepElement = ({ onDragStart, tool }) => {
           {tool.caption}
         </Typography>
 
-        {tool.name === "ListView" && <ListShape color={"#6d7def"} />}
-        {tool.name === "TileView" && <TileShape color={"#CF4C2C"} />}
-        {tool.name === "RecordView" && <RecordShape color={"#3F8AE2"} />}
-        {tool.name === "ModalDialog" && <ModalShape color={"#EBC347"} />}
-        {tool.name === "CaptureImage" && <ImageShape color={"#803DEC"} />}
+        {tool.name === "ListView" && <ListShape />}
+        {tool.name === "TileView" && <TileShape />}
+        {tool.name === "RecordView" && <RecordShape />}
+        {tool.name === "ModalDialog" && <ModalShape />}
+        {tool.name === "CaptureImage" && <ImageShape />}
         {tool.name === "AttachmentView" && (
           <AttachmentShape color={"#438D57"} />
         )}
-        {/* //Launch Elements */}
+        {tool.name === "ScannerDialogNFC" && <ListShape color={"#00f"} />}
+        {tool.name === "ScannerDialogQR" && <ListShape color={"#f00"} />}
+
         {tool.name === "LaunchDatasetFunction" && <LaunchDatasetShape />}
         {tool.name === "LaunchEntityFunction" && <LaunchEntityShape />}
         {tool.name === "LaunchModule" && <LaunchModuleShape />}
         {tool.name === "LaunchElementDefaultFunction" && <LaunchDefaultShape />}
         {tool.name === "LaunchGroupView" && <LaunchGroupShape />}
-
-        {/* 
-        <p
-          style={{
-            textTransform: "capitalize",
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-            fontSize: "0.7em",
-          }}
-        >
-          {tool.caption}
-        </p> */}
       </Box>
     </>
   );
@@ -105,14 +92,6 @@ const SubList = ({ tools, title }) => {
 
   const handleClick = () => {
     setOpen(!open);
-  };
-
-  const onDragStart = (e, node) => {
-    e.stopPropagation();
-    e.dataTransfer.setData("application/reactflow", node.name);
-    e.dataTransfer.setData("caption", node.caption);
-    e.dataTransfer.setData("type", node.type);
-    e.dataTransfer.effectAllowed = "move";
   };
 
   return (
@@ -135,7 +114,11 @@ const SubList = ({ tools, title }) => {
             }}
           >
             {tools.map((tool) => (
-              <StepElement tool={tool} onDragStart={onDragStart} />
+              <StepElement
+                key={tool.name}
+                tool={tool}
+                // onDragStart={onDragStart}
+              />
             ))}
           </Box>
         </List>
@@ -152,6 +135,8 @@ const ToolsDrawer = ({ open, setOpen }) => {
     { name: "ModalDialog", caption: "Modal Dialog", type: "view" },
     { name: "CaptureImage", caption: "Capture Image View", type: "view" },
     { name: "AttachmentView", caption: "Attachment View", type: "view" },
+    { name: "ScannerDialogNFC", caption: "NFC Scanner Dialog", type: "view" },
+    { name: "ScannerDialogQR", caption: "QR Scanner Dialog", type: "view" },
   ];
 
   const launchTypes = [
@@ -159,26 +144,26 @@ const ToolsDrawer = ({ open, setOpen }) => {
       name: "LaunchDatasetFunction",
       caption: "Dataset Function",
       type: "launch",
-      id: 0,
+      typeId: 0,
     },
     {
       name: "LaunchEntityFunction",
       caption: "Entity Function",
       type: "launch",
-      id: 1,
+      typeId: 1,
     },
-    { name: "LaunchModule", caption: "Module", type: "launch", id: 2 },
+    { name: "LaunchModule", caption: "Module", type: "launch", typeId: 2 },
     {
       name: "LaunchElementDefaultFunction",
       caption: "Element Default",
       type: "launch",
-      id: 3,
+      typeId: 3,
     },
     {
       name: "LaunchGroupView",
       caption: "Group View",
       type: "launch",
-      id: 4,
+      typeId: 4,
     },
   ];
 

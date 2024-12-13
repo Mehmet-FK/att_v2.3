@@ -84,9 +84,9 @@ export default function Layout({ children, toggleTheme }) {
 
   const drawerList = [
     {
-      text: "Home",
-      icon: <HomeIcon />,
-      nav: "/",
+      text: "Workflow",
+      icon: <AccountTreeIcon />,
+      nav: "/workflow",
     },
   ];
   const drawerListAdmin = [

@@ -75,6 +75,8 @@ const useAttensamCalls = () => {
   };
 
   //GET
+  const getWorkflowsCall = () =>
+    getAttData("/atina/api/Workflow", "workflows", true);
   const getEntitiesCall = () => getAttData("/api/Entity", "entities", true);
   const getEntityDefinitionsCall = () =>
     getAttData("/api/Entity/GetEntityDefinitions", "entityDefinitions", false);
@@ -117,6 +119,7 @@ const useAttensamCalls = () => {
     postFieldCall, //CREATE Field
     postWorkflowCall, // CREATE Workflow
 
+    getWorkflowsCall, //READ Workflows
     getEntitiesCall, //READ Entities
     getSingleEntityCall, //READ Entity
     getViewTypes, //READ ViewTypes

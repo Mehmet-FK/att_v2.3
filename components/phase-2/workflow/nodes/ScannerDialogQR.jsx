@@ -35,7 +35,7 @@ const handleStyles = {
   right: `${css.handle} ${css.handle_right}`,
 };
 
-const ListNode = ({ data, isConnectable }) => {
+const ScannerDialogQR = ({ data, isConnectable }) => {
   const [info, setInfo] = useState("");
   const [open, setOpen] = useState(false);
   const [handles, setHandles] = useState(initialHandles);
@@ -60,7 +60,7 @@ const ListNode = ({ data, isConnectable }) => {
         sx={{ bgcolor: "Background" }}
         onClick={handleOpenDialog}
       >
-        <ListShape />
+        <ListShape color="#f00" />
         <Tooltip title={info} placement="top">
           {info.length > 0 && (
             <InfoIcon
@@ -93,43 +93,8 @@ const ListNode = ({ data, isConnectable }) => {
           />
         ))}
       </Box>
-      {/* <div
-        className={`${css.node_body} ${css.list_node}`}
-        onClick={handleOpenDialog}
-      >
-        <Tooltip title={info} placement="top">
-          {info.length > 0 && (
-            <InfoIcon
-              fontSize="small"
-              sx={{
-                position: "absolute",
-                top: "2px",
-                right: "2px",
-                opacity: "0.6",
-                "&:hover": { opacity: "1" },
-              }}
-            />
-          )}
-        </Tooltip>
-
-        <h5 className={css.node_title}>{data.label}</h5>
-        {handles.map((handle) => (
-          <Handle
-            type={handle.type}
-            className={handleStyles[handle.position]}
-            position={handle.position}
-            id={handle.id}
-            isConnectable={isConnectable}
-            style={{
-              width: "10px",
-              height: " 10px",
-              [handle.position]: "-10px",
-            }}
-          />
-        ))}
-      </div> */}
     </>
   );
 };
 
-export default ListNode;
+export default ScannerDialogQR;

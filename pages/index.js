@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { dummyModules } from "@/helpers/Constants";
 // import axios from "axios";
-import { getModulesSSR } from "@/helpers/SeerverSideAPICalls";
+import { getModulesSSR } from "@/helpers/ServerSideAPICalls";
 
 export default function Home() {
   return (

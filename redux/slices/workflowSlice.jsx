@@ -35,9 +35,9 @@ const workflowSlice = createSlice({
     isProduction: false,
     permissionType: "0",
     parentWorkflowId: "",
-    edges: "",
-    nodes: "",
-    viewport: "",
+    edges: [],
+    nodes: [],
+    viewport: {},
     workflowSteps: [],
     launchElements: [],
     scannerDialogs: [],
@@ -55,6 +55,15 @@ const workflowSlice = createSlice({
   reducers: {
     updateSelectedStep: (state, { payload: { stepId } }) => {
       state.selectedStepId = stepId;
+    },
+
+    changeNodesEdgesAndViewport: (
+      state,
+      { payload: { nodes, edges, viewport } }
+    ) => {
+      state.nodes = nodes;
+      state.edges = edges;
+      state.viewport = viewport;
     },
 
     updateTotalWorkflow: (state, { payload: { workflow } }) => {
@@ -103,6 +112,48 @@ const workflowSlice = createSlice({
           return step;
         }
       });
+    },
+
+    addLaunchElement: (state, { payload: { launchElement } }) => {
+      state.launchElements = [...state.launchElements, launchElement];
+    },
+
+    changeLaunchElementValue: (
+      state,
+      { payload: { name, value, workflowStepId } }
+    ) => {
+      state.launchElements = state.launchElements.map((launchEl) => {
+        if (launchEl.workflowStepId === workflowStepId) {
+          return { ...launchEl, [name]: value };
+        } else {
+          return launchEl;
+        }
+      });
+    },
+
+    removeLaunchElement: (state, { payload: { workflowStepId } }) => {
+      state.launchElements = state.launchElements.filter(
+        (launchEl) => launchEl.workflowStepId !== workflowStepId
+      );
+    },
+
+    addRecordView: (state, { payload: { recordView } }) => {
+      state.recordViews = [...state.recordViews, recordView];
+    },
+    changeRecordViewValue: (state, { payload: { name, value, viewId } }) => {
+      state.recordViews = state.recordViews.map((rv) => {
+        if (rv.recordViewId === viewId) {
+          return { ...rv, [name]: value };
+        } else {
+          return rv;
+        }
+      });
+    },
+
+    removeRecordView: (state, { payload: { viewId } }) => {
+      state.recordViews = state.recordViews.filter(
+        (rv) => rv.recordViewId !== viewId
+      );
     },
     addListView: (state, { payload: { listView } }) => {
       state.listViews = [...state.listViews, listView];
@@ -224,6 +275,7 @@ const workflowSlice = createSlice({
     addViewHeaderColumn: (state, { payload: { viewHeaderColumn } }) => {
       state.headerColumns = [...state.headerColumns, viewHeaderColumn];
     },
+
     changeViewHeaderColumnValue: (
       state,
       { payload: { name, value, columnId } }
@@ -236,9 +288,33 @@ const workflowSlice = createSlice({
         }
       });
     },
+
     removeViewHeaderColumn: (state, { payload: { columnId } }) => {
       state.headerColumns = state.headerColumns.filter(
         (vhc) => vhc.headerColumnId !== columnId
+      );
+    },
+
+    addScannerDialog: (state, { payload: { scannerDialog } }) => {
+      state.scannerDialogs = [...state.scannerDialogs, scannerDialog];
+    },
+
+    changeScannerDialogValue: (
+      state,
+      { payload: { name, value, dialogId } }
+    ) => {
+      state.scannerDialogs = state.scannerDialogs.map((sc) => {
+        if (sc.scannerDialogId === dialogId) {
+          return { ...sc, [name]: value };
+        } else {
+          return sc;
+        }
+      });
+    },
+
+    removeScannerDialog: (state, { payload: { stepId } }) => {
+      state.scannerDialogs = state.scannerDialogs.filter(
+        (sc) => sc.workflowStepId !== stepId
       );
     },
   },
@@ -246,30 +322,40 @@ const workflowSlice = createSlice({
 
 export const {
   addWorkflowStep,
+  addLaunchElement,
+  addRecordView,
   addListView,
   addListViewElement,
   addListViewElementRow,
   addViewHeader,
   addViewHeaderRow,
   addViewHeaderColumn,
+  addScannerDialog,
+  changeNodesEdgesAndViewport,
   changeWorkflowValue,
   changeNextAndPreviousStep,
   changeStepValue,
+  changeLaunchElementValue,
+  changeRecordViewValue,
   changeListViewValue,
   changeListViewElementValue,
   changeListViewElementRowValue,
   changeViewHeaderValue,
   changeViewHeaderRowValue,
   changeViewHeaderColumnValue,
+  changeScannerDialogValue,
   updateSelectedStep,
   updateTotalWorkflow,
   removeWorkflowStep,
+  removeLaunchElement,
   removeListView,
+  removeRecordView,
   removeListViewElement,
   removeListViewElementRowByElementId,
   removeListViewElementRowByRowId,
   removeViewHeader,
   removeViewHeaderRow,
   removeViewHeaderColumn,
+  removeScannerDialog,
 } = workflowSlice.actions;
 export default workflowSlice.reducer;

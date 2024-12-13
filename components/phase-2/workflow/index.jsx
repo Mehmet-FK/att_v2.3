@@ -19,6 +19,7 @@ import ToolsDrawer from "./drawers/ToolsDrawer";
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import { useRouter } from "next/router";
 
 const initialNodes = [
   {
@@ -41,9 +42,6 @@ const initialEdges = [];
 let id = 0;
 const getId = (type) => `${type}_${id++}`;
 
-//TODO: Should be fetched from API
-const permissionTypes = { User: "0", All: "1" };
-
 const Sheet = () => {
   const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -52,6 +50,15 @@ const Sheet = () => {
   const { viewTypes, launchTypes } = useSelector(
     (state) => state.attensam.data
   );
+
+  const {
+    nodes: rdxNodes,
+    edges: rdxEdges,
+    viewport: rdxViewport,
+  } = useSelector((state) => state.workflow);
+
+  const { setViewport, getViewport } = useReactFlow();
+  const router = useRouter();
 
   const {
     onSave,
@@ -69,6 +76,7 @@ const Sheet = () => {
     deleteWorkflowStep,
     updateSelectedStep,
     setPreviousAndNextStepsOnConnect,
+    updateNodesEdgesAndViewport,
   } = useWorkflowForms();
   /* 
 ========== BACKUP ==============
@@ -176,6 +184,7 @@ const Sheet = () => {
       const name = e.dataTransfer.getData("application/reactflow");
       const caption = e.dataTransfer.getData("caption");
       const type = e.dataTransfer.getData("type");
+      const launchTypeId = e.dataTransfer.getData("typeId");
       // check if the dropped element is valid
       if (typeof name === "undefined" || !name) return;
 
@@ -196,9 +205,11 @@ const Sheet = () => {
       } else {
         newNode = createNewReqularNode(name, caption, position);
       }
+
+      console.log(newNode);
       setNodes((nds) => nds.concat(newNode));
       createWorkflowStep(newNode.id);
-      createViewOnDrop(name, newNode.id);
+      createViewOnDrop(name, newNode.id, launchTypeId);
       updateHistory();
     },
     [reactFlowInstance, launchTypes, viewTypes]
@@ -208,6 +219,32 @@ const Sheet = () => {
     deleted.forEach((node) => deleteWorkflowStep(node));
     updateHistory();
   };
+
+  updateNodesEdgesAndViewport;
+
+  useEffect(() => {
+    const viewport = getViewport();
+    const nodesToSave = JSON.stringify(nodes);
+    const edgesToSave = JSON.stringify(edges);
+    const viewportToSave = JSON.stringify(viewport);
+
+    const handleRouteChange = () => {
+      updateNodesEdgesAndViewport(nodes, edges, viewport);
+    };
+
+    router.events.on("routeChangeStart", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [nodes, edges, reactFlowInstance, router.events]);
+
+  useEffect(() => {
+    if (rdxNodes.length > 1) {
+      setNodes(rdxNodes);
+      setEdges(rdxEdges);
+      setViewport(rdxViewport);
+    }
+  }, [rdxNodes, rdxEdges, rdxViewport]);
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -226,7 +263,7 @@ const Sheet = () => {
         }}
         onClick={() => setOpenToolsDrawer((prev) => !prev)}
       >
-        Sidebar {openToolsDrawer ? "schließen" : "öffnen"}
+        Tools {openToolsDrawer ? "schließen" : "öffnen"}
       </h4>
 
       <ReactFlow

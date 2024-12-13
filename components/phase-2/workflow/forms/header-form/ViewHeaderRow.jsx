@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { useEffect, useMemo } from "react";
 
 const ViewHeaderRow = ({ rowId, headerId }) => {
   const { headerColumns } = useSelector((state) => state.workflow);
@@ -12,11 +13,15 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
     deleteViewHeaderRow(rowId);
   };
 
-  const columns = headerColumns.filter((col) => col.headerRowID === rowId);
+  const columns = useMemo(
+    () => headerColumns.filter((col) => col.headerRowID === rowId),
+    [headerColumns, headerId]
+  );
   const addColumn = () => {
     if (columns.length > 2) return;
     createViewHeaderColumn(rowId);
   };
+
   return (
     <div
       style={{
@@ -41,7 +46,7 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
           </span>
         </div>
         {columns.map((col) => (
-          <ViewHeaderColumn key={col.id} columnValues={col} />
+          <ViewHeaderColumn key={col.headerColumnId} columnValues={col} />
         ))}
       </div>
       <div style={{ display: "flex", width: "100%", columnGap: "5px" }}>
