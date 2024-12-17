@@ -40,7 +40,6 @@ export default function Layout({ children, toggleTheme }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [showLayout, setShowLayout] = useState(true);
 
   const { user } = useSelector((state) => state.settings);
 
@@ -75,13 +74,6 @@ export default function Layout({ children, toggleTheme }) {
     getSessionData();
   }, []);
 
-  useEffect(() => {
-    if (router.pathname === "/workflow") {
-      setShowLayout(false);
-      setOpen(false);
-    } else setShowLayout(true);
-  }, [router.pathname]);
-
   const drawerList = [
     {
       text: "Workflow",
@@ -114,21 +106,20 @@ export default function Layout({ children, toggleTheme }) {
         open={open}
       >
         <Toolbar>
-          {showLayout && (
-            <div style={{ width: open ? 0 : "4rem", transition: "0.3s" }}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{
-                  ...(open && { display: "none" }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            </div>
-          )}
+          <div style={{ width: open ? 0 : "4rem", transition: "0.3s" }}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </div>
+
           <div className={css.logoWrapper}>
             <Link href={"/"}>
               <Image
@@ -185,62 +176,60 @@ export default function Layout({ children, toggleTheme }) {
           </div>
         </Toolbar>
       </AppBar>
-      {showLayout && (
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {(user?.userId === 10 ? drawerListAdmin : drawerList).map(
-              (item) => (
-                <ListItem
-                  key={item.text}
-                  disablePadding
-                  sx={{
-                    display: "block",
-                    backgroundColor: router.pathname === item.nav && "#bbbb",
-                  }}
-                >
-                  <Tooltip title={item.text} placement="right" arrow>
-                    <Link href={item.nav} className={css.link}>
-                      <ListItemButton
-                        sx={{
-                          minHeight: 48,
-                          justifyContent: open ? "initial" : "center",
-                          px: 2.5,
-                        }}
-                      >
-                        <ListItemIcon
-                          sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : "auto",
-                            justifyContent: "center",
-                          }}
-                        >
-                          {item.icon}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={item.text}
-                          sx={{ opacity: open ? 1 : 0 }}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </Tooltip>
-                </ListItem>
-              )
+      (
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
             )}
-          </List>
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {(user?.userId === 10 ? drawerListAdmin : drawerList).map((item) => (
+            <ListItem
+              key={item.text}
+              disablePadding
+              sx={{
+                display: "block",
+                backgroundColor: router.pathname === item.nav && "#bbbb",
+              }}
+            >
+              <Tooltip title={item.text} placement="right" arrow>
+                <Link href={item.nav} className={css.link}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
+              </Tooltip>
+            </ListItem>
+          ))}
+        </List>
 
-          <Divider />
-        </Drawer>
-      )}
+        <Divider />
+      </Drawer>
+      )
       <Box
         component="main"
         sx={{
@@ -248,7 +237,7 @@ export default function Layout({ children, toggleTheme }) {
           // overflow: "hidden",
         }}
       >
-        {showLayout && <DrawerHeader />}
+        <DrawerHeader />
         {children}
       </Box>
     </div>

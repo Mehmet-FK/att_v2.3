@@ -8,6 +8,7 @@ import {
   addListView,
   addListViewElement,
   addListViewElementRow,
+  addModalDialog,
   addRecordView,
   addScannerDialog,
   addViewHeader,
@@ -18,10 +19,11 @@ import {
   changeListViewElementRowValue,
   changeListViewElementValue,
   changeListViewValue,
+  changeModalDialogValue,
   changeNextAndPreviousStep,
   changeNodesEdgesAndViewport,
   changeRecordViewValue,
-  changeStepValue,
+  changeScannerDialogValue,
   changeViewHeaderColumnValue,
   changeViewHeaderValue,
   changeWorkflowValue,
@@ -30,6 +32,7 @@ import {
   removeListViewElement,
   removeListViewElementRowByElementId,
   removeListViewElementRowByRowId,
+  removeModalDialog,
   removeRecordView,
   removeScannerDialog,
   removeViewHeader,
@@ -62,15 +65,18 @@ const initialWorkflowState = {
 
 const useWorkflowForms = () => {
   const dispatch = useDispatch();
+  const workflow = useSelector((state) => state.workflow);
+
   const {
     selectedStepId,
     workflowId,
     recordViews,
+    scannerDialogs,
     listViews,
     headers,
     headerRows,
     headerColumns,
-  } = useSelector((state) => state.workflow);
+  } = workflow;
 
   const generateRandomId = () => {
     return `${Math.floor(Math.random() * 1000) + Date.now()}`;
@@ -82,7 +88,7 @@ const useWorkflowForms = () => {
   const findViewByStepId = (viewsArray, workflowStepId) => {
     return viewsArray.find((v) => v.workflowStepId === workflowStepId);
   };
-  const findHeaderById = (viewId) => {
+  const findHeaderByViewId = (viewId) => {
     return headers.find((vh) => vh.viewId === viewId).headerId;
   };
 
@@ -90,14 +96,8 @@ const useWorkflowForms = () => {
     dispatch(changeNodesEdgesAndViewport({ nodes, edges, viewport }));
   };
 
-  const handleWorkflowBlur = (e) => {
-    const { value, name, type, checked } = e.target;
-    dispatch(
-      changeWorkflowValue({
-        value: type === "checkbox" ? checked : value,
-        name,
-      })
-    );
+  const updateWorkflowValue = (name, value) => {
+    dispatch(changeWorkflowValue({ value, name }));
   };
 
   const createWorkflowStep = (stepID) => {
@@ -111,15 +111,22 @@ const useWorkflowForms = () => {
     dispatch(addWorkflowStep({ step }));
   };
 
+  const deleteWorkflowStep = (step) => {
+    const workflowStepId = step.id;
+    const viewType = step.viewType;
+    deleteView(viewType, workflowStepId);
+    dispatch(removeWorkflowStep({ id: workflowStepId }));
+  };
+
   const createLaunchElementOnDrop = (launchType, workflowStepId) => {
     const template = {
-      launchElementId: "launch-" + workflowStepId,
+      launchElementId: workflowStepId + "-launch",
       workflowStepId: workflowStepId,
       launchType: launchType || 0,
       name: "",
       description: "",
     };
-
+    createWorkflowStep(workflowStepId);
     dispatch(addLaunchElement({ launchElement: template }));
   };
 
@@ -196,7 +203,7 @@ const useWorkflowForms = () => {
       headerId: headerId || "",
       listViewElementId: listViewElementId,
     };
-
+    createWorkflowStep(workflowStepId);
     dispatch(addListView({ listView: template }));
     createListViewElement(listViewElementId);
     createViewHeaderWithRowsAndColumns(
@@ -205,13 +212,15 @@ const useWorkflowForms = () => {
       headerId
     );
   };
-
+  const updateListViewValue = (name, value, viewId) => {
+    dispatch(changeListViewValue({ name, value, viewId }));
+  };
   const deleteListView = (workflowStepId) => {
     const listViewToDelete = findViewByStepId(listViews, workflowStepId);
     const listViewId = listViewToDelete.listViewId;
     const listViewElementId = listViewToDelete.listViewElementId;
 
-    const headerId = findHeaderById(listViewId);
+    const headerId = findHeaderByViewId(listViewId);
     deleteViewHeader(headerId);
     deleteListViewElement(listViewElementId);
     dispatch(removeListView({ viewId: listViewId }));
@@ -230,6 +239,7 @@ const useWorkflowForms = () => {
       showMenue: true,
       createNewDataset: false,
     };
+    createWorkflowStep(workflowStepId);
     dispatch(addRecordView({ recordView: template }));
     createViewHeaderWithRowsAndColumns(
       recordViewId,
@@ -246,7 +256,7 @@ const useWorkflowForms = () => {
     const recordViewToDelete = findViewByStepId(recordViews, workflowStepId);
     const recordViewId = recordViewToDelete.recordViewId;
 
-    const headerId = findHeaderById(recordViewId);
+    const headerId = findHeaderByViewId(recordViewId);
     deleteViewHeader(headerId);
     dispatch(removeRecordView({ viewId: recordViewId }));
   };
@@ -309,12 +319,12 @@ const useWorkflowForms = () => {
   };
 
   const createViewHeaderColumn = (headerRowId) => {
-    const tempID = "vhc" + generateRandomId();
+    const columnId = "vhc-" + generateRandomId();
     const template = {
-      headerColumnId: tempID,
+      headerColumnId: columnId,
       headerRowID: headerRowId,
       columnType: 3,
-      columnValue: tempID,
+      columnValue: "",
       colSpan: 2,
       rowSpan: 1,
       fontColor: "#FFFFFF",
@@ -354,7 +364,7 @@ const useWorkflowForms = () => {
       inputDataSourceId: "",
       headerId: headerId,
     };
-
+    createWorkflowStep(workflowStepId);
     createScannerDialog(template);
     createViewHeaderWithRowsAndColumns(
       scannerDialogId,
@@ -378,17 +388,70 @@ const useWorkflowForms = () => {
       inputDataSourceId: "",
       headerId: "",
     };
+    createWorkflowStep(workflowStepId);
     createScannerDialog(template);
   };
 
-  const updateScannerDialogValue = (name, value, scannerDialogId) => {};
+  const updateScannerDialogValue = (name, value, scannerDialogId) => {
+    dispatch(
+      changeScannerDialogValue({ name, value, dialogId: scannerDialogId })
+    );
+  };
 
   const deleteScannerDialogNFC = (workflowStepId) => {
+    const scannerDialogToDelete = findViewByStepId(
+      scannerDialogs,
+      workflowStepId
+    );
+    const dialogId = scannerDialogToDelete.scannerDialogId;
+    const headerId = findHeaderByViewId(dialogId);
+    deleteViewHeader(headerId);
     dispatch(removeScannerDialog({ stepId: workflowStepId }));
   };
 
   const deleteScannerDialogQR = (workflowStepId) => {
     dispatch(removeScannerDialog({ stepId: workflowStepId }));
+  };
+
+  const createModalDialog = (workflowStepId) => {
+    const modalId = workflowStepId + "-modal";
+
+    const template = {
+      modalDialogId: modalId,
+      workflowStepId: workflowStepId,
+      fieldId: "",
+      okButton: "Ja",
+      cancelButton: "Nein",
+      caption: "",
+      userText: "",
+      newValue: "",
+    };
+    createWorkflowStep(workflowStepId);
+    dispatch(addModalDialog({ modalDialog: template }));
+  };
+
+  const updateModalDialogValue = (name, value, modalId) => {
+    dispatch(changeModalDialogValue({ name, value, modalId }));
+  };
+
+  const deleteModalDialog = (workflowStepId) => {
+    dispatch(removeModalDialog({ stepId: workflowStepId }));
+  };
+
+  const createTileViewOnDrop = () => {
+    const viewId = workflowId;
+    const headerId = viewId + "-vh";
+    createViewHeaderWithRowsAndColumns(
+      viewId,
+      workflowStepTypeIds.TILEVIEW,
+      headerId
+    );
+  };
+
+  const deleteTileView = () => {
+    const viewId = workflowId;
+    const headerId = viewId + "-vh";
+    deleteViewHeader(headerId);
   };
 
   const createViewOnDrop = (viewType, workflowStepId, launchTypeId) => {
@@ -400,12 +463,17 @@ const useWorkflowForms = () => {
       createScannerDialogNFC(workflowStepId, viewType);
     } else if (viewType === viewTypeConstants.SCANNER_DIALOG_QR) {
       createScannerDialogQR(workflowStepId, viewType);
+    } else if (viewType === viewTypeConstants.MODALDIALOG) {
+      createModalDialog(workflowStepId, viewType);
+    } else if (viewType === viewTypeConstants.TILEVIEW) {
+      createTileViewOnDrop();
     } else if (isLaunchElement(viewType)) {
       createLaunchElementOnDrop(launchTypeId, workflowStepId);
     }
   };
 
   const deleteView = (viewType, workflowStepId) => {
+    console.log(viewType);
     if (viewType === viewTypeConstants.LISTVIEW) {
       deleteListView(workflowStepId);
     } else if (viewType === viewTypeConstants.RECORDVIEW) {
@@ -414,24 +482,13 @@ const useWorkflowForms = () => {
       deleteScannerDialogNFC(workflowStepId);
     } else if (viewType === viewTypeConstants.SCANNER_DIALOG_QR) {
       deleteScannerDialogQR(workflowStepId);
+    } else if (viewType === viewTypeConstants.MODALDIALOG) {
+      deleteModalDialog(workflowStepId);
+    } else if (viewType === viewTypeConstants.TILEVIEW) {
+      deleteTileView();
     } else if (isLaunchElement(viewType)) {
       deleteLaunchElement(workflowStepId);
     }
-  };
-
-  const deleteWorkflowStep = (step) => {
-    const workflowStepId = step.id;
-    const viewType = step.type;
-    deleteView(viewType, workflowStepId);
-    dispatch(removeWorkflowStep({ id: workflowStepId }));
-  };
-
-  const handleWFStepBlur = (name, value) => {
-    dispatch(changeStepValue({ name, value }));
-  };
-
-  const updateListViewValue = (name, value, viewId) => {
-    dispatch(changeListViewValue({ name, value, viewId }));
   };
 
   const updateSelectedStep = (stepId) => {
@@ -464,10 +521,19 @@ const useWorkflowForms = () => {
     }
   };
 
+  const prepareWorkflowStateForPost = () => {
+    const tempWorkflow = { ...workflow };
+    delete tempWorkflow.selectedStepId;
+    tempWorkflow.edges = JSON.stringify(tempWorkflow.edges);
+    tempWorkflow.nodes = JSON.stringify(tempWorkflow.nodes);
+    tempWorkflow.viewport = JSON.stringify(tempWorkflow.viewport);
+
+    console.log(tempWorkflow);
+  };
+
   return {
     generateRandomId,
-    handleWFStepBlur,
-    handleWorkflowBlur,
+    updateWorkflowValue,
     createWorkflowStep,
     createLaunchElementOnDrop,
     createViewOnDrop,
@@ -485,6 +551,7 @@ const useWorkflowForms = () => {
     updateSelectedStep,
     updateLaunchElementValue,
     updateScannerDialogValue,
+    updateModalDialogValue,
     updateRecordViewValue,
     updateListViewValue,
     updateListViewElementValue,
@@ -493,6 +560,7 @@ const useWorkflowForms = () => {
     updateViewHeaderColumnValue,
     restoreWorkflowState,
     setPreviousAndNextStepsOnConnect,
+    prepareWorkflowStateForPost,
   };
 };
 

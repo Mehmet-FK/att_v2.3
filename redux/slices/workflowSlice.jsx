@@ -317,6 +317,26 @@ const workflowSlice = createSlice({
         (sc) => sc.workflowStepId !== stepId
       );
     },
+
+    addModalDialog: (state, { payload: { modalDialog } }) => {
+      state.modalDialogs = [...state.modalDialogs, modalDialog];
+    },
+
+    changeModalDialogValue: (state, { payload: { name, value, modalId } }) => {
+      state.modalDialogs = state.modalDialogs.map((md) => {
+        if (md.modalDialogId === modalId) {
+          return { ...md, [name]: value };
+        } else {
+          return md;
+        }
+      });
+    },
+
+    removeModalDialog: (state, { payload: { stepId } }) => {
+      state.modalDialogs = state.modalDialogs.filter(
+        (md) => md.workflowStepId !== stepId
+      );
+    },
   },
 });
 
@@ -331,6 +351,7 @@ export const {
   addViewHeaderRow,
   addViewHeaderColumn,
   addScannerDialog,
+  addModalDialog,
   changeNodesEdgesAndViewport,
   changeWorkflowValue,
   changeNextAndPreviousStep,
@@ -344,6 +365,7 @@ export const {
   changeViewHeaderRowValue,
   changeViewHeaderColumnValue,
   changeScannerDialogValue,
+  changeModalDialogValue,
   updateSelectedStep,
   updateTotalWorkflow,
   removeWorkflowStep,
@@ -357,5 +379,6 @@ export const {
   removeViewHeaderRow,
   removeViewHeaderColumn,
   removeScannerDialog,
+  removeModalDialog,
 } = workflowSlice.actions;
 export default workflowSlice.reducer;

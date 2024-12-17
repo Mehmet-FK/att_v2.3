@@ -1,18 +1,13 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms/record-view-form.module.css";
 import ViewHeaderForm from "../header-form";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
+import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 
-const RecordViewForm = ({ stepID }) => {
+const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
   const { recordViews } = useSelector((state) => state.workflow);
 
   const viewId = stepID + "-recordview";
@@ -60,30 +55,22 @@ const RecordViewForm = ({ stepID }) => {
               name="name"
               fullWidth
             />
-            <FormControl className={css.form_control} size="medium">
-              <InputLabel id="EntityId">Entität</InputLabel>
-              <Select
-                MenuProps={{
-                  style: { zIndex: 35001 },
-                }}
-                labelId="EntityId"
-                id="demo-select-small"
-                value={recordViewValues?.entityId || ""}
-                label="Entität"
-                name="entityId"
-                onChange={handleChange}
-                onBlur={handleBlur}
-              >
-                <MenuItem value={""}>
-                  <em>None</em>
-                </MenuItem>
-                {["entity"]?.map((entity) => (
-                  <MenuItem key={entity} value={entity}>
-                    {entity}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: { key: "id", caption: "caption" },
+                options: entitiesForAutoSelect,
+                name: "entityId",
+                value: recordViewValues.entityId || "",
+                label: "Entität",
+              }}
+              helperProps={{
+                className: css.form_control,
+              }}
+            />
+
             <div className={css.flex_row} style={{ width: "50%" }}>
               <CheckBox
                 handleChange={handleChange}

@@ -36,7 +36,7 @@ const ListViewElement = ({ element, listViewId }) => {
       <div className={css.elements_container}>
         <Accordion>
           <AccordionSummary
-            sx={{ fontSize: "smaller", paddingBlock: "0" }}
+            sx={{ fontSize: "smaller" }}
             expandIcon={<ExpandMoreIcon fontSize="small" />}
             aria-controls="panel2-content"
             id="panel2-header"
@@ -48,7 +48,6 @@ const ListViewElement = ({ element, listViewId }) => {
               <div className={css.flex_row}>
                 <div className={css.flex_column}>
                   <IconSelect
-                    size={"small"}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
                     value={elementValues?.icon || ""}

@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 import { grey } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import css from "@/styles/workflow-comp-styles.module.css";
-import InfoForm from "../forms/InfoForm";
-import RecordViewForm from "../forms/recordview-form";
-import ListViewForm from "@/components/phase-2/workflow/forms/listview-form";
+
 import { useSelector } from "react-redux";
-import TileViewForm from "../forms/TileViewForm";
-import WorkflowForm from "../forms/workflow-form";
-import { viewTypeConstants } from "@/helpers/Constants";
-import ScannerDialogForm from "../forms/scanner-dialog-form";
+import DisplaySelectedForm from "./DisplaySelectedForm";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -24,32 +19,11 @@ const Puller = styled("div")(({ theme }) => ({
   zIndex: 10,
 }));
 
-const isScannerDialog = (viewType) => {
-  return (
-    viewType === viewTypeConstants.SCANNER_DIALOG_NFC ||
-    viewType === viewTypeConstants.SCANNER_DIALOG_QR
-  );
-};
-
-const DisplayForm = ({ selectedNode }) => {
-  if (selectedNode?.type === "RecordView") {
-    return <RecordViewForm stepID={selectedNode.id} />;
-  } else if (selectedNode?.type === "ListView") {
-    return <ListViewForm stepID={selectedNode.id} />;
-  } else if (selectedNode?.type === "TileView") {
-    return <TileViewForm stepID={selectedNode.id} />;
-  } else if (isScannerDialog(selectedNode?.type)) {
-    return <ScannerDialogForm stepID={selectedNode.id} />;
-  } else {
-    return <WorkflowForm />;
-  }
-};
-
 const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
   const [newHeight, setNewHeight] = useState(45);
-  const workflow = useSelector((state) => state.workflow);
+  // const workflow = useSelector((state) => state.workflow);
 
   const handleClose = () => setOpen(false);
   const handleMouseDown = (e) => {
@@ -85,9 +59,10 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
       document.removeEventListener("mouseup", handleMouseUp);
     };
   });
-  const selectedNode = nodes.find((nds) => nds.selected);
-
-  const handleSubmit = () => console.log(workflow);
+  const selectedNode = useMemo(
+    () => nodes.find((nds) => nds.selected),
+    [nodes]
+  );
   return (
     <>
       <Drawer
@@ -124,8 +99,8 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
               opacity: newHeight / 150,
             }}
           >
-            <div style={{ userSelect: "none" }}>
-              {selectedNode ? "Step" : "Workflow"}
+            <div style={{ userSelect: "none", color: "#f00" }}>
+              {selectedNode ? selectedNode?.data?.label : "Workflow"}
             </div>
             <div
               style={{
@@ -134,13 +109,25 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
                 pointerEvents: newHeight < 80 && "none",
               }}
             >
-              <div className={css.console_btn} onClick={() => handleSubmit()}>
+              <div
+                className={css.console_btn}
+                style={{ userSelect: "none", color: "#000" }}
+                onClick={onSubmit}
+              >
                 Send
               </div>
-              <div className={css.console_btn} onClick={onSave}>
+              <div
+                className={css.console_btn}
+                style={{ userSelect: "none", color: "#000" }}
+                onClick={onSave}
+              >
                 Speichern
               </div>
-              <div className={css.console_btn} onClick={onRestore}>
+              <div
+                className={css.console_btn}
+                style={{ userSelect: "none", color: "#000" }}
+                onClick={onRestore}
+              >
                 Restore
               </div>
             </div>
@@ -152,7 +139,7 @@ const BottomDrawer = ({ onSubmit, onSave, onRestore, nodes }) => {
             maxHeight: newHeight - 100,
           }}
         >
-          <DisplayForm
+          <DisplaySelectedForm
             selectedNode={selectedNode}
             // infoFormValues={infoFormValues}
             // setInfoFormValues={setInfoFormValues}

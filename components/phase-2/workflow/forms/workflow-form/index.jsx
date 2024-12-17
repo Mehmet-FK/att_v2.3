@@ -1,16 +1,4 @@
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Divider, TextField } from "@mui/material";
 import css from "@/styles/workflow-forms/workflow-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import IconSelect from "@/components/form-elements/IconSelect";
@@ -18,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useMemo, useState } from "react";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
+import CustomSelect from "../common-form-elements/CustomSelect";
+import LaunchElementForm from "../LaunchElementForm";
 
 const prepareWorkflowForAutoCompleteSelect = (workflows) => {
   if (!workflows) return [];
@@ -33,15 +23,24 @@ const prepareWorkflowForAutoCompleteSelect = (workflows) => {
   }));
 };
 
-const WorkflowForm = () => {
+const permissionTypes = [
+  { id: "0", caption: "0" },
+  { id: "1", caption: "1" },
+];
+
+const WorkflowForm = ({ entitiesForAutoSelect }) => {
   const workflowState = useSelector((state) => state.workflow);
   const workflows = useSelector((state) => state.attensam.data?.workflows);
 
-  const workflowsForAutoCompleteSelect =
-    prepareWorkflowForAutoCompleteSelect(workflows);
+  const workflowsForAutoCompleteSelect = useMemo(
+    () => prepareWorkflowForAutoCompleteSelect(workflows),
+    [workflows]
+  );
 
-  const { handleWorkflowBlur } = useWorkflowForms();
+  const { updateWorkflowValue } = useWorkflowForms();
+
   const [workflowFormValues, setWorkflowFormValues] = useState(workflowState);
+
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
     setWorkflowFormValues({
@@ -50,13 +49,19 @@ const WorkflowForm = () => {
     });
   };
 
+  const handleBlur = (e) => {
+    const { value, name, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
+    updateWorkflowValue(name, inputValue);
+  };
+
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>
         <div className={css.flex_row}>
           <TextField
             onChange={handleChange}
-            onBlur={handleWorkflowBlur}
+            onBlur={handleBlur}
             value={workflowFormValues.name || ""}
             variant="outlined"
             size="medium"
@@ -67,7 +72,7 @@ const WorkflowForm = () => {
           />
           <TextField
             onChange={handleChange}
-            onBlur={handleWorkflowBlur}
+            onBlur={handleBlur}
             value={workflowFormValues.caption || ""}
             variant="outlined"
             size="medium"
@@ -77,7 +82,7 @@ const WorkflowForm = () => {
           />
           <TextField
             onChange={handleChange}
-            onBlur={handleWorkflowBlur}
+            onBlur={handleBlur}
             value={workflowFormValues.description || ""}
             variant="outlined"
             size="medium"
@@ -89,7 +94,7 @@ const WorkflowForm = () => {
           <AutoCompleteSelect
             mainProps={{
               handleChange: handleChange,
-              handleBlur: handleWorkflowBlur,
+              handleBlur: handleBlur,
               preferences: { key: "id", caption: "caption" },
               options: workflowsForAutoCompleteSelect,
               name: "parentWorkflowId",
@@ -108,55 +113,31 @@ const WorkflowForm = () => {
             handleBlur={() => console.log("blur")}
             value={workflowFormValues.icon || ""}
           />
-          <FormControl className={css.form_control} size="medium">
-            <InputLabel id="permissionType">Berechtigungstyp</InputLabel>
-            <Select
-              MenuProps={{
-                style: { zIndex: 35001 },
-              }}
-              labelId="permissionType"
-              id="demo-select-permissionType"
-              label="Berechtigungstyp"
-              name="permissionType"
-              value={workflowFormValues.permissionType || ""}
-              onChange={handleChange}
-              onBlur={handleWorkflowBlur}
-            >
-              <MenuItem value={""}>
-                <em>None</em>
-              </MenuItem>
-              {["0", "1"]?.map((perm) => (
-                <MenuItem key={perm} value={perm}>
-                  {perm}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
 
-          <FormControl className={css.form_control} size="medium">
-            <InputLabel id="EntityId">Entität</InputLabel>
-            <Select
-              MenuProps={{
-                style: { zIndex: 35001 },
-              }}
-              labelId="EntityId"
-              id="demo-select-small"
-              label="Entität"
-              name="entityId"
-              value={workflowFormValues.entityId || ""}
-              onChange={handleChange}
-              onBlur={handleWorkflowBlur}
-            >
-              <MenuItem value={""}>
-                <em>None</em>
-              </MenuItem>
-              {["entities"]?.map((entity) => (
-                <MenuItem key={entity} value={entity}>
-                  {entity}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <CustomSelect
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+            value={workflowFormValues?.permissionType || ""}
+            label="Berechtigungstyp"
+            name="permissionType"
+            preferences={{ key: "id", caption: "caption" }}
+            options={permissionTypes}
+          />
+
+          <AutoCompleteSelect
+            mainProps={{
+              handleChange: handleChange,
+              handleBlur: handleBlur,
+              preferences: { key: "id", caption: "caption" },
+              options: entitiesForAutoSelect,
+              name: "entityId",
+              value: workflowFormValues.entityId || "",
+              label: "Entität",
+            }}
+            helperProps={{
+              className: css.form_control,
+            }}
+          />
 
           <div
             style={{
@@ -170,9 +151,9 @@ const WorkflowForm = () => {
                 width: "100%",
               }}
               handleChange={handleChange}
-              handleBlur={handleWorkflowBlur}
+              handleBlur={handleBlur}
               name="isActive"
-              checked={workflowFormValues.isActive}
+              checked={workflowFormValues.isActive || false}
               label="isActive"
             />
             <CheckBox
@@ -180,9 +161,9 @@ const WorkflowForm = () => {
                 width: "100%",
               }}
               handleChange={handleChange}
-              handleBlur={handleWorkflowBlur}
+              handleBlur={handleBlur}
               name="isProduction"
-              checked={workflowFormValues.isProduction}
+              checked={workflowFormValues.isProduction || false}
               label="isProduction"
             />
           </div>
@@ -190,7 +171,10 @@ const WorkflowForm = () => {
 
         {/* <LaunchElementSection /> */}
 
-        <div className={css.flex_row} style={{ paddingBlock: "10px" }} />
+        <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
+        <Divider />
+        <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
+        <LaunchElementForm />
       </div>
     </div>
   );

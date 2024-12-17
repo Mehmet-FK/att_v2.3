@@ -5,19 +5,13 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Avatar,
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
 import { useEffect, useMemo, useState } from "react";
 import ViewHeaderRow from "./ViewHeaderRow";
 import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import ColorPicker from "../common-form-elements/ColorPicker";
 
 const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
   const { headerRows, headers } = useSelector((state) => state.workflow);
@@ -50,7 +44,7 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
     const headerId = header.headerId;
     updateViewHeaderValue(name, value, headerId);
   };
-  const handleUploadImage = (e) => {
+  /*   const handleUploadImage = (e) => {
     const { files } = e.target;
     if (files && files[0]) {
       setHeaderValues((prev) => ({
@@ -58,7 +52,7 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
         uploadIcon: files[0],
       }));
     }
-  };
+  }; */
 
   useEffect(() => {
     setHeaderValues(header);
@@ -97,20 +91,18 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
                 />
               </div>
               <div className={css.flex_column}>
-                <TextField
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={headerValues?.gradientStart || ""}
-                  variant="outlined"
+                <ColorPicker
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  value={headerValues?.gradientStart || "#000000"}
                   label="Gradient Start"
                   name="gradientStart"
                   fullWidth
                 />
-                <TextField
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={headerValues?.gradientEnd || ""}
-                  variant="outlined"
+                <ColorPicker
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  value={headerValues?.gradientEnd || "#000000"}
                   label="Gradient End"
                   name="gradientEnd"
                   fullWidth
@@ -121,7 +113,7 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                rowGap: "10px",
+                rowGap: "5px",
               }}
             >
               {viewHeaderRows.map((rowValue) => (

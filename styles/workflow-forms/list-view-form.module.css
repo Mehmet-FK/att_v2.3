@@ -7,6 +7,7 @@
   width: 100%;
   border-radius: 3px;
   margin-top: 10px;
+  padding-bottom: 15px;
 }
 .flex_row {
   display: flex;
@@ -31,6 +32,23 @@
   row-gap: 5px;
   /* height: 220px; */
 }
+
+.list_element_container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #a7a6a6;
+  transition: all 0.1s linear;
+  border-radius: 5px;
+}
+
+.list_element_container:hover {
+  border: 1px solid rgba(0, 157, 255, 0.45);
+  box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
+  padding-block: 15px;
+}
+
 .header_form_wrapper {
   display: flex;
   flex-direction: column;
@@ -66,12 +84,14 @@
   align-items: center;
   justify-content: center;
   font-size: 0.7rem;
-  height: 10px;
+  height: 100%;
+  width: 80px;
   background-color: #f00;
   cursor: pointer;
   border-radius: 3px;
-  opacity: 0.1;
+  opacity: 0.5;
   transition: opacity 0.15s ease-in-out;
+  padding: 5px;
 }
 
 .remove_row_btn:hover {

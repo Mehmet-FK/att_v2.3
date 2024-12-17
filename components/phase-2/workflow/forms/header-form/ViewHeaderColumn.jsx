@@ -1,22 +1,29 @@
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import css from "@/styles/workflow-forms/header-form.module.css";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
+import CustomSelect from "../common-form-elements/CustomSelect";
 
 const ViewHeaderColumn = ({ columnValues }) => {
-  const columnTypes = {
-    Text: "0",
-    Value: "1",
-    Icon: "2",
-    Variable: "3",
-  };
+  const columnTypes = [
+    {
+      id: "0",
+      caption: "Text",
+    },
+    {
+      id: "1",
+      caption: "Value",
+    },
+    {
+      id: "2",
+      caption: "Icon",
+    },
+    {
+      id: "3",
+      caption: "Variable",
+    },
+  ];
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
 
   const { updateViewHeaderColumnValue, deleteViewHeaderColumn } =
@@ -40,20 +47,8 @@ const ViewHeaderColumn = ({ columnValues }) => {
     setColumnFormValues(columnValues);
   }, [columnValues.headerColumnId]);
 
-  const columnKeys = Object.keys(columnTypes);
   return (
-    <div
-      style={{
-        border: "1px solid #ddd",
-        // border: "1px solid #0f0",
-        padding: "5px",
-        position: "relative",
-        maxWidth: "40%",
-        borderRadius: "5px",
-        overflow: "hidden",
-      }}
-      className={css.flex_column}
-    >
+    <div className={css.header_column_container}>
       <HighlightOffIcon
         onClick={removeColumn}
         title="remove column"
@@ -74,31 +69,16 @@ const ViewHeaderColumn = ({ columnValues }) => {
         }}
       />
       <div className={css.flex_row}>
-        <FormControl size="small" fullWidth>
-          <InputLabel size="small" id="demo-simple-select-label">
-            Column Type
-          </InputLabel>
-          <Select
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={columnFormValues?.columnType || ""}
-            MenuProps={{
-              style: { zIndex: 35001 },
-            }}
-            name="columnType"
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label=" Column Type"
-            size="small"
-          >
-            <MenuItem value={""}>None</MenuItem>
-            {columnKeys.map((colType) => (
-              <MenuItem key={colType} value={columnTypes[colType]}>
-                {colType}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <CustomSelect
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          value={columnFormValues?.columnType || ""}
+          label="Spaltentyp"
+          name="columnType"
+          preferences={{ key: "id", caption: "caption" }}
+          options={columnTypes}
+          size="small"
+        />
 
         <TextField
           onChange={handleChange}

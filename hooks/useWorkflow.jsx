@@ -1,21 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useReactFlow } from "reactflow";
+import { addEdge, MarkerType, useReactFlow } from "reactflow";
 import useWorkflowForms from "./workflow-hooks/useWorkflowForms";
 
 const flowKey = "atina-flow";
 const capacity = 100;
-const useWorkflow = (setNodes, setEdges) => {
+const useWorkflow = () => {
   const { setViewport, getIntersectingNodes } = useReactFlow();
   const { restoreWorkflowState } = useWorkflowForms();
   const workflow = useSelector((state) => state.workflow);
   const flowHistoryRef = useRef(null);
   const currentflowRef = useRef(null);
-
+  const idRef = useRef(0);
   const rfInstance = useReactFlow();
 
+  const { setNodes, setEdges, getEdges, getNodes } = rfInstance;
+
   //Creates random id
-  const id = () => Math.random().toString(36).substr(2, 8);
+  const getId = (type) => `${type}_${idRef.current++}`;
+  const createIdForWFHistory = () => Math.random().toString(36).substr(2, 8);
+
+  const isValidConnection = (connection) => {
+    return (
+      connection.target !== connection.source &&
+      connection.targetHandle !== "start"
+    );
+  };
 
   const updateHistory = () => {
     const history = flowHistoryRef.current || [];
@@ -23,7 +33,7 @@ const useWorkflow = (setNodes, setEdges) => {
     const currentFlow = history.find((f) => f.id === currentflowRef.current);
 
     if (rfInstance) {
-      const newFlow = { ...rfInstance.toObject(), id: id() };
+      const newFlow = { ...rfInstance.toObject(), id: createIdForWFHistory() };
       const isEqual =
         JSON.stringify({ ...newFlow, id: "" }) ===
         JSON.stringify({ ...currentFlow, id: "" });
@@ -89,7 +99,7 @@ const useWorkflow = (setNodes, setEdges) => {
     }
   }, [rfInstance, workflow]);
 
-  const onRestore = useCallback(() => {
+  const onRestore = () => {
     const restoreFlow = async () => {
       const { flow = null, flowInfo = null } =
         JSON.parse(localStorage.getItem(flowKey)) || {};
@@ -106,7 +116,52 @@ const useWorkflow = (setNodes, setEdges) => {
     };
 
     restoreFlow();
-  }, [setNodes, setViewport, restoreWorkflowState]);
+  };
+  const targetAlreadyExist = (params) => {
+    const edges = getEdges();
+    const targetExists = edges.find((edge) => edge.target === params.target);
+    return targetExists !== undefined;
+  };
+  const sourceAlreadyExist = (params) => {
+    const edges = getEdges();
+
+    const sourceExists = edges.find((edge) => edge.source === params.source);
+    return sourceExists !== undefined;
+  };
+
+  const createNewLaunchNode = (name, caption) => {
+    const nodeId = getId(name);
+    return {
+      id: nodeId,
+      type: "launch",
+      viewType: name,
+      position: { x: 70, y: 250 },
+      parentNode: "launch-group",
+      extent: "parent",
+
+      data: {
+        label: `${caption}`,
+        nodeId: nodeId,
+        type: name,
+      },
+    };
+  };
+  const createNewReqularNode = (name, caption, position) => {
+    const nodeId = getId(name);
+    return {
+      id: nodeId,
+      type: "view",
+      viewType: name,
+      name: "",
+      position,
+      data: { label: `${caption}`, nodeId: nodeId, type: name },
+      changeEvent: (e, selectedNode) =>
+        setNodes((nds) => [
+          ...nds.filter((n) => n.id !== newNode.id),
+          { ...selectedNode, name: e.target.value },
+        ]),
+    };
+  };
 
   const onNodeDragStop = (e, node) => {
     const interNodes = getIntersectingNodes(node);
@@ -134,11 +189,55 @@ const useWorkflow = (setNodes, setEdges) => {
     e.dataTransfer.dropEffect = "move";
   }, []);
 
-  const isValidConnection = (connection) => {
-    return (
-      connection.target !== connection.source &&
-      connection.targetHandle !== "start"
+  const isLaunchElementExisting = () => {
+    const currentNodes = rfInstance.getNodes();
+    const launchElement = currentNodes.find((nds) => nds.type === "launch");
+    return launchElement !== undefined;
+  };
+
+  const addNodeAndUpdateHistoryOnDrop = (e) => {
+    const viewType = e.dataTransfer.getData("application/reactflow");
+    const caption = e.dataTransfer.getData("caption");
+    const type = e.dataTransfer.getData("type");
+    const launchTypeId = e.dataTransfer.getData("typeId");
+
+    const position = rfInstance.screenToFlowPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+
+    let newNode = {};
+
+    //TODO: Refactoring is needed, returns null
+    if (type === "launch") {
+      if (isLaunchElementExisting()) return { viewType, launchTypeId, newNode };
+
+      newNode = createNewLaunchNode(viewType, caption);
+    } else {
+      newNode = createNewReqularNode(viewType, caption, position);
+    }
+
+    setNodes((nds) => nds.concat(newNode));
+    updateHistory();
+    return { viewType, launchTypeId, newNode };
+  };
+
+  const addEdgeAndUpdateHistoryOnConnect = (params) => {
+    if (targetAlreadyExist(params) || sourceAlreadyExist(params)) return;
+    setEdges((eds) =>
+      addEdge(
+        {
+          ...params,
+          type: params.sourceHandle !== "start" ? "floating" : "default",
+          markerEnd: { type: MarkerType.ArrowClosed },
+          style: { strokeWidth: 2 },
+          sourceID: params.source,
+          targetID: params.target,
+        },
+        eds
+      )
     );
+    updateHistory();
   };
 
   useEffect(() => {
@@ -156,6 +255,12 @@ const useWorkflow = (setNodes, setEdges) => {
     updateHistory,
     isValidConnection,
     getIntersectingNodes,
+    sourceAlreadyExist,
+    targetAlreadyExist,
+    createNewLaunchNode,
+    createNewReqularNode,
+    addNodeAndUpdateHistoryOnDrop,
+    addEdgeAndUpdateHistoryOnConnect,
   };
 };
 

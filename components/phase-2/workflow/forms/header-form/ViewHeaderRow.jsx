@@ -25,8 +25,7 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
   return (
     <div
       style={{
-        // border: "1px solid red",
-        padding: "5px 8px",
+        padding: "5px 8px 0 8px",
       }}
     >
       <div
@@ -49,7 +48,15 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
           <ViewHeaderColumn key={col.headerColumnId} columnValues={col} />
         ))}
       </div>
-      <div style={{ display: "flex", width: "100%", columnGap: "5px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "end",
+          width: "100%",
+          columnGap: "5px",
+          paddingBlock: "10px",
+        }}
+      >
         <span
           title="add column"
           className={css.add_column_btn}
@@ -57,13 +64,6 @@ const ViewHeaderRow = ({ rowId, headerId }) => {
         >
           <AddCircleOutlineIcon fontSize="inherit" />
         </span>
-        {/* <span
-          title="remove column"
-          className={css.remove_column_btn}
-          onClick={removeColumn}
-        >
-          ×
-        </span> */}
       </div>
     </div>
   );
