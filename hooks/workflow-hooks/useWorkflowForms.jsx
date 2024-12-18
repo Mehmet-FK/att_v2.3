@@ -513,22 +513,19 @@ const useWorkflowForms = () => {
     } else {
       dispatch(
         updateTotalWorkflow({
-          workflow: {
-            ...initialWorkflowState,
-          },
+          workflow: initialWorkflowState,
         })
       );
     }
   };
 
-  const prepareWorkflowStateForPost = () => {
+  const prepareWorkflowStateForPost = (nodes, edges, viewport) => {
     const tempWorkflow = { ...workflow };
     delete tempWorkflow.selectedStepId;
-    tempWorkflow.edges = JSON.stringify(tempWorkflow.edges);
-    tempWorkflow.nodes = JSON.stringify(tempWorkflow.nodes);
-    tempWorkflow.viewport = JSON.stringify(tempWorkflow.viewport);
-
-    console.log(tempWorkflow);
+    tempWorkflow.edges = JSON.stringify(edges);
+    tempWorkflow.nodes = JSON.stringify(nodes);
+    tempWorkflow.viewport = JSON.stringify(viewport);
+    return tempWorkflow;
   };
 
   return {

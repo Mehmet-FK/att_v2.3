@@ -16,6 +16,14 @@ const CustomSelect = ({
   const optKey = preferences.key;
   const optCaption = preferences.caption;
 
+  const validateValue = (value) => {
+    if (typeof value === "number" || value) {
+      return value;
+    } else {
+      return "";
+    }
+  };
+
   return (
     <FormControl
       className={css.form_control}
@@ -30,7 +38,7 @@ const CustomSelect = ({
         }}
         labelId={name}
         id={name + "-select-small"}
-        value={value}
+        value={validateValue(value)}
         label={label}
         name={name}
         onChange={handleChange}

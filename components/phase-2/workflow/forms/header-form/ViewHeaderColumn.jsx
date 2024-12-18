@@ -4,26 +4,10 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import CustomSelect from "../common-form-elements/CustomSelect";
+import ColorPicker from "../common-form-elements/ColorPicker";
+import { headerColumnTextAlignments, headerColumnTypes } from "@/helpers/Enums";
 
 const ViewHeaderColumn = ({ columnValues }) => {
-  const columnTypes = [
-    {
-      id: "0",
-      caption: "Text",
-    },
-    {
-      id: "1",
-      caption: "Value",
-    },
-    {
-      id: "2",
-      caption: "Icon",
-    },
-    {
-      id: "3",
-      caption: "Variable",
-    },
-  ];
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
 
   const { updateViewHeaderColumnValue, deleteViewHeaderColumn } =
@@ -38,7 +22,8 @@ const ViewHeaderColumn = ({ columnValues }) => {
     const { name, value } = e.target;
     updateViewHeaderColumnValue(name, value, columnValues.headerColumnId);
   };
-  const removeColumn = () => {
+  const removeColumnOnDoubleClick = (e) => {
+    if (e.detail < 2) return;
     const columnId = columnValues.headerColumnId;
     console.log(columnId);
     deleteViewHeaderColumn(columnId);
@@ -49,34 +34,35 @@ const ViewHeaderColumn = ({ columnValues }) => {
 
   return (
     <div className={css.header_column_container}>
-      <HighlightOffIcon
-        onClick={removeColumn}
-        title="remove column"
-        sx={{
-          position: "absolute",
-          right: "0",
-          top: "0",
-          opacity: "0.3",
-          color: "#fff",
-          backgroundColor: "#f00",
-          zIndex: 5,
-          cursor: "pointer",
-          padding: "2px",
-          borderRadius: "2px 2px 2px 8px",
-          transition: "all 0.1s ease-in-out",
+      <span title="Spalte löschen">
+        <HighlightOffIcon
+          onClick={removeColumnOnDoubleClick}
+          sx={{
+            position: "absolute",
+            right: "0",
+            top: "0",
+            opacity: "0.3",
+            color: "#fff",
+            backgroundColor: "#f00",
+            zIndex: 5,
+            cursor: "pointer",
+            padding: "2px",
+            borderRadius: "2px 2px 2px 8px",
+            transition: "all 0.1s ease-in-out",
 
-          "&:hover": { opacity: 1, color: "#fff", backgroundColor: "#f00" },
-        }}
-      />
+            "&:hover": { opacity: 1, color: "#fff", backgroundColor: "#f00" },
+          }}
+        />
+      </span>
       <div className={css.flex_row}>
         <CustomSelect
           handleChange={handleChange}
           handleBlur={handleBlur}
-          value={columnFormValues?.columnType || ""}
+          value={columnFormValues?.columnType}
           label="Spaltentyp"
           name="columnType"
           preferences={{ key: "id", caption: "caption" }}
-          options={columnTypes}
+          options={headerColumnTypes}
           size="small"
         />
 
@@ -100,6 +86,7 @@ const ViewHeaderColumn = ({ columnValues }) => {
           size="small"
           label="Column Span"
           name="colSpan"
+          type="number"
           fullWidth
         />
         <TextField
@@ -109,6 +96,7 @@ const ViewHeaderColumn = ({ columnValues }) => {
           variant="outlined"
           size="small"
           label="Row Span"
+          type="number"
           name="rowSpan"
           fullWidth
         />
@@ -124,16 +112,29 @@ const ViewHeaderColumn = ({ columnValues }) => {
           name="fontFamily"
           fullWidth
         />
-        <TextField
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={columnFormValues?.fontColor || ""}
-          variant="outlined"
+
+        <CustomSelect
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          value={columnFormValues?.textAlignment}
+          label="Ausrichtung"
+          name="textAlignment"
+          preferences={{ key: "id", caption: "caption" }}
+          options={headerColumnTextAlignments}
           size="small"
+        />
+      </div>
+      <div className={css.flex_row}>
+        <ColorPicker
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          value={columnFormValues?.fontColor || "#000000"}
           label="Font Color"
           name="fontColor"
+          size="small"
           fullWidth
         />
+        <div style={{ width: "100%" }} />
       </div>
     </div>
   );

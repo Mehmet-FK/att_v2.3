@@ -8,6 +8,7 @@ import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import LaunchElementForm from "../LaunchElementForm";
+import { workflowPermissionTypes } from "@/helpers/Enums";
 
 const prepareWorkflowForAutoCompleteSelect = (workflows) => {
   if (!workflows) return [];
@@ -22,11 +23,6 @@ const prepareWorkflowForAutoCompleteSelect = (workflows) => {
     icon: wf.icon,
   }));
 };
-
-const permissionTypes = [
-  { id: "0", caption: "0" },
-  { id: "1", caption: "1" },
-];
 
 const WorkflowForm = ({ entitiesForAutoSelect }) => {
   const workflowState = useSelector((state) => state.workflow);
@@ -62,7 +58,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            value={workflowFormValues.name || ""}
+            value={workflowFormValues?.name || ""}
             variant="outlined"
             size="medium"
             label="Name"
@@ -73,7 +69,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            value={workflowFormValues.caption || ""}
+            value={workflowFormValues?.caption || ""}
             variant="outlined"
             size="medium"
             label="Caption"
@@ -83,7 +79,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            value={workflowFormValues.description || ""}
+            value={workflowFormValues?.description || ""}
             variant="outlined"
             size="medium"
             label="Beschreibung"
@@ -98,7 +94,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
               preferences: { key: "id", caption: "caption" },
               options: workflowsForAutoCompleteSelect,
               name: "parentWorkflowId",
-              value: workflowFormValues.parentWorkflowId || "",
+              value: workflowFormValues?.parentWorkflowId || "",
               label: "Parent Workflow",
             }}
             helperProps={{
@@ -111,7 +107,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
             size={"medium"}
             handleChange={() => console.log("change")}
             handleBlur={() => console.log("blur")}
-            value={workflowFormValues.icon || ""}
+            value={workflowFormValues?.icon || ""}
           />
 
           <CustomSelect
@@ -121,7 +117,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
             label="Berechtigungstyp"
             name="permissionType"
             preferences={{ key: "id", caption: "caption" }}
-            options={permissionTypes}
+            options={workflowPermissionTypes}
           />
 
           <AutoCompleteSelect
@@ -131,7 +127,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
               preferences: { key: "id", caption: "caption" },
               options: entitiesForAutoSelect,
               name: "entityId",
-              value: workflowFormValues.entityId || "",
+              value: workflowFormValues?.entityId || "",
               label: "Entität",
             }}
             helperProps={{
@@ -153,7 +149,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
               handleChange={handleChange}
               handleBlur={handleBlur}
               name="isActive"
-              checked={workflowFormValues.isActive || false}
+              checked={workflowFormValues?.isActive || false}
               label="isActive"
             />
             <CheckBox
@@ -163,7 +159,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
               handleChange={handleChange}
               handleBlur={handleBlur}
               name="isProduction"
-              checked={workflowFormValues.isProduction || false}
+              checked={workflowFormValues?.isProduction || false}
               label="isProduction"
             />
           </div>

@@ -1,15 +1,12 @@
-import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { TextField } from "@mui/material";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms/list-view-form.module.css";
 import ViewHeaderForm from "../header-form";
 import ListViewElement from "./ListViewElement";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
-import CustomSelect from "../common-form-elements/CustomSelect";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 
 const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
@@ -17,8 +14,8 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
     (state) => state.workflow
   );
 
-  const viewId = stepID + "-listview";
-  const listView = listViews.find((lv) => lv.listViewId === viewId);
+  const listView = listViews.find((lv) => lv.workflowStepId === stepID);
+  const viewId = useMemo(() => listView?.listViewId, [listView]);
 
   const listViewElement = listViewElements.find(
     (lve) => lve.listViewElementId === listView?.listViewElementId
@@ -42,7 +39,6 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
     const inputValue = type === "checkbox" ? checked : value;
     updateListViewValue(name, inputValue, viewId);
   };
-
   useEffect(() => {
     setListViewValues(listView);
   }, [stepID]);
@@ -78,7 +74,7 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
               preferences: { key: "id", caption: "caption" },
               options: entitiesForAutoSelect,
               name: "entityId",
-              value: listViewValues.entityId || "",
+              value: listViewValues?.entityId || "",
               label: "Entität",
             }}
             helperProps={{
@@ -110,7 +106,7 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
         </div>
       </div>
       <div className={css.header_form_wrapper}>
-        <ViewHeaderForm viewId={viewId} />
+        <ViewHeaderForm viewId={viewId} defaultExpanded={true} />
       </div>
 
       <ListViewElement element={listViewElement} listViewId={viewId} />

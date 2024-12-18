@@ -1,14 +1,7 @@
 import Head from "next/head";
-// import { Inter } from "next/font/google";
 import { getSession } from "next-auth/react";
 import css from "@/styles/dashboard-card.module.css";
-import { useSelector } from "react-redux";
 import Card from "@/components/dashboard/Card";
-import { useEffect } from "react";
-import useAttensamCalls from "@/hooks/useAttensamCalls";
-import { dummyModules } from "@/helpers/Constants";
-// import axios from "axios";
-import { getModulesSSR } from "@/helpers/ServerSideAPICalls";
 
 export default function Home() {
   return (
@@ -43,6 +36,14 @@ export default function Home() {
 
               caption: "Benutzer",
               defaultIconUrl: "/assets/dashboard-icons/users.svg",
+            }}
+          />
+          <Card
+            cardInfo={{
+              url: "/workflows",
+
+              caption: "Workflows",
+              defaultIconUrl: "/assets/dashboard-icons/workflows.svg",
             }}
           />
         </div>

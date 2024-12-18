@@ -8,7 +8,7 @@ import ReactFlow, {
 import nodeTypes from "./NodeTypes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "reactflow/dist/style.css";
-import useWorkflow from "@/hooks/useWorkflow";
+import useWorkflow from "@/hooks/workflow-hooks/useWorkflow";
 import edgeTypes from "./EdgeTypes";
 import BottomDrawer from "./drawers/bottom-drawer";
 import ToolsDrawer from "./drawers/tools-drawer";
@@ -17,6 +17,9 @@ import useAttensamCalls from "@/hooks/useAttensamCalls";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { useRouter } from "next/router";
 import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
+import RestoreWorkflowConfirmDialog from "./dialogs/RestoreWorkflowConfirmDialog";
+import useSessionStorage from "@/hooks/useSessionStorage";
+import { Sledding } from "@mui/icons-material";
 
 const initialNodes = [
   {
@@ -36,26 +39,27 @@ const initialNodes = [
 ];
 const initialEdges = [];
 
-// let id = 0;
-// const getId = (type) => `${type}_${id++}`;
-
-const Sheet = () => {
+const Sheet = ({ existingWorkflow }) => {
   const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const workflow = useSelector((state) => state.workflow);
-
-  const { nodes: rdxNodes, edges: rdxEdges, viewport: rdxViewport } = workflow;
+  const [openRestoreConfirmDialog, setOpenRestoreConfirmDialog] =
+    useState(false);
 
   const { setViewport, getViewport } = useReactFlow();
   const router = useRouter();
   const { postWorkflowCall } = useAttensamCalls();
+  const { isWorkflowSessionExisting, setSessionFlagForWorkflow } =
+    useSessionStorage();
 
   const {
     onSave,
-    onRestore,
+    restoreExistingRemoteWorkflow,
+    restoreWorkflowFromLocalStorage,
+    removeWorkflowFromLocalStorage,
+    isWorkflowExistingInLocalStorage,
     onNodeDragStop,
     onDragOver,
     updateHistory,
@@ -76,21 +80,26 @@ const Sheet = () => {
   const onConnect = (params) => {
     addEdgeAndUpdateHistoryOnConnect(params);
     setPreviousAndNextStepsOnConnect(params);
-    console.log(reactFlowInstance.getEdges());
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    console.log(_edges);
+    updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
 
-  const onDrop = useCallback(
-    (e) => {
-      e.preventDefault();
-      const { viewType, launchTypeId, newNode } =
-        addNodeAndUpdateHistoryOnDrop(e);
+  const onDrop = (e) => {
+    e.preventDefault();
+    const viewport = reactFlowInstance.getViewport();
 
-      createViewOnDrop(viewType, newNode.id, launchTypeId);
-      console.log(reactFlowInstance.getNodes());
-    },
-    [reactFlowInstance]
-  );
+    const { viewType, launchTypeId, newNode } =
+      addNodeAndUpdateHistoryOnDrop(e);
 
+    createViewOnDrop(viewType, newNode.id, launchTypeId);
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
+  };
   const handleDeleteNode = (deleted) => {
     deleted.forEach((node) => deleteWorkflowStep(node));
     updateHistory();
@@ -110,19 +119,45 @@ const Sheet = () => {
   }, [nodes, edges, reactFlowInstance, router.events]);
 
   const handleSubmit = () => {
-    prepareWorkflowStateForPost();
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    const workflowToPost = prepareWorkflowStateForPost(
+      _nodes,
+      _edges,
+      _viewport
+    );
+    console.log(workflowToPost);
+    // postWorkflowCall(workflowToPost);
   };
 
   useEffect(() => {
-    if (rdxNodes.length > 1) {
-      setNodes(rdxNodes);
-      setEdges(rdxEdges);
-      setViewport(rdxViewport);
+    if (
+      !isWorkflowSessionExisting() &&
+      isWorkflowExistingInLocalStorage() &&
+      router.query.workflowId === "new"
+    ) {
+      setOpenRestoreConfirmDialog(true);
+      setSessionFlagForWorkflow();
+
+      console.log("component <Sheet/> useEffect");
     }
-  }, [rdxNodes, rdxEdges, rdxViewport]);
+  }, []);
+
+  useEffect(() => {
+    if (existingWorkflow) {
+      restoreExistingRemoteWorkflow(existingWorkflow, setNodes, setEdges);
+    }
+  }, [existingWorkflow]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: "100vw", height: "100%" }}>
+      <RestoreWorkflowConfirmDialog
+        open={openRestoreConfirmDialog}
+        setOpen={setOpenRestoreConfirmDialog}
+        onConfirm={restoreWorkflowFromLocalStorage}
+        onDeny={removeWorkflowFromLocalStorage}
+      />
       <h4
         style={{
           position: "absolute",
@@ -167,13 +202,13 @@ const Sheet = () => {
         {/* <Controls style={{ bottom: 55 }} /> */}
       </ReactFlow>
 
-      <ToolsDrawer open={openToolsDrawer} setOpen={setOpenToolsDrawer} />
-      <BottomDrawer
+      <ToolsDrawer open={openToolsDrawer} />
+      {/* <BottomDrawer
         onSubmit={handleSubmit}
         onSave={onSave}
-        onRestore={onRestore}
+        restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
         nodes={nodes}
-      />
+      /> */}
     </div>
   );
 };

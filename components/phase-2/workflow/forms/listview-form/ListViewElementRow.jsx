@@ -13,7 +13,7 @@ const ListViewElementRow = ({ elementRowValues }) => {
     useWorkflowForms();
 
   const removeRow = () => {
-    const rowId = elementRowValues.listViewElementRowId;
+    const rowId = elementRowValues?.listViewElementRowId;
     deleteListViewElementRowByRowId(rowId);
   };
 
@@ -24,13 +24,13 @@ const ListViewElementRow = ({ elementRowValues }) => {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-    const rowId = elementRowValues.listViewElementRowId;
+    const rowId = elementRowValues?.listViewElementRowId;
 
     updateListViewElementRowValue(name, value, rowId);
   };
   useEffect(() => {
     setRowValues(elementRowValues);
-  }, [elementRowValues.listViewElementRowId]);
+  }, [elementRowValues?.listViewElementRowId]);
 
   return (
     <div className={css.list_element_container}>

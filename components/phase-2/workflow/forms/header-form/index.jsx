@@ -14,12 +14,13 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import ColorPicker from "../common-form-elements/ColorPicker";
 
 const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
-  const { headerRows, headers } = useSelector((state) => state.workflow);
+  const { headerRows, headers, selectedStepId } = useSelector(
+    (state) => state.workflow
+  );
   const { createViewHeaderRow, updateViewHeaderValue } = useWorkflowForms();
-
   const header = useMemo(
     () => headers.find((h) => h.viewId === viewId),
-    [viewId, headers]
+    [selectedStepId]
   );
 
   const viewHeaderRows = useMemo(
@@ -44,19 +45,23 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
     const headerId = header.headerId;
     updateViewHeaderValue(name, value, headerId);
   };
-  /*   const handleUploadImage = (e) => {
-    const { files } = e.target;
-    if (files && files[0]) {
-      setHeaderValues((prev) => ({
-        ...prev,
-        uploadIcon: files[0],
-      }));
-    }
-  }; */
+
+  const MemoViewHeaderRows = useMemo(
+    () =>
+      viewHeaderRows.map((rowValue) => (
+        <ViewHeaderRow
+          key={rowValue?.headerRowId}
+          rowId={rowValue?.headerRowId}
+          headerId={headerValues?.headerId}
+        />
+      )),
+    [viewHeaderRows]
+  );
 
   useEffect(() => {
     setHeaderValues(header);
-  }, [viewId]);
+    console.log(header);
+  }, []);
 
   return (
     <div className={css.header_container}>
@@ -116,20 +121,16 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
                 rowGap: "5px",
               }}
             >
-              {viewHeaderRows.map((rowValue) => (
-                <ViewHeaderRow
-                  key={rowValue.headerRowId}
-                  rowId={rowValue.headerRowId}
-                  headerId={headerValues.headerId}
-                />
-              ))}
+              {MemoViewHeaderRows}
 
-              <button
-                disabled={headerRows.length > 4}
-                onClick={addViewHeaderRow}
-              >
-                add row
-              </button>
+              <div>
+                <button
+                  disabled={viewHeaderRows.length > 4}
+                  onClick={addViewHeaderRow}
+                >
+                  add row
+                </button>
+              </div>
             </div>
           </div>
         </AccordionDetails>

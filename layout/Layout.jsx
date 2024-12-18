@@ -78,7 +78,7 @@ export default function Layout({ children, toggleTheme }) {
     {
       text: "Workflow",
       icon: <AccountTreeIcon />,
-      nav: "/workflow",
+      nav: "/workflows",
     },
   ];
   const drawerListAdmin = [
@@ -95,11 +95,11 @@ export default function Layout({ children, toggleTheme }) {
     {
       text: "Workflow",
       icon: <AccountTreeIcon />,
-      nav: "/workflow",
+      nav: "/workflows",
     },
   ];
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", height: "100vh" }}>
       <AppBar
         sx={{ backgroundColor: "navbar.main" }}
         position="fixed"
@@ -234,7 +234,7 @@ export default function Layout({ children, toggleTheme }) {
         component="main"
         sx={{
           flexGrow: 1,
-          // overflow: "hidden",
+          height: "calc(100vh - 64px)",
         }}
       >
         <DrawerHeader />

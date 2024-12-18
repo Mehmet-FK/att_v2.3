@@ -10,12 +10,11 @@ import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
   const { recordViews } = useSelector((state) => state.workflow);
 
-  const viewId = stepID + "-recordview";
-
   const recordView = useMemo(
-    () => recordViews.find((rv) => rv.recordViewId === viewId),
+    () => recordViews.find((rv) => rv.workflowStepId === stepID),
     [stepID]
   );
+  const viewId = useMemo(() => recordView?.recordViewId, [recordView]);
 
   const [recordViewValues, setRecordViewValues] = useState(recordView);
 
@@ -48,7 +47,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
             <TextField
               onChange={handleChange}
               onBlur={handleBlur}
-              value={recordViewValues.name || ""}
+              value={recordViewValues?.name || ""}
               variant="outlined"
               size="medium"
               label="Name"
@@ -63,7 +62,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
                 preferences: { key: "id", caption: "caption" },
                 options: entitiesForAutoSelect,
                 name: "entityId",
-                value: recordViewValues.entityId || "",
+                value: recordViewValues?.entityId || "",
                 label: "Entität",
               }}
               helperProps={{
@@ -75,7 +74,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
               <CheckBox
                 handleChange={handleChange}
                 handleBlur={handleBlur}
-                checked={recordViewValues.isEditable}
+                checked={recordViewValues?.isEditable}
                 label="isEditable"
                 name="isEditable"
                 sx={{
@@ -86,7 +85,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
               <CheckBox
                 handleChange={handleChange}
                 handleBlur={handleBlur}
-                checked={recordViewValues.showMenue}
+                checked={recordViewValues?.showMenue}
                 label="showMenue"
                 name="showMenue"
                 sx={{
@@ -97,7 +96,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
               <CheckBox
                 handleChange={handleChange}
                 handleBlur={handleBlur}
-                checked={recordViewValues.createNewDataset}
+                checked={recordViewValues?.createNewDataset}
                 label="createNewDataset"
                 name="createNewDataset"
                 sx={{
@@ -109,7 +108,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
         </div>
       </div>
       <div className={css.header_form_wrapper}>
-        <ViewHeaderForm viewId={viewId} />
+        <ViewHeaderForm viewId={viewId} defaultExpanded={true} />
       </div>
     </>
   );

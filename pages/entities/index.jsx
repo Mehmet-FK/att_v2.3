@@ -5,7 +5,7 @@ import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
-import UtilBar from "@/components/phase-2/entities/UtilBar";
+import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";
 import EntitiesSkeleton from "@/components/phase-2/entities/EntitiesSkeleton";
 import EntityCard from "@/components/phase-2/entities/EntityCard";
 
@@ -31,9 +31,11 @@ const Entities = () => {
     <>
       <PageHeader title="ENTITÄTEN" />
       <div className={css.container}>
-        <UtilBar
-          setExistingEntities={setExistingEntities}
-          entities={entities}
+        <DashboardSearchBar
+          setState={setExistingEntities}
+          state={entities}
+          filterKey="caption"
+          addNewLink="/entities/add"
         />
         <div className={css.gridContainer}>
           {!entities && <EntitiesSkeleton />}

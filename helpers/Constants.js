@@ -93,6 +93,14 @@ export const viewTypeConstants = {
   LAUNCH_GROUPVIEW: "LaunchGroupView",
 };
 
+export const launchTypes = [
+  { id: 0, type: "LaunchDatasetFunction" },
+  { id: 1, type: "LaunchEntityFunction" },
+  { id: 2, type: "LaunchModule" },
+  { id: 3, type: "LaunchElementDefaultFunction" },
+  { id: 4, type: "LaunchGroupView" },
+];
+
 export const workflowStepTypeIds = {
   LISTVIEW: 0,
   TILEVIEW: 1,

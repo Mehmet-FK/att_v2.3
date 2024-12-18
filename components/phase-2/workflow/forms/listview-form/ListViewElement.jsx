@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 const ListViewElement = ({ element, listViewId }) => {
   const [elementValues, setElementValues] = useState(element);
@@ -60,13 +61,23 @@ const ListViewElement = ({ element, listViewId }) => {
                     />
                   ))}
                 </div>
-                <span
-                  className={css.add_row_btn}
-                  title="Add Row"
-                  onClick={addListViewElementRow}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "end",
+                    width: "40px",
+                    rowGap: "5px",
+                  }}
                 >
-                  +
-                </span>
+                  <span
+                    className={css.add_row_btn}
+                    title="Add Row"
+                    onClick={addListViewElementRow}
+                  >
+                    <AddCircleOutlineIcon fontSize="inherit" />
+                  </span>
+                </div>
               </div>{" "}
             </div>
           </AccordionDetails>

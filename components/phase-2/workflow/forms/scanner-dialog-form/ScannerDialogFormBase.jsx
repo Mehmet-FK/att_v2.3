@@ -5,11 +5,7 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
-
-const scannerActions = [
-  { value: "1", caption: "Online Suche" },
-  { value: "0", caption: "Entität Suche" },
-];
+import { scannerDialogActions } from "@/helpers/Enums";
 
 const ScannerDialogFormBase = ({
   scannerDialog,
@@ -72,7 +68,7 @@ const ScannerDialogFormBase = ({
                 preferences: { key: "id", caption: "caption" },
                 options: entitiesForAutoSelect,
                 name: "entityId",
-                value: scannerDialogValues.entityId || "",
+                value: scannerDialogValues?.entityId || "",
                 label: "Entität",
               }}
               helperProps={{
@@ -82,18 +78,18 @@ const ScannerDialogFormBase = ({
             <CustomSelect
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={scannerDialogValues?.scannerAction || ""}
+              value={scannerDialogValues?.scannerAction}
               label="Scanner Aktion"
               name="scannerAction"
-              preferences={{ key: "value", caption: "caption" }}
-              options={scannerActions}
+              preferences={{ key: "id", caption: "caption" }}
+              options={scannerDialogActions}
             />
           </div>{" "}
           <div className={css.flex_row}>
             <CustomSelect
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={scannerDialogValues?.targetFiedId || ""}
+              value={scannerDialogValues?.targetFiedId}
               label="Target Field"
               name="targetFiedId"
               preferences={{ key: "id", caption: "name" }}
@@ -106,20 +102,20 @@ const ScannerDialogFormBase = ({
             <CustomSelect
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={scannerDialogValues?.inputDataSourceId || ""}
+              value={scannerDialogValues?.inputDataSourceId}
               label="Workflow für Manuelle Eingabe"
               name="inputDataSourceId"
-              preferences={{ key: "value", caption: "caption" }}
-              options={scannerActions}
+              preferences={{ key: "id", caption: "caption" }}
+              options={scannerDialogActions}
             />
             <CustomSelect
               handleChange={handleChange}
               handleBlur={handleBlur}
-              value={scannerDialogValues?.filterField || ""}
+              value={scannerDialogValues?.filterField}
               label="Filter Feld"
               name="filterField"
-              preferences={{ key: "value", caption: "caption" }}
-              options={scannerActions}
+              preferences={{ key: "id", caption: "caption" }}
+              options={scannerDialogActions}
             />
 
             <CheckBox

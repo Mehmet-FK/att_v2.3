@@ -74,10 +74,33 @@ const useAttensamCalls = () => {
     }
   };
 
+  //TODO: Refactoring is needed
+  const postWorkflowCall = async (formData) => {
+    try {
+      const { data } = await axiosWithToken.post(
+        "/atina/api/Workflow/CreateAndUpdateWorkflow",
+        formData
+      );
+      console.log(data);
+      toastSuccessNotify("Element wurde erfolgreich angelegt");
+    } catch (error) {
+      toastErrorNotify(error?.response?.data);
+      // console.log(error);
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
+
   //GET
   const getWorkflowsCall = () =>
     getAttData("/atina/api/Workflow", "workflows", true);
   const getEntitiesCall = () => getAttData("/api/Entity", "entities", true);
+  const getWorkflowDefinitionsCall = (workflowId) =>
+    getAttData(
+      "/atina/api/Workflow/GetWorkflowDefinitions?WorkflowId=" + workflowId,
+      "workflowDefinition",
+      false
+    );
   const getEntityDefinitionsCall = () =>
     getAttData("/api/Entity/GetEntityDefinitions", "entityDefinitions", false);
   const getModulesCall = () => getAttData("/api/Modules", "modules", true);
@@ -105,7 +128,7 @@ const useAttensamCalls = () => {
     postAttData(`/api/Field/${entityId}`, data);
 
   //TODO: Do not forget to delete
-  const postWorkflowCall = (data) => postAttData("/api/Workflow", data);
+  // const postWorkflowCall = (data) => postAttData("/api/Workflow/CreateAndUpdateWorkflow", data);
 
   //PUT
   const updateEntityCall = (id, data) => putAttData(`/api/Entity/${id}`, data);
@@ -115,26 +138,27 @@ const useAttensamCalls = () => {
   const deleteEntityCall = (id) => deleteAttData(`/api/Entity/${id}`);
   const deleteFieldCall = (id) => deleteAttData(`/api/Field/${id}`);
   return {
-    postEntityCall, //CREATE Entity
-    postFieldCall, //CREATE Field
-    postWorkflowCall, // CREATE Workflow
+    postEntityCall,
+    postFieldCall,
+    postWorkflowCall,
 
-    getWorkflowsCall, //READ Workflows
-    getEntitiesCall, //READ Entities
-    getSingleEntityCall, //READ Entity
-    getViewTypes, //READ ViewTypes
-    getLaunchTypes, //READ Launch Types
-    getFieldTypes, //READ FieldTypes
-    getViewsCall, //READ Views
-    getViewColumnsCall, //READ View Columns
-    getModulesCall, // READ Modules
-    getEntityDefinitionsCall, // READ Entity Definitions with fields
+    getWorkflowsCall,
+    getWorkflowDefinitionsCall,
+    getEntitiesCall,
+    getSingleEntityCall,
+    getViewTypes,
+    getLaunchTypes,
+    getFieldTypes,
+    getViewsCall,
+    getViewColumnsCall,
+    getModulesCall,
+    getEntityDefinitionsCall,
 
-    updateEntityCall, //UPDATE Entity
-    updateFieldCall, //UPDATE Field
+    updateEntityCall,
+    updateFieldCall,
 
-    deleteEntityCall, //DELETE Entity
-    deleteFieldCall, //DELETE Field
+    deleteEntityCall,
+    deleteFieldCall,
   };
 };
 

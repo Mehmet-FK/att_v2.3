@@ -65,14 +65,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: stretch;
   font-size: 0.7rem;
-  width: 15px;
-  background-color: #2050d0;
+  height: 100%;
+  width: inherit;
+  background-color: #4169e1;
+  color: #fff;
   cursor: pointer;
   border-radius: 3px;
-  opacity: 0.1;
-  margin: 0 -10px;
-  transition: opacity 0.15s ease-in-out;
+  opacity: 0.5;
+  transition: all 0.1s ease-in-out;
+  font-size: larger;
 }
 
 .add_row_btn:hover {

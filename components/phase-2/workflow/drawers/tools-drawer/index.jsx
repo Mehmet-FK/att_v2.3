@@ -4,7 +4,7 @@ import { DrawerHeader } from "@/layout/layout_helpers";
 
 import ToolList from "./ToolList";
 
-const ToolsDrawer = ({ open, setOpen }) => {
+const ToolsDrawer = ({ open }) => {
   const views = [
     { name: "ListView", caption: "List View", type: "view" },
     { name: "TileView", caption: "Tile View", type: "view" },

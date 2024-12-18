@@ -1,5 +1,6 @@
 import Link from "next/link";
 import css from "@/styles/dashboard-card.module.css";
+
 const Card = ({ cardInfo }) => {
   return (
     <Link

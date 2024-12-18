@@ -1,5 +1,5 @@
 import css from "@/styles/workflow-forms/list-view-form.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
@@ -8,7 +8,7 @@ import { TextField } from "@mui/material";
 const ModalDialogForm = ({ stepID }) => {
   const { modalDialogs } = useSelector((state) => state.workflow);
 
-  const viewId = stepID + "-modal";
+  const viewId = useMemo(() => stepID + "-modal", [stepID]);
   const modalDialog = modalDialogs.find((md) => md.modalDialogId === viewId);
 
   const [modalDialogValues, setModalDialogValues] = useState(modalDialog);
