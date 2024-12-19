@@ -1,51 +1,59 @@
-import css from "@/styles/entities.module.css";
-import PageHeader from "@/components/ui-components/PageHeader";
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
-import ConfirmModal from "@/components/ui-components/ConfirmModal";
+
+import css from "@/styles/dashboard-card.module.css";
+import Card from "@/components/ui-components/DashboardCard";
+import PageHeader from "@/components/ui-components/PageHeader";
 import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";
-import EntitiesSkeleton from "@/components/phase-2/entities/EntitiesSkeleton";
-import EntityCard from "@/components/phase-2/entities/EntityCard";
+import DashboardSkeletonLoader from "@/components/ui-components/DashboardSkeletonLoader";
 
 const Entities = () => {
-  const { entities } = useSelector((state) => state.attensam.data);
-  const { user } = useSelector((state) => state.settings);
+  const entities = useSelector((state) => state.attensam.data?.entities);
   const { getEntitiesCall, getFieldTypes, getViewsCall } = useAttensamCalls();
 
   const [existingEntities, setExistingEntities] = useState([]);
 
   useEffect(() => {
-    if (!user?.token) return;
-    getEntitiesCall();
+    if (!entities) {
+      getEntitiesCall();
+    }
     getFieldTypes();
     getViewsCall();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
-    setExistingEntities(entities);
+    if (entities) {
+      setExistingEntities(entities);
+    }
   }, [entities]);
 
   return (
-    <>
+    <div className="page-wrapper">
       <PageHeader title="ENTITÄTEN" />
       <div className={css.container}>
         <DashboardSearchBar
           setState={setExistingEntities}
           state={entities}
           filterKey="caption"
-          addNewLink="/entities/add"
+          addNewLink="/entities/new"
         />
+        <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
-          {!entities && <EntitiesSkeleton />}
-          {entities &&
-            existingEntities?.map((entity) => (
-              <EntityCard cardInfo={entity} key={entity.id} />
-            ))}
+          {existingEntities?.map((entity) => (
+            <Card
+              cardInfo={{
+                url: `/entities/${entity.id}`,
+                caption: entity.caption,
+                defaultIconUrl: entity.defaultIconPath,
+              }}
+              key={entity.id}
+            />
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

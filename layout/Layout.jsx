@@ -33,8 +33,63 @@ import { setUser } from "@/redux/slices/settingsSlice";
 import { useEffect, useState } from "react";
 //
 // Custom Components
-import { AppBar, Drawer, DrawerHeader } from "./layout_helpers";
+import {
+  AppBar,
+  CustomSidebarIcon,
+  Drawer,
+  DrawerHeader,
+} from "./layout_helpers";
 import ProfileMenu from "@/components/menus/ProfileMenu";
+
+const drawerList = [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    nav: "/",
+  },
+  {
+    text: "Mobile Buchungen",
+    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/bookings.svg"} />,
+    nav: "/mobile-bookings",
+  },
+  {
+    text: "Datensätze",
+    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/items.svg"} />,
+    nav: "/items",
+  },
+  {
+    text: "Benutzer",
+    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/users.svg"} />,
+    nav: "/users",
+  },
+  {
+    text: "Workflows",
+    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/workflows.svg"} />,
+    nav: "/workflows",
+  },
+  {
+    text: "Entitäten",
+    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/entities.svg"} />,
+    nav: "/entities",
+  },
+];
+const drawerListAdmin = [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    nav: "/",
+  },
+  {
+    text: "Entitäten",
+    icon: <FeedIcon />,
+    nav: "/entities",
+  },
+  {
+    text: "Workflow",
+    icon: <AccountTreeIcon />,
+    nav: "/workflows",
+  },
+];
 
 export default function Layout({ children, toggleTheme }) {
   const theme = useTheme();
@@ -69,35 +124,16 @@ export default function Layout({ children, toggleTheme }) {
 
     dispatch(setUser({ user: credentials }));
   };
-  const avatar = user?.avatar;
-  useEffect(() => {
-    getSessionData();
-  }, []);
 
-  const drawerList = [
-    {
-      text: "Workflow",
-      icon: <AccountTreeIcon />,
-      nav: "/workflows",
-    },
-  ];
-  const drawerListAdmin = [
-    {
-      text: "Home",
-      icon: <HomeIcon />,
-      nav: "/",
-    },
-    {
-      text: "Entitäten",
-      icon: <FeedIcon />,
-      nav: "/entities",
-    },
-    {
-      text: "Workflow",
-      icon: <AccountTreeIcon />,
-      nav: "/workflows",
-    },
-  ];
+  const userAvatar = user?.avatar;
+
+  const avatar = userAvatar
+    ? userAvatar?.url + "?" + userAvatar?.lastEdited
+    : "/assets/emptyAvatar.jpg";
+  // useEffect(() => {
+  //   getSessionData();
+  // }, []);
+
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       <AppBar
@@ -156,12 +192,7 @@ export default function Layout({ children, toggleTheme }) {
               </Typography>{" "}
               <Image
                 onClick={handleClick}
-                src={"/assets/emptyAvatar.jpg"}
-                // src={
-                //   avatar
-                //     ? `${avatar}?${new Date().getTime()}`
-                //     : "/assets/emptyAvatar.jpg"
-                // }
+                src={avatar}
                 width={50}
                 height={50}
                 alt="profilePicture"

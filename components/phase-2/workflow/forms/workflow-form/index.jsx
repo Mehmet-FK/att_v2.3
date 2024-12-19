@@ -3,7 +3,7 @@ import css from "@/styles/workflow-forms/workflow-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import IconSelect from "@/components/form-elements/IconSelect";
 import { useSelector } from "react-redux";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../common-form-elements/CustomSelect";
@@ -23,19 +23,17 @@ const prepareWorkflowForAutoCompleteSelect = (workflows) => {
     icon: wf.icon,
   }));
 };
-
 const WorkflowForm = ({ entitiesForAutoSelect }) => {
   const workflowState = useSelector((state) => state.workflow);
   const workflows = useSelector((state) => state.attensam.data?.workflows);
+  const [workflowFormValues, setWorkflowFormValues] = useState(workflowState);
+
+  const { updateWorkflowValue } = useWorkflowForms();
 
   const workflowsForAutoCompleteSelect = useMemo(
     () => prepareWorkflowForAutoCompleteSelect(workflows),
     [workflows]
   );
-
-  const { updateWorkflowValue } = useWorkflowForms();
-
-  const [workflowFormValues, setWorkflowFormValues] = useState(workflowState);
 
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
@@ -50,6 +48,10 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
     const inputValue = type === "checkbox" ? checked : value;
     updateWorkflowValue(name, inputValue);
   };
+
+  useEffect(() => {
+    setWorkflowFormValues(workflowState);
+  }, [workflowState]);
 
   return (
     <div className={css.form_container}>
@@ -170,6 +172,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
         <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
         <Divider />
         <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
+
         <LaunchElementForm />
       </div>
     </div>

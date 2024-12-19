@@ -5,7 +5,11 @@ import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import ColorPicker from "../common-form-elements/ColorPicker";
-import { headerColumnTextAlignments, headerColumnTypes } from "@/helpers/Enums";
+import {
+  fontFamilies,
+  headerColumnTextAlignments,
+  headerColumnTypes,
+} from "@/helpers/Enums";
 
 const ViewHeaderColumn = ({ columnValues }) => {
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
@@ -102,15 +106,15 @@ const ViewHeaderColumn = ({ columnValues }) => {
         />
       </div>
       <div className={css.flex_row}>
-        <TextField
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={columnFormValues?.fontFamily || ""}
-          variant="outlined"
-          size="small"
+        <CustomSelect
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          value={columnFormValues?.fontFamily}
           label="Font Family"
           name="fontFamily"
-          fullWidth
+          preferences={{ key: "id", caption: "caption" }}
+          options={fontFamilies}
+          size={"small"}
         />
 
         <CustomSelect

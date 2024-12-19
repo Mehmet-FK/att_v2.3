@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { getSession } from "next-auth/react";
 import css from "@/styles/dashboard-card.module.css";
-import Card from "@/components/dashboard/Card";
+import Card from "@/components/ui-components/DashboardCard";
 
 export default function Home() {
   return (
@@ -44,6 +44,14 @@ export default function Home() {
 
               caption: "Workflows",
               defaultIconUrl: "/assets/dashboard-icons/workflows.svg",
+            }}
+          />
+          <Card
+            cardInfo={{
+              url: "/entities",
+
+              caption: "Entitäten",
+              defaultIconUrl: "/assets/dashboard-icons/entities.svg",
             }}
           />
         </div>

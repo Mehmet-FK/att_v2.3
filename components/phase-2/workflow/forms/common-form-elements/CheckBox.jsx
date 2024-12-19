@@ -18,7 +18,7 @@ const CheckBox = ({
       control={
         <Checkbox
           name={name}
-          checked={checked}
+          checked={checked || false}
           onChange={handleChange}
           onBlur={handleBlur}
         />

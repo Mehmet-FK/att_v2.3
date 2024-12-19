@@ -120,7 +120,7 @@ const useWorkflow = () => {
 
       workflowToLocalStorage.nodes = rfInstance.getNodes();
       workflowToLocalStorage.edges = rfInstance.getEdges();
-      workflowToLocalStorage.viewPort = rfInstance.getViewport();
+      workflowToLocalStorage.viewport = rfInstance.getViewport();
 
       setDataToLocalStorage(KEY_WORKFLOW_LOCALSTORAGE, workflowToLocalStorage);
     }
@@ -201,7 +201,7 @@ const useWorkflow = () => {
     };
   };
 
-  const onNodeDragStop = (e, node) => {
+  const onNodeDragStop = (e, node, updateSelectedStep) => {
     const interNodes = getIntersectingNodes(node);
     const wrapper = interNodes.find((n) => n.type === "group");
 
@@ -219,7 +219,9 @@ const useWorkflow = () => {
         })
       );
     }
+
     updateHistory();
+    updateSelectedStep(node.id);
   };
 
   const onDragOver = useCallback((e) => {
@@ -247,8 +249,8 @@ const useWorkflow = () => {
     let newNode = {};
 
     if (type === "launch") {
-      //TODO: Refactoring is needed, returns null
-      if (isLaunchElementExisting()) return { viewType, launchTypeId, newNode };
+      if (isLaunchElementExisting())
+        return { viewType, launchTypeId, newNode: null };
 
       newNode = createNewLaunchNode(viewType, caption);
     } else {

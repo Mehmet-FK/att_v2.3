@@ -5,6 +5,8 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { useEffect } from "react";
 import ColorPicker from "../common-form-elements/ColorPicker";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { fontFamilies } from "@/helpers/Enums";
+import CustomSelect from "../common-form-elements/CustomSelect";
 
 const ListViewElementRow = ({ elementRowValues }) => {
   const [rowValues, setRowValues] = useState(elementRowValues);
@@ -54,15 +56,16 @@ const ListViewElementRow = ({ elementRowValues }) => {
         name="listViewRowNumber"
         fullWidth
       />
-      <TextField
-        onChange={handleChange}
-        onBlur={handleBlur}
-        value={rowValues?.fontFamily || ""}
-        variant="outlined"
-        size="small"
+
+      <CustomSelect
+        handleChange={handleChange}
+        handleBlur={handleBlur}
+        value={rowValues?.fontFamily}
         label="Font Family"
         name="fontFamily"
-        fullWidth
+        preferences={{ key: "id", caption: "caption" }}
+        options={fontFamilies}
+        size={"small"}
       />
       <ColorPicker
         handleChange={handleChange}

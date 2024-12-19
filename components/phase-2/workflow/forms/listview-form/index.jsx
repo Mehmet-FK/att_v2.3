@@ -9,21 +9,31 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 
-const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
+const ListViewForm = ({
+  stepID,
+  entitiesForAutoSelect,
+  workflowStepValues,
+}) => {
   const { listViewElements, listViews } = useSelector(
     (state) => state.workflow
   );
 
-  const listView = listViews.find((lv) => lv.workflowStepId === stepID);
-  const viewId = useMemo(() => listView?.listViewId, [listView]);
+  const listView = useMemo(
+    () => listViews.find((lv) => lv.workflowStepId === stepID),
+    [stepID]
+  );
+  const [listViewValues, setListViewValues] = useState(listView);
+  const viewId = listView?.listViewId;
 
-  const listViewElement = listViewElements.find(
-    (lve) => lve.listViewElementId === listView?.listViewElementId
+  const listViewElement = useMemo(
+    () =>
+      listViewElements.find(
+        (lve) => lve.listViewElementId === listView?.listViewElementId
+      ),
+    [stepID]
   );
 
-  const [listViewValues, setListViewValues] = useState(listView);
-
-  const { updateListViewValue } = useWorkflowForms();
+  const { updateListViewValue, updateWorkflowStepValue } = useWorkflowForms();
 
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
@@ -39,8 +49,20 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
     const inputValue = type === "checkbox" ? checked : value;
     updateListViewValue(name, inputValue, viewId);
   };
+
+  const handleWorkflowStepBlur = (e) => {
+    const { name, value } = e.target;
+
+    updateWorkflowStepValue(name, value, stepID);
+  };
+
   useEffect(() => {
-    setListViewValues(listView);
+    const listViewFormValue = {
+      ...listView,
+      name: workflowStepValues?.name,
+    };
+
+    setListViewValues(listViewFormValue);
   }, [stepID]);
 
   return (
@@ -49,7 +71,7 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
         <div className={css.flex_row}>
           <TextField
             onChange={handleChange}
-            onBlur={handleBlur}
+            onBlur={handleWorkflowStepBlur}
             value={listViewValues?.name || ""}
             variant="outlined"
             size="medium"
@@ -57,16 +79,7 @@ const ListViewForm = ({ stepID, entitiesForAutoSelect }) => {
             name="name"
             fullWidth
           />
-          <TextField
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={listViewValues?.caption || ""}
-            variant="outlined"
-            size="medium"
-            label="Caption"
-            name="caption"
-            fullWidth
-          />
+
           <AutoCompleteSelect
             mainProps={{
               handleChange: handleChange,

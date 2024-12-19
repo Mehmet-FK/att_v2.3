@@ -1,24 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-/*
-============BACKUP============
-initialState: {
-  selectedStepID: "",
-  workflowName: "",
-  workflowCaption: "",
-  workflowIcon: "",
-  permissionType: "",
-  parentWorkflowId: "",
+const _initialState = {
+  selectedStepId: "",
+  workflowId: "new-wf",
   entityId: "",
-  launchElementName: "",
-  launchElementDescription: "",
-  launchElementType: "",
+  name: "",
   caption: "",
-  childAdapter: "",
-  parentAdapter: "",
+  description: "",
+  icon: "",
+  isActive: true,
+  isProduction: false,
+  permissionType: "0",
+  parentWorkflowId: "",
+  edges: [],
+  nodes: [],
+  viewport: {},
   workflowSteps: [],
-  ============BACKUP============
-}, */
+  launchElements: [],
+  scannerDialogs: [],
+  listViews: [],
+  listViewElements: [],
+  listViewElementRows: [],
+  recordViews: [],
+  recordViewFunctions: [],
+  modalDialogs: [],
+  headers: [],
+  headerRows: [],
+  headerColumns: [],
+  itemsToDelete: null,
+};
 
 const workflowSlice = createSlice({
   name: "workflow",
@@ -53,8 +63,12 @@ const workflowSlice = createSlice({
     itemsToDelete: null,
   },
   reducers: {
+    setWorkflowToInitial: () => _initialState,
+
     updateSelectedStep: (state, { payload: { stepId } }) => {
-      state.selectedStepId = stepId;
+      if (state.selectedStepId !== stepId) {
+        state.selectedStepId = stepId;
+      }
     },
 
     changeNodesEdgesAndViewport: (
@@ -75,10 +89,12 @@ const workflowSlice = createSlice({
     },
 
     changeWorkflowValue: (state, { payload: { value, name } }) => {
-      state[name] = value;
+      if (state[name] !== value) {
+        state[name] = value;
+      }
     },
     addWorkflowStep: (state, { payload: { step } }) => {
-      state.workflowSteps = [...state.workflowSteps, step];
+      state.workflowSteps.push(step);
     },
     removeWorkflowStep: (state, { payload: { id } }) => {
       state.workflowSteps = state.workflowSteps.filter(
@@ -101,21 +117,18 @@ const workflowSlice = createSlice({
         }
       });
     },
-    changeStepValue: (state, { payload: { name, value } }) => {
-      state.workflowSteps = state.workflowSteps.map((step) => {
-        if (
-          step.workflowStepId === state.selectedStepId &&
-          JSON.stringify(step[name]) !== JSON.stringify(value)
-        ) {
-          return { ...step, [name]: value };
+    changeWorkflowStepValue: (state, { payload: { name, value, stepId } }) => {
+      state.workflowSteps = state.workflowSteps.map((wfs) => {
+        if (wfs.workflowStepId === stepId) {
+          return { ...wfs, [name]: value };
         } else {
-          return step;
+          return wfs;
         }
       });
     },
 
     addLaunchElement: (state, { payload: { launchElement } }) => {
-      state.launchElements = [...state.launchElements, launchElement];
+      state.launchElements.push(launchElement);
     },
 
     changeLaunchElementValue: (
@@ -138,7 +151,7 @@ const workflowSlice = createSlice({
     },
 
     addRecordView: (state, { payload: { recordView } }) => {
-      state.recordViews = [...state.recordViews, recordView];
+      state.recordViews.push(recordView);
     },
     changeRecordViewValue: (state, { payload: { name, value, viewId } }) => {
       state.recordViews = state.recordViews.map((rv) => {
@@ -156,7 +169,7 @@ const workflowSlice = createSlice({
       );
     },
     addListView: (state, { payload: { listView } }) => {
-      state.listViews = [...state.listViews, listView];
+      state.listViews.push(listView);
     },
 
     changeListViewValue: (state, { payload: { name, value, viewId } }) => {
@@ -175,7 +188,7 @@ const workflowSlice = createSlice({
     },
 
     addListViewElement: (state, { payload: { listViewElement } }) => {
-      state.listViewElements = [...state.listViewElements, listViewElement];
+      state.listViewElements.push(listViewElement);
     },
 
     changeListViewElementValue: (
@@ -198,7 +211,7 @@ const workflowSlice = createSlice({
     },
 
     addListViewElementRow: (state, { payload: { elementRow } }) => {
-      state.listViewElementRows = [...state.listViewElementRows, elementRow];
+      state.listViewElementRows.push(elementRow);
     },
 
     changeListViewElementRowValue: (
@@ -229,7 +242,7 @@ const workflowSlice = createSlice({
     },
 
     addViewHeader: (state, { payload: { viewHeader } }) => {
-      state.headers = [...state.headers, viewHeader];
+      state.headers.push(viewHeader);
     },
     changeViewHeaderValue: (
       state,
@@ -249,7 +262,7 @@ const workflowSlice = createSlice({
       );
     },
     addViewHeaderRow: (state, { payload: { viewHeaderRow } }) => {
-      state.headerRows = [...state.headerRows, viewHeaderRow];
+      state.headerRows.push(viewHeaderRow);
     },
     changeViewHeaderRowValue: (
       state,
@@ -273,7 +286,7 @@ const workflowSlice = createSlice({
     },
 
     addViewHeaderColumn: (state, { payload: { viewHeaderColumn } }) => {
-      state.headerColumns = [...state.headerColumns, viewHeaderColumn];
+      state.headerColumns.push(viewHeaderColumn);
     },
 
     changeViewHeaderColumnValue: (
@@ -296,7 +309,7 @@ const workflowSlice = createSlice({
     },
 
     addScannerDialog: (state, { payload: { scannerDialog } }) => {
-      state.scannerDialogs = [...state.scannerDialogs, scannerDialog];
+      state.scannerDialogs.push(scannerDialog);
     },
 
     changeScannerDialogValue: (
@@ -319,7 +332,7 @@ const workflowSlice = createSlice({
     },
 
     addModalDialog: (state, { payload: { modalDialog } }) => {
-      state.modalDialogs = [...state.modalDialogs, modalDialog];
+      state.modalDialogs.push(modalDialog);
     },
 
     changeModalDialogValue: (state, { payload: { name, value, modalId } }) => {
@@ -341,6 +354,7 @@ const workflowSlice = createSlice({
 });
 
 export const {
+  setWorkflowToInitial,
   addWorkflowStep,
   addLaunchElement,
   addRecordView,
@@ -354,8 +368,8 @@ export const {
   addModalDialog,
   changeNodesEdgesAndViewport,
   changeWorkflowValue,
+  changeWorkflowStepValue,
   changeNextAndPreviousStep,
-  changeStepValue,
   changeLaunchElementValue,
   changeRecordViewValue,
   changeListViewValue,

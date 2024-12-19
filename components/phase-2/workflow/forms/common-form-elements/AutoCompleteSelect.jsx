@@ -13,7 +13,6 @@ import React, { useEffect, useState } from "react";
 const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const { handleChange, handleBlur, preferences, options, name, value, label } =
     mainProps;
-
   const [inputValue, setInputValue] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
 

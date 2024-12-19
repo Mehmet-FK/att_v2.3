@@ -21,8 +21,12 @@ const attensamSlice = createSlice({
   },
   reducers: {
     fetchStart: (state) => {
-      state.loading = true;
-      state.error = false;
+      if (!state.loading) {
+        state.loading = true;
+      }
+      if (state.error) {
+        state.error = false;
+      }
     },
     getSuccess: (state, { payload: { data, dataName } }) => {
       state.error = false;

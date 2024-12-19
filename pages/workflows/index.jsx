@@ -1,23 +1,21 @@
-import css from "@/styles/dashboard-card.module.css";
-
 import React, { useEffect, useState } from "react";
 import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useSelector } from "react-redux";
-
 import { getSession } from "next-auth/react";
-import Card from "@/components/dashboard/Card";
+
+import css from "@/styles/dashboard-card.module.css";
+import Card from "@/components/ui-components/DashboardCard";
+import PageHeader from "@/components/ui-components/PageHeader";
 import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";
+import DashboardSkeletonLoader from "@/components/ui-components/DashboardSkeletonLoader";
 
 const Workflow = () => {
-  const [existingWorkflows, setExistingWorkflows] = useState([]);
-  const { getViewTypes, getLaunchTypes, getEntitiesCall, getWorkflowsCall } =
-    useAttensamCalls();
+  const { getWorkflowsCall } = useAttensamCalls();
   const workflows = useSelector((state) => state.attensam.data?.workflows);
+  const [existingWorkflows, setExistingWorkflows] = useState(workflows);
 
   useEffect(() => {
-    getViewTypes();
-    getLaunchTypes();
-    getEntitiesCall();
+    if (workflows) return;
     getWorkflowsCall();
   }, []);
 
@@ -28,7 +26,8 @@ const Workflow = () => {
   }, [workflows]);
 
   return (
-    <>
+    <div className="page-wrapper">
+      <PageHeader title="WORKFLOWS" />
       <div className={css.container}>
         <DashboardSearchBar
           setState={setExistingWorkflows}
@@ -36,6 +35,7 @@ const Workflow = () => {
           filterKey="caption"
           addNewLink="/workflows/new"
         />
+        <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
           {existingWorkflows?.map((wf) => (
             <Card
@@ -44,11 +44,12 @@ const Workflow = () => {
                 caption: wf.caption,
                 defaultIconUrl: wf.icon,
               }}
+              key={wf.id}
             />
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

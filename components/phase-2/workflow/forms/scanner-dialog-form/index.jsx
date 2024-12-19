@@ -1,11 +1,15 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms/record-view-form.module.css";
 import { scannerTypeConstants } from "@/helpers/Constants";
 import ScannerDialogFormBase from "./ScannerDialogFormBase";
 import ViewHeaderForm from "../header-form";
 
-const ScannerDialogForm = ({ stepID, entitiesForAutoSelect }) => {
+const ScannerDialogForm = ({
+  stepID,
+  entitiesForAutoSelect,
+  workflowStepValues,
+}) => {
   const { scannerDialogs } = useSelector((state) => state.workflow);
 
   const scannerDialog = useMemo(
@@ -22,6 +26,7 @@ const ScannerDialogForm = ({ stepID, entitiesForAutoSelect }) => {
         scannerDialog={scannerDialog}
         viewId={viewId}
         entitiesForAutoSelect={entitiesForAutoSelect}
+        workflowStepValues={workflowStepValues}
       >
         <div className={css.header_form_wrapper}>
           <ViewHeaderForm viewId={viewId} defaultExpanded={true} />
@@ -33,6 +38,7 @@ const ScannerDialogForm = ({ stepID, entitiesForAutoSelect }) => {
       <ScannerDialogFormBase
         scannerDialog={scannerDialog}
         entitiesForAutoSelect={entitiesForAutoSelect}
+        workflowStepValues={workflowStepValues}
       />
     );
   }

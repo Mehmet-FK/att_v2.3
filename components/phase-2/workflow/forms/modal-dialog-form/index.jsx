@@ -5,7 +5,7 @@ import CustomSelect from "../common-form-elements/CustomSelect";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { TextField } from "@mui/material";
 
-const ModalDialogForm = ({ stepID }) => {
+const ModalDialogForm = ({ stepID, workflowStepValues }) => {
   const { modalDialogs } = useSelector((state) => state.workflow);
 
   const viewId = useMemo(() => stepID + "-modal", [stepID]);
@@ -13,7 +13,8 @@ const ModalDialogForm = ({ stepID }) => {
 
   const [modalDialogValues, setModalDialogValues] = useState(modalDialog);
 
-  const { updateModalDialogValue } = useWorkflowForms();
+  const { updateModalDialogValue, updateWorkflowStepValue } =
+    useWorkflowForms();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,14 +31,35 @@ const ModalDialogForm = ({ stepID }) => {
     updateModalDialogValue(name, inputValue, viewId);
   };
 
+  const handleWorkflowStepBlur = (e) => {
+    const { name, value } = e.target;
+
+    updateWorkflowStepValue(name, value, stepID);
+  };
+
   useEffect(() => {
-    setModalDialogValues(modalDialog);
+    const modalDialogValues = {
+      ...modalDialog,
+      name: workflowStepValues?.name,
+    };
+
+    setModalDialogValues(modalDialogValues);
   }, [stepID]);
 
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>
         <div className={css.flex_row}>
+          <TextField
+            onChange={handleChange}
+            onBlur={handleWorkflowStepBlur}
+            value={modalDialogValues?.name || ""}
+            variant="outlined"
+            size="medium"
+            label="Name"
+            name="name"
+            fullWidth
+          />
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
@@ -48,11 +70,24 @@ const ModalDialogForm = ({ stepID }) => {
             name="caption"
             placeholder="z.B Ablehnen"
             fullWidth
+          />{" "}
+          <TextField
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={modalDialogValues?.userText || ""}
+            variant="outlined"
+            size="medium"
+            label="Benutzer Informationstext"
+            name="userText"
+            placeholder="Möchten Sie..."
+            fullWidth
           />
+        </div>
+        <div className={css.flex_row}>
           <CustomSelect
             handleChange={handleChange}
             handleBlur={handleBlur}
-            value={modalDialogValues?.fieldId || ""}
+            value={modalDialogValues?.fieldId}
             label="Feld"
             name="fieldId"
             preferences={{ key: "id", caption: "name" }}
@@ -71,6 +106,7 @@ const ModalDialogForm = ({ stepID }) => {
             name="newValue"
             fullWidth
           />
+          <div style={{ width: "100%" }} />
         </div>
         <div className={css.flex_row}>
           <TextField
@@ -83,7 +119,7 @@ const ModalDialogForm = ({ stepID }) => {
             name="okButton"
             placeholder="z.B Ja"
             fullWidth
-          />{" "}
+          />
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
@@ -94,18 +130,8 @@ const ModalDialogForm = ({ stepID }) => {
             name="cancelButton"
             placeholder="z.B Nein"
             fullWidth
-          />{" "}
-          <TextField
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={modalDialogValues?.userText || ""}
-            variant="outlined"
-            size="medium"
-            label="Benutzer Informationstext"
-            name="userText"
-            placeholder="Möchten Sie..."
-            fullWidth
           />
+          <div style={{ width: "100%" }} />
         </div>
       </div>
     </div>

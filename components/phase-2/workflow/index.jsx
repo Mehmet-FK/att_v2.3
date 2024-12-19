@@ -89,10 +89,11 @@ const Sheet = ({ existingWorkflow }) => {
 
   const onDrop = (e) => {
     e.preventDefault();
-    const viewport = reactFlowInstance.getViewport();
 
     const { viewType, launchTypeId, newNode } =
       addNodeAndUpdateHistoryOnDrop(e);
+
+    if (!newNode) return;
 
     createViewOnDrop(viewType, newNode.id, launchTypeId);
     const _viewport = reactFlowInstance.getViewport();
@@ -127,8 +128,7 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    console.log(workflowToPost);
-    // postWorkflowCall(workflowToPost);
+    postWorkflowCall(workflowToPost);
   };
 
   useEffect(() => {
@@ -139,8 +139,6 @@ const Sheet = ({ existingWorkflow }) => {
     ) {
       setOpenRestoreConfirmDialog(true);
       setSessionFlagForWorkflow();
-
-      console.log("component <Sheet/> useEffect");
     }
   }, []);
 
@@ -182,7 +180,7 @@ const Sheet = ({ existingWorkflow }) => {
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeDragStop={onNodeDragStop}
+        onNodeDragStop={(e, n) => onNodeDragStop(e, n, updateSelectedStep)}
         onNodesDelete={handleDeleteNode}
         onNodeClick={(e, n) => updateSelectedStep(n.id)}
         onPaneClick={() => updateSelectedStep("")}
@@ -203,12 +201,12 @@ const Sheet = ({ existingWorkflow }) => {
       </ReactFlow>
 
       <ToolsDrawer open={openToolsDrawer} />
-      {/* <BottomDrawer
+      <BottomDrawer
         onSubmit={handleSubmit}
         onSave={onSave}
         restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
         nodes={nodes}
-      /> */}
+      />
     </div>
   );
 };

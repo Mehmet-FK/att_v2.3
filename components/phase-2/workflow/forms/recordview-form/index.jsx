@@ -7,24 +7,30 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 
-const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
+const RecordViewForm = ({
+  stepID,
+  entitiesForAutoSelect,
+  workflowStepValues,
+}) => {
   const { recordViews } = useSelector((state) => state.workflow);
 
   const recordView = useMemo(
     () => recordViews.find((rv) => rv.workflowStepId === stepID),
     [stepID]
   );
-  const viewId = useMemo(() => recordView?.recordViewId, [recordView]);
+  const viewId = recordView?.recordViewId;
 
   const [recordViewValues, setRecordViewValues] = useState(recordView);
 
-  const { updateRecordViewValue } = useWorkflowForms();
+  const { updateRecordViewValue, updateWorkflowStepValue } = useWorkflowForms();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
+
     setRecordViewValues((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: inputValue,
     }));
   };
 
@@ -35,8 +41,19 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
     updateRecordViewValue(name, inputValue, viewId);
   };
 
+  const handleWorkflowStepBlur = (e) => {
+    const { name, value } = e.target;
+
+    updateWorkflowStepValue(name, value, stepID);
+  };
+
   useEffect(() => {
-    setRecordViewValues(recordView);
+    const recordViewFormValue = {
+      ...recordView,
+      name: workflowStepValues?.name,
+    };
+
+    setRecordViewValues(recordViewFormValue);
   }, [stepID]);
 
   return (
@@ -46,7 +63,7 @@ const RecordViewForm = ({ stepID, entitiesForAutoSelect }) => {
           <div className={css.flex_row}>
             <TextField
               onChange={handleChange}
-              onBlur={handleBlur}
+              onBlur={handleWorkflowStepBlur}
               value={recordViewValues?.name || ""}
               variant="outlined"
               size="medium"

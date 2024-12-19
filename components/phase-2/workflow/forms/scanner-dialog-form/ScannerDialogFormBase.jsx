@@ -6,16 +6,17 @@ import CheckBox from "../common-form-elements/CheckBox";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import { scannerDialogActions } from "@/helpers/Enums";
-
 const ScannerDialogFormBase = ({
   scannerDialog,
   viewId,
   entitiesForAutoSelect,
+  workflowStepValues,
   children,
 }) => {
   const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
 
-  const { updateScannerDialogValue } = useWorkflowForms();
+  const { updateScannerDialogValue, updateWorkflowStepValue } =
+    useWorkflowForms();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,8 +33,20 @@ const ScannerDialogFormBase = ({
     updateScannerDialogValue(name, inputValue, viewId);
   };
 
+  const handleWorkflowStepBlur = (e) => {
+    const { name, value } = e.target;
+    const stepID = workflowStepValues?.workflowStepId;
+    updateWorkflowStepValue(name, value, stepID);
+    handleBlur(e);
+  };
+
   useEffect(() => {
-    setScannerDialogValues(scannerDialogValues);
+    const scannerDialogFormValue = {
+      ...scannerDialog,
+      name: workflowStepValues?.name,
+    };
+
+    setScannerDialogValues(scannerDialogFormValue);
   }, [viewId]);
 
   return (
@@ -43,7 +56,7 @@ const ScannerDialogFormBase = ({
           <div className={css.flex_row}>
             <TextField
               onChange={handleChange}
-              onBlur={handleBlur}
+              onBlur={handleWorkflowStepBlur}
               value={scannerDialogValues?.name || ""}
               variant="outlined"
               size="medium"

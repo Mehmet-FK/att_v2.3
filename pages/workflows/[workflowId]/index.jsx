@@ -6,12 +6,19 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
-// import useWorkflow from "@/hooks/workflow-hooks/useWorkflow";
+import { useSelector } from "react-redux";
 
 const WorkflowTool = () => {
-  const { getWorkflowDefinitionsCall } = useAttensamCalls();
-  const { restoreWorkflowState } = useWorkflowForms();
-  //   const { restoreExistingRemoteWorkflow } = useWorkflow();
+  const dataRemote = useSelector((state) => state.attensam.data);
+
+  const {
+    getWorkflowDefinitionsCall,
+    getViewTypes,
+    getLaunchTypes,
+    getEntitiesCall,
+    getWorkflowsCall,
+  } = useAttensamCalls();
+  const { restoreWorkflowState, clearWorkflowState } = useWorkflowForms();
   const [fetchedWorkflow, setFetchedWorkflow] = useState(null);
   const router = useRouter();
 
@@ -31,8 +38,23 @@ const WorkflowTool = () => {
   useEffect(() => {
     if (router.query.workflowId !== "new") {
       fetchWorkflowDefinition();
+    } else {
+      clearWorkflowState();
     }
   }, [router.query.workflowId]);
+
+  useEffect(() => {
+    getViewTypes();
+    getLaunchTypes();
+    if (!dataRemote?.entities) {
+      getEntitiesCall();
+    }
+
+    if (!dataRemote?.workflows) {
+      getWorkflowsCall();
+    }
+  }, []);
+
   return (
     <>
       <Head>

@@ -26,6 +26,7 @@ import {
   changeScannerDialogValue,
   changeViewHeaderColumnValue,
   changeViewHeaderValue,
+  changeWorkflowStepValue,
   changeWorkflowValue,
   removeLaunchElement,
   removeListView,
@@ -39,6 +40,7 @@ import {
   removeViewHeaderColumn,
   removeViewHeaderRow,
   removeWorkflowStep,
+  setWorkflowToInitial,
   updateSelectedStep as updateStep,
   updateTotalWorkflow,
 } from "@/redux/slices/workflowSlice";
@@ -92,6 +94,10 @@ const useWorkflowForms = () => {
     return headers.find((vh) => vh.viewId === viewId).headerId;
   };
 
+  const clearWorkflowState = () => {
+    dispatch(setWorkflowToInitial());
+  };
+
   const updateNodesEdgesAndViewport = (nodes, edges, viewport) => {
     dispatch(changeNodesEdgesAndViewport({ nodes, edges, viewport }));
   };
@@ -111,6 +117,10 @@ const useWorkflowForms = () => {
     dispatch(addWorkflowStep({ step }));
   };
 
+  const updateWorkflowStepValue = (name, value, workflowStepId) => {
+    dispatch(changeWorkflowStepValue({ name, value, stepId: workflowStepId }));
+  };
+
   const deleteWorkflowStep = (step) => {
     const workflowStepId = step.id;
     const viewType = step.viewType;
@@ -122,7 +132,7 @@ const useWorkflowForms = () => {
     const template = {
       launchElementId: workflowStepId + "-launch",
       workflowStepId: workflowStepId,
-      launchType: launchType || 0,
+      launchType: parseInt(launchType),
       name: "",
       description: "",
     };
@@ -529,8 +539,8 @@ const useWorkflowForms = () => {
   };
 
   return {
+    clearWorkflowState,
     generateRandomId,
-    updateWorkflowValue,
     createWorkflowStep,
     createLaunchElementOnDrop,
     createViewOnDrop,
@@ -544,8 +554,10 @@ const useWorkflowForms = () => {
     deleteListViewElementRowByRowId,
     deleteViewHeaderRow,
     deleteViewHeaderColumn,
-    updateNodesEdgesAndViewport,
+    updateWorkflowValue,
+    updateWorkflowStepValue,
     updateSelectedStep,
+    updateNodesEdgesAndViewport,
     updateLaunchElementValue,
     updateScannerDialogValue,
     updateModalDialogValue,

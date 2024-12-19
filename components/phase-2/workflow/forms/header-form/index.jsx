@@ -60,8 +60,7 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
 
   useEffect(() => {
     setHeaderValues(header);
-    console.log(header);
-  }, []);
+  }, [selectedStepId]);
 
   return (
     <div className={css.header_container}>

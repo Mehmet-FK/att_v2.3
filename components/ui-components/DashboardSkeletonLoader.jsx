@@ -1,4 +1,6 @@
 import css from "@/styles/skeletons.module.css";
+import { Fade } from "@mui/material";
+import { useSelector } from "react-redux";
 const SkeletonCard = () => {
   return (
     <div className={css.box}>
@@ -17,14 +19,19 @@ const SkeletonCard = () => {
   );
 };
 
-const EntitiesSkeleton = () => {
+const DashboardSkeletonLoader = () => {
+  const { loading } = useSelector((state) => state.attensam);
+  const mockArray = Array(25).fill(null);
+
   return (
-    <>
-      {[1, 2, 3, 4, 5, 6].map((item) => (
-        <SkeletonCard key={item} />
-      ))}
-    </>
+    <Fade in={loading} timeout={{ enter: 150, exit: 500 }} unmountOnExit>
+      <div className={css.gridContainer}>
+        {mockArray.map((item, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+    </Fade>
   );
 };
 
-export default EntitiesSkeleton;
+export default DashboardSkeletonLoader;

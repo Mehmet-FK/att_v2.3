@@ -26,7 +26,6 @@ const BottomDrawer = ({
   const handleMouseDown = () => {
     setIsResizing(true);
     resizeStartHeightRef.current = newHeight;
-    console.log({ newHeight });
   };
 
   const handleDoubleClick = (e) => {
@@ -41,12 +40,11 @@ const BottomDrawer = ({
     const resizeStartHeight = resizeStartHeightRef.current;
 
     const offsetY =
-      e.clientY - (document.body.offsetHeight - resizeStartHeight) - 85;
+      e.clientY - (document.body.offsetHeight - resizeStartHeight);
 
     let minHeight = 45;
     let maxHeight = 850;
     const calculatedHeight = resizeStartHeight - offsetY;
-    console.log({ calculatedHeight, resizeStartHeight });
     if (calculatedHeight > minHeight && calculatedHeight < maxHeight) {
       setNewHeight(calculatedHeight);
     }
@@ -76,9 +74,9 @@ const BottomDrawer = ({
         variant="persistent"
         PaperProps={{
           overflow: "auto",
-          style: { height: newHeight, zIndex: 3000 },
+          style: { height: newHeight, zIndex: 2000 },
           sx: {
-            height: 100,
+            // height: 100,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
             opacity: newHeight / 150,
@@ -101,7 +99,6 @@ const BottomDrawer = ({
         <Box
           sx={{
             display: newHeight > 100 ? "block" : "none",
-            maxHeight: newHeight - 100,
             overflow: "auto",
           }}
         >

@@ -6,7 +6,7 @@ import { setUser } from "@/redux/slices/settingsSlice";
 const SessionHandler = () => {
   const { data: session, status } = useSession();
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.settings);
+  // const { user } = useSelector((state) => state.settings);
 
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
@@ -14,9 +14,11 @@ const SessionHandler = () => {
       dispatch(
         setUser({
           user: {
-            ...user,
+            avatar: session.user?.avatar,
+            roles: session.user?.roles,
             token: session.user.token,
             refreshToken: session.user.refreshToken,
+            ...session.user.userInfo,
           },
         })
       );

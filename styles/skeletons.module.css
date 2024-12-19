@@ -1,8 +1,9 @@
 .box {
   width: 100%;
+  min-height: 100px;
 }
 .skeleton {
-  padding: 15px;
+  padding: 10px 10px;
   width: 100%;
   background: #fff;
   border-radius: 5px;
@@ -114,6 +115,54 @@
   height: 80px !important;
   width: 80px;
 }
+
+.gridContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  justify-content: center;
+  /* padding-inline: 2rem; */
+}
+
+@media (max-width: 850px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .container {
+    width: 90%;
+    border: 2px solid red;
+  }
+  .cardIcon {
+    width: 4rem;
+    height: 4rem;
+  }
+  .cardTitle {
+    font-size: small;
+  }
+}
+
+@media (min-width: 1000px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .container {
+    width: 80%;
+  }
+}
+@media (min-width: 1300px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (min-width: 1650px) {
+  .gridContainer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @keyframes wave-lines {
   0% {
     background-position: -368px 0;

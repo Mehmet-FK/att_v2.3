@@ -1,11 +1,34 @@
 import { toastErrorNotify } from "@/helpers/ToastNotify";
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
+import { useRef } from "react";
 
 const useAxios = () => {
   const BASE_URL = "https://apl.attensam.at";
 
+  const isRefreshingRef = useRef(false);
+  const refreshSubscribersRef = useRef([]);
+
   const { data: session, update: updateSession } = useSession();
+
+  const callRefreshSubscribers = (subscribers, token) => {
+    subscribers.forEach((callback) => callback(token));
+  };
+
+  const addRefreshSubscriber = (callback) => {
+    //TODO: ref.current.push????
+    refreshSubscribersRef.current.push(callback);
+  };
+
+  const refreshTokenCall = async (token, refreshToken) => {
+    return await axios.post(
+      "https://apl.attensam.at/atina/AtinaUsers/refresh",
+      {
+        accessToken: token,
+        refreshToken: refreshToken,
+      }
+    );
+  };
 
   const retryAPICallAfterUnauthorizedResponse = async (
     error,
@@ -14,48 +37,54 @@ const useAxios = () => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (!isRefreshingRef.current) {
+        isRefreshingRef.current = true;
+
+        try {
+          if (!session) {
+            throw new Error("Session not found");
+          }
+          const { token, refreshToken } = session.user;
+          const { data } = await refreshTokenCall(token, refreshToken);
+          const newAccessToken = data?.accessToken;
+          const newRefreshToken = data?.refreshToken;
+          updateSession({
+            ...session,
+            user: {
+              ...session.user,
+              token: newAccessToken,
+              refreshToken: newRefreshToken,
+            },
+          });
+
+          isRefreshingRef.current = false;
+          const currentSubscribers = [...refreshSubscribersRef.current];
+          console.log(currentSubscribers);
+          refreshSubscribersRef.current = [];
+          callRefreshSubscribers(currentSubscribers, newAccessToken);
+
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          return axiosInstanceBase(originalRequest);
+        } catch (refreshError) {
+          console.error("Token refresh failed", refreshError);
+          isRefreshingRef.current = false;
+          setTimeout(() => {
+            // signIn();
+            console.log(refreshError);
+          }, 1500);
+        }
+      }
+
       originalRequest._retry = true;
 
-      try {
-        if (!session) {
-          throw new Error("Session not found");
-        }
+      return new Promise((resolve) => {
+        addRefreshSubscriber((newToken) => {
+          originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
 
-        const { token, refreshToken } = session.user;
-
-        const { data } = await axios.post(
-          "https://apl.attensam.at/atina/AtinaUsers/refresh",
-          {
-            accessToken: token,
-            refreshToken: refreshToken,
-          }
-        );
-
-        updateSession({
-          ...session,
-          user: {
-            ...session.user,
-            token: data?.accessToken,
-            refreshToken: data?.refreshToken,
-          },
+          console.log("API request was subscribed", originalRequest.url);
+          resolve(axiosInstanceBase(originalRequest));
         });
-
-        // Retry the original request with the new token
-        axiosInstanceBase.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${data.accessToken}`;
-        originalRequest.headers["Authorization"] = `Bearer ${data.accessToken}`;
-
-        return axiosInstanceBase(originalRequest);
-      } catch (refreshError) {
-        console.error("Token refresh failed", refreshError);
-        toastErrorNotify(
-          "Ihre Sitzung ist abgelaufen, Sie werden zum Login weitergeleitet!"
-        );
-        setTimeout(() => {
-          signIn();
-        }, 1500);
-      }
+      });
     }
 
     return Promise.reject(error);
