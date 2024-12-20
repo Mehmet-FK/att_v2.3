@@ -16,6 +16,7 @@ const Workflow = () => {
   const workflows = useSelector((state) => state.attensam.data?.workflows);
   const [existingWorkflows, setExistingWorkflows] = useState(workflows);
   const [workflowLaunchType, setWorkflowLaunchType] = useState("");
+
   const launchTypeFilterOptions = [
     {
       id: 0,

@@ -20,7 +20,7 @@ const DashboardSearchBar = ({
   const filterItems = (_itemsState) => {
     return _itemsState?.filter((el) => {
       const condition =
-        el[filter?.key] !== "" ? el[filter?.key] == filter?.value : true;
+        filter?.value !== "" ? el[filter?.key] == filter?.value : true;
 
       return (
         condition &&

@@ -53,6 +53,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   useEffect(() => {
     const tempSelectedValue = options.find((opt) => opt[optKey] === value);
     setSelectedValue(tempSelectedValue);
+    console.log(tempSelectedValue);
   }, [value]);
 
   return (
@@ -62,19 +63,36 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
       onChange={(event, newValue) => {
         handleChangeLocal(newValue);
       }}
+      getOptionKey={(opt) => opt.id}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
       onBlur={handleBlurLocal}
-      id="controllable-states-demo"
+      id="controllable-states"
       getOptionLabel={(opt) => opt[optCaption]}
       slotProps={{ popper: { sx: { zIndex: 35001 } } }}
       options={options}
       sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label={label} />}
+      renderInput={(params) => (
+        <TextField {...params} key={params.id} label={label} />
+      )}
     />
   );
 };
 
 export default AutoCompleteSelect;
+
+/* const prepareWorkflowForAutoCompleteSelect = (workflows) => {
+  if (!workflows) return [];
+
+  const notDatasetWorkflows = workflows.filter(
+    (wf) => wf.launchType !== "0" && wf.launchType !== "1"
+  );
+
+  return notDatasetWorkflows.map((wf) => ({
+    id: wf.id,
+    caption: wf.caption,
+    icon: wf.icon,
+  }));
+}; */

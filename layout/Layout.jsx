@@ -67,6 +67,37 @@ const drawerList = [
     ),
     nav: "/users",
   },
+];
+const drawerListAdmin = [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    nav: "/",
+  },
+  {
+    text: "Mobile Buchungen",
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/bookings.svg"}
+        width="23px"
+      />
+    ),
+    nav: "/mobile-bookings",
+  },
+  {
+    text: "Datensätze",
+    icon: (
+      <CustomSvgIcon src={"/assets/dashboard-icons/items.svg"} width="23px" />
+    ),
+    nav: "/items",
+  },
+  {
+    text: "Benutzer",
+    icon: (
+      <CustomSvgIcon src={"/assets/dashboard-icons/users.svg"} width="23px" />
+    ),
+    nav: "/users",
+  },
   {
     text: "Workflows",
     icon: (
@@ -86,23 +117,6 @@ const drawerList = [
       />
     ),
     nav: "/entities",
-  },
-];
-const drawerListAdmin = [
-  {
-    text: "Home",
-    icon: <HomeIcon />,
-    nav: "/",
-  },
-  {
-    text: "Entitäten",
-    icon: <FeedIcon />,
-    nav: "/entities",
-  },
-  {
-    text: "Workflow",
-    icon: <AccountTreeIcon />,
-    nav: "/workflows",
   },
 ];
 
@@ -139,17 +153,14 @@ export default function Layout({ children, toggleTheme }) {
 
     dispatch(setUser({ user: credentials }));
   };
-  const avatar = user?.avatar;
+  const userAvatar = user?.avatar;
+
+  const avatar = userAvatar
+    ? userAvatar?.url + "?" + userAvatar?.lastEdited
+    : "/assets/emptyAvatar.jpg";
   // useEffect(() => {
   //   getSessionData();
   // }, []);
-
-  useEffect(() => {
-    if (router.pathname === "/workflow") {
-      setShowLayout(false);
-      setOpen(false);
-    } else setShowLayout(true);
-  }, [router.pathname]);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
@@ -237,42 +248,44 @@ export default function Layout({ children, toggleTheme }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {(user?.userId === 10 ? drawerListAdmin : drawerList).map((item) => (
-            <ListItem
-              key={item.text}
-              disablePadding
-              sx={{
-                display: "block",
-                backgroundColor: router.pathname === item.nav && "#bbbb",
-              }}
-            >
-              <Tooltip title={item.text} placement="right" arrow>
-                <Link href={item.nav} className={css.link}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
-                    }}
-                  >
-                    <ListItemIcon
+          {(user?.userId === 5573 ? drawerListAdmin : drawerList).map(
+            (item) => (
+              <ListItem
+                key={item.text}
+                disablePadding
+                sx={{
+                  display: "block",
+                  backgroundColor: router.pathname === item.nav && "#bbbb",
+                }}
+              >
+                <Tooltip title={item.text} placement="right" arrow>
+                  <Link href={item.nav} className={css.link}>
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
+                        minHeight: 48,
+                        justifyContent: open ? "initial" : "center",
+                        px: 2.5,
                       }}
                     >
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.text}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </Link>
-              </Tooltip>
-            </ListItem>
-          ))}
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.text}
+                        sx={{ opacity: open ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </Link>
+                </Tooltip>
+              </ListItem>
+            )
+          )}
         </List>
 
         <Divider />
