@@ -30,7 +30,7 @@ const DashboardSearchBar = ({
   };
 
   useEffect(() => {
-    //updates the entities everytime when the search value changes
+    //updates the entities everytime when the search value changes //
     setItemsState((prev) => filterItems(itemsState));
   }, [searchVal]);
 
