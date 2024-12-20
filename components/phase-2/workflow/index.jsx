@@ -1,24 +1,24 @@
 import ReactFlow, {
-  addEdge,
   Background,
   useEdgesState,
   useNodesState,
-  MarkerType,
-  ReactFlowProvider,
   ConnectionMode,
   useReactFlow,
-  Controls,
 } from "reactflow";
 import nodeTypes from "./NodeTypes";
-import { cloneElement, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "reactflow/dist/style.css";
-import useWorkflow from "@/hooks/useWorkflow";
+import useWorkflow from "@/hooks/workflow-hooks/useWorkflow";
 import edgeTypes from "./EdgeTypes";
-import BottomDrawer from "./drawers/BottomDrawer";
-import ToolsDrawer from "./drawers/ToolsDrawer";
+import BottomDrawer from "./drawers/bottom-drawer";
+import ToolsDrawer from "./drawers/tools-drawer";
 import { useSelector } from "react-redux";
-import useAttensamCalls from "@/hooks/useAttensamCalls";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import { useRouter } from "next/router";
+import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
+import RestoreWorkflowConfirmDialog from "./dialogs/RestoreWorkflowConfirmDialog";
+import useSessionStorage from "@/hooks/storage-hooks/useSessionStorage";
+import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
 const initialNodes = [
   {
@@ -38,153 +38,123 @@ const initialNodes = [
 ];
 const initialEdges = [];
 
-let id = 0;
-const getId = (type) => `${type}_${id++}`;
-
-//TODO: Should be fetched from API
-const permissionTypes = { User: "0", All: "1" };
-
-const Sheet = () => {
+const Sheet = ({ existingWorkflow }) => {
   const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const { viewTypes, launchTypes } = useSelector(
-    (state) => state.attensam.data
-  );
+
+  const [openRestoreConfirmDialog, setOpenRestoreConfirmDialog] =
+    useState(false);
+
+  const { setViewport, getViewport } = useReactFlow();
+  const router = useRouter();
+  const { postWorkflowCall } = useAttensamCalls();
+  const { isWorkflowSessionExisting, setSessionFlagForWorkflow } =
+    useSessionStorage();
 
   const {
     onSave,
-    onRestore,
+    restoreExistingRemoteWorkflow,
+    restoreWorkflowFromLocalStorage,
+    removeWorkflowFromLocalStorage,
+    isWorkflowExistingInLocalStorage,
     onNodeDragStop,
     onDragOver,
     updateHistory,
     isValidConnection,
-  } = useWorkflow(setNodes, setEdges);
+    addNodeAndUpdateHistoryOnDrop,
+    addEdgeAndUpdateHistoryOnConnect,
+  } = useWorkflow();
 
-  const { postWorkflowCall } = useAttensamCalls();
-  const { createWorkflowStep, deleteWorkflowStep, updateSelectedStep } =
-    useWorkflowForms();
+  const {
+    createViewOnDrop,
+    deleteWorkflowStep,
+    updateSelectedStep,
+    setPreviousAndNextStepsOnConnect,
+    updateNodesEdgesAndViewport,
+    prepareWorkflowStateForPost,
+  } = useWorkflowForms();
 
-  const onConnect = useCallback(
-    (params) => {
-      let source = params.source.substring(0, params.source.indexOf("_"));
-      let target = params.target.substring(0, params.target.indexOf("_"));
-
-      if (params.sourceHandle === "start") source = launchTypes[source];
-      else source = viewTypes[source];
-      target = viewTypes[target];
-
-      setEdges((eds) =>
-        addEdge(
-          {
-            ...params,
-            type: params.sourceHandle !== "start" ? "floating" : "default",
-            markerEnd: { type: MarkerType.ArrowClosed },
-            style: { strokeWidth: 2 },
-            sourceID: source,
-            targetID: target,
-          },
-          eds
-        )
-      );
-      updateHistory();
-    },
-    [setEdges, launchTypes, viewTypes]
-  );
-
-  const onDrop = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (!launchTypes || !viewTypes) return;
-
-      const name = e.dataTransfer.getData("application/reactflow");
-      const caption = e.dataTransfer.getData("caption");
-      const type = e.dataTransfer.getData("type");
-
-      // check if the dropped element is valid
-      if (typeof name === "undefined" || !name) return;
-
-      const position = reactFlowInstance.screenToFlowPosition({
-        x: e.clientX,
-        y: e.clientY,
-      });
-
-      let newNode = {};
-      const currentNodes = reactFlowInstance.getNodes();
-      const isLaunchExisting = currentNodes.find(
-        (nds) => nds.type === "launch"
-      );
-      if (type === "launch") {
-        if (isLaunchExisting) return;
-
-        newNode = {
-          id: getId(name),
-          type: "launch",
-          position: { x: 70, y: 250 },
-          parentNode: "launch-group",
-          extent: "parent",
-
-          attID: launchTypes[name],
-          data: {
-            label: `${caption}`,
-            attID: launchTypes[name],
-          },
-        };
-      } else {
-        newNode = {
-          id: getId(name),
-          type: name,
-          name: "",
-          position,
-          attID: viewTypes[name],
-          data: { label: `${caption}` },
-          changeEvent: (e, selectedNode) =>
-            setNodes((nds) => [
-              ...nds.filter((n) => n.id !== newNode.id),
-              { ...selectedNode, name: e.target.value },
-            ]),
-        };
-        createWorkflowStep(newNode.id);
-      }
-      setNodes((nds) => nds.concat(newNode));
-      updateHistory();
-    },
-    [reactFlowInstance, launchTypes, viewTypes]
-  );
-
-  /*   const handleSubmit = (infoFormValues) => {
-    if (!edges.length) return;
-    const launchEl = edges.find((el) => el.sourceHandle === "start");
-    if (!launchEl) return;
-
-    const viewport = reactFlowInstance.getViewport();
-    const wfData = {
-      Edges: JSON.stringify(edges),
-      Nodes: JSON.stringify(nodes),
-      Viewport: JSON.stringify(viewport),
-      Steps: JSON.stringify(
-        nodes
-          .filter((n) => n.type !== "group" && n.type !== "launch")
-          .map((n) => ({ Name: n.name }))
-      ),
-      ...infoFormValues,
-      PermissionType: Number(infoFormValues.PermissionType),
-    };
-    wfData["LaunchType"] = launchEl.sourceID;
-    console.log(wfData);
-    const workflowFormData = new FormData();
-    for (const [key, value] of Object.entries(wfData)) {
-      workflowFormData.append(`${key}`, value);
-      console.log(key, " --- ", workflowFormData.get(`${key}`));
-    }
-
-    postWorkflowCall(workflowFormData);
+  const onConnect = (params) => {
+    addEdgeAndUpdateHistoryOnConnect(params);
+    setPreviousAndNextStepsOnConnect(params);
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    console.log(_edges);
+    updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
- */
+
+  const onDrop = (e) => {
+    e.preventDefault();
+
+    const { viewType, launchTypeId, newNode } =
+      addNodeAndUpdateHistoryOnDrop(e);
+
+    if (!newNode) return;
+
+    createViewOnDrop(viewType, newNode.id, launchTypeId);
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
+  };
+  const handleDeleteNode = (deleted) => {
+    deleted.forEach((node) => deleteWorkflowStep(node));
+    updateHistory();
+  };
+
+  useEffect(() => {
+    const viewport = getViewport();
+
+    const handleRouteChange = () => {
+      updateNodesEdgesAndViewport(nodes, edges, viewport);
+    };
+
+    router.events.on("routeChangeStart", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [nodes, edges, reactFlowInstance, router.events]);
+
+  const handleSubmit = () => {
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    const workflowToPost = prepareWorkflowStateForPost(
+      _nodes,
+      _edges,
+      _viewport
+    );
+    postWorkflowCall(workflowToPost);
+  };
+
+  useEffect(() => {
+    if (
+      !isWorkflowSessionExisting() &&
+      isWorkflowExistingInLocalStorage() &&
+      router.query.workflowId === "new"
+    ) {
+      setOpenRestoreConfirmDialog(true);
+      setSessionFlagForWorkflow();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (existingWorkflow) {
+      restoreExistingRemoteWorkflow(existingWorkflow, setNodes, setEdges);
+    }
+  }, [existingWorkflow]);
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: "100vw", height: "100%" }}>
+      <RestoreWorkflowConfirmDialog
+        open={openRestoreConfirmDialog}
+        setOpen={setOpenRestoreConfirmDialog}
+        onConfirm={restoreWorkflowFromLocalStorage}
+        onDeny={removeWorkflowFromLocalStorage}
+      />
       <h4
         style={{
           position: "absolute",
@@ -200,7 +170,7 @@ const Sheet = () => {
         }}
         onClick={() => setOpenToolsDrawer((prev) => !prev)}
       >
-        Sidebar {openToolsDrawer ? "schließen" : "öffnen"}
+        Tools {openToolsDrawer ? "schließen" : "öffnen"}
       </h4>
 
       <ReactFlow
@@ -209,11 +179,8 @@ const Sheet = () => {
         onConnect={onConnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onNodeDragStop={onNodeDragStop}
-        onNodesDelete={(deleted) => {
-          deleted.forEach((node) => deleteWorkflowStep(node.id));
-          updateHistory();
-        }}
+        onNodeDragStop={(e, n) => onNodeDragStop(e, n, updateSelectedStep)}
+        onNodesDelete={handleDeleteNode}
         onNodeClick={(e, n) => updateSelectedStep(n.id)}
         onPaneClick={() => updateSelectedStep("")}
         isValidConnection={isValidConnection}
@@ -232,8 +199,13 @@ const Sheet = () => {
         {/* <Controls style={{ bottom: 55 }} /> */}
       </ReactFlow>
 
-      <ToolsDrawer open={openToolsDrawer} setOpen={setOpenToolsDrawer} />
-      <BottomDrawer onSave={onSave} onRestore={onRestore} nodes={nodes} />
+      <ToolsDrawer open={openToolsDrawer} />
+      <BottomDrawer
+        onSubmit={handleSubmit}
+        onSave={onSave}
+        restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
+        nodes={nodes}
+      />
     </div>
   );
 };

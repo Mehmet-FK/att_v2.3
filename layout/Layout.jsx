@@ -33,19 +33,83 @@ import { setUser } from "@/redux/slices/settingsSlice";
 import { useEffect, useState } from "react";
 //
 // Custom Components
-import {
-  AppBar,
-  CustomSidebarIcon,
-  Drawer,
-  DrawerHeader,
-} from "./layout_helpers";
+import { AppBar, CustomSvgIcon, Drawer, DrawerHeader } from "./layout_helpers";
 import ProfileMenu from "@/components/menus/ProfileMenu";
+import { LaunchModuleShape } from "@/components/phase-2/workflow/nodes/node-comps/Shapes";
+
+const drawerList = [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    nav: "/",
+  },
+  {
+    text: "Mobile Buchungen",
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/bookings.svg"}
+        width="23px"
+      />
+    ),
+    nav: "/mobile-bookings",
+  },
+  {
+    text: "Datensätze",
+    icon: (
+      <CustomSvgIcon src={"/assets/dashboard-icons/items.svg"} width="23px" />
+    ),
+    nav: "/items",
+  },
+  {
+    text: "Benutzer",
+    icon: (
+      <CustomSvgIcon src={"/assets/dashboard-icons/users.svg"} width="23px" />
+    ),
+    nav: "/users",
+  },
+  {
+    text: "Workflows",
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/workflows.svg"}
+        width="23px"
+      />
+    ),
+    nav: "/workflows",
+  },
+  {
+    text: "Entitäten",
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/entities.svg"}
+        width="23px"
+      />
+    ),
+    nav: "/entities",
+  },
+];
+const drawerListAdmin = [
+  {
+    text: "Home",
+    icon: <HomeIcon />,
+    nav: "/",
+  },
+  {
+    text: "Entitäten",
+    icon: <FeedIcon />,
+    nav: "/entities",
+  },
+  {
+    text: "Workflow",
+    icon: <AccountTreeIcon />,
+    nav: "/workflows",
+  },
+];
 
 export default function Layout({ children, toggleTheme }) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [showLayout, setShowLayout] = useState(true);
 
   const { user } = useSelector((state) => state.settings);
 
@@ -76,9 +140,9 @@ export default function Layout({ children, toggleTheme }) {
     dispatch(setUser({ user: credentials }));
   };
   const avatar = user?.avatar;
-  useEffect(() => {
-    getSessionData();
-  }, []);
+  // useEffect(() => {
+  //   getSessionData();
+  // }, []);
 
   useEffect(() => {
     if (router.pathname === "/workflow") {
@@ -87,68 +151,28 @@ export default function Layout({ children, toggleTheme }) {
     } else setShowLayout(true);
   }, [router.pathname]);
 
-  const drawerList = [
-    {
-      text: "Home",
-      icon: <HomeIcon />,
-      nav: "/",
-    },
-    {
-      text: "Mobile Buchungen",
-      icon: <CustomSidebarIcon src={"/assets/dashboard-icons/bookings.svg"} />,
-      nav: "/mobile-bookings",
-    },
-    {
-      text: "Datensätze",
-      icon: <CustomSidebarIcon src={"/assets/dashboard-icons/items.svg"} />,
-      nav: "/items",
-    },
-    {
-      text: "Benutzer",
-      icon: <CustomSidebarIcon src={"/assets/dashboard-icons/users.svg"} />,
-      nav: "/users",
-    },
-  ];
-  const drawerListAdmin = [
-    {
-      text: "Home",
-      icon: <HomeIcon />,
-      nav: "/",
-    },
-    {
-      text: "Entitäten",
-      icon: <FeedIcon />,
-      nav: "/entities",
-    },
-    {
-      text: "Workflow",
-      icon: <AccountTreeIcon />,
-      nav: "/workflow",
-    },
-  ];
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", height: "100vh" }}>
       <AppBar
         sx={{ backgroundColor: "navbar.main" }}
         position="fixed"
         open={open}
       >
         <Toolbar>
-          {showLayout && (
-            <div style={{ width: open ? 0 : "4rem", transition: "0.3s" }}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                sx={{
-                  ...(open && { display: "none" }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-            </div>
-          )}
+          <div style={{ width: open ? 0 : "4rem", transition: "0.3s" }}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </div>
+
           <div className={css.logoWrapper}>
             <Link href={"/"}>
               <Image
@@ -185,12 +209,7 @@ export default function Layout({ children, toggleTheme }) {
               </Typography>{" "}
               <Image
                 onClick={handleClick}
-                // src={"/assets/emptyAvatar.jpg"}
-                src={
-                  avatar
-                    ? `${avatar}?${new Date().getTime()}`
-                    : "/assets/emptyAvatar.jpg"
-                }
+                src={avatar}
                 width={50}
                 height={50}
                 alt="profilePicture"
@@ -205,70 +224,68 @@ export default function Layout({ children, toggleTheme }) {
           </div>
         </Toolbar>
       </AppBar>
-      {showLayout && (
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "rtl" ? (
-                <ChevronRightIcon />
-              ) : (
-                <ChevronLeftIcon />
-              )}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <List>
-            {(user?.userId === 10 ? drawerListAdmin : drawerList).map(
-              (item) => (
-                <ListItem
-                  key={item.text}
-                  disablePadding
-                  sx={{
-                    display: "block",
-                    backgroundColor: router.pathname === item.nav && "#bbbb",
-                  }}
-                >
-                  <Tooltip title={item.text} placement="right" arrow>
-                    <Link href={item.nav} className={css.link}>
-                      <ListItemButton
-                        sx={{
-                          minHeight: 48,
-                          justifyContent: open ? "initial" : "center",
-                          px: 2.5,
-                        }}
-                      >
-                        <ListItemIcon
-                          sx={{
-                            minWidth: 0,
-                            mr: open ? 3 : "auto",
-                            justifyContent: "center",
-                          }}
-                        >
-                          {item.icon}
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={item.text}
-                          sx={{ opacity: open ? 1 : 0 }}
-                        />
-                      </ListItemButton>
-                    </Link>
-                  </Tooltip>
-                </ListItem>
-              )
+      (
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
             )}
-          </List>
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {(user?.userId === 10 ? drawerListAdmin : drawerList).map((item) => (
+            <ListItem
+              key={item.text}
+              disablePadding
+              sx={{
+                display: "block",
+                backgroundColor: router.pathname === item.nav && "#bbbb",
+              }}
+            >
+              <Tooltip title={item.text} placement="right" arrow>
+                <Link href={item.nav} className={css.link}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </Link>
+              </Tooltip>
+            </ListItem>
+          ))}
+        </List>
 
-          <Divider />
-        </Drawer>
-      )}
+        <Divider />
+      </Drawer>
+      )
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          // overflow: "hidden",
+          height: "calc(100vh - 64px)",
         }}
       >
-        {showLayout && <DrawerHeader />}
+        <DrawerHeader />
         {children}
       </Box>
     </div>

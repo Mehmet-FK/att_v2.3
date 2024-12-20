@@ -10,9 +10,9 @@ import {
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import useContextMenu from "@/hooks/useContextMenu";
+import useContextMenu from "@/hooks/table-hooks/useContextMenu";
 import css from "@/styles/menus.module.css";
-import useOnClickOutside from "@/hooks/useOnClickOutside";
+import useOnClickOutside from "@/hooks/table-hooks/useOnClickOutside";
 import { contextMenuConstants } from "@/helpers/Constants";
 const ColumnMenu = ({ allColumns, setHiddenColumns, hiddenColumns }) => {
   const router = useRouter();

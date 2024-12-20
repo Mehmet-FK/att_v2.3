@@ -5,7 +5,7 @@ import { Button, Collapse } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import TextInput from "@/components/form-elements/TextInput";
 import DateInput from "@/components/form-elements/DateInput";
-import useFilters from "@/hooks/useFilters";
+import useFilters from "@/hooks/table-hooks/useFilters";
 import FilterHead from "@/components/phase-2/table/table_helpers/FilterHead";
 
 const FilterPanel = ({ fieldsObject, module }) => {

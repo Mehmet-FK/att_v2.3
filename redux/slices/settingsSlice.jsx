@@ -4,6 +4,7 @@ const settingsSlice = createSlice({
   name: "settings",
 
   initialState: {
+    sessionExpired: false,
     user: {
       userId: null,
       firstname: "",
@@ -19,8 +20,11 @@ const settingsSlice = createSlice({
     setUser: (state, { payload: { user } }) => {
       state.user = user;
     },
+    setSessionExpired: (state, { payload: { isSessionExpired } }) => {
+      state.sessionExpired = isSessionExpired;
+    },
   },
 });
 
-export const { setTheme, setUser } = settingsSlice.actions;
+export const { setTheme, setUser, setSessionExpired } = settingsSlice.actions;
 export default settingsSlice.reducer;

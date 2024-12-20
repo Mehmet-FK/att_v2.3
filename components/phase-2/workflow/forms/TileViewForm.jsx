@@ -1,84 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
-import HeaderForm from "./HeaderForm";
+import css from "@/styles/workflow-forms/list-view-form.module.css";
+import ViewHeaderForm from "./header-form";
 
-const initialStepValues = {
-  entityId: "",
-  name: "",
-  caption: "",
-  hasLookup: false,
-};
-
-const initialHeaderValues = {
-  caption: "",
-  icon: "",
-  gradientStart: "",
-  gradientEnd: "",
-  rows: [
-    {
-      id: 1,
-    },
-  ],
-  columns: [
-    { id: 1, rowId: 1 },
-    { id: 2, rowId: 1 },
-    { id: 3, rowId: 1 },
-  ],
-};
-const initialListElement = {
-  id: 1,
-  icon: "",
-  listViewRows: [
-    {
-      id: 1,
-      listViewRowNumber: 1,
-      text: "",
-      fontFamily: "",
-      fontColor: "",
-    },
-  ],
-};
-
-const TileViewForm = ({ stepID }) => {
-  const [stepValues, setStepValues] = useState(initialStepValues);
-  const [headerValues, setHeaderValues] = useState(initialHeaderValues);
-
-  const { entities } = useSelector((state) => state.attensam.data);
-  const { user } = useSelector((state) => state.settings);
-  const { workflowSteps } = useSelector((state) => state.workflow);
-
-  const { handleWFStepBlur } = useWorkflowForms();
-
-  const handleHeaderBlur = () => {
-    handleWFStepBlur("header", headerValues);
-  };
-
-  useEffect(() => {
-    const step = workflowSteps.find((step) => step.id === stepID);
-
-    setStepValues((prev) => ({
-      ...prev,
-      name: step?.name,
-      entityId: step?.entityId,
-      caption: step?.caption,
-      hasLookup: step?.hasLookup,
-    }));
-
-    setHeaderValues((prev) =>
-      step?.header ? { ...prev, ...step?.header } : initialHeaderValues
-    );
-  }, [stepID]);
+const TileViewForm = () => {
+  const { workflowId } = useSelector((state) => state.workflow);
 
   return (
-    <>
-      <HeaderForm
-        handleHeaderBlur={handleHeaderBlur}
-        headerValues={headerValues}
-        setHeaderValues={setHeaderValues}
-        defaultExpanded={true}
-      />
-    </>
+    <div className={css.form_container}>
+      <div className={css.header_form_wrapper}>
+        <ViewHeaderForm viewId={workflowId} defaultExpanded={true} />
+      </div>
+    </div>
   );
 };
 

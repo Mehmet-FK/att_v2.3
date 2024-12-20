@@ -15,7 +15,7 @@ import RolesList from "./modal-components/RolesList";
 import PasswordDialog from "./modal-components/PasswordDialog";
 import { client, settlement } from "@/helpers/Constants";
 import RolesList_phase2 from "./modal-components/RolesList_phase2";
-import useTableDataCalls from "@/hooks/useTableDataCalls";
+import useTableDataCalls from "@/hooks/remote-api-hooks/useTableDataCalls";
 import UserInfoTab from "./modal-components/UserInfoTab";
 // import placeholder from "/assets/placeholder.jpg";
 

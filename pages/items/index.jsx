@@ -1,28 +1,19 @@
-import ItemsTable from "@/components/phase-1/items/Table";
 import { getSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useEffect, useState } from "react";
 
 const NoSSRTable = dynamic(() => import("@/components/phase-1/items/Table"), {
   ssr: false,
 });
 
 const Items = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   return (
-    <>
+    <div className="page-wrapper">
       <Head>
         <title>Datensätze</title>
       </Head>
-      {/* <NoSSRTable /> */}
-      {isClient && <ItemsTable />}
-    </>
+      <NoSSRTable />
+    </div>
   );
 };
 

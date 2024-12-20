@@ -22,11 +22,17 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.page-wrapper {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .page-header {
@@ -37,31 +43,6 @@ a {
 
 .react-flow__attribution {
   display: none;
-}
-
-.react-flow__node.selectable {
-  outline-offset: 5px;
-  outline: 2px solid transparent !important;
-  border: 2px solid transparent !important;
-}
-
-.react-flow__node.selectable:focus {
-  outline-offset: 5px;
-  outline-color: rgb(0, 149, 255) !important;
-  border-color: rgb(0, 149, 255) !important;
-  border-radius: 0% !important;
-}
-
-.react-flow__node.selectable:focus div[data-handleid] {
-  background-color: #1b192b;
-  border-color: #fff !important;
-  border-radius: 50% !important;
-}
-
-.react-flow__node.selectable:focus * {
-  border-radius: 0;
-  border: none;
-  outline: none;
 }
 
 /* Scrollbar Styles */

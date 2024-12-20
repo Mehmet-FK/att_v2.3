@@ -9,7 +9,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import { useSelector } from "react-redux";
-import useTable from "@/hooks/useTable";
+import useTable from "@/hooks/table-hooks/useTable";
 
 const Pagination = ({ paginationParams, table, totalPages }) => {
   const [page, setPage] = useState({

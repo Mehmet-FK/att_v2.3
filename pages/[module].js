@@ -33,13 +33,6 @@ export const getServerSideProps = async (context) => {
         permanent: false,
       },
     };
-  } else {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
   }
 
   return {

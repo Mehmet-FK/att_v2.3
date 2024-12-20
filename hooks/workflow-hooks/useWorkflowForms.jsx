@@ -1,8 +1,46 @@
 import {
+  scannerTypeConstants,
+  viewTypeConstants,
+  workflowStepTypeIds,
+} from "@/helpers/Constants";
+import {
+  addLaunchElement,
+  addListView,
+  addListViewElement,
+  addListViewElementRow,
+  addModalDialog,
+  addRecordView,
+  addScannerDialog,
+  addViewHeader,
+  addViewHeaderColumn,
+  addViewHeaderRow,
   addWorkflowStep,
-  changeStepValue,
+  changeLaunchElementValue,
+  changeListViewElementRowValue,
+  changeListViewElementValue,
+  changeListViewValue,
+  changeModalDialogValue,
+  changeNextAndPreviousStep,
+  changeNodesEdgesAndViewport,
+  changeRecordViewValue,
+  changeScannerDialogValue,
+  changeViewHeaderColumnValue,
+  changeViewHeaderValue,
+  changeWorkflowStepValue,
   changeWorkflowValue,
+  removeLaunchElement,
+  removeListView,
+  removeListViewElement,
+  removeListViewElementRowByElementId,
+  removeListViewElementRowByRowId,
+  removeModalDialog,
+  removeRecordView,
+  removeScannerDialog,
+  removeViewHeader,
+  removeViewHeaderColumn,
+  removeViewHeaderRow,
   removeWorkflowStep,
+  setWorkflowToInitial,
   updateSelectedStep as updateStep,
   updateTotalWorkflow,
 } from "@/redux/slices/workflowSlice";
@@ -29,33 +67,454 @@ const initialWorkflowState = {
 
 const useWorkflowForms = () => {
   const dispatch = useDispatch();
-  const { selectedStepID } = useSelector((state) => state.workflow);
+  const workflow = useSelector((state) => state.workflow);
 
-  const handleWorkflowChange = (e) => {
-    const { value, name } = e.target;
+  const {
+    selectedStepId,
+    workflowId,
+    recordViews,
+    scannerDialogs,
+    listViews,
+    headers,
+    headerRows,
+    headerColumns,
+  } = workflow;
+
+  const generateRandomId = () => {
+    return `${Math.floor(Math.random() * 1000) + Date.now()}`;
+  };
+
+  const isLaunchElement = (viewType) =>
+    viewType?.toLowerCase()?.includes("launch");
+
+  const findViewByStepId = (viewsArray, workflowStepId) => {
+    return viewsArray.find((v) => v.workflowStepId === workflowStepId);
+  };
+  const findHeaderByViewId = (viewId) => {
+    return headers.find((vh) => vh.viewId === viewId).headerId;
+  };
+
+  const clearWorkflowState = () => {
+    dispatch(setWorkflowToInitial());
+  };
+
+  const updateNodesEdgesAndViewport = (nodes, edges, viewport) => {
+    dispatch(changeNodesEdgesAndViewport({ nodes, edges, viewport }));
+  };
+
+  const updateWorkflowValue = (name, value) => {
     dispatch(changeWorkflowValue({ value, name }));
   };
 
   const createWorkflowStep = (stepID) => {
     const step = {
-      id: stepID,
+      workflowStepId: stepID,
+      workflowID: workflowId,
+      name: "",
+      nextStep: "",
+      previousStep: "",
     };
-
     dispatch(addWorkflowStep({ step }));
   };
 
-  const deleteWorkflowStep = (stepID) => {
-    dispatch(removeWorkflowStep({ id: stepID }));
+  const updateWorkflowStepValue = (name, value, workflowStepId) => {
+    dispatch(changeWorkflowStepValue({ name, value, stepId: workflowStepId }));
   };
 
-  const handleWFStepBlur = (name, value) => {
-    // console.log(value);
-    dispatch(changeStepValue({ name, value }));
+  const deleteWorkflowStep = (step) => {
+    const workflowStepId = step.id;
+    const viewType = step.viewType;
+    deleteView(viewType, workflowStepId);
+    dispatch(removeWorkflowStep({ id: workflowStepId }));
   };
 
-  const updateSelectedStep = (stepID) => {
-    if (selectedStepID === stepID) return;
-    dispatch(updateStep({ stepID }));
+  const createLaunchElementOnDrop = (launchType, workflowStepId) => {
+    const template = {
+      launchElementId: workflowStepId + "-launch",
+      workflowStepId: workflowStepId,
+      launchType: parseInt(launchType),
+      name: "",
+      description: "",
+    };
+    createWorkflowStep(workflowStepId);
+    dispatch(addLaunchElement({ launchElement: template }));
+  };
+
+  const updateLaunchElementValue = (name, value, workflowStepId) => {
+    dispatch(changeLaunchElementValue({ name, value, workflowStepId }));
+  };
+
+  const deleteLaunchElement = (workflowStepId) => {
+    dispatch(removeLaunchElement({ workflowStepId }));
+  };
+
+  const createListViewElementRow = (listViewElementId) => {
+    const template = {
+      listViewElementRowId: "lvr-" + generateRandomId(),
+      listViewElementId: listViewElementId,
+      listViewRowNumber: 1,
+      text: "",
+      fontFamily: 3,
+      fontColor: "#1D1D1D",
+    };
+
+    dispatch(addListViewElementRow({ elementRow: template }));
+  };
+
+  const updateListViewElementRowValue = (name, value, elementRowId) => {
+    dispatch(
+      changeListViewElementRowValue({ name, value, rowId: elementRowId })
+    );
+  };
+
+  const deleteListViewElementRowByElementId = (listViewElementId) => {
+    dispatch(
+      removeListViewElementRowByElementId({ elementId: listViewElementId })
+    );
+  };
+  const deleteListViewElementRowByRowId = (listViewElementRowId) => {
+    dispatch(removeListViewElementRowByRowId({ rowId: listViewElementRowId }));
+  };
+
+  const createListViewElement = (listViewElementId) => {
+    const template = {
+      listViewElementId: listViewElementId,
+      icon: "",
+    };
+
+    dispatch(addListViewElement({ listViewElement: template }));
+    createListViewElementRow(listViewElementId);
+  };
+
+  const updateListViewElementValue = (name, value, listViewElementId) => {
+    dispatch(
+      changeListViewElementValue({ name, value, elementId: listViewElementId })
+    );
+  };
+
+  const deleteListViewElement = (listViewElementId) => {
+    deleteListViewElementRowByElementId(listViewElementId);
+    dispatch(removeListViewElement({ elementId: listViewElementId }));
+  };
+
+  const createListViewOnDrop = (workflowStepId) => {
+    const listViewId = workflowStepId + "-listview";
+    const headerId = `${listViewId}-vh`;
+    const listViewElementId = listViewId + "-lve";
+
+    const template = {
+      listViewId: listViewId,
+      workflowStepId: workflowStepId,
+      entityId: "",
+      hasLookup: true,
+      onlyOnline: false,
+      elementBackgroundColor: "",
+      elementIconPath: "",
+      headerId: headerId || "",
+      listViewElementId: listViewElementId,
+    };
+    createWorkflowStep(workflowStepId);
+    dispatch(addListView({ listView: template }));
+    createListViewElement(listViewElementId);
+    createViewHeaderWithRowsAndColumns(
+      listViewId,
+      workflowStepTypeIds.LISTVIEW,
+      headerId
+    );
+  };
+  const updateListViewValue = (name, value, viewId) => {
+    dispatch(changeListViewValue({ name, value, viewId }));
+  };
+  const deleteListView = (workflowStepId) => {
+    const listViewToDelete = findViewByStepId(listViews, workflowStepId);
+    const listViewId = listViewToDelete.listViewId;
+    const listViewElementId = listViewToDelete.listViewElementId;
+
+    const headerId = findHeaderByViewId(listViewId);
+    deleteViewHeader(headerId);
+    deleteListViewElement(listViewElementId);
+    dispatch(removeListView({ viewId: listViewId }));
+  };
+
+  const createRecordViewOnDrop = (workflowStepId) => {
+    const recordViewId = workflowStepId + "-recordview";
+    const headerId = `${recordViewId}-vh`;
+
+    const template = {
+      recordViewId: recordViewId,
+      workflowStepId: workflowStepId,
+      entityId: "",
+      headerId: headerId || "",
+      isEditable: false,
+      showMenue: true,
+      createNewDataset: false,
+    };
+    createWorkflowStep(workflowStepId);
+    dispatch(addRecordView({ recordView: template }));
+    createViewHeaderWithRowsAndColumns(
+      recordViewId,
+      workflowStepTypeIds.RECORDVIEW,
+      headerId
+    );
+  };
+
+  const updateRecordViewValue = (name, value, recordViewId) => {
+    dispatch(changeRecordViewValue({ name, value, viewId: recordViewId }));
+  };
+
+  const deleteRecordView = (workflowStepId) => {
+    const recordViewToDelete = findViewByStepId(recordViews, workflowStepId);
+    const recordViewId = recordViewToDelete.recordViewId;
+
+    const headerId = findHeaderByViewId(recordViewId);
+    deleteViewHeader(headerId);
+    dispatch(removeRecordView({ viewId: recordViewId }));
+  };
+
+  const createViewHeaderWithRowsAndColumns = (viewId, viewType, headerId) => {
+    createViewHeader(viewId, viewType, headerId);
+    createViewHeaderRow(headerId);
+  };
+
+  const createViewHeader = (viewId, viewType, headerId) => {
+    const template = {
+      headerId: headerId,
+      viewType: viewType,
+      viewId: viewId,
+      caption: "",
+      defaultIcon: "",
+      gradientStart: "",
+      gradientEnd: "",
+    };
+
+    dispatch(addViewHeader({ viewHeader: template }));
+  };
+
+  const updateViewHeaderValue = (name, value, headerId) => {
+    dispatch(changeViewHeaderValue({ name, value, viewHeaderId: headerId }));
+  };
+
+  const deleteViewHeader = (viewHeaderId) => {
+    const headerRowIds = headerRows
+      .filter((vhr) => vhr.headerId === viewHeaderId)
+      .flatMap((vhr) => vhr.headerRowId);
+    const headerColumnIds = headerColumns
+      .filter((vhc) => headerRowIds.includes(vhc.headerRowID))
+      .flatMap((vhc) => vhc.headerColumnId);
+
+    headerRowIds.forEach((vhrId) => deleteViewHeaderRow(vhrId));
+    headerColumnIds.forEach((vhcId) => deleteViewHeaderColumn(vhcId));
+
+    dispatch(
+      removeViewHeader({
+        viewHeaderId: viewHeaderId,
+      })
+    );
+  };
+
+  const createViewHeaderRow = (headerId) => {
+    const rowId = "vhr-" + generateRandomId();
+    const template = {
+      headerRowId: rowId,
+      headerId: headerId,
+      rowAlignment: 0,
+    };
+
+    dispatch(addViewHeaderRow({ viewHeaderRow: template }));
+    createViewHeaderColumn(rowId);
+  };
+
+  const deleteViewHeaderRow = (rowId) => {
+    dispatch(removeViewHeaderRow({ rowId }));
+  };
+
+  const createViewHeaderColumn = (headerRowId) => {
+    const columnId = "vhc-" + generateRandomId();
+    const template = {
+      headerColumnId: columnId,
+      headerRowID: headerRowId,
+      columnType: 3,
+      columnValue: "",
+      colSpan: 2,
+      rowSpan: 1,
+      fontColor: "#FFFFFF",
+      textAlignment: 0,
+      fontFamily: 3,
+    };
+
+    dispatch(addViewHeaderColumn({ viewHeaderColumn: template }));
+  };
+
+  const updateViewHeaderColumnValue = (name, value, columnId) => {
+    dispatch(changeViewHeaderColumnValue({ name, value, columnId }));
+  };
+
+  const deleteViewHeaderColumn = (columnId) => {
+    dispatch(removeViewHeaderColumn({ columnId }));
+  };
+
+  const createScannerDialog = (dialogTemplate) => {
+    dispatch(addScannerDialog({ scannerDialog: dialogTemplate }));
+  };
+
+  const createScannerDialogNFC = (workflowStepId) => {
+    const scannerDialogId = workflowStepId + "-scannerdialog";
+    const headerId = scannerDialogId + "-vh";
+    const template = {
+      scannerDialogId: scannerDialogId,
+      workflowStepId: workflowStepId,
+      scannerType: scannerTypeConstants.NFC,
+      scannerAction: 1,
+      targetFieldId: "",
+      entityId: "",
+      name: "",
+      description: "",
+      filterField: "",
+      allowManualInput: true,
+      inputDataSourceId: "",
+      headerId: headerId,
+    };
+    createWorkflowStep(workflowStepId);
+    createScannerDialog(template);
+    createViewHeaderWithRowsAndColumns(
+      scannerDialogId,
+      workflowStepTypeIds.SCANNER_DIALOG,
+      headerId
+    );
+  };
+  const createScannerDialogQR = (workflowStepId, viewType) => {
+    const scannerDialogId = workflowStepId + "-scannerdialog";
+    const template = {
+      scannerDialogId: scannerDialogId,
+      workflowStepId: workflowStepId,
+      scannerType: scannerTypeConstants.QR_CODE,
+      scannerAction: 1,
+      targetFieldId: "",
+      entityId: "",
+      name: "",
+      description: "",
+      filterField: "",
+      allowManualInput: true,
+      inputDataSourceId: "",
+      headerId: "",
+    };
+    createWorkflowStep(workflowStepId);
+    createScannerDialog(template);
+  };
+
+  const updateScannerDialogValue = (name, value, scannerDialogId) => {
+    dispatch(
+      changeScannerDialogValue({ name, value, dialogId: scannerDialogId })
+    );
+  };
+
+  const deleteScannerDialogNFC = (workflowStepId) => {
+    const scannerDialogToDelete = findViewByStepId(
+      scannerDialogs,
+      workflowStepId
+    );
+    const dialogId = scannerDialogToDelete.scannerDialogId;
+    const headerId = findHeaderByViewId(dialogId);
+    deleteViewHeader(headerId);
+    dispatch(removeScannerDialog({ stepId: workflowStepId }));
+  };
+
+  const deleteScannerDialogQR = (workflowStepId) => {
+    dispatch(removeScannerDialog({ stepId: workflowStepId }));
+  };
+
+  const createModalDialog = (workflowStepId) => {
+    const modalId = workflowStepId + "-modal";
+
+    const template = {
+      modalDialogId: modalId,
+      workflowStepId: workflowStepId,
+      fieldId: "",
+      okButton: "Ja",
+      cancelButton: "Nein",
+      caption: "",
+      userText: "",
+      newValue: "",
+    };
+    createWorkflowStep(workflowStepId);
+    dispatch(addModalDialog({ modalDialog: template }));
+  };
+
+  const updateModalDialogValue = (name, value, modalId) => {
+    dispatch(changeModalDialogValue({ name, value, modalId }));
+  };
+
+  const deleteModalDialog = (workflowStepId) => {
+    dispatch(removeModalDialog({ stepId: workflowStepId }));
+  };
+
+  const createTileViewOnDrop = () => {
+    const viewId = workflowId;
+    const headerId = viewId + "-vh";
+    createViewHeaderWithRowsAndColumns(
+      viewId,
+      workflowStepTypeIds.TILEVIEW,
+      headerId
+    );
+  };
+
+  const deleteTileView = () => {
+    const viewId = workflowId;
+    const headerId = viewId + "-vh";
+    deleteViewHeader(headerId);
+  };
+
+  const createViewOnDrop = (viewType, workflowStepId, launchTypeId) => {
+    if (viewType === viewTypeConstants.LISTVIEW) {
+      createListViewOnDrop(workflowStepId);
+    } else if (viewType === viewTypeConstants.RECORDVIEW) {
+      createRecordViewOnDrop(workflowStepId);
+    } else if (viewType === viewTypeConstants.SCANNER_DIALOG_NFC) {
+      createScannerDialogNFC(workflowStepId, viewType);
+    } else if (viewType === viewTypeConstants.SCANNER_DIALOG_QR) {
+      createScannerDialogQR(workflowStepId, viewType);
+    } else if (viewType === viewTypeConstants.MODALDIALOG) {
+      createModalDialog(workflowStepId, viewType);
+    } else if (viewType === viewTypeConstants.TILEVIEW) {
+      createTileViewOnDrop();
+    } else if (isLaunchElement(viewType)) {
+      createLaunchElementOnDrop(launchTypeId, workflowStepId);
+    }
+  };
+
+  const deleteView = (viewType, workflowStepId) => {
+    console.log(viewType);
+    if (viewType === viewTypeConstants.LISTVIEW) {
+      deleteListView(workflowStepId);
+    } else if (viewType === viewTypeConstants.RECORDVIEW) {
+      deleteRecordView(workflowStepId);
+    } else if (viewType === viewTypeConstants.SCANNER_DIALOG_NFC) {
+      deleteScannerDialogNFC(workflowStepId);
+    } else if (viewType === viewTypeConstants.SCANNER_DIALOG_QR) {
+      deleteScannerDialogQR(workflowStepId);
+    } else if (viewType === viewTypeConstants.MODALDIALOG) {
+      deleteModalDialog(workflowStepId);
+    } else if (viewType === viewTypeConstants.TILEVIEW) {
+      deleteTileView();
+    } else if (isLaunchElement(viewType)) {
+      deleteLaunchElement(workflowStepId);
+    }
+  };
+
+  const updateSelectedStep = (stepId) => {
+    if (selectedStepId === stepId) return;
+    dispatch(updateStep({ stepId }));
+  };
+
+  const setPreviousAndNextStepsOnConnect = (params) => {
+    const previousStepId = params.source;
+    const nextStepId = params.target;
+    dispatch(
+      changeNextAndPreviousStep({
+        nextStepId: nextStepId,
+        previousStepId: previousStepId,
+      })
+    );
   };
 
   const restoreWorkflowState = (workflow) => {
@@ -64,21 +523,53 @@ const useWorkflowForms = () => {
     } else {
       dispatch(
         updateTotalWorkflow({
-          workflow: {
-            ...initialWorkflowState,
-          },
+          workflow: initialWorkflowState,
         })
       );
     }
   };
 
+  const prepareWorkflowStateForPost = (nodes, edges, viewport) => {
+    const tempWorkflow = { ...workflow };
+    delete tempWorkflow.selectedStepId;
+    tempWorkflow.edges = JSON.stringify(edges);
+    tempWorkflow.nodes = JSON.stringify(nodes);
+    tempWorkflow.viewport = JSON.stringify(viewport);
+    return tempWorkflow;
+  };
+
   return {
-    handleWorkflowChange,
-    handleWFStepBlur,
+    clearWorkflowState,
+    generateRandomId,
     createWorkflowStep,
+    createLaunchElementOnDrop,
+    createViewOnDrop,
+    createListViewElementRow,
+    createViewHeaderWithRowsAndColumns,
+    createViewHeaderRow,
+    createViewHeaderColumn,
     deleteWorkflowStep,
+    deleteView,
+    deleteListViewElementRowByElementId,
+    deleteListViewElementRowByRowId,
+    deleteViewHeaderRow,
+    deleteViewHeaderColumn,
+    updateWorkflowValue,
+    updateWorkflowStepValue,
     updateSelectedStep,
+    updateNodesEdgesAndViewport,
+    updateLaunchElementValue,
+    updateScannerDialogValue,
+    updateModalDialogValue,
+    updateRecordViewValue,
+    updateListViewValue,
+    updateListViewElementValue,
+    updateListViewElementRowValue,
+    updateViewHeaderValue,
+    updateViewHeaderColumnValue,
     restoreWorkflowState,
+    setPreviousAndNextStepsOnConnect,
+    prepareWorkflowStateForPost,
   };
 };
 
