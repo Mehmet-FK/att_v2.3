@@ -17,8 +17,8 @@ import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import FilterHead from "../FilterHead";
 import DateInput from "@/components/form-elements/DateInput";
 import TimeInput from "@/components/form-elements/TimeInput";
-import useTableDataCalls from "@/hooks/useTableDataCalls";
-import useFilters from "@/hooks/useFilters";
+import useTableDataCalls from "@/hooks/remote-api-hooks/useTableDataCalls";
+import useFilters from "@/hooks/table-hooks/useFilters";
 import {
   itemTableTypeConstants,
   pageTitleConstants,

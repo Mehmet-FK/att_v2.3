@@ -10,7 +10,7 @@ import {
   sqlTableCSV,
   userTableCSV,
 } from "@/helpers/DownloadCsvFunctions";
-import useAxios from "@/hooks/useAxios";
+import useAxios from "@/hooks/remote-api-hooks/useAxios";
 import { useSelector } from "react-redux";
 import { tableNameConstants } from "@/helpers/Constants";
 

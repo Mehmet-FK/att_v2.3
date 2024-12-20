@@ -11,8 +11,8 @@ import {
   dummyData1,
   contextMenuConstants,
 } from "@/helpers/Constants";
-import useContextMenu from "@/hooks/useContextMenu";
-import useTable from "@/hooks/useTable";
+import useContextMenu from "@/hooks/table-hooks/useContextMenu";
+import useTable from "@/hooks/table-hooks/useTable";
 import ContextMenu from "@/components/phase-2/table/table_helpers/ContextMenu";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";

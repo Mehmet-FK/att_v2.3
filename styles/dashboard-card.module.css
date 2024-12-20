@@ -23,7 +23,8 @@
 .card {
   border: 1px solid transparent;
   padding: 10px;
-  min-height: 100px;
+  height: 100px;
+  max-height: 150px;
 
   border-radius: 5px;
   background-color: #cccccc15;
@@ -31,6 +32,7 @@
     0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 1px 8px 0 rgba(0, 0, 0, 0.12);
   transition: all ease 0.2s;
   display: flex;
+  /* flex-direction: column; */
   align-items: center;
 }
 .card:hover {
@@ -44,6 +46,20 @@
   border-radius: 20%;
 }
 
+.card_title_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  /* align-items: space-between; */
+}
+
+.card_helper_text {
+  font-size: 0.7em;
+  padding: 0;
+  color: #717070;
+}
+
 .cardTitle {
   font-size: small;
   font-weight: 500;
@@ -52,12 +68,13 @@
   line-break: anywhere;
 }
 
-.cardBody {
+.card_body {
   display: flex;
   justify-content: space-between;
   align-items: center;
   column-gap: 15px;
   width: 100%;
+  height: 100%;
 }
 
 .cardIcon {

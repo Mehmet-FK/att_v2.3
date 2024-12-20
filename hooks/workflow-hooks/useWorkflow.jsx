@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEdge, MarkerType, useReactFlow } from "reactflow";
 import useWorkflowForms from "./useWorkflowForms";
-import useLocalStorage from "../useLocalStorage";
+import useLocalStorage from "../storage-hooks/useLocalStorage";
 import { toastSuccessNotify } from "@/helpers/ToastNotify";
 import {
   launchTypes,
@@ -284,6 +284,7 @@ const useWorkflow = () => {
     const viewType = launchTypes.find(
       (lt) => lt.id === launchElement.launchType
     ).type;
+
     const caption = viewType; //TODO: refoctoring is needed
     const nodeId = launchElement.workflowStepId;
     const newLaunchNode = createNewLaunchNode(viewType, caption, nodeId);

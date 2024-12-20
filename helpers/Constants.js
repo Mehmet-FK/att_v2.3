@@ -94,11 +94,15 @@ export const viewTypeConstants = {
 };
 
 export const launchTypes = [
-  { id: 0, type: "LaunchDatasetFunction" },
-  { id: 1, type: "LaunchEntityFunction" },
-  { id: 2, type: "LaunchModule" },
-  { id: 3, type: "LaunchElementDefaultFunction" },
-  { id: 4, type: "LaunchGroupView" },
+  { id: 0, type: "LaunchDatasetFunction", caption: "Dataset Function" },
+  { id: 1, type: "LaunchEntityFunction", caption: "Entity Function" },
+  { id: 2, type: "LaunchModule", caption: "Module" },
+  {
+    id: 3,
+    type: "LaunchElementDefaultFunction",
+    caption: "Element Default Function",
+  },
+  { id: 4, type: "LaunchGroupView", caption: "Group View" },
 ];
 
 export const workflowStepTypeIds = {

@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import FilterHead from "../FilterHead";
-import useFilters from "@/hooks/useFilters";
+import useFilters from "@/hooks/table-hooks/useFilters";
 import {
   itemTableTypeConstants,
   pageTitleConstants,

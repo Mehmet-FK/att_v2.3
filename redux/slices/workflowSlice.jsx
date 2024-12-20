@@ -82,9 +82,9 @@ const workflowSlice = createSlice({
 
     updateTotalWorkflow: (state, { payload: { workflow } }) => {
       for (const key in workflow) {
-        if (workflow[key]) {
-          state[key] = workflow[key];
-        }
+        // if (workflow[key] || workflow[key] === "") {
+        state[key] = workflow[key];
+        // }
       }
     },
 

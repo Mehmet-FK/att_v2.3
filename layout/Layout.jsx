@@ -33,13 +33,9 @@ import { setUser } from "@/redux/slices/settingsSlice";
 import { useEffect, useState } from "react";
 //
 // Custom Components
-import {
-  AppBar,
-  CustomSidebarIcon,
-  Drawer,
-  DrawerHeader,
-} from "./layout_helpers";
+import { AppBar, CustomSvgIcon, Drawer, DrawerHeader } from "./layout_helpers";
 import ProfileMenu from "@/components/menus/ProfileMenu";
+import { LaunchModuleShape } from "@/components/phase-2/workflow/nodes/node-comps/Shapes";
 
 const drawerList = [
   {
@@ -49,27 +45,46 @@ const drawerList = [
   },
   {
     text: "Mobile Buchungen",
-    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/bookings.svg"} />,
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/bookings.svg"}
+        width="23px"
+      />
+    ),
     nav: "/mobile-bookings",
   },
   {
     text: "Datensätze",
-    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/items.svg"} />,
+    icon: (
+      <CustomSvgIcon src={"/assets/dashboard-icons/items.svg"} width="23px" />
+    ),
     nav: "/items",
   },
   {
     text: "Benutzer",
-    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/users.svg"} />,
+    icon: (
+      <CustomSvgIcon src={"/assets/dashboard-icons/users.svg"} width="23px" />
+    ),
     nav: "/users",
   },
   {
     text: "Workflows",
-    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/workflows.svg"} />,
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/workflows.svg"}
+        width="23px"
+      />
+    ),
     nav: "/workflows",
   },
   {
     text: "Entitäten",
-    icon: <CustomSidebarIcon src={"/assets/dashboard-icons/entities.svg"} />,
+    icon: (
+      <CustomSvgIcon
+        src={"/assets/dashboard-icons/entities.svg"}
+        width="23px"
+      />
+    ),
     nav: "/entities",
   },
 ];

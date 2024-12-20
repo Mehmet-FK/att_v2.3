@@ -11,6 +11,7 @@ import store from "@/redux/app/store";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/ui-components/Loading";
 import SessionHandler from "@/components/handlers/SessionHandler";
+import SessionExpiredModal from "@/components/ui-components/SessionExpiredModal";
 // import Providers from "@/redux/Provider";
 
 export default function App({ Component, pageProps }) {
@@ -107,6 +108,7 @@ export default function App({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         <SessionProvider session={pageProps.session} refetchInterval={13 * 60}>
           <SessionHandler />
+          <SessionExpiredModal />
           {router.pathname.includes("login") && <Component {...pageProps} />}
           {!router.pathname.includes("login") && <Loading />}
           {!router.pathname.includes("login") && (

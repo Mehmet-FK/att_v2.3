@@ -1,42 +1,55 @@
 import SearchIcon from "@mui/icons-material/Search";
-import styles from "@/styles/dashboard-searchbar.module.css";
+import css from "@/styles/dashboard-searchbar.module.css";
 import Link from "next/link";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const DashboardSearchBar = ({ state, setState, filterKey, addNewLink }) => {
-  //State to controll searchbar value
+const DashboardSearchBar = ({
+  itemsState,
+  setItemsState,
+  filterKey,
+  addNewLink,
+  filter,
+}) => {
   const [searchVal, setSearchVal] = useState("");
 
   const handleChange = (e) => {
     setSearchVal(e.target.value);
   };
 
+  const filterItems = (_itemsState) => {
+    return _itemsState?.filter((el) => {
+      const condition =
+        el[filter?.key] !== "" ? el[filter?.key] == filter?.value : true;
+
+      return (
+        condition &&
+        el[filterKey].toLowerCase().includes(searchVal.toLowerCase())
+      );
+    });
+  };
+
   useEffect(() => {
     //updates the entities everytime when the search value changes
-    setState((prev) =>
-      state?.filter((el) =>
-        el[filterKey].toLowerCase().includes(searchVal.toLowerCase())
-      )
-    );
+    setItemsState((prev) => filterItems(itemsState));
   }, [searchVal]);
 
   return (
-    <div className={styles.utilbarContainer}>
-      <div className={styles.searchbarWrapper}>
-        <span className={styles.iconWrapper}>
+    <div className={css.utilbarContainer}>
+      <div className={css.searchbarWrapper}>
+        <span className={css.iconWrapper}>
           <SearchIcon />
         </span>
         <input
           value={searchVal || ""}
           onChange={handleChange}
           type="text"
-          className={styles.searchbar}
+          className={css.searchbar}
           placeholder="Suchbegriff eingeben"
         />
       </div>
-      <Link href={addNewLink} className={styles.buttonWrapper}>
-        <Button size="small" className={styles.button} variant="contained">
+      <Link href={addNewLink} className={css.buttonWrapper}>
+        <Button size="small" className={css.button} variant="contained">
           Neu Anlegen
         </Button>
       </Link>

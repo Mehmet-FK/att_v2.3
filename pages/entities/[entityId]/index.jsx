@@ -2,7 +2,6 @@ import PageHeader from "@/components/ui-components/PageHeader";
 import css from "@/styles/entities.module.css";
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
-import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 import { useSelector } from "react-redux";
@@ -11,6 +10,7 @@ import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EntityAccordion from "@/components/phase-2/entities/EntityAccordion";
 import FieldsAccordion from "@/components/phase-2/entities/FieldsAccordion";
+import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
 const AddEntity = () => {
   const [entity, setEntity] = useState({});

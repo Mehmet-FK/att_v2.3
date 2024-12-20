@@ -13,13 +13,12 @@ import edgeTypes from "./EdgeTypes";
 import BottomDrawer from "./drawers/bottom-drawer";
 import ToolsDrawer from "./drawers/tools-drawer";
 import { useSelector } from "react-redux";
-import useAttensamCalls from "@/hooks/useAttensamCalls";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { useRouter } from "next/router";
 import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 import RestoreWorkflowConfirmDialog from "./dialogs/RestoreWorkflowConfirmDialog";
-import useSessionStorage from "@/hooks/useSessionStorage";
-import { Sledding } from "@mui/icons-material";
+import useSessionStorage from "@/hooks/storage-hooks/useSessionStorage";
+import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
 const initialNodes = [
   {

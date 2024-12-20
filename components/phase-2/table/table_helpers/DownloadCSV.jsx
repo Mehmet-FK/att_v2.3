@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
 import { IconButton, Tooltip } from "@mui/material";
-import useAxios from "@/hooks/useAxios";
+import useAxios from "@/hooks/remote-api-hooks/useAxios";
 import { useSelector } from "react-redux";
 import { moduleTableCSV } from "@/helpers/DownloadCsvFunctions";
 

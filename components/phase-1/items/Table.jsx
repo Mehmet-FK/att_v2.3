@@ -9,14 +9,14 @@ import TableContainer from "@mui/material/TableContainer";
 import { TableBody, TableHead, TableRow } from "@mui/material";
 import css from "@/styles/table.module.css";
 import FilterPanel from "./FilterPanel";
-import useTableDataCalls from "@/hooks/useTableDataCalls";
+import useTableDataCalls from "@/hooks/remote-api-hooks/useTableDataCalls";
 import ColumnHead from "../ColumnHead";
 import { useSelector } from "react-redux";
 import ItemsTableRow from "./ItemsTableRow";
 import ContextMenu from "../ContextMenu";
-import useContextMenu from "@/hooks/useContextMenu";
-import useTable from "@/hooks/useTable";
-import useColumns from "@/hooks/useColumns";
+import useContextMenu from "@/hooks/table-hooks/useContextMenu";
+import useTable from "@/hooks/table-hooks/useTable";
+import useColumns from "@/hooks/table-hooks/useColumns";
 import TableUtilities from "@/components/phase-1/table_helpers/TableUtilities";
 import {
   contextMenuConstants,

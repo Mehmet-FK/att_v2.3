@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import useAttensamCalls from "@/hooks/useAttensamCalls";
 import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
+import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
 import css from "@/styles/dashboard-card.module.css";
 import Card from "@/components/ui-components/DashboardCard";
@@ -34,8 +34,8 @@ const Entities = () => {
       <PageHeader title="ENTITÄTEN" />
       <div className={css.container}>
         <DashboardSearchBar
-          setState={setExistingEntities}
-          state={entities}
+          itemsState={entities}
+          setItemsState={setExistingEntities}
           filterKey="caption"
           addNewLink="/entities/new"
         />

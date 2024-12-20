@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import useAxios from "./useAxios";
 import {
   fetchFail,
   fetchStart,
@@ -8,6 +7,7 @@ import {
 } from "@/redux/slices/attensamSlice";
 import { toastErrorNotify, toastSuccessNotify } from "@/helpers/ToastNotify";
 import { signOut } from "next-auth/react";
+import useAxios from "./useAxios";
 
 const useAttensamCalls = () => {
   const { axiosWithToken, axiosFormData } = useAxios();
@@ -93,7 +93,7 @@ const useAttensamCalls = () => {
 
   //GET
   const getWorkflowsCall = () =>
-    getAttData("/atina/api/Workflow", "workflows", true);
+    getAttData("/atina/api/Workflow?showPath=true", "workflows", true);
   const getEntitiesCall = () => getAttData("/api/Entity", "entities", true);
   const getWorkflowDefinitionsCall = (workflowId) =>
     getAttData(
