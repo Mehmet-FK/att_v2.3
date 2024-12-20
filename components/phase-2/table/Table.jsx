@@ -5,12 +5,7 @@ import { Paper, TableBody, TableHead, TableRow } from "@mui/material";
 import ColumnHead from "./ColumnHead";
 import CustomTableRow from "./CustomTableRow";
 import css from "@/styles/table.module.css";
-import {
-  dummyDataItems,
-  dummyDataBookings,
-  dummyData1,
-  contextMenuConstants,
-} from "@/helpers/Constants";
+import { contextMenuConstants } from "@/helpers/Constants";
 import useContextMenu from "@/hooks/table-hooks/useContextMenu";
 import useTable from "@/hooks/table-hooks/useTable";
 import ContextMenu from "@/components/phase-2/table/table_helpers/ContextMenu";
@@ -67,27 +62,27 @@ const Table = () => {
     return Object.keys(data).filter((el) => data[el].isVisible);
   };
 
-  useLayoutEffect(() => {
-    const dataArray = [
-      dummyDataItems,
-      dummyDataBookings,
-      dummyData1,
-      dummyData1,
-      dummyDataBookings,
-      dummyData1,
-      dummyDataItems,
-      dummyDataItems,
-    ];
-    const randomIndex = Math.floor(Math.random() * 8);
-    const data = dataArray[randomIndex];
-    setTimeout(() => {
-      setDataSets(data);
-    }, 500);
-    if (data) {
-      const extractedHeaders = extractHeaders(data.fields);
-      setHeaders(extractedHeaders);
-    }
-  }, []);
+  // useLayoutEffect(() => {
+  //   const dataArray = [
+  //     dummyDataItems,
+  //     dummyDataBookings,
+  //     dummyData1,
+  //     dummyData1,
+  //     dummyDataBookings,
+  //     dummyData1,
+  //     dummyDataItems,
+  //     dummyDataItems,
+  //   ];
+  //   const randomIndex = Math.floor(Math.random() * 8);
+  //   const data = dataArray[randomIndex];
+  //   setTimeout(() => {
+  //     setDataSets(data);
+  //   }, 500);
+  //   if (data) {
+  //     const extractedHeaders = extractHeaders(data.fields);
+  //     setHeaders(extractedHeaders);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (!dataSets?.fields) return;

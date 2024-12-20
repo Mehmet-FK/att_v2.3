@@ -7,7 +7,7 @@ import CustomTableRow from "./CustomTableRow";
 import css from "@/styles/table.module.css";
 
 //TODO: the Import below is only for testing do not forget to delete
-import { dummyData, tableNameConstants } from "@/helpers/Constants";
+import { tableNameConstants } from "@/helpers/Constants";
 import { useDispatch } from "react-redux";
 import {
   fetchStart,
@@ -63,30 +63,30 @@ const Table = () => {
     setColumnWidths(widths);
   };
 
-  useEffect(() => {
-    //Start fetching
-    dispatch(fetchStart());
-    //set data
-    setBookings({
-      ...dummyData,
-      entries: [
-        ...dummyData.entries,
-        ...dummyData.entries,
-        ...dummyData.entries,
-        ...dummyData.entries,
-      ],
-    });
-    //set data to redux store
-    dispatch(
-      getSuccess({ data: dummyData, dataName: tableNameConstants.BOOKINGS })
-    );
-    const extractedHeaders = extractHeaders(dummyData.entries[0]);
-    setHeaders(extractedHeaders);
-    // console.log(extractedHeaders);
-    initializeColumnWidths(extractedHeaders);
-    // stop loading
-    dispatch(stopLoading());
-  }, []);
+  // useEffect(() => {
+  //   //Start fetching
+  //   dispatch(fetchStart());
+  //   //set data
+  //   setBookings({
+  //     ...dummyData,
+  //     entries: [
+  //       ...dummyData.entries,
+  //       ...dummyData.entries,
+  //       ...dummyData.entries,
+  //       ...dummyData.entries,
+  //     ],
+  //   });
+  //   //set data to redux store
+  //   dispatch(
+  //     getSuccess({ data: dummyData, dataName: tableNameConstants.BOOKINGS })
+  //   );
+  //   const extractedHeaders = extractHeaders(dummyData.entries[0]);
+  //   setHeaders(extractedHeaders);
+  //   // console.log(extractedHeaders);
+  //   initializeColumnWidths(extractedHeaders);
+  //   // stop loading
+  //   dispatch(stopLoading());
+  // }, []);
   return (
     <>
       <TableContainer
