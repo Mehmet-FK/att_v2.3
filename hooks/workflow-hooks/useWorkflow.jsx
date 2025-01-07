@@ -22,8 +22,10 @@ const useWorkflow = () => {
   } = useLocalStorage();
 
   const workflow = useSelector((state) => state.workflow);
-  const flowHistoryRef = useRef(null);
-  const currentflowRef = useRef(null);
+
+  const undoStackRef = useRef([]);
+  const redoStackRef = useRef([]);
+
   const idRef = useRef(0);
   const rfInstance = useReactFlow();
 
@@ -31,8 +33,6 @@ const useWorkflow = () => {
 
   //Creates random id
   const getId = (type) => `${type}_${idRef.current++}`;
-
-  const createIdForWFHistory = () => Math.random().toString(36).substr(2, 8);
 
   const randomPositions = (xMax = 1000, yMax = 500) => {
     const getRandomValue = (max) => Math.floor(Math.random() * (max / 10)) * 10;
@@ -50,68 +50,81 @@ const useWorkflow = () => {
     );
   };
 
-  const updateHistory = () => {
-    const history = flowHistoryRef.current || [];
-
-    const currentFlow = history.find((f) => f.id === currentflowRef.current);
-
-    if (rfInstance) {
-      const newFlow = { ...rfInstance.toObject(), id: createIdForWFHistory() };
-      const isEqual =
-        JSON.stringify({ ...newFlow, id: "" }) ===
-        JSON.stringify({ ...currentFlow, id: "" });
-
-      if (isEqual) return;
-
-      const index = history.findIndex(
-        (item) => item.id === currentflowRef.current
-      );
-      const slicedArr = history.slice(0, index + 1);
-
-      if (slicedArr.length >= capacity) {
-        slicedArr.shift();
-      }
-
-      slicedArr.push(newFlow);
-      currentflowRef.current = newFlow.id;
-      flowHistoryRef.current = slicedArr;
-    }
+  const updateCurrentFlowState = (state) => {
+    setNodes(state.nodes);
+    setEdges(state.edges);
   };
 
-  const undo = () => {
-    const history = flowHistoryRef.current || [];
-
-    const index = history.findIndex((obj) => obj.id === currentflowRef.current);
-    const flow = history[index - 1];
-    if (index === 0) {
-      const defaultNode = history[index].nodes[0];
-      setNodes([defaultNode]);
-      setEdges([]);
-      currentflowRef.current = history[0].id;
-    }
-    if (flow) {
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      currentflowRef.current = flow.id;
-    }
+  const simplifyFlowState = (state) => {
+    return {
+      edges: state.edges,
+      nodes: state.nodes.map((node) => ({
+        position: node.position,
+        positionAbsolute: node.positionAbsolute,
+        id: node.id,
+        data: node.data,
+      })),
+    };
+  };
+  const didStateChange = (currentState) => {
+    if (undoStackRef.current.length < 1) return true;
+    const previousState = undoStackRef.current.at(-1);
+    const current = simplifyFlowState(currentState);
+    const previous = simplifyFlowState(previousState);
+    return JSON.stringify(current) !== JSON.stringify(previous);
   };
 
-  const redo = () => {
-    const history = flowHistoryRef.current || [];
+  const didWorkflowChange = () => {
+    if (undoStackRef.current.length < 1) return false;
+    const previousState = undoStackRef.current.at(-1);
 
-    const index = history.findIndex((obj) => obj.id === currentflowRef.current);
-    const flow = history[index + 1];
-
-    if (flow) {
-      setNodes(flow.nodes || []);
-      setEdges(flow.edges || []);
-      currentflowRef.current = flow.id;
-    }
+    const current = { ...workflow, selectedStepId: "" };
+    const previous = { ...previousState.workflow, selectedStepId: "" };
+    return JSON.stringify(current) !== JSON.stringify(previous);
   };
+
+  const updateWorkflowOfLatestState = () => {
+    let latestState = undoStackRef.current.pop();
+    latestState = { ...latestState, workflow };
+    undoStackRef.current.push(latestState);
+  };
+
+  const saveToHistory = useCallback(() => {
+    let newState = rfInstance.toObject();
+    newState = { ...newState, workflow };
+    if (didStateChange(newState)) {
+      console.log("saveToHistory");
+      undoStackRef.current.push(newState);
+      redoStackRef.current = [];
+    } else if (didWorkflowChange()) {
+      console.log("update workflow of latest state");
+      updateWorkflowOfLatestState();
+    }
+  }, [getNodes(), getEdges()]);
+
+  const onUndo = useCallback(() => {
+    if (undoStackRef.current.length < 1) return;
+    let currentState = rfInstance.toObject();
+    currentState = { ...currentState, workflow };
+    redoStackRef.current.push(currentState);
+    const lastState = undoStackRef.current.pop();
+    updateCurrentFlowState(lastState);
+    restoreWorkflowState(lastState.workflow);
+  }, [undoStackRef.current, getNodes(), getEdges(), workflow]);
+
+  const onRedo = useCallback(() => {
+    if (redoStackRef.current.length < 1) return;
+
+    const nextState = redoStackRef.current.pop();
+    updateCurrentFlowState(nextState);
+    restoreWorkflowState(nextState.workflow);
+
+    undoStackRef.current.push(nextState);
+  }, [redoStackRef.current, getNodes(), getEdges()]);
 
   const onKeydown = (e) => {
-    if (e.key === "z" && e.ctrlKey) undo();
-    if (e.key === "y" && e.ctrlKey) redo();
+    if (e.key === "z" && e.ctrlKey) onUndo();
+    if (e.key === "y" && e.ctrlKey) onRedo();
   };
 
   const onSave = useCallback(() => {
@@ -219,8 +232,7 @@ const useWorkflow = () => {
         })
       );
     }
-
-    updateHistory();
+    saveToHistory();
     updateSelectedStep(node.id);
   };
 
@@ -258,7 +270,7 @@ const useWorkflow = () => {
     }
 
     setNodes((nds) => nds.concat(newNode));
-    updateHistory();
+    saveToHistory();
     return { viewType, launchTypeId, newNode };
   };
 
@@ -277,7 +289,7 @@ const useWorkflow = () => {
         eds
       )
     );
-    updateHistory();
+    saveToHistory();
   };
 
   const restoreExistingLaunchElement = (launchElement) => {
@@ -431,7 +443,7 @@ const useWorkflow = () => {
     isWorkflowExistingInLocalStorage,
     onNodeDragStop,
     onDragOver,
-    updateHistory,
+    saveToHistory,
     isValidConnection,
     getIntersectingNodes,
     sourceAlreadyExist,

@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 
-import Layout from "@/layout/Layout";
+import Layout from "@/layout";
 import { useEffect, useMemo, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { useRouter } from "next/router";

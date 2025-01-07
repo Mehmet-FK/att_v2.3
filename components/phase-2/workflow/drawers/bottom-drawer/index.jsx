@@ -8,6 +8,10 @@ import { useSelector } from "react-redux";
 import DisplaySelectedForm from "./DisplaySelectedForm";
 import DrawerHead from "./DrawerHead";
 
+const defaultOpenHeight = 350;
+const minHeight = 45;
+const maxHeight = 850;
+
 const BottomDrawer = ({
   onSubmit,
   onSave,
@@ -20,6 +24,7 @@ const BottomDrawer = ({
   const { selectedStepId } = useSelector((state) => state.workflow);
 
   const resizeStartHeightRef = useRef(null);
+  const selectedNodeStoreRef = useRef(selectedStepId);
 
   const handleClose = () => setOpen(false);
 
@@ -29,9 +34,9 @@ const BottomDrawer = ({
   };
 
   const handleDoubleClick = (e) => {
-    if (e.detail === 2) {
-      if (newHeight < 150) setNewHeight(350);
-      else setNewHeight(45);
+    if (e.detail >= 2) {
+      if (newHeight < 150) setNewHeight(defaultOpenHeight);
+      else setNewHeight(minHeight);
     }
   };
 
@@ -42,8 +47,6 @@ const BottomDrawer = ({
     const offsetY =
       e.clientY - (document.body.offsetHeight - resizeStartHeight);
 
-    let minHeight = 45;
-    let maxHeight = 850;
     const calculatedHeight = resizeStartHeight - offsetY;
     if (calculatedHeight > minHeight && calculatedHeight < maxHeight) {
       setNewHeight(calculatedHeight);
@@ -63,6 +66,14 @@ const BottomDrawer = ({
     };
   });
 
+  useEffect(() => {
+    if (selectedStepId === "") selectedNodeStoreRef.current = selectedStepId;
+    if (selectedStepId === selectedNodeStoreRef.current) return;
+
+    selectedNodeStoreRef.current = selectedStepId;
+    // if (newHeight < 150) setNewHeight(defaultOpenHeight);
+  }, [selectedStepId]);
+
   const findSelectedNode = (_nodes) =>
     _nodes.find((nds) => nds.id === selectedStepId);
 
@@ -79,7 +90,6 @@ const BottomDrawer = ({
             // height: 100,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
-            opacity: newHeight / 150,
             userSelect: "none",
           },
         }}
@@ -99,6 +109,7 @@ const BottomDrawer = ({
         <Box
           sx={{
             display: newHeight > 100 ? "block" : "none",
+            opacity: newHeight / 350,
             overflow: "auto",
           }}
         >

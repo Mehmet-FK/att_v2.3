@@ -483,7 +483,6 @@ const useWorkflowForms = () => {
   };
 
   const deleteView = (viewType, workflowStepId) => {
-    console.log(viewType);
     if (viewType === viewTypeConstants.LISTVIEW) {
       deleteListView(workflowStepId);
     } else if (viewType === viewTypeConstants.RECORDVIEW) {
@@ -518,6 +517,7 @@ const useWorkflowForms = () => {
   };
 
   const restoreWorkflowState = (workflow) => {
+    console.log({ workflow });
     if (workflow) {
       dispatch(updateTotalWorkflow({ workflow }));
     } else {

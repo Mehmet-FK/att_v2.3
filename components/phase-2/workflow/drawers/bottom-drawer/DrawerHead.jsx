@@ -19,7 +19,6 @@ const DrawerHead = ({
   restoreWorkflowFromLocalStorage,
   handleMouseDown,
   handleDoubleClick,
-  opacity,
   pointerEvents,
   label,
 }) => {
@@ -35,7 +34,6 @@ const DrawerHead = ({
         className={css.console_btn_wrapper}
         style={{
           display: "flex",
-          opacity: opacity,
         }}
       >
         <div style={{ userSelect: "none", fontStyle: "italic" }}>{label}</div>

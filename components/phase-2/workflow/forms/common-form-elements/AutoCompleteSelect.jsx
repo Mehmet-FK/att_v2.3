@@ -53,7 +53,6 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   useEffect(() => {
     const tempSelectedValue = options.find((opt) => opt[optKey] === value);
     setSelectedValue(tempSelectedValue);
-    console.log(tempSelectedValue);
   }, [value]);
 
   return (

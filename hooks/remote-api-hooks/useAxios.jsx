@@ -59,7 +59,6 @@ const useAxios = () => {
 
           isRefreshingRef.current = false;
           const currentSubscribers = [...refreshSubscribersRef.current];
-          console.log(currentSubscribers);
           refreshSubscribersRef.current = [];
           callRefreshSubscribers(currentSubscribers, newAccessToken);
 

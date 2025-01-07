@@ -4,3 +4,21 @@
 .tool_element:hover {
   transform: translateY(1px);
 }
+.open_button {
+  position: absolute;
+  left: -40px;
+  top: 90px;
+  z-index: 200;
+  cursor: pointer;
+  height: 45px;
+  width: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px 0 0 15px;
+  border: 1px solid #ccc;
+  border-right: none;
+  user-select: none;
+  transition: all 0.3s linear;
+}

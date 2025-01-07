@@ -16,7 +16,7 @@ const ToolList = ({ tools, title }) => {
   };
 
   return (
-    <Box sx={{ width: 250 }} role="presentation">
+    <Box sx={{ width: 250, overflowY: "auto" }} role="presentation">
       <ListItemButton
         sx={{ bgcolor: "paper.background", color: "paper.text" }}
         onClick={handleClick}

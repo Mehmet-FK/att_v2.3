@@ -39,7 +39,6 @@ const initialNodes = [
 const initialEdges = [];
 
 const Sheet = ({ existingWorkflow }) => {
-  const [openToolsDrawer, setOpenToolsDrawer] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -61,7 +60,7 @@ const Sheet = ({ existingWorkflow }) => {
     isWorkflowExistingInLocalStorage,
     onNodeDragStop,
     onDragOver,
-    updateHistory,
+    saveToHistory,
     isValidConnection,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
@@ -82,7 +81,6 @@ const Sheet = ({ existingWorkflow }) => {
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
-    console.log(_edges);
     updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
 
@@ -100,9 +98,12 @@ const Sheet = ({ existingWorkflow }) => {
     const _nodes = reactFlowInstance.getNodes();
     updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
-  const handleDeleteNode = (deleted) => {
-    deleted.forEach((node) => deleteWorkflowStep(node));
-    updateHistory();
+  const handleDeleteNode = (deletedNodes) => {
+    deletedNodes.forEach((node) => deleteWorkflowStep(node));
+    saveToHistory();
+  };
+  const handleDeleteEdge = (deletedEdges) => {
+    saveToHistory();
   };
 
   useEffect(() => {
@@ -155,23 +156,6 @@ const Sheet = ({ existingWorkflow }) => {
         onConfirm={restoreWorkflowFromLocalStorage}
         onDeny={removeWorkflowFromLocalStorage}
       />
-      <h4
-        style={{
-          position: "absolute",
-          top: 70,
-          zIndex: 200,
-          cursor: "pointer",
-          backgroundColor: "#404040",
-          padding: "6px 20px",
-          borderRadius: "6px",
-          color: "#fff",
-          textAlign: "center",
-          userSelect: "none",
-        }}
-        onClick={() => setOpenToolsDrawer((prev) => !prev)}
-      >
-        Tools {openToolsDrawer ? "schließen" : "öffnen"}
-      </h4>
 
       <ReactFlow
         nodes={nodes}
@@ -181,6 +165,7 @@ const Sheet = ({ existingWorkflow }) => {
         onEdgesChange={onEdgesChange}
         onNodeDragStop={(e, n) => onNodeDragStop(e, n, updateSelectedStep)}
         onNodesDelete={handleDeleteNode}
+        onEdgesDelete={handleDeleteEdge}
         onNodeClick={(e, n) => updateSelectedStep(n.id)}
         onPaneClick={() => updateSelectedStep("")}
         isValidConnection={isValidConnection}
@@ -199,7 +184,7 @@ const Sheet = ({ existingWorkflow }) => {
         {/* <Controls style={{ bottom: 55 }} /> */}
       </ReactFlow>
 
-      <ToolsDrawer open={openToolsDrawer} />
+      <ToolsDrawer />
       <BottomDrawer
         onSubmit={handleSubmit}
         onSave={onSave}
