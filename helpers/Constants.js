@@ -91,6 +91,7 @@ export const viewTypeConstants = {
   LAUNCH_MODULE: "LaunchModule",
   LAUNCH_ELEMENT_DEFAULT_FUNCTION: "LaunchElementDefaultFunction",
   LAUNCH_GROUPVIEW: "LaunchGroupView",
+  LAUNCH_DEAFULT_LISTVIEW: "LaunchDefaultListView",
 };
 
 export const launchTypes = [
@@ -103,6 +104,7 @@ export const launchTypes = [
     caption: "Element Default Function",
   },
   { id: 4, type: "LaunchGroupView", caption: "Group View" },
+  { id: 5, type: "LaunchDefaultListView", caption: "Default List View" },
 ];
 
 export const workflowStepTypeIds = {

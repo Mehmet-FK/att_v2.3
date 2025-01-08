@@ -4,15 +4,18 @@ import {
   AttachmentShape,
   ImageShape,
   LaunchDatasetShape,
+  LaunchDefaultListViewShape,
   LaunchDefaultShape,
   LaunchEntityShape,
   LaunchGroupShape,
   LaunchModuleShape,
   ListShape,
   ModalShape,
+  NFCScannerShape,
+  QRScannerShape,
   RecordShape,
   TileShape,
-} from "../../nodes/node-comps/Shapes";
+} from "../../nodes/node-components/Shapes";
 
 const StepElement = ({ tool }) => {
   const onDragStart = (e) => {
@@ -60,15 +63,16 @@ const StepElement = ({ tool }) => {
       {tool.name === "RecordView" && <RecordShape />}
       {tool.name === "ModalDialog" && <ModalShape />}
       {tool.name === "CaptureImage" && <ImageShape />}
-      {tool.name === "AttachmentView" && <AttachmentShape color={"#438D57"} />}
-      {tool.name === "ScannerDialogNFC" && <ListShape color={"#00f"} />}
-      {tool.name === "ScannerDialogQR" && <ListShape color={"#f00"} />}
+      {tool.name === "AttachmentView" && <AttachmentShape />}
+      {tool.name === "ScannerDialogNFC" && <NFCScannerShape />}
+      {tool.name === "ScannerDialogQR" && <QRScannerShape />}
 
       {tool.name === "LaunchDatasetFunction" && <LaunchDatasetShape />}
       {tool.name === "LaunchEntityFunction" && <LaunchEntityShape />}
       {tool.name === "LaunchModule" && <LaunchModuleShape />}
       {tool.name === "LaunchElementDefaultFunction" && <LaunchDefaultShape />}
       {tool.name === "LaunchGroupView" && <LaunchGroupShape />}
+      {tool.name === "LaunchDefaultListView" && <LaunchDefaultListViewShape />}
     </Box>
   );
 };

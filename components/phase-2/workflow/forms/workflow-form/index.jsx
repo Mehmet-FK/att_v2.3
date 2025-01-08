@@ -9,20 +9,8 @@ import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import LaunchElementForm from "../LaunchElementForm";
 import { workflowPermissionTypes } from "@/helpers/Enums";
+import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
 
-const prepareWorkflowForAutoCompleteSelect = (workflows) => {
-  if (!workflows) return [];
-
-  const notDatasetWorkflows = workflows.filter(
-    (wf) => wf.launchType !== "0" && wf.launchType !== "1"
-  );
-
-  return notDatasetWorkflows.map((wf) => ({
-    id: wf.id,
-    caption: wf.caption,
-    icon: wf.icon,
-  }));
-};
 const WorkflowForm = ({ entitiesForAutoSelect }) => {
   const workflowState = useSelector((state) => state.workflow);
   const workflows = useSelector((state) => state.attensam.data?.workflows);
@@ -30,10 +18,8 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
 
   const { updateWorkflowValue } = useWorkflowForms();
 
-  const workflowsForAutoCompleteSelect = useMemo(
-    () => prepareWorkflowForAutoCompleteSelect(workflows),
-    [workflows]
-  );
+  const [runWorker, workflowsForAutoCompleteSelect, error, loading] =
+    useAutoCompleteDataWorker("/workers/prepareWorkflowsWorker.js");
 
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
@@ -52,6 +38,12 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
   useEffect(() => {
     setWorkflowFormValues(workflowState);
   }, [workflowState]);
+
+  useEffect(() => {
+    if (workflows) {
+      runWorker(workflows);
+    }
+  }, [workflows]);
 
   return (
     <div className={css.form_container}>
@@ -94,7 +86,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
               handleChange: handleChange,
               handleBlur: handleBlur,
               preferences: { key: "id", caption: "caption" },
-              options: workflowsForAutoCompleteSelect,
+              options: workflowsForAutoCompleteSelect || [],
               name: "parentWorkflowId",
               value: workflowFormValues?.parentWorkflowId || "",
               label: "Parent Workflow",
@@ -134,19 +126,14 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
             }}
             helperProps={{
               className: css.form_control,
+              // fullWidth: true,
             }}
           />
 
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className={css.flex_row}>
             <CheckBox
               sx={{
-                width: "100%",
+                width: "50%",
               }}
               handleChange={handleChange}
               handleBlur={handleBlur}
@@ -156,7 +143,7 @@ const WorkflowForm = ({ entitiesForAutoSelect }) => {
             />
             <CheckBox
               sx={{
-                width: "100%",
+                width: "50%",
               }}
               handleChange={handleChange}
               handleBlur={handleBlur}

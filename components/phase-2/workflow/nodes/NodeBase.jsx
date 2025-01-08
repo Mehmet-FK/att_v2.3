@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import NodeHandles from "./node-comps/Handles";
+import NodeHandles from "./node-components/Handles";
 
 const NodeBase = ({ data, isConnectable, shape }) => {
   const { selectedStepId } = useSelector((state) => state.workflow);
@@ -12,12 +12,8 @@ const NodeBase = ({ data, isConnectable, shape }) => {
     () => selectedStepId === data.nodeId,
     [selectedStepId, data.nodeId]
   );
-
   return (
-    <Box
-      className={`${css.node_body} ${isNodeSelected && css.selected_node}`}
-      sx={{ bgcolor: "Background" }}
-    >
+    <Box className={`${css.node_body} ${isNodeSelected && css.selected_node}`}>
       {shape}
 
       <h5 className={css.node_title}>{data.label}</h5>

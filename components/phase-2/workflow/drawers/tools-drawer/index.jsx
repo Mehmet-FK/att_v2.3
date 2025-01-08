@@ -100,6 +100,12 @@ const ToolsDrawer = () => {
       type: "launch",
       typeId: 4,
     },
+    {
+      name: "LaunchDefaultListView",
+      caption: "Default List View",
+      type: "launch",
+      typeId: 5,
+    },
   ];
 
   return (

@@ -3,6 +3,7 @@ import {
   AttachmentShape,
   ImageShape,
   LaunchDatasetShape,
+  LaunchDefaultListViewShape,
   LaunchDefaultShape,
   LaunchEntityShape,
   LaunchGroupShape,
@@ -11,7 +12,7 @@ import {
   ModalShape,
   RecordShape,
   TileShape,
-} from "./node-comps/Shapes";
+} from "./node-components/Shapes";
 import NodeBase from "./NodeBase";
 
 const nodeShapes = {
@@ -28,6 +29,7 @@ const nodeShapes = {
   LaunchModule: <LaunchModuleShape />,
   LaunchElementDefaultFunction: <LaunchDefaultShape />,
   LaunchGroupView: <LaunchGroupShape />,
+  LaunchDefaultListView: <LaunchDefaultListViewShape />,
 };
 
 const Nodes = ({ data, isConnectable }) => {

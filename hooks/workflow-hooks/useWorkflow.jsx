@@ -296,7 +296,7 @@ const useWorkflow = () => {
     const viewType = launchTypes.find(
       (lt) => lt.id === launchElement.launchType
     ).type;
-
+    console.log(launchElement);
     const caption = viewType; //TODO: refoctoring is needed
     const nodeId = launchElement.workflowStepId;
     const newLaunchNode = createNewLaunchNode(viewType, caption, nodeId);
@@ -404,6 +404,7 @@ const useWorkflow = () => {
     _setEdges
   ) => {
     if (!existingWorkflow) return;
+    console.log(existingWorkflow);
     const launchElement = existingWorkflow.launchElements[0];
     const launchNode = restoreExistingLaunchElement(launchElement);
     _setNodes((nds) => nds.concat(launchNode));

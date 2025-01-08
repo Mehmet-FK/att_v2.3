@@ -4,9 +4,11 @@ import { useSelector } from "react-redux";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import { TextField } from "@mui/material";
+import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 
 const ModalDialogForm = ({ stepID, workflowStepValues }) => {
-  const { modalDialogs } = useSelector((state) => state.workflow);
+  const { modalDialogs, entityId } = useSelector((state) => state.workflow);
+  const entities = useSelector((state) => state.attensam.data?.entities);
 
   const viewId = useMemo(() => stepID + "-modal", [stepID]);
   const modalDialog = modalDialogs.find((md) => md.modalDialogId === viewId);
@@ -15,6 +17,21 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
 
   const { updateModalDialogValue, updateWorkflowStepValue } =
     useWorkflowForms();
+
+  const prepareEntityFieldsForAutoSelect = () => {
+    const entity = entities?.find((e) => e.id === parseInt(entityId));
+    if (!entity) return [];
+
+    return entity.fields.map((f) => ({
+      id: f.id,
+      caption: f.dataSourceColumn,
+    }));
+  };
+
+  const entityFieldsForAutoSelect = useMemo(
+    () => prepareEntityFieldsForAutoSelect(),
+    [entityId, entities]
+  );
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -84,7 +101,7 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
           />
         </div>
         <div className={css.flex_row}>
-          <CustomSelect
+          {/* <CustomSelect
             handleChange={handleChange}
             handleBlur={handleBlur}
             value={modalDialogValues?.fieldId}
@@ -95,7 +112,22 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
               { id: "1", name: "fieldId" },
               { id: "2", name: "fieldId_2" },
             ]}
+          /> */}
+          <AutoCompleteSelect
+            mainProps={{
+              handleChange: handleChange,
+              handleBlur: handleBlur,
+              preferences: { key: "id", caption: "caption" },
+              options: entityFieldsForAutoSelect,
+              name: "fieldId",
+              value: modalDialogValues?.fieldId || "",
+              label: "Feld",
+            }}
+            helperProps={{
+              className: css.form_control,
+            }}
           />
+
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}

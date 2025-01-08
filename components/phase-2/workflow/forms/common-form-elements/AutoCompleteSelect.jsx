@@ -72,7 +72,6 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
       getOptionLabel={(opt) => opt[optCaption]}
       slotProps={{ popper: { sx: { zIndex: 35001 } } }}
       options={options}
-      sx={{ width: 300 }}
       renderInput={(params) => (
         <TextField {...params} key={params.id} label={label} />
       )}
