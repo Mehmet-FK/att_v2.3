@@ -16,7 +16,6 @@ const useAxios = () => {
   };
 
   const addRefreshSubscriber = (callback) => {
-    //TODO: ref.current.push????
     refreshSubscribersRef.current.push(callback);
   };
 

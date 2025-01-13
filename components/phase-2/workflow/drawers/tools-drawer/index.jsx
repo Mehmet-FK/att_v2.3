@@ -127,7 +127,7 @@ const ToolsDrawer = () => {
           <Tooltip title={open ? "Schließen" : "Öffnen"} enterDelay={200}>
             <KeyboardArrowLeftIcon
               sx={{
-                fontSize: "2rem",
+                fontSize: "1.5rem",
                 transform: `rotate( ${open ? "180deg" : "0deg"})`,
                 transition: "all 0.2s ease-in-out",
               }}
