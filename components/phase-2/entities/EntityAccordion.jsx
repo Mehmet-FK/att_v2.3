@@ -6,25 +6,24 @@ import ImageInput from "@/components/form-elements/ImageInput";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const EntityAccordion = ({ entity, setEntity }) => {
+const EntityAccordion = ({ entityForm, setEntityForm }) => {
   const [dataSource, setDataSource] = useState([]); //Keep the State from Store
 
   const { views } = useSelector((state) => state.attensam.data); // DataSource
 
-  // Input onchange function
   const handleChange = (e) => {
-    setEntity({ ...entity, [e.target.name]: e.target.value });
+    setEntityForm({ ...entityForm, [e.target.name]: e.target.value });
   };
 
-  const handleImageOnChange = (e) => {
-    const file = e.target.files[0] || null;
-    setEntity({ ...entity, iconUrl: file });
+  // const handleImageOnChange = (e) => {
+  //   const file = e.target.files[0] || null;
+  //   setEntityForm({ ...entityForm, iconUrl: file });
 
-    if (!file) {
-      setEntity({ ...entity, iconUrl: null });
-      return;
-    }
-  };
+  //   if (!file) {
+  //     setEntityForm({ ...entityForm, iconUrl: null });
+  //     return;
+  //   }
+  // };
 
   useEffect(() => {
     setDataSource(views);
@@ -35,7 +34,7 @@ const EntityAccordion = ({ entity, setEntity }) => {
         <TextField
           sx={{ width: "100%" }}
           onChange={handleChange}
-          value={entity?.name || ""}
+          value={entityForm?.name || ""}
           size="small"
           label="Name"
           name="name"
@@ -45,7 +44,7 @@ const EntityAccordion = ({ entity, setEntity }) => {
         <TextField
           sx={{ width: "100%" }}
           onChange={handleChange}
-          value={entity?.caption || ""}
+          value={entityForm?.caption || ""}
           size="small"
           name="caption"
           label="Caption"
@@ -57,7 +56,7 @@ const EntityAccordion = ({ entity, setEntity }) => {
           label="DataSource"
           name="dataSource"
           width="100%"
-          value={entity?.dataSource || ""}
+          value={entityForm?.dataSource || ""}
           onChange={handleChange}
         >
           {dataSource?.map((opt, index) => (
@@ -67,11 +66,13 @@ const EntityAccordion = ({ entity, setEntity }) => {
           ))}
         </Select>
 
-        <ImageInput
+        {/* <ImageInput
           name="iconUrl"
-          img={entity?.IconUrl != undefined ? null : entity?.defaultIconUrl}
-          onChange={handleImageOnChange}
-        />
+          img={
+            entityForm?.IconUrl != undefined ? null : entityForm?.defaultIconPath
+          }
+           onChange={handleImageOnChange}
+        /> */}
       </div>
     </Accordion>
   );

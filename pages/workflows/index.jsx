@@ -158,8 +158,8 @@ const Workflow = () => {
             <Card
               cardInfo={{
                 url: `/workflows/${wf.id}`,
-                path: wf.path,
-                caption: wf.caption,
+                texts: [wf.path],
+                caption: `${wf.id} - ${wf.caption}`,
                 defaultIconUrl: wf.icon,
               }}
               key={wf.id}

@@ -1,7 +1,9 @@
 import { toastErrorNotify } from "@/helpers/ToastNotify";
+import { setSessionExpired } from "@/redux/slices/settingsSlice";
 import axios from "axios";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRef } from "react";
+import { useDispatch } from "react-redux";
 
 const useAxios = () => {
   const BASE_URL = "https://apl.attensam.at";
@@ -10,6 +12,8 @@ const useAxios = () => {
   const refreshSubscribersRef = useRef([]);
 
   const { data: session, update: updateSession } = useSession();
+
+  const dispatch = useDispatch();
 
   const callRefreshSubscribers = (subscribers, token) => {
     subscribers.forEach((callback) => callback(token));
@@ -60,16 +64,12 @@ const useAxios = () => {
           const currentSubscribers = [...refreshSubscribersRef.current];
           refreshSubscribersRef.current = [];
           callRefreshSubscribers(currentSubscribers, newAccessToken);
-
           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosInstanceBase(originalRequest);
         } catch (refreshError) {
+          dispatch(setSessionExpired({ isSessionExpired: true }));
           console.error("Token refresh failed", refreshError);
           isRefreshingRef.current = false;
-          setTimeout(() => {
-            signIn();
-            console.log(refreshError);
-          }, 1500);
         }
       }
 

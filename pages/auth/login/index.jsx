@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import css from "@/styles/login.module.css";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import { getSession, signIn } from "next-auth/react";
-import { setUser } from "@/redux/slices/settingsSlice";
+import { setSessionExpired, setUser } from "@/redux/slices/settingsSlice";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { toastErrorNotify } from "@/helpers/ToastNotify";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -60,6 +60,10 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    dispatch(setSessionExpired({ isSessionExpired: false }));
+  }, []);
 
   return (
     <>

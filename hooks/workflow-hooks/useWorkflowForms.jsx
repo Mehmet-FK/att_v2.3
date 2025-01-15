@@ -329,20 +329,33 @@ const useWorkflowForms = () => {
   };
 
   const createViewHeaderColumn = (headerRowId) => {
-    const columnId = "vhc-" + generateRandomId();
+    const columnId = () => "vhc-" + generateRandomId();
     const template = {
-      headerColumnId: columnId,
       headerRowID: headerRowId,
       columnType: 3,
-      columnValue: "",
-      colSpan: 2,
       rowSpan: 1,
       fontColor: "#FFFFFF",
+    };
+
+    const column1 = {
+      ...template,
+      headerColumnId: columnId(),
+      columnValue: "user.userName",
+      colSpan: 2,
       textAlignment: 0,
       fontFamily: 3,
     };
+    const column2 = {
+      ...template,
+      headerColumnId: columnId(),
+      columnValue: "user.number",
+      colSpan: 1,
+      textAlignment: 2,
+      fontFamily: 7,
+    };
 
-    dispatch(addViewHeaderColumn({ viewHeaderColumn: template }));
+    dispatch(addViewHeaderColumn({ viewHeaderColumn: column1 }));
+    dispatch(addViewHeaderColumn({ viewHeaderColumn: column2 }));
   };
 
   const updateViewHeaderColumnValue = (name, value, columnId) => {

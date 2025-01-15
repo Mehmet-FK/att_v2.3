@@ -4,54 +4,67 @@ import Accordion from "@/components/ui-components/Accordion";
 import FieldGroup from "@/components/phase-2/entities/FieldGroup";
 import { toastWarnNotify } from "@/helpers/ToastNotify";
 
-const FieldsAccordion = ({ entity, fields, setFields }) => {
-  const removeField = (id) => {
-    const filtered = fields.filter((f) => f.id !== id);
-    setFields(filtered);
+const fieldTemplate = {
+  id: null,
+  name: "",
+  caption: "",
+  type: 0,
+  dataSourceColumn: "",
+  linkedEntityId: null,
+  showMobile: false,
+  validationId: null,
+  isReadOnly: false,
+  maxLength: null,
+  decimalPlaces: null,
+  showByDefault: false,
+  groupName: "Allgemein",
+};
+
+const FieldsAccordion = ({
+  entityForm,
+  setEntityForm,
+  entitiesForAutoSelect,
+}) => {
+  const fields = entityForm.fields;
+
+  const removeField = (fieldId) => {
+    const filteredFields = fields.filter((field) => field.id !== fieldId);
+    setEntityForm({ ...entityForm, fields: filteredFields });
   };
 
-  // checks if dataSource (View) Value is empty. if empty does not add new field
-  // because fieldGroups need dataSource value to make API Call for View columns
-  //
   const addNewField = () => {
-    if (!entity?.dataSource) {
-      // if no dataSource selected yet
-      toastWarnNotify("Zuerst das DataSource festlegen!");
+    const randomId = Math.ceil(new Date().getTime() * Math.random());
+    if (!entityForm?.dataSource) {
+      toastWarnNotify("Zuerst ein DataSource auswählen!");
       return;
     }
-    const groupID = `id-${Math.random().toString(36).substr(2, 10)}`; // Id to determine current group in fields array
-    const inx = fields.length;
-    setFields([
-      ...fields,
-      {
-        index: inx,
-        id: groupID,
-      },
-    ]);
+    fields.push({ ...fieldTemplate, id: randomId });
+    setEntityForm({ ...entityForm, fields });
   };
 
-  const handleFieldChange = (e, i, isCheckbox) => {
-    const name = e.target.name;
-    const tempFields = [...fields];
-    const tempF = { ...tempFields[i] };
-    if (isCheckbox) {
-      tempF[name] = e.target.checked;
-    } else {
-      tempF[name] = e.target.value;
-    }
-    tempFields[i] = tempF;
-    setFields(tempFields);
+  const handleBlur = (e, fieldId) => {
+    const { name, value, type, checked } = e.target;
+    const inputValue = type === "checkbox" ? checked : value;
+
+    const changedFields = fields.map((field) => {
+      if (field.id === fieldId) {
+        return { ...field, [name]: inputValue };
+      } else {
+        return field;
+      }
+    });
+    setEntityForm({ ...entityForm, fields: changedFields });
   };
 
   return (
     <Accordion expandDefault header={"FELDER"}>
-      {fields?.map((field, index) => (
+      {fields?.map((field) => (
         <FieldGroup
-          key={index}
+          key={field.id}
           field={field}
-          index={index}
-          view={entity?.dataSource}
-          handleFieldChange={handleFieldChange}
+          view={entityForm?.dataSource}
+          entitiesForAutoSelect={entitiesForAutoSelect}
+          handleBlur={handleBlur}
           removeField={removeField}
         />
       ))}

@@ -43,6 +43,6 @@ export const fontFamilies = [
 
 export const headerColumnTextAlignments = [
   { id: 0, caption: "Left" },
-  { id: 1, caption: "Right" },
-  { id: 2, caption: "Center" },
+  { id: 1, caption: "Center" },
+  { id: 2, caption: "Right" },
 ];

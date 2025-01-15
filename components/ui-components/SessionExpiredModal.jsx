@@ -12,14 +12,14 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useSelector } from "react-redux";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 // import { FaExclamationTriangle } from "react-icons/fa";
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
     borderRadius: 12,
     padding: theme.spacing(2),
-    maxWidth: 400,
+    maxWidth: 500,
   },
 }));
 
@@ -46,22 +46,22 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 const SessionExpiredModal = () => {
   const { sessionExpired } = useSelector((state) => state.settings);
-
-  const handleLogin = () => {
-    signIn();
+  const handleNavigateToLogin = () => {
+    signOut();
   };
 
   return (
-    // <Fade in={open}>
+    // <Fade in={sessionExpired} timeout={{ enter: 150, exit: 500 }}>
     <StyledDialog
       open={sessionExpired}
       aria-labelledby="session-expired-dialog-title"
       aria-describedby="session-expired-dialog-description"
-      TransitionProps={
-        {
-          // onExited: () => setOpen(false),
-        }
-      }
+      slotProps={{
+        backdrop: {
+          sx: { backdropFilter: "blur(5px)" },
+          open: sessionExpired,
+        },
+      }}
     >
       <DialogTitle id="session-expired-dialog-title">
         <IconWrapper>{/* <FaExclamationTriangle /> */}</IconWrapper>
@@ -79,7 +79,7 @@ const SessionExpiredModal = () => {
       </DialogContent>
       <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
         <StyledButton
-          onClick={handleLogin}
+          onClick={handleNavigateToLogin}
           variant="contained"
           color="primary"
           aria-label="Go to login page"

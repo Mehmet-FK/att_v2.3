@@ -21,7 +21,7 @@ const BottomDrawer = ({
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
   const [newHeight, setNewHeight] = useState(45);
-  const { selectedStepId } = useSelector((state) => state.workflow);
+  const { selectedStepId, workflowId } = useSelector((state) => state.workflow);
 
   const resizeStartHeightRef = useRef(null);
   const selectedNodeStoreRef = useRef(selectedStepId);
@@ -78,6 +78,7 @@ const BottomDrawer = ({
     _nodes.find((nds) => nds.id === selectedStepId);
 
   const selectedNode = useMemo(() => findSelectedNode(nodes), [selectedStepId]);
+
   return (
     <>
       <Drawer
@@ -101,7 +102,11 @@ const BottomDrawer = ({
           handleDoubleClick={handleDoubleClick}
           opacity={newHeight / 150}
           pointerEvents={newHeight < 80 && "none"}
-          label={selectedNode ? selectedNode?.data?.label : "Workflow"}
+          label={
+            selectedNode
+              ? `${selectedNode?.data?.label}: ${selectedNode?.data?.viewId}`
+              : `Workflow: ${workflowId}`
+          }
           onSubmit={onSubmit}
           onSave={onSave}
           restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}

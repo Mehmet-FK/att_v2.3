@@ -1,6 +1,6 @@
 import PageHeader from "@/components/ui-components/PageHeader";
 import css from "@/styles/entities.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
@@ -11,19 +11,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EntityAccordion from "@/components/phase-2/entities/EntityAccordion";
 import FieldsAccordion from "@/components/phase-2/entities/FieldsAccordion";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
+import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
+
+const entityTemplate = {
+  name: "",
+  caption: "",
+  dataSource: "",
+  dataSourceType: 0,
+  isSystemEntity: false,
+  fileSource: "",
+  maxResults: null,
+  defaultIconPath: null,
+  fields: [],
+  sortingDefinitions: [],
+};
 
 const AddEntity = () => {
-  const [entity, setEntity] = useState({});
-  const [fields, setFields] = useState([]);
-
-  const [openConfirm, setOpenConfirm] = useState({
-    isOpen: false,
-    isConfirmed: false,
-  });
-
+  const [entityForm, setEntityForm] = useState(entityTemplate);
   const router = useRouter();
-  const { query } = router;
-  // Fetch functions from custom hook
+  const {
+    query: { entityId },
+  } = router;
+  const { entity: singleEntity, entities } = useSelector(
+    (state) => state.attensam.data
+  );
+
+  const [runWorker, entitiesForAutoSelect, error, loading] =
+    useAutoCompleteDataWorker("/workers/prepareEntitiesWorker.js");
+
   const {
     deleteEntityCall,
     deleteFieldCall,
@@ -36,17 +51,15 @@ const AddEntity = () => {
     getFieldTypes,
   } = useAttensamCalls();
 
-  const { entity: singleEntity } = useSelector((state) => state.attensam.data);
-  const { user } = useSelector((state) => state.settings);
-
-  //Confirm Dialog Props
-  const confirmProps = {
-    dialogTitle: "Title",
-    dialogContent: "Lorem Ipsum",
-    acceptBtnText: "Löschen",
-    acceptFunc: () => setOpenConfirm({ ...openConfirm, isConfirmed: true }),
-    isConfirmed: false,
+  const findEntityById = () => {
+    const entity = entities?.find((entity) => entity.id === parseInt(entityId));
+    if (!entity) {
+      return entityTemplate;
+    }
+    return entity;
   };
+
+  const entity = useMemo(() => findEntityById(), [entityId, entities]);
 
   //ToolMenu Buttonlist
   const toolMenuProps = [
@@ -133,8 +146,8 @@ const AddEntity = () => {
     formData.append("Fields", JSON.stringify(fields));
 
     //Check if it is edit Entity or create Entity
-    if (query.entityId) {
-      handleUpdate(query.entityId, singleEntity?.fields, fields, formData);
+    if (entityId) {
+      handleUpdate(entityId, singleEntity?.fields, fields, formData);
     } else {
       postEntityCall(formData);
     }
@@ -143,52 +156,42 @@ const AddEntity = () => {
   };
 
   useEffect(() => {
-    if (!entity?.dataSource) return;
-    getViewColumnsCall(entity.dataSource);
-  }, [entity?.dataSource, user]);
+    setEntityForm(entity);
+    getViewColumnsCall(entity?.dataSource);
+  }, [entityId]);
 
   useEffect(() => {
-    getFieldTypes();
-
-    if (query?.entityId) {
-      getSingleEntityCall(query.entityId);
+    if (entities) {
+      runWorker(entities);
     }
-  }, [user]);
+  }, [entities]);
 
-  useEffect(() => {
-    if (query?.entityId) {
-      setEntity(singleEntity);
-      setFields(singleEntity?.fields);
-      //TODO: This block renders two times when entityId changes. Optimization needed
-    }
-  }, [singleEntity, user]);
   return (
-    <form onSubmit={handleSubmit}>
-      <ConfirmModal
-        open={openConfirm}
-        setOpen={setOpenConfirm}
-        confirmProps={confirmProps}
-      />
-
-      <PageHeader
-        title={`Entität ${query.entityId ? "Bearbeiten" : "Anlegen"}`}
-      />
-      <div className={css.container}>
-        {query.entityId && <ToolMenu buttonsList={toolMenuProps} />}
-
-        <EntityAccordion setEntity={setEntity} entity={entity} />
-        <FieldsAccordion
-          entity={entity}
-          fields={fields}
-          setFields={setFields}
+    <div className="page-wrapper">
+      <form onSubmit={handleSubmit}>
+        <PageHeader
+          title={`Entität ${entity?.id ? "Bearbeiten" : "Anlegen"}`}
         />
-        <div className={css.submitBtnWrapper}>
-          <Button className={css.submitBtn} variant="contained" type="submit">
-            submit
-          </Button>
+        <div className={css.container}>
+          {entityId && <ToolMenu buttonsList={toolMenuProps} />}
+
+          <EntityAccordion
+            setEntityForm={setEntityForm}
+            entityForm={entityForm}
+          />
+          <FieldsAccordion
+            entityForm={entityForm}
+            setEntityForm={setEntityForm}
+            entitiesForAutoSelect={entitiesForAutoSelect}
+          />
+          <div className={css.submitBtnWrapper}>
+            <Button className={css.submitBtn} variant="contained" type="submit">
+              submit
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

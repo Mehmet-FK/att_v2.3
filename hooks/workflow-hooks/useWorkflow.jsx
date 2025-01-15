@@ -197,7 +197,7 @@ const useWorkflow = () => {
       },
     };
   };
-  const createNewReqularNode = (name, caption, position, nodeId) => {
+  const createNewReqularNode = (name, caption, position, nodeId, viewId) => {
     const _nodeId = nodeId ? nodeId : getId(name);
     return {
       id: _nodeId,
@@ -205,7 +205,7 @@ const useWorkflow = () => {
       viewType: name,
       name: "",
       position,
-      data: { label: `${caption}`, nodeId: _nodeId, type: name },
+      data: { label: `${caption}`, nodeId: _nodeId, type: name, viewId },
       changeEvent: (e, selectedNode) =>
         setNodes((nds) => [
           ...nds.filter((n) => n.id !== newNode.id),
@@ -313,7 +313,8 @@ const useWorkflow = () => {
         viewType,
         caption,
         position,
-        lv.workflowStepId
+        lv.workflowStepId,
+        lv.listViewId
       );
       createdListViewsNodes.push(newNode);
     });
@@ -330,7 +331,8 @@ const useWorkflow = () => {
         viewType,
         caption,
         position,
-        rv.workflowStepId
+        rv.workflowStepId,
+        rv.recordViewId
       );
       createdRecordViewNodes.push(newNode);
       // setNodes((nds) => nds.concat(newNode));
@@ -348,7 +350,8 @@ const useWorkflow = () => {
         viewType,
         caption,
         position,
-        md.workflowStepId
+        md.workflowStepId,
+        md.modalDialogId
       );
       createdModalDialogNodes.push(newNode);
     });
@@ -370,7 +373,8 @@ const useWorkflow = () => {
         viewType,
         caption,
         position,
-        sc.workflowStepId
+        sc.workflowStepId,
+        sc.scannerDialogId
       );
       createdScannerDialogNodes.push(newNode);
     });

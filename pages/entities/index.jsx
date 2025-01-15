@@ -45,6 +45,7 @@ const Entities = () => {
             <Card
               cardInfo={{
                 url: `/entities/${entity.id}`,
+                texts: [`ID: ${entity.id}`],
                 caption: entity.caption,
                 defaultIconUrl: entity.defaultIconPath,
               }}
