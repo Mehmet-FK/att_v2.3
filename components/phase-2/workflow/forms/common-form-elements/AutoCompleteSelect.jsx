@@ -1,5 +1,24 @@
-import { Autocomplete, Paper, TextField } from "@mui/material";
+import { Autocomplete, Avatar, Box, Paper, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
+
+const renderOptionWithImage = (props, option) => {
+  const { key, ...optionProps } = props;
+  return (
+    <Box
+      key={key}
+      title={`Workflow ID: ${option.id}`}
+      component="li"
+      {...optionProps}
+    >
+      <Avatar
+        alt="Image"
+        sx={{ width: 24, height: 24, mr: 1 }}
+        src={option.icon}
+      />
+      {option.caption}
+    </Box>
+  );
+};
 
 /**
  *
@@ -9,7 +28,6 @@ import React, { useEffect, useState } from "react";
  * key: key to select property which will be sent to backend
  * caption: key to select property to show to the User
  */
-
 const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const { handleChange, handleBlur, preferences, options, name, value, label } =
     mainProps;
@@ -18,6 +36,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
 
   const optKey = preferences.key;
   const optCaption = preferences.caption;
+  const optImage = preferences.image;
 
   const handleChangeLocal = (newValue) => {
     const pseudoEvent = {
@@ -55,6 +74,8 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     setSelectedValue(tempSelectedValue);
   }, [value]);
 
+  // const renderOptionsConditional = { renderOptions };
+
   return (
     <Autocomplete
       {...helperProps}
@@ -75,6 +96,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
       renderInput={(params) => (
         <TextField {...params} key={params.id} label={label} />
       )}
+      renderOption={optImage ? renderOptionWithImage : null}
     />
   );
 };

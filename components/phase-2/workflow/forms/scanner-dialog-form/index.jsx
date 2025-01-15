@@ -8,6 +8,7 @@ import ViewHeaderForm from "../header-form";
 const ScannerDialogForm = ({
   stepID,
   entitiesForAutoSelect,
+  workflowsForAutoCompleteSelect,
   workflowStepValues,
 }) => {
   const { scannerDialogs } = useSelector((state) => state.workflow);
@@ -26,6 +27,7 @@ const ScannerDialogForm = ({
         scannerDialog={scannerDialog}
         viewId={viewId}
         entitiesForAutoSelect={entitiesForAutoSelect}
+        workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect}
         workflowStepValues={workflowStepValues}
       >
         <div className={css.header_form_wrapper}>
@@ -37,7 +39,9 @@ const ScannerDialogForm = ({
     return (
       <ScannerDialogFormBase
         scannerDialog={scannerDialog}
+        viewId={viewId}
         entitiesForAutoSelect={entitiesForAutoSelect}
+        workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect}
         workflowStepValues={workflowStepValues}
       />
     );

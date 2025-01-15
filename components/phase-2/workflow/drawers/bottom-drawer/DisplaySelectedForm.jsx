@@ -11,10 +11,15 @@ import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataW
 
 const DisplaySelectedForm = ({ selectedNode }) => {
   const entities = useSelector((state) => state.attensam.data?.entities);
+  const workflows = useSelector((state) => state.attensam.data?.workflows);
   const { workflowSteps } = useSelector((state) => state.workflow);
 
-  const [runWorker, entitiesForAutoSelect, error, loading] =
-    useAutoCompleteDataWorker("/workers/prepareEntitiesWorker.js");
+  const [runEntityWorker, entitiesForAutoSelect] = useAutoCompleteDataWorker(
+    "/workers/prepareEntitiesWorker.js"
+  );
+
+  const [runWorkflowWorker, workflowsForAutoCompleteSelect] =
+    useAutoCompleteDataWorker("/workers/prepareWorkflowsWorker.js");
 
   const viewType = selectedNode?.viewType;
   const stepID = selectedNode?.id;
@@ -50,9 +55,14 @@ const DisplaySelectedForm = ({ selectedNode }) => {
 
   useEffect(() => {
     if (entities) {
-      runWorker(entities);
+      runEntityWorker(entities);
     }
   }, [entities]);
+  useEffect(() => {
+    if (workflows) {
+      runWorkflowWorker(workflows);
+    }
+  }, [workflows]);
 
   if (viewType === viewTypeConstants.RECORDVIEW) {
     return (
@@ -83,6 +93,7 @@ const DisplaySelectedForm = ({ selectedNode }) => {
       <ScannerDialogForm
         stepID={stepID}
         entitiesForAutoSelect={entitiesForAutoSelect || []}
+        workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect || []}
         workflowStepValues={selectedWorkflowStep}
       />
     );
@@ -94,7 +105,12 @@ const DisplaySelectedForm = ({ selectedNode }) => {
       />
     );
   } else {
-    return <WorkflowForm entitiesForAutoSelect={entitiesForAutoSelect || []} />;
+    return (
+      <WorkflowForm
+        entitiesForAutoSelect={entitiesForAutoSelect || []}
+        workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect || []}
+      />
+    );
   }
 };
 

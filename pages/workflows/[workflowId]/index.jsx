@@ -39,7 +39,7 @@ const WorkflowTool = () => {
     if (router.query.workflowId !== "new") {
       fetchWorkflowDefinition();
     } else {
-      clearWorkflowState();
+      // clearWorkflowState();
     }
   }, [router.query.workflowId]);
 

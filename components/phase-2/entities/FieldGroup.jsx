@@ -86,20 +86,7 @@ const FieldGroup = ({
             options={fieldTypesForSelect}
             size={"small"}
           />
-          {/* <Select
-            label="Typ"
-            name="type"
-            value={fieldForm.type || ""}
-            onBlur={(e) => handleBlur(e, field.id)}
-            onChange={handleChange}
-            fullWidth
-          >
-            {Object.keys(fieldTypes || {}).map((opt, index) => (
-              <MenuItem key={index} value={fieldTypes[opt]}>
-                {opt}
-              </MenuItem>
-            ))}
-          </Select> */}
+
           <TextField
             size="small"
             label="Gruppenname"

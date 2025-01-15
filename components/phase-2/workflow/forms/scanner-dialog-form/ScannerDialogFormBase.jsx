@@ -1,19 +1,23 @@
-import { TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, TextField } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import css from "@/styles/workflow-forms/record-view-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import { scannerDialogActions } from "@/helpers/Enums";
+import { useSelector } from "react-redux";
 const ScannerDialogFormBase = ({
   scannerDialog,
   viewId,
   entitiesForAutoSelect,
+  workflowsForAutoCompleteSelect,
   workflowStepValues,
   children,
 }) => {
   const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
+
+  const entities = useSelector((state) => state.attensam.data?.entities);
 
   const { updateScannerDialogValue, updateWorkflowStepValue } =
     useWorkflowForms();
@@ -29,7 +33,7 @@ const ScannerDialogFormBase = ({
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
-
+    console.log(viewId);
     updateScannerDialogValue(name, inputValue, viewId);
   };
 
@@ -40,6 +44,23 @@ const ScannerDialogFormBase = ({
     handleBlur(e);
   };
 
+  const prepareEntityFields = () => {
+    const selectedEntity = entities?.find(
+      (entity) => entity.id == scannerDialogValues?.entityId
+    );
+    if (!selectedEntity) return [];
+
+    return selectedEntity.fields.map((field) => ({
+      id: field.id,
+      caption: field.name,
+    }));
+  };
+
+  const entityFields = useMemo(
+    () => prepareEntityFields(),
+    [scannerDialogValues.entityId]
+  );
+
   useEffect(() => {
     const scannerDialogFormValue = {
       ...scannerDialog,
@@ -48,7 +69,7 @@ const ScannerDialogFormBase = ({
 
     setScannerDialogValues(scannerDialogFormValue);
   }, [viewId]);
-
+  console.log(entityFields);
   return (
     <>
       <div className={css.form_container}>
@@ -105,30 +126,33 @@ const ScannerDialogFormBase = ({
               value={scannerDialogValues?.targetFiedId}
               label="Target Field"
               name="targetFiedId"
-              preferences={{ key: "id", caption: "name" }}
-              options={[
-                { id: "1", name: "targetFiedId" },
-                { id: "2", name: "targetFiedId_2" },
-              ]}
+              preferences={{ key: "id", caption: "caption" }}
+              options={entityFields}
             />
 
-            <CustomSelect
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={scannerDialogValues?.inputDataSourceId}
-              label="Workflow für Manuelle Eingabe"
-              name="inputDataSourceId"
-              preferences={{ key: "id", caption: "caption" }}
-              options={scannerDialogActions}
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: { key: "id", caption: "caption", image: "icon" },
+                options: workflowsForAutoCompleteSelect || [],
+                name: "inputDataSourceId",
+                value: scannerDialogValues?.inputDataSourceId || "",
+                label: "Workflow für Manuelle Eingabe",
+              }}
+              helperProps={{
+                className: css.form_control,
+              }}
             />
+
             <CustomSelect
               handleChange={handleChange}
               handleBlur={handleBlur}
               value={scannerDialogValues?.filterField}
               label="Filter Feld"
               name="filterField"
-              preferences={{ key: "id", caption: "caption" }}
-              options={scannerDialogActions}
+              preferences={{ key: "caption", caption: "caption" }}
+              options={entityFields}
             />
 
             <CheckBox

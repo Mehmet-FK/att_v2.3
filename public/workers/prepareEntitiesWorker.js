@@ -7,7 +7,7 @@ self.onmessage = (event) => {
     return entities.map((entity) => ({
       id: entity.id,
       name: entity.name,
-      caption: entity.caption,
+      caption: entity.id + " - " + entity.caption,
     }));
   };
 
