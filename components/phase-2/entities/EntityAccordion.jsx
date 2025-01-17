@@ -13,20 +13,12 @@ const EntityAccordion = ({ entityForm, setEntityForm }) => {
 
   const handleChange = (e) => {
     setEntityForm({ ...entityForm, [e.target.name]: e.target.value });
+    console.log(entityForm);
   };
-
-  // const handleImageOnChange = (e) => {
-  //   const file = e.target.files[0] || null;
-  //   setEntityForm({ ...entityForm, iconUrl: file });
-
-  //   if (!file) {
-  //     setEntityForm({ ...entityForm, iconUrl: null });
-  //     return;
-  //   }
-  // };
 
   useEffect(() => {
     setDataSource(views);
+    console.log("VIEWS CHANGED", views);
   }, [views]);
   return (
     <Accordion expandDefault header={"ENTITIY"}>
@@ -59,7 +51,7 @@ const EntityAccordion = ({ entityForm, setEntityForm }) => {
           value={entityForm?.dataSource || ""}
           onChange={handleChange}
         >
-          {dataSource?.map((opt, index) => (
+          {views?.map((opt, index) => (
             <MenuItem key={index} value={opt}>
               {opt}
             </MenuItem>

@@ -79,7 +79,8 @@ const Workflow = () => {
   };
 
   const multiSortWorkflows = (array) => {
-    return array.sort((a, b) => {
+    const tmpArray = [...array];
+    return tmpArray.sort((a, b) => {
       // Compare by 'path' first
       if (a.path < b.path) return -1;
       if (a.path > b.path) return 1;
@@ -107,31 +108,7 @@ const Workflow = () => {
 
   useEffect(() => {
     if (workflows) {
-      const tempWorkflows = workflows.map((wf) => {
-        if (wf.launchType === "4") {
-          return { ...wf, path: wf.caption };
-        } else if (wf.launchType === "2") {
-          const parentWF = findParentWorkflowById(wf.id);
-          if (parentWF) {
-            return {
-              ...wf,
-              path: parentWF.caption + ">" + wf.caption,
-            };
-          }
-          return {
-            ...wf,
-            path: wf.caption,
-          };
-        } else if (wf.launchType === "0") {
-          return {
-            ...wf,
-            path: "Record >" + wf.caption,
-          };
-        } else {
-          return wf;
-        }
-      });
-      setExistingWorkflows(multiSortWorkflows(tempWorkflows));
+      setExistingWorkflows(multiSortWorkflows(workflows));
     }
   }, [workflows]);
 
@@ -158,7 +135,7 @@ const Workflow = () => {
             <Card
               cardInfo={{
                 url: `/workflows/${wf.id}`,
-                texts: [wf.path],
+                texts: wf.path.split("/"),
                 caption: `${wf.id} - ${wf.caption}`,
                 defaultIconUrl: wf.icon,
               }}

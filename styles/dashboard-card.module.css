@@ -55,9 +55,13 @@
 }
 
 .card_helper_text {
-  font-size: 0.7em;
+  font-size: 0.6em;
   padding: 0;
   color: #717070;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding-inline: 2px;
+  /* word-break: break-all; */
 }
 
 .cardTitle {

@@ -14,10 +14,12 @@ const Card = ({ cardInfo }) => {
       <div className={css.card}>
         <div className={css.card_body}>
           <div className={css.card_title_wrapper}>
-            {cardInfo?.texts?.map((text) => (
-              <p className={css.card_helper_text}>{text}</p>
-            ))}
             <h5 className={css.cardTitle}>{cardInfo?.caption}</h5>
+            <div style={{ display: "flex", gap: "2px", flexWrap: "wrap" }}>
+              {cardInfo?.texts?.map((text) => (
+                <p className={css.card_helper_text}>{text} </p>
+              ))}
+            </div>
           </div>
 
           <img src={iconUrl} className={css.cardIcon} alt="icon" />

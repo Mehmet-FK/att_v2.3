@@ -27,29 +27,20 @@ const entityTemplate = {
 };
 
 const AddEntity = () => {
-  const [entityForm, setEntityForm] = useState(entityTemplate);
   const router = useRouter();
   const {
     query: { entityId },
   } = router;
-  const { entity: singleEntity, entities } = useSelector(
-    (state) => state.attensam.data
-  );
-
-  const [runWorker, entitiesForAutoSelect, error, loading] =
-    useAutoCompleteDataWorker("/workers/prepareEntitiesWorker.js");
+  const { entities } = useSelector((state) => state.attensam.data);
 
   const {
     deleteEntityCall,
-    deleteFieldCall,
-    updateFieldCall,
-    updateEntityCall,
-    postEntityCall,
-    postFieldCall,
+
     getViewColumnsCall,
-    getSingleEntityCall,
-    getFieldTypes,
   } = useAttensamCalls();
+  const [runWorker, entitiesForAutoSelect] = useAutoCompleteDataWorker(
+    "/workers/prepareEntitiesWorker.js"
+  );
 
   const findEntityById = () => {
     const entity = entities?.find((entity) => entity.id === parseInt(entityId));
@@ -60,8 +51,8 @@ const AddEntity = () => {
   };
 
   const entity = useMemo(() => findEntityById(), [entityId, entities]);
+  const [entityForm, setEntityForm] = useState(entity);
 
-  //ToolMenu Buttonlist
   const toolMenuProps = [
     {
       icon: <DeleteIcon />,
@@ -73,92 +64,11 @@ const AddEntity = () => {
     },
   ];
 
-  const handleUpdate = (entityId, fieldsBase, fieldsEdited, formData) => {
-    const fieldsToPost = [];
-    const fieldsToPut = [];
-    const fieldsToDelete = [];
-
-    // Find in UI edited or created Fields and push them into the right Array
-    fieldsEdited.forEach((item, i) => {
-      const baseElement = fieldsBase.find((el) => el.id === item.id);
-      if (!baseElement) {
-        // Check if element is new created
-        fieldsToPost.push(item);
-      } else {
-        const isEqual = JSON.stringify(baseElement) === JSON.stringify(item);
-        if (!isEqual) {
-          // Check if elements are same or altered
-          fieldsToPut.push(item);
-        }
-      }
-    });
-
-    //Find in UI deleted elements and push them into fieldsToDelete Array
-    fieldsBase.forEach((item) => {
-      const editedElement = fieldsEdited.find((el) => el.id === item.id);
-      if (!editedElement) {
-        fieldsToDelete.push(item);
-      }
-    });
-
-    //POST FIELDS
-    fieldsToPost.forEach((item) => {
-      const fieldForm = new FormData();
-      for (const [key, value] of Object.entries(item)) {
-        if (value) {
-          fieldForm.append(`${key}`, value);
-        }
-      }
-      postFieldCall(entityId, fieldForm);
-    });
-
-    //PUT FIELDS
-    fieldsToPut.forEach((item) => {
-      const fieldForm = new FormData();
-      for (const [key, value] of Object.entries(item)) {
-        if (value) {
-          fieldForm.append(`${key}`, value);
-        }
-      }
-      updateFieldCall(item.id, fieldForm);
-    });
-
-    //DELETE FIELDS
-    fieldsToDelete.forEach((item) => {
-      deleteFieldCall(item.id);
-    });
-
-    //UPDATE ENTITY
-    const uptData = formData;
-    uptData.delete("fields");
-    updateEntityCall(entityId, uptData);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-
-    formData.append("Name", entity.name);
-    formData.append("Caption", entity.caption);
-    formData.append("Icon", entity.iconUrl);
-    formData.append("DataSource", entity.dataSource);
-
-    formData.append("Fields", JSON.stringify(fields));
-
-    //Check if it is edit Entity or create Entity
-    if (entityId) {
-      handleUpdate(entityId, singleEntity?.fields, fields, formData);
-    } else {
-      postEntityCall(formData);
-    }
-
-    router.push("/entities");
-  };
-
   useEffect(() => {
-    setEntityForm(entity);
-    getViewColumnsCall(entity?.dataSource);
-  }, [entityId]);
+    if (entityForm?.dataSource) {
+      getViewColumnsCall(entityForm?.dataSource);
+    }
+  }, [entityForm?.dataSource]);
 
   useEffect(() => {
     if (entities) {
@@ -168,7 +78,7 @@ const AddEntity = () => {
 
   return (
     <div className="page-wrapper">
-      <form onSubmit={handleSubmit}>
+      <form>
         <PageHeader
           title={`Entität ${entity?.id ? "Bearbeiten" : "Anlegen"}`}
         />
