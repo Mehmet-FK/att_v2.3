@@ -115,6 +115,16 @@ const ListViewForm = ({
               handleBlur={handleBlur}
               label={"onlyOnline"}
             />
+            <CheckBox
+              sx={{
+                width: "100%",
+              }}
+              name="mergeData"
+              checked={listViewValues?.mergeData}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              label={"mergeData"}
+            />
           </div>
         </div>
       </div>

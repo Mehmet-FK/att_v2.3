@@ -91,7 +91,7 @@ const useWorkflowForms = () => {
     return viewsArray.find((v) => v.workflowStepId === workflowStepId);
   };
   const findHeaderByViewId = (viewId) => {
-    return headers.find((vh) => vh.viewId === viewId).headerId;
+    return headers.find((vh) => vh.viewId === viewId)?.headerId;
   };
 
   const clearWorkflowState = () => {
@@ -232,6 +232,8 @@ const useWorkflowForms = () => {
 
     const headerId = findHeaderByViewId(listViewId);
     deleteViewHeader(headerId);
+    dispatch(removeLaunchElement({ workflowStepId }));
+
     deleteListViewElement(listViewElementId);
     dispatch(removeListView({ viewId: listViewId }));
   };
@@ -301,10 +303,9 @@ const useWorkflowForms = () => {
     const headerColumnIds = headerColumns
       .filter((vhc) => headerRowIds.includes(vhc.headerRowID))
       .flatMap((vhc) => vhc.headerColumnId);
-
+    console.log({ headerColumnIds, headerRowIds });
     headerRowIds.forEach((vhrId) => deleteViewHeaderRow(vhrId));
     headerColumnIds.forEach((vhcId) => deleteViewHeaderColumn(vhcId));
-
     dispatch(
       removeViewHeader({
         viewHeaderId: viewHeaderId,

@@ -10,20 +10,24 @@ const CheckBox = ({
   labelPlacement,
   sx,
   style,
+  size,
+  fullWidth,
 }) => {
   return (
     <FormControlLabel
       sx={sx || {}}
       style={style || {}}
+      fullWidth={fullWidth || false}
       control={
         <Checkbox
+          size={size || "medium"}
           name={name}
           checked={checked || false}
           onChange={handleChange}
           onBlur={handleBlur}
         />
       }
-      label={<span style={{ fontSize: "smaller" }}>{label}</span>}
+      label={<p style={{ fontSize: "smaller" }}>{label}</p>}
       labelPlacement={labelPlacement || "end"}
     />
   );

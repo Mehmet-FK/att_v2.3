@@ -106,7 +106,10 @@ export default function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <SessionProvider session={pageProps.session} refetchInterval={13 * 60}>
+        <SessionProvider
+          session={pageProps.session}
+          // refetchInterval={13 * 60}
+        >
           <SessionHandler />
           <SessionExpiredModal />
           {router.pathname.includes("login") && <Component {...pageProps} />}

@@ -3,6 +3,10 @@ import Tooltip from "@mui/material/Tooltip";
 import Accordion from "@/components/ui-components/Accordion";
 import FieldGroup from "@/components/phase-2/entities/FieldGroup";
 import { toastWarnNotify } from "@/helpers/ToastNotify";
+import { useEffect } from "react";
+import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
+import { useSelector } from "react-redux";
+import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
 
 const fieldTemplate = {
   id: null,
@@ -20,52 +24,38 @@ const fieldTemplate = {
   groupName: "Allgemein",
 };
 
-const FieldsAccordion = ({
-  entityForm,
-  setEntityForm,
-  entitiesForAutoSelect,
-}) => {
-  const fields = entityForm.fields;
+const FieldsAccordion = ({ entitiesForAutoSelect }) => {
+  const { dataSource, entityFields, fieldTypes } = useSelector(
+    (state) => state.entity
+  );
 
-  const removeField = (fieldId) => {
-    const filteredFields = fields.filter((field) => field.id !== fieldId);
-    setEntityForm({ ...entityForm, fields: filteredFields });
-  };
+  const { getViewColumnsCall, getFieldTypes } = useAttensamCalls();
+
+  const { createEntityField } = useEntityForm();
 
   const addNewField = () => {
-    const randomId = Math.ceil(new Date().getTime() * Math.random());
-    if (!entityForm?.dataSource) {
-      toastWarnNotify("Zuerst ein DataSource auswählen!");
-      return;
+    createEntityField();
+  };
+
+  useEffect(() => {
+    if (dataSource) {
+      getViewColumnsCall(dataSource);
     }
-    fields.push({ ...fieldTemplate, id: randomId });
-    setEntityForm({ ...entityForm, fields });
-  };
+  }, [dataSource]);
 
-  const handleBlur = (e, fieldId) => {
-    const { name, value, type, checked } = e.target;
-    const inputValue = type === "checkbox" ? checked : value;
-
-    const changedFields = fields.map((field) => {
-      if (field.id === fieldId) {
-        return { ...field, [name]: inputValue };
-      } else {
-        return field;
-      }
-    });
-    setEntityForm({ ...entityForm, fields: changedFields });
-  };
+  useEffect(() => {
+    if (!fieldTypes) {
+      getFieldTypes();
+    }
+  }, []);
 
   return (
     <Accordion expandDefault header={"FELDER"}>
-      {fields?.map((field) => (
+      {entityFields?.map((field) => (
         <FieldGroup
-          key={field.id}
+          key={field.fieldId}
           field={field}
-          view={entityForm?.dataSource}
           entitiesForAutoSelect={entitiesForAutoSelect}
-          handleBlur={handleBlur}
-          removeField={removeField}
         />
       ))}
       <Tooltip title="Neues Feld anlegen" placement="right" arrow>

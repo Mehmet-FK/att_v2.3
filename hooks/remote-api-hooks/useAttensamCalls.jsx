@@ -101,8 +101,12 @@ const useAttensamCalls = () => {
       "workflowDefinition",
       false
     );
-  const getEntityDefinitionsCall = () =>
-    getAttData("/api/Entity/GetEntityDefinitions", "entityDefinitions", false);
+  const getEntityDefinitionsCall = (entityId) =>
+    getAttData(
+      `/api/Entity/GetEntityDefinitions?entityId=${entityId}`,
+      "entityDefinition",
+      false
+    );
   const getModulesCall = () => getAttData("/api/Modules", "modules", true);
   const getSingleEntityCall = (id) =>
     getAttData(`/api/Entity/${id}`, "entity", true);
@@ -128,7 +132,7 @@ const useAttensamCalls = () => {
     postAttData(`/api/Field/${entityId}`, data);
 
   //TODO: Do not forget to delete
-  // const postWorkflowCall = (data) => postAttData("/api/Workflow/CreateAndUpdateWorkflow", data);
+  // const postWorkflowCall = (data) => console.log(data);
 
   //PUT
   const updateEntityCall = (id, data) => putAttData(`/api/Entity/${id}`, data);

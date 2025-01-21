@@ -5,70 +5,86 @@ import { Button } from "@mui/material";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 import { useSelector } from "react-redux";
-import ToolMenu from "@/components/menus/ToolMenu";
-import ConfirmModal from "@/components/ui-components/ConfirmModal";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 import EntityAccordion from "@/components/phase-2/entities/EntityAccordion";
 import FieldsAccordion from "@/components/phase-2/entities/FieldsAccordion";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
+import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
+import EntityForm from "@/components/phase-2/entities";
 
 const entityTemplate = {
+  entityId: "new",
   name: "",
-  caption: "",
+  caption: " Measurements",
   dataSource: "",
   dataSourceType: 0,
   isSystemEntity: false,
   fileSource: "",
   maxResults: null,
   defaultIconPath: null,
-  fields: [],
+  entityFields: [],
   sortingDefinitions: [],
 };
 
-const AddEntity = () => {
+const entityFieldTemplate = {
+  fieldId: "new-field",
+  entityId: "3",
+  linkedEntityId: "",
+  name: "Number",
+  caption: "Nummer",
+  type: 0,
+  dataSourceColumn: "Number",
+  showMobile: true,
+  validationId: "",
+  isReadOnly: true,
+  maxLength: null,
+  decimalPlaces: null,
+  showByDefault: true,
+  groupName: "Allgemein",
+};
+
+const Entity = () => {
   const router = useRouter();
   const {
     query: { entityId },
   } = router;
   const { entities } = useSelector((state) => state.attensam.data);
 
-  const {
-    deleteEntityCall,
+  const { getEntityDefinitionsCall } = useAttensamCalls();
 
-    getViewColumnsCall,
-  } = useAttensamCalls();
+  const { clearEntityDefinition } = useEntityForm();
+
   const [runWorker, entitiesForAutoSelect] = useAutoCompleteDataWorker(
     "/workers/prepareEntitiesWorker.js"
   );
 
-  const findEntityById = () => {
-    const entity = entities?.find((entity) => entity.id === parseInt(entityId));
-    if (!entity) {
-      return entityTemplate;
-    }
-    return entity;
-  };
+  const [fetchedEntity, setFetchedEntity] = useState(null);
 
-  const entity = useMemo(() => findEntityById(), [entityId, entities]);
+  const entity = {};
   const [entityForm, setEntityForm] = useState(entity);
 
-  const toolMenuProps = [
-    {
-      icon: <DeleteIcon />,
-      onClick: () => {
-        setOpenConfirm(true);
-        deleteEntityCall(query?.entityId).then(() => router.push("/entities"));
-      },
-      buttonText: "Löschen",
-    },
-  ];
+  const fetchEntityDefinition = async () => {
+    const entityID = router.query.entityId;
+    if (entityID) {
+      try {
+        const response = await getEntityDefinitionsCall(entityID);
+        setFetchedEntity(response);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+  };
 
   useEffect(() => {
-    if (entityForm?.dataSource) {
-      getViewColumnsCall(entityForm?.dataSource);
+    if (entityId === "new") {
+      clearEntityDefinition();
+    } else {
+      fetchEntityDefinition(entityId);
     }
-  }, [entityForm?.dataSource]);
+  }, [entityId]);
+
+  useEffect;
 
   useEffect(() => {
     if (entities) {
@@ -80,11 +96,14 @@ const AddEntity = () => {
     <div className="page-wrapper">
       <form>
         <PageHeader
-          title={`Entität ${entity?.id ? "Bearbeiten" : "Anlegen"}`}
+          title={`Entität ${
+            fetchedEntity === "new" ? "Anlegen" : "Bearbeiten"
+          }`}
         />
-        <div className={css.container}>
-          {entityId && <ToolMenu buttonsList={toolMenuProps} />}
 
+        <EntityForm existingEntity={fetchedEntity} />
+
+        {/* <div className={css.container}>
           <EntityAccordion
             setEntityForm={setEntityForm}
             entityForm={entityForm}
@@ -99,13 +118,13 @@ const AddEntity = () => {
               submit
             </Button>
           </div>
-        </div>
+        </div> */}
       </form>
     </div>
   );
 };
 
-export default AddEntity;
+export default Entity;
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);

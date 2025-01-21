@@ -1,25 +1,22 @@
-import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-
 import css from "@/styles/entities-comp.module.css";
-import Select from "@/components/form-elements/Select";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import AutoCompleteSelect from "../workflow/forms/common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../workflow/forms/common-form-elements/CustomSelect";
+import ValidationSection from "./ValidationSection";
+import Accordion from "@/components/ui-components/Accordion";
+import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
 
-const FieldGroup = ({
-  field,
-  handleBlur,
-  removeField,
-  entitiesForAutoSelect,
-}) => {
+const FieldGroup = ({ field, entitiesForAutoSelect }) => {
   const { viewColumns, fieldTypes } = useSelector(
     (state) => state.attensam.data
   );
 
   const [fieldForm, setFieldForm] = useState(field);
+
+  const { updateEntityFieldValue, deleteEntityField } = useEntityForm();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,147 +28,174 @@ const FieldGroup = ({
     (opt, index) => ({ id: fieldTypes[opt], caption: opt })
   );
 
+  const removeField = () => {
+    deleteEntityField(field.fieldId);
+  };
+
+  const handleBlur = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    const inputValue = type === "checkbox" ? checked : value;
+
+    updateEntityFieldValue(name, inputValue, field.fieldId);
+  };
+
   return (
-    <div className={css.field_from_group}>
-      <span className={css.close_button} onClick={() => removeField(field.id)}>
-        ✖
-      </span>
+    <Accordion sx={{ paddingBlock: 0 }} header={field?.name || "Neues Feld"}>
+      <div className={css.field_from_group}>
+        <span
+          className={css.close_button}
+          onClick={() => removeField(field.id)}
+        >
+          ✖
+        </span>
 
-      <div className={css.inputs_wrapper}>
-        <div className={css.flex_column}></div>
-        <div className={css.flex_row}>
-          <TextField
-            size="small"
-            label="Name"
-            value={fieldForm.name || ""}
-            name="name"
-            variant="outlined"
-            onChange={handleChange}
-            onBlur={(e) => handleBlur(e, field.id)}
-            required
-            fullWidth
-          />
-          <TextField
-            size="small"
-            label="Caption"
-            value={fieldForm.caption || ""}
-            name="caption"
-            variant="outlined"
-            onChange={handleChange}
-            onBlur={(e) => handleBlur(e, field.id)}
-            required
-            fullWidth
-          />
+        <div className={css.inputs_wrapper}>
+          <div className={css.flex_column}></div>
+          <div className={css.flex_row}>
+            <TextField
+              size="small"
+              label="Name"
+              value={fieldForm.name || ""}
+              name="name"
+              variant="outlined"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              fullWidth
+            />
+            <TextField
+              size="small"
+              label="Caption"
+              value={fieldForm.caption || ""}
+              name="caption"
+              variant="outlined"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              fullWidth
+            />
 
-          <CustomSelect
-            handleChange={handleChange}
-            handleBlur={(e) => handleBlur(e, field.id)}
-            value={fieldForm.dataSourceColumn}
-            label="DataSource Spalten"
-            name="dataSourceColumn"
-            preferences={{ key: "columnName", caption: "columnName" }}
-            options={viewColumns}
-            size={"small"}
-          />
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={fieldForm.dataSourceColumn}
+              label="DataSource Spalten"
+              name="dataSourceColumn"
+              preferences={{ key: "columnName", caption: "columnName" }}
+              options={viewColumns}
+              size={"small"}
+            />
+          </div>
+
+          <div className={css.flex_row}>
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={fieldForm.type}
+              label="Typ"
+              name="type"
+              preferences={{ key: "id", caption: "caption" }}
+              options={fieldTypesForSelect}
+              size={"small"}
+            />
+
+            <TextField
+              size="small"
+              label="Gruppenname"
+              value={fieldForm.groupName || ""}
+              name="groupName"
+              variant="outlined"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              fullWidth
+            />
+
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: { key: "id", caption: "caption" },
+                options: entitiesForAutoSelect || [],
+                name: "linkedEntityId",
+                value: fieldForm.linkedEntityId || "",
+                label: "Verlinkte Entität",
+              }}
+              helperProps={{
+                className: css.auto_complete_select,
+                fullWidth: true,
+                size: "small",
+              }}
+            />
+          </div>
+          <div className={css.flex_row}>
+            <TextField
+              size="small"
+              label="Dezimalstellen"
+              value={fieldForm.decimalPlaces || ""}
+              name="decimalPlaces"
+              variant="outlined"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              fullWidth
+            />
+            <TextField
+              size="small"
+              label="Maximale Länge"
+              value={fieldForm.maxLength || ""}
+              name="maxLength"
+              variant="outlined"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              fullWidth
+            />
+            <TextField
+              size="small"
+              label="Validierungsregeln"
+              value={fieldForm.validationId || ""}
+              name="validationId"
+              variant="outlined"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              fullWidth
+            />
+          </div>
+          <div className={css.flex_row}>
+            <CheckBox
+              name="showMobile"
+              checked={field.showMobile}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              label="Show Mobile"
+            />
+            <CheckBox
+              name="isReadOnly"
+              checked={field.isReadOnly}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              label="isReadOnly"
+            />
+            <CheckBox
+              name="showByDefault"
+              checked={field.showByDefault}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              label="showByDefault"
+            />
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            ></div>
+          </div>
+          <div className={css.flex_row}>
+            <ValidationSection fieldID={field.fieldId} />
+          </div>
         </div>
-
-        <div className={css.flex_row}>
-          <CustomSelect
-            handleChange={handleChange}
-            handleBlur={(e) => handleBlur(e, field.id)}
-            value={fieldForm.type}
-            label="Typ"
-            name="type"
-            preferences={{ key: "id", caption: "caption" }}
-            options={fieldTypesForSelect}
-            size={"small"}
-          />
-
-          <TextField
-            size="small"
-            label="Gruppenname"
-            value={fieldForm.groupName || ""}
-            name="groupName"
-            variant="outlined"
-            onChange={handleChange}
-            onBlur={(e) => handleBlur(e, field.id)}
-            fullWidth
-          />
-
-          <AutoCompleteSelect
-            mainProps={{
-              handleChange: handleChange,
-              handleBlur: (e) => handleBlur(e, field.id),
-              preferences: { key: "id", caption: "caption" },
-              options: entitiesForAutoSelect || [],
-              name: "linkedEntityId",
-              value: fieldForm.linkedEntityId || "",
-              label: "Verlinkte Entität",
-            }}
-            helperProps={{
-              className: css.auto_complete_select,
-              fullWidth: true,
-              size: "small",
-            }}
-          />
-        </div>
-        <div className={css.flex_row}>
-          <TextField
-            size="small"
-            label="Dezimalstellen"
-            value={fieldForm.decimalPlaces || ""}
-            name="decimalPlaces"
-            variant="outlined"
-            onChange={handleChange}
-            onBlur={(e) => handleBlur(e, field.id)}
-            fullWidth
-          />
-          <TextField
-            size="small"
-            label="Maximale Länge"
-            value={fieldForm.maxLength || ""}
-            name="maxLength"
-            variant="outlined"
-            onChange={handleChange}
-            onBlur={(e) => handleBlur(e, field.id)}
-            fullWidth
-          />
-          <TextField
-            size="small"
-            label="Validierungsregeln"
-            value={fieldForm.validationId || ""}
-            name="validationId"
-            variant="outlined"
-            onChange={handleChange}
-            onBlur={(e) => handleBlur(e, field.id)}
-            fullWidth
-          />
-        </div>
-        <div className={css.flex_row}>
-          <CheckBox
-            name="showMobile"
-            checked={field.showMobile}
-            handleChange={handleChange}
-            handleBlur={(e) => handleBlur(e, field.id)}
-            label="Show Mobile"
-          />
-          <CheckBox
-            name="isReadOnly"
-            checked={field.isReadOnly}
-            handleChange={handleChange}
-            handleBlur={(e) => handleBlur(e, field.id)}
-            label="isReadOnly"
-          />
-          <CheckBox
-            name="showByDefault"
-            checked={field.showByDefault}
-            handleChange={handleChange}
-            handleBlur={(e) => handleBlur(e, field.id)}
-            label="showByDefault"
-          />
-        </div>
-      </div>
-      {/* <FormGroup className={css.checkbox_wrapper}>
+        {/* <FormGroup className={css.checkbox_wrapper}>
         <FormControlLabel
           className={css.checkbox}
           control={
@@ -198,21 +222,9 @@ const FieldGroup = ({
         />
   
       </FormGroup> */}
-    </div>
+      </div>
+    </Accordion>
   );
 };
 
 export default FieldGroup;
-caption: "fields_f";
-createDate: "2024-03-14T14:13:55.7489243";
-dataSourceColumn: "GAR_Notes";
-decimalPlaces: null;
-entityId: 32;
-groupName: null;
-id: 20;
-isReadOnly: null;
-maxLength: null;
-modifiedDate: "2024-03-14T14:13:55.7489244";
-name: "fields_f";
-showByDefault: null;
-type: 6;

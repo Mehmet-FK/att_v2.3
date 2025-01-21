@@ -36,10 +36,10 @@ const WorkflowTool = () => {
   };
 
   useEffect(() => {
-    if (router.query.workflowId !== "new") {
-      fetchWorkflowDefinition();
+    if (router.query.workflowId === "new") {
+      clearWorkflowState();
     } else {
-      // clearWorkflowState();
+      fetchWorkflowDefinition();
     }
   }, [router.query.workflowId]);
 
