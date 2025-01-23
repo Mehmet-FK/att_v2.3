@@ -94,7 +94,7 @@ const ListViewForm = ({
               className: css.form_control,
             }}
           />
-          <div style={{ display: "flex", width: "50%" }}>
+          <div style={{ display: "flex", width: "100%" }}>
             <CheckBox
               sx={{
                 width: "100%",

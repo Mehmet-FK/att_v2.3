@@ -1,9 +1,16 @@
 import {
   addEntityField,
+  addEntitySorting,
+  addFieldProperty,
   addFieldValidation,
   changeEntityFieldValue,
+  changeEntitySortingValue,
   changeEntityValue,
+  changeFieldPropertyValue,
+  changeFieldValidationValue,
   removeEntityField,
+  removeEntitySorting,
+  removeFieldProperty,
   removeFieldValidation,
   setEntityToInitial,
   updateTotalEntity,
@@ -40,6 +47,24 @@ const validationTemplate = {
   maxLength: null,
   showByDefault: true,
   required: null,
+};
+
+const entitySortingTemplate = {
+  entitySortingId: "",
+  entityId: "",
+  fieldId: "",
+  sortOrder: 1,
+  sortDirection: 0,
+};
+
+const fieldPropertyTemplate = {
+  listViewPropertyId: "",
+  fieldID: "",
+  filterValue: "",
+  differingIcon: null,
+  differingListviewItemIcon: "",
+  priorityType: null,
+  priorityText: null,
 };
 
 const useEntityForm = () => {
@@ -92,19 +117,30 @@ const useEntityForm = () => {
   };
 
   const deleteEntityField = (fieldID) => {
+    const sortingIdToDelete =
+      findEntitySortingByFieldID(fieldID)?.entitySortingId;
+    const fieldPropertyIdToDelete =
+      findFieldPropertyByFieldID(fieldID)?.listViewPropertyId;
+    const validationIdToDelete =
+      findValidationByFieldID(fieldID)?.fieldValidationId;
+    console.log({
+      sortingIdToDelete,
+      fieldPropertyIdToDelete,
+      validationIdToDelete,
+    });
+    deleteEntitySorting(sortingIdToDelete);
+    deleteFieldPropery(fieldPropertyIdToDelete);
+    deleteFieldValidationById(validationIdToDelete);
     dispatch(removeEntityField({ fieldID }));
-    const assignedValidation = fieldValidations?.find(
-      (validation) => validation.fieldId === fieldID
-    );
-
-    if (!assignedValidation) return;
-
-    dispatch(
-      removeFieldValidation({ validationID: assignedValidation.validationId })
-    );
   };
 
   //! ======== VALIDATION ======== //
+
+  const findValidationByFieldID = (fieldID) => {
+    return fieldValidations?.find(
+      (validation) => validation.fieldId === fieldID
+    );
+  };
 
   const createFieldValidation = (fieldID) => {
     const newValidationID = generateRandomId("validation");
@@ -113,12 +149,13 @@ const useEntityForm = () => {
       fieldValidationId: newValidationID,
       fieldId: fieldID,
     };
-    console.log(newValidation);
     dispatch(addFieldValidation({ newValidation }));
+
+    updateEntityFieldValue("validationId", newValidationID, fieldID);
   };
 
   const updateFieldValidationValue = (name, value, validationID) => {
-    dispatch(changeEntityFieldValue({ name, value, validationID }));
+    dispatch(changeFieldValidationValue({ name, value, validationID }));
   };
 
   const deleteFieldValidationById = (validationID) => {
@@ -127,22 +164,100 @@ const useEntityForm = () => {
     const assignedField = entityFields?.find(
       (field) => field.validationId === validationID
     );
-    if (!assignedField.fieldId) return;
+    if (!assignedField?.fieldId) return;
     updateEntityFieldValue("validationId", "", assignedField.fieldId);
   };
 
+  // const deleteFieldValidationByFieldID = (fieldID) => {
+  //   const validationToDelete = fieldValidations?.find(
+  //     (validation) => validation.fieldId === fieldID
+  //   );
+
+  //   deleteFieldValidationById(validationToDelete.validationId);
+  // };
+
+  //! ======== ENTITY-SORT ======== //
+
+  const findEntitySortingByFieldID = (fieldID) => {
+    return entitySortings.find((sorting) => sorting.fieldId === fieldID);
+  };
+
+  const createEntitySorting = (fieldID) => {
+    const generatedSortID = generateRandomId("sort");
+    const newEntitySorting = {
+      ...entitySortingTemplate,
+      entitySortingId: generatedSortID,
+      entityId,
+      fieldId: fieldID,
+    };
+
+    dispatch(addEntitySorting({ newEntitySorting }));
+  };
+
+  const updateEntitySortingValue = (name, value, sortingID) => {
+    console.log({ name, value, sortingID });
+    dispatch(changeEntitySortingValue({ name, value, sortingID }));
+  };
+
+  const deleteEntitySorting = (sortingID) => {
+    dispatch(removeEntitySorting({ sortingID }));
+  };
+
+  const deleteEntitySortingByFieldID = (fieldID) => {
+    const sortingToDelete = entitySortings.find(
+      (sorting) => sorting.fieldId === fieldID
+    );
+
+    deleteEntitySorting(sortingToDelete?.entitySortingId);
+  };
+
+  //! ======== FIELD-PROPERTIES ======== //
+
+  const findFieldPropertyByFieldID = (fieldID) => {
+    return fieldProperties.find((property) => property.fieldID === fieldID);
+  };
+
+  const createFieldProperty = (fieldID) => {
+    const generatedPropertyID = generateRandomId("sort");
+    const newFieldProperty = {
+      ...fieldPropertyTemplate,
+      listViewPropertyId: generatedPropertyID,
+      fieldID: fieldID,
+    };
+
+    dispatch(addFieldProperty({ newFieldProperty }));
+  };
+
+  const updateFieldProperyValue = (name, value, propertyID) => {
+    console.log({ name, value, propertyID });
+    dispatch(changeFieldPropertyValue({ name, value, propertyID }));
+  };
+
+  const deleteFieldPropery = (propertyID) => {
+    dispatch(removeFieldProperty({ propertyID }));
+  };
+
   return {
+    //ENTITY
     restoreEntityState,
     clearEntityDefinition,
     updateEntityValue,
-
+    //ENTITY-FIELD
     createEntityField,
     updateEntityFieldValue,
     deleteEntityField,
-
+    // VALIDATION
     createFieldValidation,
     updateFieldValidationValue,
     deleteFieldValidationById,
+    //ENTITY-SORT
+    createEntitySorting,
+    updateEntitySortingValue,
+    deleteEntitySorting,
+    // FIELD-PROPERTY
+    createFieldProperty,
+    updateFieldProperyValue,
+    deleteFieldPropery,
   };
 };
 

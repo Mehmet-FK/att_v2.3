@@ -33,7 +33,6 @@ const LaunchElementForm = () => {
 
   useEffect(() => {
     setLaunchElementValues(launchElement);
-    console.log(launchElement);
   }, [launchElement?.launchElementId]);
 
   return (

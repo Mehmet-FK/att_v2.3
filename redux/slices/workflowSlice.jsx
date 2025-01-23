@@ -15,15 +15,24 @@ const _initialState = {
   edges: [],
   nodes: [],
   viewport: {},
+
   workflowSteps: [],
+
   launchElements: [],
+
   scannerDialogs: [],
+
   listViews: [],
   listViewElements: [],
   listViewElementRows: [],
+  listViewFilterDefinitions: [],
+
   recordViews: [],
   recordViewFunctions: [],
+  recordViewFields: [],
+
   modalDialogs: [],
+
   headers: [],
   headerRows: [],
   headerColumns: [],

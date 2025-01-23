@@ -8,12 +8,13 @@ import CustomSelect from "../workflow/forms/common-form-elements/CustomSelect";
 import ValidationSection from "./ValidationSection";
 import Accordion from "@/components/ui-components/Accordion";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
+import EntitySortingSection from "./EntitySortingSection";
+import FieldPropertiesSection from "./field-sections/FieldPropertiesSection";
 
 const FieldGroup = ({ field, entitiesForAutoSelect }) => {
   const { viewColumns, fieldTypes } = useSelector(
     (state) => state.attensam.data
   );
-
   const [fieldForm, setFieldForm] = useState(field);
 
   const { updateEntityFieldValue, deleteEntityField } = useEntityForm();
@@ -50,8 +51,8 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
           ✖
         </span>
 
-        <div className={css.inputs_wrapper}>
-          <div className={css.flex_column}></div>
+        {/* <div className={css.inputs_wrapper}> */}
+        <div className={css.flex_column}>
           <div className={css.flex_row}>
             <TextField
               size="small"
@@ -163,65 +164,34 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
           <div className={css.flex_row}>
             <CheckBox
               name="showMobile"
-              checked={field.showMobile}
+              checked={fieldForm.showMobile}
               handleChange={handleChange}
               handleBlur={handleBlur}
               label="Show Mobile"
             />
             <CheckBox
               name="isReadOnly"
-              checked={field.isReadOnly}
+              checked={fieldForm.isReadOnly}
               handleChange={handleChange}
               handleBlur={handleBlur}
               label="isReadOnly"
             />
             <CheckBox
               name="showByDefault"
-              checked={field.showByDefault}
+              checked={fieldForm.showByDefault}
               handleChange={handleChange}
               handleBlur={handleBlur}
               label="showByDefault"
             />
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            ></div>
           </div>
-          <div className={css.flex_row}>
-            <ValidationSection fieldID={field.fieldId} />
+          <div className={css.flex_column} style={{ rowGap: "20px" }}>
+            <div className={css.flex_row} style={{ paddingTop: "10px" }}>
+              <ValidationSection fieldID={field.fieldId} />
+              <EntitySortingSection fieldID={field.fieldId} />
+            </div>
+            <FieldPropertiesSection fieldID={field.fieldId} />
           </div>
         </div>
-        {/* <FormGroup className={css.checkbox_wrapper}>
-        <FormControlLabel
-          className={css.checkbox}
-          control={
-            <Checkbox
-              size="small"
-              name="showByDefault"
-              onChange={handleChange}
-              checked={fieldForm.showByDefault || false}
-            />
-          }
-          label="showByDefault"
-        />
-        <FormControlLabel
-          className={css.checkbox}
-          control={
-            <Checkbox
-              size="small"
-              name="isReadOnly"
-              onChange={handleChange}
-              checked={fieldForm.isReadOnly || false}
-            />
-          }
-          label="isReadOnly"
-        />
-  
-      </FormGroup> */}
       </div>
     </Accordion>
   );

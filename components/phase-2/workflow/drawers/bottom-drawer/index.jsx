@@ -86,9 +86,8 @@ const BottomDrawer = ({
         variant="persistent"
         PaperProps={{
           overflow: "auto",
-          style: { height: newHeight, zIndex: 2000 },
+          style: { height: newHeight, zIndex: 1200 },
           sx: {
-            // height: 100,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
             userSelect: "none",
@@ -116,6 +115,7 @@ const BottomDrawer = ({
             display: newHeight > 100 ? "block" : "none",
             opacity: newHeight / 350,
             overflow: "auto",
+            paddingBlock: "8px",
           }}
         >
           <DisplaySelectedForm selectedNode={selectedNode} />

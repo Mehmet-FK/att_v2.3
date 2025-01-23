@@ -10,6 +10,7 @@ const _initialState = {
   fileSource: "",
   maxResults: null,
   defaultIconPath: null,
+  parentEntityId: null,
   entityFields: [],
   entitySortings: [],
   fieldValidations: [],
@@ -54,7 +55,6 @@ const entitySlice = createSlice({
     },
 
     addFieldValidation: (state, { payload: { newValidation } }) => {
-      console.log(newValidation);
       state.fieldValidations.push(newValidation);
     },
 
@@ -73,7 +73,54 @@ const entitySlice = createSlice({
 
     removeFieldValidation: (state, { payload: { validationID } }) => {
       state.fieldValidations = state.fieldValidations.filter(
-        (validation) => validation.validationID !== validationID
+        (validation) => validation.fieldValidationId !== validationID
+      );
+    },
+
+    addEntitySorting: (state, { payload: { newEntitySorting } }) => {
+      state.entitySortings.push(newEntitySorting);
+    },
+
+    changeEntitySortingValue: (
+      state,
+      { payload: { name, value, sortingID } }
+    ) => {
+      state.entitySortings = state.entitySortings.map((sortingRule) => {
+        if (sortingRule.entitySortingId === sortingID) {
+          return { ...sortingRule, [name]: value };
+        } else {
+          return sortingRule;
+        }
+      });
+    },
+
+    removeEntitySorting: (state, { payload: { sortingID } }) => {
+      console.log(sortingID);
+      state.entitySortings = state.entitySortings.filter(
+        (sortingRule) => sortingRule.entitySortingId !== sortingID
+      );
+    },
+
+    addFieldProperty: (state, { payload: { newFieldProperty } }) => {
+      state.fieldProperties.push(newFieldProperty);
+    },
+
+    changeFieldPropertyValue: (
+      state,
+      { payload: { name, value, propertyID } }
+    ) => {
+      state.fieldProperties = state.fieldProperties.map((fieldProperty) => {
+        if (fieldProperty.listViewPropertyId === propertyID) {
+          return { ...fieldProperty, [name]: value };
+        } else {
+          return fieldProperty;
+        }
+      });
+    },
+
+    removeFieldProperty: (state, { payload: { propertyID } }) => {
+      state.fieldProperties = state.fieldProperties.filter(
+        (fieldProperty) => fieldProperty.listViewPropertyId !== propertyID
       );
     },
   },
@@ -92,5 +139,13 @@ export const {
   addFieldValidation,
   changeFieldValidationValue,
   removeFieldValidation,
+  // ENTITY-SORT
+  addEntitySorting,
+  changeEntitySortingValue,
+  removeEntitySorting,
+  // FIELD-PROPERTY
+  addFieldProperty,
+  changeFieldPropertyValue,
+  removeFieldProperty,
 } = entitySlice.actions;
 export default entitySlice.reducer;

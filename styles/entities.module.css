@@ -1,3 +1,10 @@
+.flex_wrap_row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 .flex_row {
   display: flex;
   column-gap: 10px;

@@ -113,24 +113,36 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
                 />
               </div>
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                rowGap: "5px",
-              }}
-            >
-              {MemoViewHeaderRows}
 
-              <div>
-                <button
-                  disabled={viewHeaderRows.length > 4}
-                  onClick={addViewHeaderRow}
+            <Accordion defaultExpanded={defaultExpanded}>
+              <AccordionSummary
+                sx={{ fontSize: "smaller", paddingBlock: "0" }}
+                expandIcon={<ExpandMoreIcon fontSize="small" />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                Header Zeilen
+              </AccordionSummary>
+              <AccordionDetails sx={{ paddingTop: "0" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    rowGap: "5px",
+                  }}
                 >
-                  add row
-                </button>
-              </div>
-            </div>
+                  {MemoViewHeaderRows}
+                </div>
+                <div>
+                  <button
+                    disabled={viewHeaderRows.length > 4}
+                    onClick={addViewHeaderRow}
+                  >
+                    add row
+                  </button>
+                </div>
+              </AccordionDetails>
+            </Accordion>
           </div>
         </AccordionDetails>
       </Accordion>

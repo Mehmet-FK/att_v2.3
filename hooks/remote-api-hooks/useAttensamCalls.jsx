@@ -90,6 +90,22 @@ const useAttensamCalls = () => {
       dispatch(stopLoading());
     }
   };
+  const postEntityCall = async (entityData) => {
+    try {
+      console.log(entityData);
+      const { data } = await axiosWithToken.post(
+        "/api/Entity/CreateAndUpdateEntity",
+        entityData
+      );
+      console.log(data);
+      toastSuccessNotify("Element wurde erfolgreich angelegt");
+    } catch (error) {
+      toastErrorNotify(error?.response?.data);
+      console.log(error);
+    } finally {
+      dispatch(stopLoading());
+    }
+  };
 
   //GET
   const getWorkflowsCall = () =>
@@ -127,7 +143,7 @@ const useAttensamCalls = () => {
     getAttData("/api/Enums/workflowlaunchtypes", "launchTypes", true);
 
   //POST
-  const postEntityCall = (data) => postAttData("/api/Entity", data);
+  // const postEntityCall = (data) => postAttData("/api/Entity/CreateAndUpdateEntity", data);
   const postFieldCall = (entityId, data) =>
     postAttData(`/api/Field/${entityId}`, data);
 

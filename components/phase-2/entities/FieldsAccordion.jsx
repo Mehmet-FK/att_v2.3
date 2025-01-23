@@ -1,3 +1,4 @@
+import css from "@/styles/entities.module.css";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import Accordion from "@/components/ui-components/Accordion";

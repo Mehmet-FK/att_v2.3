@@ -93,7 +93,6 @@ const useWorkflow = () => {
     let newState = rfInstance.toObject();
     newState = { ...newState, workflow };
     if (didStateChange(newState)) {
-      console.log("saveToHistory");
       undoStackRef.current.push(newState);
       redoStackRef.current = [];
     } else if (didWorkflowChange()) {
@@ -296,7 +295,6 @@ const useWorkflow = () => {
     const viewType = launchTypes.find(
       (lt) => lt.id === launchElement.launchType
     ).type;
-    console.log(launchElement);
     const caption = viewType; //TODO: refoctoring is needed
     const nodeId = launchElement.workflowStepId;
     const newLaunchNode = createNewLaunchNode(viewType, caption, nodeId);
@@ -408,7 +406,6 @@ const useWorkflow = () => {
     _setEdges
   ) => {
     if (!existingWorkflow) return;
-    console.log(existingWorkflow);
     const launchElement = existingWorkflow.launchElements[0];
     const launchNode = restoreExistingLaunchElement(launchElement);
     _setNodes((nds) => nds.concat(launchNode));

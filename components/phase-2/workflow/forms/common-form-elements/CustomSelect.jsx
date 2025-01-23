@@ -12,6 +12,7 @@ const CustomSelect = ({
   preferences,
   FormControlProps,
   SelectProps,
+  defaultValue,
 }) => {
   const optKey = preferences.key;
   const optCaption = preferences.caption;
@@ -20,7 +21,7 @@ const CustomSelect = ({
     if (typeof value === "number" || value) {
       return value;
     } else {
-      return "";
+      return defaultValue !== undefined ? defaultValue : "";
     }
   };
 
@@ -43,6 +44,7 @@ const CustomSelect = ({
         name={name}
         onChange={handleChange}
         onBlur={handleBlur}
+        fullWidth
       >
         <MenuItem value={""}>
           <em>None</em>

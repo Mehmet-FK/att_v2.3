@@ -8,18 +8,26 @@ import { useSelector } from "react-redux";
 import EntityToolMenu from "./EntityToolMenu";
 import { useRouter } from "next/router";
 import { Button } from "@mui/material";
+import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
 const EntityForm = ({ existingEntity }) => {
   const router = useRouter();
   const { entities } = useSelector((state) => state.attensam.data);
+  const { entity } = useSelector((state) => state);
 
   const { restoreEntityState } = useEntityForm();
+  const { postEntityCall } = useAttensamCalls();
 
   const [runWorker, entitiesForAutoSelect] = useAutoCompleteDataWorker(
     "/workers/prepareEntitiesWorker.js"
   );
 
   const entityId = router.query?.entityId;
+
+  const handleSubmit = () => {
+    console.log("submit");
+    postEntityCall(entity);
+  };
 
   useEffect(() => {
     if (existingEntity) {
@@ -40,7 +48,11 @@ const EntityForm = ({ existingEntity }) => {
       <EntityAccordion entitiesForAutoSelect={entitiesForAutoSelect} />
       <FieldsAccordion entitiesForAutoSelect={entitiesForAutoSelect} />
       <div className={css.submitBtnWrapper}>
-        <Button className={css.submitBtn} variant="contained" type="submit">
+        <Button
+          className={css.submitBtn}
+          onClick={handleSubmit}
+          variant="contained"
+        >
           submit
         </Button>
       </div>

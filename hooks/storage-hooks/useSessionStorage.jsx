@@ -3,7 +3,6 @@ const useSessionStorage = () => {
 
   const isWorkflowSessionExisting = () => {
     const sessionValue = sessionStorage.getItem(WORKFOW_SESSION);
-    console.log(sessionValue);
     return sessionValue !== null;
   };
 

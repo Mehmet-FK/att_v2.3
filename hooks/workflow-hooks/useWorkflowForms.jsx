@@ -323,6 +323,7 @@ const useWorkflowForms = () => {
 
     dispatch(addViewHeaderRow({ viewHeaderRow: template }));
     createViewHeaderColumn(rowId);
+    createViewHeaderColumn(rowId);
   };
 
   const deleteViewHeaderRow = (rowId) => {
@@ -338,7 +339,7 @@ const useWorkflowForms = () => {
       fontColor: "#FFFFFF",
     };
 
-    const column1 = {
+    const column = {
       ...template,
       headerColumnId: columnId(),
       columnValue: "user.userName",
@@ -346,17 +347,17 @@ const useWorkflowForms = () => {
       textAlignment: 0,
       fontFamily: 3,
     };
-    const column2 = {
-      ...template,
-      headerColumnId: columnId(),
-      columnValue: "user.number",
-      colSpan: 1,
-      textAlignment: 2,
-      fontFamily: 7,
-    };
+    // const column2 = {
+    //   ...template,
+    //   headerColumnId: columnId(),
+    //   columnValue: "user.number",
+    //   colSpan: 1,
+    //   textAlignment: 2,
+    //   fontFamily: 7,
+    // };
 
-    dispatch(addViewHeaderColumn({ viewHeaderColumn: column1 }));
-    dispatch(addViewHeaderColumn({ viewHeaderColumn: column2 }));
+    // dispatch(addViewHeaderColumn({ viewHeaderColumn: column1 }));
+    dispatch(addViewHeaderColumn({ viewHeaderColumn: column }));
   };
 
   const updateViewHeaderColumnValue = (name, value, columnId) => {
@@ -531,7 +532,6 @@ const useWorkflowForms = () => {
   };
 
   const restoreWorkflowState = (workflow) => {
-    console.log({ workflow });
     if (workflow) {
       dispatch(updateTotalWorkflow({ workflow }));
     } else {

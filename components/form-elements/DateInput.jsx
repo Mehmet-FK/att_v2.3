@@ -11,7 +11,13 @@ const dateValidation = (date) => {
   if (Number(date[0]) === 3 && Number(date[1]) > 3) return;
 };
 
-const DateInput = ({ filterValue, setFilterValue, label, name }) => {
+const DateInput = ({
+  filterValue,
+  setFilterValue,
+  label,
+  name,
+  handleBlur,
+}) => {
   const handleChange = (e) => {
     const { value: val } = e.target;
     if (Number(val[0]) === 3 && Number(val[1]) > 1) return;
@@ -37,9 +43,15 @@ const DateInput = ({ filterValue, setFilterValue, label, name }) => {
       setFilterValue({ ...filterValue, [name]: val });
     }
   };
+
+  const localHandleBlur = (e) => {
+    if (!handleBlur) return;
+    handleBlur(e);
+  };
   return (
     <TextField
       onChange={handleChange}
+      onBlur={localHandleBlur}
       className={css.dateinput}
       name={name}
       value={filterValue[name] || ""}

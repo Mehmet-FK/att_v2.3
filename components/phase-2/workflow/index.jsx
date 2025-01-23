@@ -186,7 +186,8 @@ const Sheet = ({ existingWorkflow }) => {
 
       <ToolsDrawer />
       <BottomDrawer
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
+        onSubmit={() => console.log("Workflow Submitted")}
         onSave={onSave}
         restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
         nodes={nodes}

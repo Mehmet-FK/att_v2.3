@@ -19,6 +19,7 @@
   border-radius: 5px;
   transition: all 0.2s;
   position: relative;
+  width: 100%;
 }
 
 .close_button {
