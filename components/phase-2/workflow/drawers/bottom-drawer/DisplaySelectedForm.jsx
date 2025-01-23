@@ -34,20 +34,6 @@ const DisplaySelectedForm = ({ selectedNode }) => {
   const findWorkflowStepById = (_stepID) =>
     workflowSteps.find((wfs) => wfs.workflowStepId === _stepID);
 
-  // const prepareEntitiesForAutoSelect = () => {
-  //   if (!entities) return [];
-  //   return entities.map((entity) => ({
-  //     id: entity.id,
-  //     name: entity.name,
-  //     caption: entity.caption,
-  //   }));
-  // };
-
-  // const entitiesForAutoSelect = useMemo(
-  //   () => prepareEntitiesForAutoSelect(),
-  //   [entities]
-  // );
-
   const selectedWorkflowStep = useMemo(
     () => findWorkflowStepById(stepID),
     [selectedNode]

@@ -2,15 +2,12 @@
   top: 0;
   z-index: 2500;
   cursor: pointer;
+  position: relative;
+  /* height: 25px; */
+  background-color: #efefef;
 }
 .fixed_tab:hover {
   opacity: 1 !important;
-}
-.puller_wrapper {
-  position: relative;
-  height: 25px;
-  background-color: #efefef;
-  cursor: pointer;
 }
 
 .console_btn_wrapper {

@@ -1,25 +1,6 @@
 import { Autocomplete, Avatar, Box, Paper, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-const renderOptionWithImage = (props, option) => {
-  const { key, ...optionProps } = props;
-  return (
-    <Box
-      key={key}
-      title={`Workflow ID: ${option.id}`}
-      component="li"
-      {...optionProps}
-    >
-      <Avatar
-        alt="Image"
-        sx={{ width: 24, height: 24, mr: 1 }}
-        src={option.icon}
-      />
-      {option.caption}
-    </Box>
-  );
-};
-
 /**
  *
  * @param {preferences} preferences
@@ -37,7 +18,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const optKey = preferences.key;
   const optCaption = preferences.caption;
   const optImage = preferences.image;
-
+  const optTitle = preferences?.title;
   const handleChangeLocal = (newValue) => {
     const pseudoEvent = {
       target: {
@@ -68,13 +49,29 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     }
     handleBlur(pseudoEvent);
   };
+  const renderOptionWithImage = (props, option) => {
+    const { key, ...optionProps } = props;
+    return (
+      <Box
+        key={key}
+        title={optTitle ? option[optTitle] : ""}
+        component="li"
+        {...optionProps}
+      >
+        <Avatar
+          alt="Image"
+          sx={{ width: 24, height: 24, mr: 1 }}
+          src={option.icon}
+        />
+        {option[optCaption]}
+      </Box>
+    );
+  };
 
   useEffect(() => {
     const tempSelectedValue = options.find((opt) => opt[optKey] === value);
     setSelectedValue(tempSelectedValue);
   }, [value]);
-
-  // const renderOptionsConditional = { renderOptions };
 
   return (
     <Autocomplete

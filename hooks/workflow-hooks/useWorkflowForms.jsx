@@ -10,6 +10,7 @@ import {
   addListViewElementRow,
   addModalDialog,
   addRecordView,
+  addRecordViewField,
   addScannerDialog,
   addViewHeader,
   addViewHeaderColumn,
@@ -22,6 +23,8 @@ import {
   changeModalDialogValue,
   changeNextAndPreviousStep,
   changeNodesEdgesAndViewport,
+  changeAllRecordViewFields,
+  changeRecordViewFieldValue,
   changeRecordViewValue,
   changeScannerDialogValue,
   changeViewHeaderColumnValue,
@@ -35,6 +38,7 @@ import {
   removeListViewElementRowByRowId,
   removeModalDialog,
   removeRecordView,
+  removeRecordViewField,
   removeScannerDialog,
   removeViewHeader,
   removeViewHeaderColumn,
@@ -238,6 +242,8 @@ const useWorkflowForms = () => {
     dispatch(removeListView({ viewId: listViewId }));
   };
 
+  // RECORD-VIEW
+
   const createRecordViewOnDrop = (workflowStepId) => {
     const recordViewId = workflowStepId + "-recordview";
     const headerId = `${recordViewId}-vh`;
@@ -271,6 +277,38 @@ const useWorkflowForms = () => {
     const headerId = findHeaderByViewId(recordViewId);
     deleteViewHeader(headerId);
     dispatch(removeRecordView({ viewId: recordViewId }));
+  };
+
+  // RECORD-VIEW-FIELDS
+
+  const createRecordViewField = (recordViewId) => {
+    const generatedID = generateRandomId();
+
+    const recordViewTemplate = {
+      recordViewFieldId: generatedID + "-record-field",
+      recordViewId: recordViewId,
+      fieldId: null,
+      differingCaption: "",
+      isDefault: false,
+      isReadOnly: false,
+      imageMode: null,
+      imageGroupCaption: null,
+      imageType: null,
+      sortOrder: null,
+    };
+    dispatch(addRecordViewField({ newRecordField: recordViewTemplate }));
+  };
+
+  const updateRecordViewFieldValue = (name, value, fieldID) => {
+    dispatch(changeRecordViewFieldValue({ name, value, fieldID }));
+  };
+
+  const updateAllRecordViewFields = (recordViewId, fields) => {
+    dispatch(changeAllRecordViewFields({ recordViewId, fields }));
+  };
+
+  const deleteRecordViewField = (fieldID) => {
+    dispatch(removeRecordViewField({ fieldID }));
   };
 
   const createViewHeaderWithRowsAndColumns = (viewId, viewType, headerId) => {
@@ -347,16 +385,7 @@ const useWorkflowForms = () => {
       textAlignment: 0,
       fontFamily: 3,
     };
-    // const column2 = {
-    //   ...template,
-    //   headerColumnId: columnId(),
-    //   columnValue: "user.number",
-    //   colSpan: 1,
-    //   textAlignment: 2,
-    //   fontFamily: 7,
-    // };
 
-    // dispatch(addViewHeaderColumn({ viewHeaderColumn: column1 }));
     dispatch(addViewHeaderColumn({ viewHeaderColumn: column }));
   };
 
@@ -584,6 +613,12 @@ const useWorkflowForms = () => {
     restoreWorkflowState,
     setPreviousAndNextStepsOnConnect,
     prepareWorkflowStateForPost,
+
+    //RECORD_VIEW_FIELD
+    createRecordViewField,
+    updateRecordViewFieldValue,
+    updateAllRecordViewFields,
+    deleteRecordViewField,
   };
 };
 

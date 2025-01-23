@@ -5,13 +5,10 @@ self.onmessage = (event) => {
   const prepareWorkflowsForAutoCompleteSelect = (workflows) => {
     if (!workflows) return [];
 
-    const potentialParentWorkflows = workflows.filter(
-      (wf) => wf.launchType !== "0" && wf.launchType !== "1"
-    );
-
-    return potentialParentWorkflows.map((wf) => ({
+    return workflows.map((wf) => ({
       id: wf.id,
       caption: wf.caption,
+      path: wf.path,
       icon: wf.icon,
     }));
   };

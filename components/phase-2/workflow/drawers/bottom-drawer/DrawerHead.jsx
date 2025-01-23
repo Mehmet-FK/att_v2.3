@@ -21,12 +21,14 @@ const DrawerHead = ({
   handleDoubleClick,
   pointerEvents,
   label,
+  drawerHeaderHeight,
 }) => {
   return (
     <div
-      className={css.fixed_tab + " " + css.puller_wrapper}
+      className={css.fixed_tab}
       onMouseDown={handleMouseDown}
       onClick={handleDoubleClick}
+      style={{ height: drawerHeaderHeight + "px" }}
     >
       <Puller />
 

@@ -11,6 +11,7 @@ import DrawerHead from "./DrawerHead";
 const defaultOpenHeight = 350;
 const minHeight = 45;
 const maxHeight = 850;
+const drawerHeaderHeight = "25px";
 
 const BottomDrawer = ({
   onSubmit,
@@ -100,6 +101,7 @@ const BottomDrawer = ({
           handleMouseDown={handleMouseDown}
           handleDoubleClick={handleDoubleClick}
           opacity={newHeight / 150}
+          drawerHeaderHeight={drawerHeaderHeight}
           pointerEvents={newHeight < 80 && "none"}
           label={
             selectedNode
@@ -116,6 +118,7 @@ const BottomDrawer = ({
             opacity: newHeight / 350,
             overflow: "auto",
             paddingBlock: "8px",
+            height: `calc(100% - ${drawerHeaderHeight})`,
           }}
         >
           <DisplaySelectedForm selectedNode={selectedNode} />

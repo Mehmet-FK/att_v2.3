@@ -14,6 +14,31 @@ import SessionHandler from "@/components/handlers/SessionHandler";
 import SessionExpiredModal from "@/components/ui-components/SessionExpiredModal";
 // import Providers from "@/redux/Provider";
 
+function isFunction(func) {
+  return Object.prototype.toString.call(func) === "[object Function]";
+}
+
+/**
+ * This function converts an array to hash map
+ * @param {String | function} key describes the key to be evaluated in each object to use as key for hashmap
+ * @returns Object
+ * @Example
+ *      [{id:123, name:'atina'}, {id:345, name:"development"}].toHashMap("id")
+ *      Returns :- Object {123: Object, 345: Object}
+ */
+Array.prototype.toHashMap = function (key) {
+  var _hashMap = {},
+    getKey = isFunction(key)
+      ? key
+      : function (_obj) {
+          return _obj[key];
+        };
+  this.forEach(function (obj) {
+    _hashMap[getKey(obj)] = obj;
+  });
+  return _hashMap;
+};
+
 export default function App({ Component, pageProps }) {
   const [mode, setMode] = useState("light");
   const router = useRouter();

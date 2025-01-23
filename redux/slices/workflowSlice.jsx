@@ -15,24 +15,17 @@ const _initialState = {
   edges: [],
   nodes: [],
   viewport: {},
-
   workflowSteps: [],
-
   launchElements: [],
-
   scannerDialogs: [],
-
   listViews: [],
   listViewElements: [],
   listViewElementRows: [],
   listViewFilterDefinitions: [],
-
   recordViews: [],
   recordViewFunctions: [],
   recordViewFields: [],
-
   modalDialogs: [],
-
   headers: [],
   headerRows: [],
   headerColumns: [],
@@ -63,8 +56,10 @@ const workflowSlice = createSlice({
     listViews: [],
     listViewElements: [],
     listViewElementRows: [],
+    listViewFilterDefinitions: [],
     recordViews: [],
     recordViewFunctions: [],
+    recordViewFields: [],
     modalDialogs: [],
     headers: [],
     headerRows: [],
@@ -158,6 +153,7 @@ const workflowSlice = createSlice({
         (launchEl) => launchEl.workflowStepId !== workflowStepId
       );
     },
+    //! RECORD-VIEW
 
     addRecordView: (state, { payload: { recordView } }) => {
       state.recordViews.push(recordView);
@@ -177,6 +173,41 @@ const workflowSlice = createSlice({
         (rv) => rv.recordViewId !== viewId
       );
     },
+
+    //! RECORD-VIEW-FIELD
+    addRecordViewField: (state, { payload: { newRecordField } }) => {
+      state.recordViewFields.push(newRecordField);
+    },
+    changeRecordViewFieldValue: (
+      state,
+      { payload: { name, value, fieldID } }
+    ) => {
+      state.recordViewFields = state.recordViewFields.map((rvf) => {
+        if (rvf.recordViewFieldId === fieldID) {
+          return { ...rvf, [name]: value };
+        } else {
+          return rvf;
+        }
+      });
+    },
+
+    changeAllRecordViewFields: (
+      state,
+      { payload: { recordViewId, fields } }
+    ) => {
+      const otherFields = state.recordViewFields.filter(
+        (rvf) => rvf.recordViewId !== recordViewId
+      );
+      state.recordViewFields = otherFields.concat(fields);
+    },
+
+    removeRecordViewField: (state, { payload: { fieldID } }) => {
+      state.recordViewFields = state.recordViewFields.filter(
+        (rvf) => rvf.recordViewFieldId !== fieldID
+      );
+    },
+
+    //! LIST-VIEW
     addListView: (state, { payload: { listView } }) => {
       state.listViews.push(listView);
     },
@@ -367,6 +398,8 @@ export const {
   addWorkflowStep,
   addLaunchElement,
   addRecordView,
+
+  addRecordViewField,
   addListView,
   addListViewElement,
   addListViewElementRow,
@@ -381,6 +414,9 @@ export const {
   changeNextAndPreviousStep,
   changeLaunchElementValue,
   changeRecordViewValue,
+  // RECORD-VIEW-FIELDS
+  changeAllRecordViewFields,
+  changeRecordViewFieldValue,
   changeListViewValue,
   changeListViewElementValue,
   changeListViewElementRowValue,
@@ -394,6 +430,7 @@ export const {
   removeWorkflowStep,
   removeLaunchElement,
   removeListView,
+  removeRecordViewField,
   removeRecordView,
   removeListViewElement,
   removeListViewElementRowByElementId,

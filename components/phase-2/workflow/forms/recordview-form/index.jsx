@@ -7,6 +7,7 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import RecordViewFieldsModal from "./RecordViewFieldsModal";
+import RecordViewFunctionsSection from "./RecordViewFunctionsSection";
 
 const RecordViewForm = ({
   stepID,
@@ -81,7 +82,9 @@ const RecordViewForm = ({
         open={openRecordFieldsModal}
         setOpen={setOpenRecordFieldsModal}
         entityFields={entityFields}
+        recordViewId={viewId}
       />
+
       <div className={css.form_container}>
         <div className={css.flex_column}>
           <div className={css.flex_row}>
@@ -111,7 +114,7 @@ const RecordViewForm = ({
               }}
             />
 
-            <div className={css.flex_row} style={{ width: "100%" }}>
+            <div className={css.flex_row}>
               <CheckBox
                 handleChange={handleChange}
                 handleBlur={handleBlur}
@@ -147,7 +150,9 @@ const RecordViewForm = ({
 
               <Button
                 variant="contained"
+                size="small"
                 onClick={() => setOpenRecordFieldsModal(true)}
+                fullWidth
               >
                 {" "}
                 open record-view-fields
@@ -156,8 +161,13 @@ const RecordViewForm = ({
           </div>
         </div>
       </div>
-      <div className={css.header_form_wrapper}>
-        <ViewHeaderForm viewId={viewId} defaultExpanded={true} />
+      <div className={css.flex_column}>
+        <div className={css.header_form_wrapper}>
+          <ViewHeaderForm viewId={viewId} defaultExpanded={false} />
+        </div>
+        <div className={css.form_container}>
+          <RecordViewFunctionsSection recordViewId={viewId} />
+        </div>
       </div>
     </>
   );
