@@ -128,7 +128,10 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    postWorkflowCall(workflowToPost);
+
+    postWorkflowCall(workflowToPost).then((res) =>
+      res ? router.push("/workflows") : null
+    );
   };
 
   useEffect(() => {
@@ -186,8 +189,7 @@ const Sheet = ({ existingWorkflow }) => {
 
       <ToolsDrawer />
       <BottomDrawer
-        // onSubmit={handleSubmit}
-        onSubmit={() => console.log("Workflow Submitted")}
+        onSubmit={handleSubmit}
         onSave={onSave}
         restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
         nodes={nodes}

@@ -47,6 +47,7 @@ import {
   setWorkflowToInitial,
   updateSelectedStep as updateStep,
   updateTotalWorkflow,
+  changeAllRecordViewFunctions,
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -84,8 +85,12 @@ const useWorkflowForms = () => {
     headerColumns,
   } = workflow;
 
-  const generateRandomId = () => {
-    return `${Math.floor(Math.random() * 1000) + Date.now()}`;
+  const generateRandomId = (prefix, suffix) => {
+    const _prefix = prefix ? prefix : "";
+    const _suffix = suffix ? suffix : "";
+    return `${_prefix}${
+      Math.floor(Math.random() * 1000) + Date.now()
+    }${_suffix}`;
   };
 
   const isLaunchElement = (viewType) =>
@@ -154,7 +159,7 @@ const useWorkflowForms = () => {
 
   const createListViewElementRow = (listViewElementId) => {
     const template = {
-      listViewElementRowId: "lvr-" + generateRandomId(),
+      listViewElementRowId: generateRandomId("lvr-", null),
       listViewElementId: listViewElementId,
       listViewRowNumber: 1,
       text: "",
@@ -282,10 +287,10 @@ const useWorkflowForms = () => {
   // RECORD-VIEW-FIELDS
 
   const createRecordViewField = (recordViewId) => {
-    const generatedID = generateRandomId();
+    const generatedID = generateRandomId(null, "-record-field");
 
     const recordViewTemplate = {
-      recordViewFieldId: generatedID + "-record-field",
+      recordViewFieldId: generatedID,
       recordViewId: recordViewId,
       fieldId: null,
       differingCaption: "",
@@ -309,6 +314,12 @@ const useWorkflowForms = () => {
 
   const deleteRecordViewField = (fieldID) => {
     dispatch(removeRecordViewField({ fieldID }));
+  };
+
+  // RECORD-VIEW-FUNCTIONS
+
+  const updateAllRecordViewFunctions = (recordViewId, recordFunctions) => {
+    dispatch(changeAllRecordViewFunctions({ recordViewId, recordFunctions }));
   };
 
   const createViewHeaderWithRowsAndColumns = (viewId, viewType, headerId) => {
@@ -352,7 +363,7 @@ const useWorkflowForms = () => {
   };
 
   const createViewHeaderRow = (headerId) => {
-    const rowId = "vhr-" + generateRandomId();
+    const rowId = generateRandomId("vhr-", null);
     const template = {
       headerRowId: rowId,
       headerId: headerId,
@@ -369,7 +380,7 @@ const useWorkflowForms = () => {
   };
 
   const createViewHeaderColumn = (headerRowId) => {
-    const columnId = () => "vhc-" + generateRandomId();
+    const columnId = () => generateRandomId("vhc-", null);
     const template = {
       headerRowID: headerRowId,
       columnType: 3,
@@ -619,6 +630,9 @@ const useWorkflowForms = () => {
     updateRecordViewFieldValue,
     updateAllRecordViewFields,
     deleteRecordViewField,
+
+    //RECORD_VIEW_FUNCTION
+    updateAllRecordViewFunctions,
   };
 };
 

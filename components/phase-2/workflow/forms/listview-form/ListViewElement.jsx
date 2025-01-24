@@ -34,55 +34,55 @@ const ListViewElement = ({ element, listViewId }) => {
   };
   return (
     <>
-      <div className={css.elements_container}>
-        <Accordion>
-          <AccordionSummary
-            sx={{ fontSize: "smaller" }}
-            expandIcon={<ExpandMoreIcon fontSize="small" />}
-            aria-controls="panel2-content"
-            id="panel2-header"
-          >
-            List View Element
-          </AccordionSummary>
-          <AccordionDetails>
-            <div className={css.flex_column} style={{ rowGap: "10px" }}>
-              <div className={css.flex_row}>
-                <div className={css.flex_column}>
-                  <IconSelect
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
-                    value={elementValues?.icon || ""}
+      {/* <div className={css.section_container}> */}
+      <Accordion>
+        <AccordionSummary
+          sx={{ fontSize: "smaller" }}
+          expandIcon={<ExpandMoreIcon fontSize="small" />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          List View Element
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className={css.flex_column} style={{ rowGap: "10px" }}>
+            <div className={css.flex_row}>
+              <div className={css.flex_column}>
+                <IconSelect
+                  handleChange={handleChange}
+                  handleBlur={handleBlur}
+                  value={elementValues?.icon || ""}
+                />
+                {elementRows.map((row) => (
+                  <ListViewElementRow
+                    key={row.listViewElementRowId}
+                    elementID={element.listViewElementRowId}
+                    elementRowValues={row}
                   />
-                  {elementRows.map((row) => (
-                    <ListViewElementRow
-                      key={row.listViewElementRowId}
-                      elementID={element.listViewElementRowId}
-                      elementRowValues={row}
-                    />
-                  ))}
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "end",
-                    width: "40px",
-                    rowGap: "5px",
-                  }}
+                ))}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "end",
+                  width: "40px",
+                  rowGap: "5px",
+                }}
+              >
+                <span
+                  className={css.add_row_btn}
+                  title="Add Row"
+                  onClick={addListViewElementRow}
                 >
-                  <span
-                    className={css.add_row_btn}
-                    title="Add Row"
-                    onClick={addListViewElementRow}
-                  >
-                    <AddCircleOutlineIcon fontSize="inherit" />
-                  </span>
-                </div>
-              </div>{" "}
-            </div>
-          </AccordionDetails>
-        </Accordion>
-      </div>
+                  <AddCircleOutlineIcon fontSize="inherit" />
+                </span>
+              </div>
+            </div>{" "}
+          </div>
+        </AccordionDetails>
+      </Accordion>
+      {/* </div> */}
     </>
   );
 };

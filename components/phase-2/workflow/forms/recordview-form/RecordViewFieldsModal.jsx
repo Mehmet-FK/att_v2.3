@@ -9,7 +9,8 @@ import {
   Modal,
   TextField,
 } from "@mui/material";
-import css from "@/styles/workflow-forms/recordview-fields.module.css";
+// import css from "@/styles/workflow-forms/recordview-fields.module.css";
+import css from "@/styles/workflow-forms/record-view-form.module.css";
 import { useSelector } from "react-redux";
 import { useMemo, useRef, useState } from "react";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
@@ -25,6 +26,7 @@ const DraggableRecordViewField = ({
   recordViewField,
   entityFields,
   deleteRecordViewField,
+  changeRecordFieldValue,
   handleDragStart,
   handleDragEnter,
   handleDragEnd,
@@ -40,6 +42,12 @@ const DraggableRecordViewField = ({
     setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
   };
 
+  const handleBlur = (e) => {
+    const { value, name, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+    changeRecordFieldValue(name, newValue, fieldFormValues.recordViewFieldId);
+  };
+
   const handleDeleteField = (e) => {
     if (e.detail < 2) return;
     deleteRecordViewField(fieldFormValues.recordViewFieldId);
@@ -50,6 +58,8 @@ const DraggableRecordViewField = ({
   }, [recordViewField.fieldId]);
   return (
     <div
+      droppable
+      draggable
       className={css.flex_row}
       style={{
         marginRight: "-15px",
@@ -60,6 +70,10 @@ const DraggableRecordViewField = ({
           isDraggedOver &&
           "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
         transition: "all 0.2s ease-in-out ",
+      }}
+      onDragStart={(e) => {
+        setAccordionExpanded(false);
+        handleDragStart(e, fieldFormValues, index);
       }}
       onDragEnter={(e) => {
         handleDragEnter(fieldFormValues, index);
@@ -73,12 +87,6 @@ const DraggableRecordViewField = ({
         handleDragEnd(fieldFormValues, index);
         setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
       }}
-      onDragStart={(e) => {
-        setAccordionExpanded(false);
-        handleDragStart(e, fieldFormValues, index);
-      }}
-      droppable
-      draggable
     >
       <Badge
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
@@ -136,7 +144,7 @@ const DraggableRecordViewField = ({
                   <AutoCompleteSelect
                     mainProps={{
                       handleChange: handleChange,
-                      handleBlur: () => console.log("blur"),
+                      handleBlur: handleBlur,
                       preferences: { key: "id", caption: "caption" },
                       options: entityFields,
                       name: "fieldId",
@@ -151,7 +159,7 @@ const DraggableRecordViewField = ({
                   />
                   <TextField
                     onChange={handleChange}
-                    onBlur={() => console.log("blur")}
+                    onBlur={handleBlur}
                     value={fieldFormValues?.differingCaption || ""}
                     variant="outlined"
                     size="small"
@@ -162,7 +170,7 @@ const DraggableRecordViewField = ({
 
                   <TextField
                     onChange={handleChange}
-                    onBlur={() => console.log("blur")}
+                    onBlur={handleBlur}
                     value={fieldFormValues?.sortOrder || ""}
                     variant="outlined"
                     size="small"
@@ -175,7 +183,7 @@ const DraggableRecordViewField = ({
                 <div className={css.flex_row}>
                   <TextField
                     onChange={handleChange}
-                    onBlur={() => console.log("blur")}
+                    onBlur={handleBlur}
                     value={fieldFormValues?.imageMode || ""}
                     variant="outlined"
                     size="small"
@@ -185,7 +193,7 @@ const DraggableRecordViewField = ({
                   />
                   <TextField
                     onChange={handleChange}
-                    onBlur={() => console.log("blur")}
+                    onBlur={handleBlur}
                     value={fieldFormValues?.imageGroupCaption || ""}
                     variant="outlined"
                     size="small"
@@ -195,7 +203,7 @@ const DraggableRecordViewField = ({
                   />
                   <TextField
                     onChange={handleChange}
-                    onBlur={() => console.log("blur")}
+                    onBlur={handleBlur}
                     value={fieldFormValues?.imageType || ""}
                     variant="outlined"
                     size="small"
@@ -210,7 +218,7 @@ const DraggableRecordViewField = ({
                     name="isReadOnly"
                     checked={fieldFormValues.isReadOnly}
                     handleChange={handleChange}
-                    handleBlur={() => console.log("blur")}
+                    handleBlur={handleBlur}
                     size={"small"}
                     sx={{
                       width: "100%",
@@ -221,7 +229,7 @@ const DraggableRecordViewField = ({
                     name="isDefault"
                     checked={fieldFormValues.isDefault}
                     handleChange={handleChange}
-                    handleBlur={() => console.log("blur")}
+                    handleBlur={handleBlur}
                     size={"small"}
                     sx={{
                       width: "100%",
@@ -278,13 +286,10 @@ const RecordViewFieldsModal = ({
 
   const [fields, setFields] = useState([...filteredRecordViewFields]);
 
-  const { updateAllRecordViewFields } = useWorkflowForms();
+  const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
 
   const assignFieldIndexToSortOrder = () => {
-    const tmpFields = [...filteredRecordViewFields];
-    tmpFields.sort((a, b) => a.sortOrder - b.sortOrder);
-
-    const preparedFields = tmpFields?.map((field, index) => ({
+    const preparedFields = filteredRecordViewFields?.map((field, index) => ({
       ...field,
       sortOrder: index + 1,
       isDraggedOver: false,
@@ -360,9 +365,7 @@ const RecordViewFieldsModal = ({
     const newSortOrder = fields.at(-1)?.sortOrder + 1;
     const newRecordViewField = {
       ...recordViewTemplate,
-      recordViewFieldId: `${
-        Math.floor(Math.random() * 1000) + Date.now()
-      }-record-field`,
+      recordViewFieldId: generateRandomId("record-field-", null),
       recordViewId,
       sortOrder: newSortOrder,
     };
@@ -371,6 +374,21 @@ const RecordViewFieldsModal = ({
 
   const deleteRecordViewField = (fieldID) => {
     setFields((prev) => prev.filter((f) => f.recordViewFieldId !== fieldID));
+  };
+
+  const changeRecordFieldValue = (name, value, fieldID) => {
+    const changedFieds = fields.map((el) => {
+      if (el.recordViewFieldId === fieldID) {
+        return { ...el, [name]: value };
+      } else {
+        return el;
+      }
+    });
+    if (name === "sortOrder") {
+      changedFieds.sort((a, b) => a.sortOrder - b.sortOrder);
+    }
+    console.log(changedFieds);
+    setFields(changedFieds);
   };
 
   const updateStoreOnClose = () => {
@@ -387,21 +405,32 @@ const RecordViewFieldsModal = ({
     >
       <Card className={css.card}>
         <CardContent className={css.content}>
-          {fields?.map((recordViewField, index) => (
-            <DraggableRecordViewField
-              index={index}
-              recordViewField={recordViewField}
-              entityFields={entityFields}
-              deleteRecordViewField={deleteRecordViewField}
-              handleDragStart={handleDragStart}
-              handleDragEnter={handleDragEnter}
-              handleDragEnd={handleDragEnd}
-            />
-          ))}
+          <div
+            className={css.flex_column}
+            style={{
+              minHeight: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className={css.flex_column}>
+              {fields?.map((recordViewField, index) => (
+                <DraggableRecordViewField
+                  index={index}
+                  recordViewField={recordViewField}
+                  entityFields={entityFields}
+                  deleteRecordViewField={deleteRecordViewField}
+                  changeRecordFieldValue={changeRecordFieldValue}
+                  handleDragStart={handleDragStart}
+                  handleDragEnter={handleDragEnter}
+                  handleDragEnd={handleDragEnd}
+                />
+              ))}
+            </div>
 
-          <Button onClick={handleAddRecordView} variant="contained">
-            Recordview Feld anlegen
-          </Button>
+            <Button onClick={handleAddRecordView} variant="contained">
+              Recordview Feld anlegen
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </Modal>

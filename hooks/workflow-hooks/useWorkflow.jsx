@@ -394,7 +394,7 @@ const useWorkflow = () => {
             sourceID: wfs.workflowStepId,
             targetID: wfs.nextStep,
           },
-          eds
+          []
         )
       )
     );

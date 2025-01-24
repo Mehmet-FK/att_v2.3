@@ -8,6 +8,7 @@ import ListViewElement from "./ListViewElement";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
+import ListViewFilterDefinitions from "./ListViewFilterDefinitions";
 
 const ListViewForm = ({
   stepID,
@@ -23,7 +24,11 @@ const ListViewForm = ({
     [stepID]
   );
   const [listViewValues, setListViewValues] = useState(listView);
-  const viewId = listView?.listViewId;
+  const viewId = useMemo(() => listView?.listViewId, [stepID]);
+  const selectedEntityId = useMemo(
+    () => listViewValues?.entityId,
+    [listViewValues?.entityId]
+  );
 
   const listViewElement = useMemo(
     () =>
@@ -45,14 +50,12 @@ const ListViewForm = ({
 
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
-
     const inputValue = type === "checkbox" ? checked : value;
     updateListViewValue(name, inputValue, viewId);
   };
 
   const handleWorkflowStepBlur = (e) => {
     const { name, value } = e.target;
-
     updateWorkflowStepValue(name, value, stepID);
   };
 
@@ -65,8 +68,14 @@ const ListViewForm = ({
     setListViewValues(listViewFormValue);
   }, [stepID]);
 
+  useEffect(() => {
+    return () => {
+      console.log("list form return", stepID);
+    };
+  }, [stepID]);
+
   return (
-    <>
+    <div className={css.flex_column}>
       <div className={css.form_container}>
         <div className={css.flex_row}>
           <TextField
@@ -129,11 +138,20 @@ const ListViewForm = ({
         </div>
       </div>
       <div className={css.header_form_wrapper}>
-        <ViewHeaderForm viewId={viewId} defaultExpanded={true} />
+        <ViewHeaderForm viewId={viewId} defaultExpanded={false} />
       </div>
-
-      <ListViewElement element={listViewElement} listViewId={viewId} />
-    </>
+      <div className={css.flex_row} style={{ paddingInline: "10px" }}>
+        <div className={css.section_container}>
+          <ListViewElement element={listViewElement} listViewId={viewId} />
+        </div>
+        <div className={css.section_container}>
+          <ListViewFilterDefinitions
+            listViewId={viewId}
+            selectedEntityId={selectedEntityId}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

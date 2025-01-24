@@ -76,19 +76,24 @@ const useAttensamCalls = () => {
 
   //TODO: Refactoring is needed
   const postWorkflowCall = async (formData) => {
+    let responseFlag = false;
+
     try {
+      console.log({ POST_Workflow: formData });
+
       const { data } = await axiosWithToken.post(
         "/atina/api/Workflow/CreateAndUpdateWorkflow",
         formData
       );
       console.log(data);
       toastSuccessNotify("Element wurde erfolgreich angelegt");
+      responseFlag = true;
     } catch (error) {
       toastErrorNotify(error?.response?.data);
-      // console.log(error);
     } finally {
       dispatch(stopLoading());
     }
+    return responseFlag;
   };
   const postEntityCall = async (entityData) => {
     try {

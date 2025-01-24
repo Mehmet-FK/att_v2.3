@@ -207,6 +207,17 @@ const workflowSlice = createSlice({
       );
     },
 
+    //! RECORD-VIEW-FUNCTION
+    changeAllRecordViewFunctions: (
+      state,
+      { payload: { recordViewId, recordFunctions } }
+    ) => {
+      const otherFunctions = state.recordViewFunctions.filter(
+        (rvf) => rvf.recordViewId !== recordViewId
+      );
+      state.recordViewFunctions = otherFunctions.concat(recordFunctions);
+    },
+
     //! LIST-VIEW
     addListView: (state, { payload: { listView } }) => {
       state.listViews.push(listView);
@@ -417,6 +428,10 @@ export const {
   // RECORD-VIEW-FIELDS
   changeAllRecordViewFields,
   changeRecordViewFieldValue,
+
+  // RECORD-VIEW-FUNCTIONS
+  changeAllRecordViewFunctions,
+
   changeListViewValue,
   changeListViewElementValue,
   changeListViewElementRowValue,

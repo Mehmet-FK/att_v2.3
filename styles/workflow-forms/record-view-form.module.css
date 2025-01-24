@@ -1,7 +1,6 @@
 .fields_container {
   display: flex;
   flex-direction: column;
-  /* border: 1px solid red; */
   padding-inline: 10px;
   gap: 5px;
   width: 100%;
@@ -27,13 +26,11 @@
   flex-direction: column;
   width: 100%;
   row-gap: 5px;
-  /* height: 220px; */
 }
 .header_form_wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* height: 100%; */
   row-gap: 5px;
 }
 .form_control {
@@ -56,4 +53,29 @@
 
 .remove_field_btn:hover {
   opacity: 1;
+}
+
+/*Modal Card*/
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  min-height: 750px;
+  padding: 8px;
+  border: 2px solid #000;
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  height: 440px;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
 }

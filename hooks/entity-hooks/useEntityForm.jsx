@@ -80,8 +80,12 @@ const useEntityForm = () => {
     fieldProperties,
   } = entity;
 
-  const generateRandomId = (prefix) => {
-    return `${prefix}-${Math.floor(Math.random() * 1000) + Date.now()}`;
+  const generateRandomId = (prefix, suffix) => {
+    const _prefix = prefix ? prefix : "";
+    const _suffix = suffix ? suffix : "";
+    return `${_prefix}${
+      Math.floor(Math.random() * 1000) + Date.now()
+    }${_suffix}`;
   };
 
   //! ======== ENTITY ======== //
@@ -108,7 +112,7 @@ const useEntityForm = () => {
     const newField = {
       ...fieldTemplate,
       entityId,
-      fieldId: generateRandomId("field"),
+      fieldId: generateRandomId("field-", null),
     };
     dispatch(addEntityField({ newField }));
   };
@@ -143,7 +147,7 @@ const useEntityForm = () => {
   };
 
   const createFieldValidation = (fieldID) => {
-    const newValidationID = generateRandomId("validation");
+    const newValidationID = generateRandomId("validation-", null);
     const newValidation = {
       ...validationTemplate,
       fieldValidationId: newValidationID,
@@ -183,7 +187,7 @@ const useEntityForm = () => {
   };
 
   const createEntitySorting = (fieldID) => {
-    const generatedSortID = generateRandomId("sort");
+    const generatedSortID = generateRandomId("sort-", null);
     const newEntitySorting = {
       ...entitySortingTemplate,
       entitySortingId: generatedSortID,
@@ -218,7 +222,7 @@ const useEntityForm = () => {
   };
 
   const createFieldProperty = (fieldID) => {
-    const generatedPropertyID = generateRandomId("sort");
+    const generatedPropertyID = generateRandomId("sort-", null);
     const newFieldProperty = {
       ...fieldPropertyTemplate,
       listViewPropertyId: generatedPropertyID,
@@ -238,6 +242,7 @@ const useEntityForm = () => {
   };
 
   return {
+    generateRandomId,
     //ENTITY
     restoreEntityState,
     clearEntityDefinition,

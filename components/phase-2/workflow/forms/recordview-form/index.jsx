@@ -7,7 +7,7 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import RecordViewFieldsModal from "./RecordViewFieldsModal";
-import RecordViewFunctionsSection from "./RecordViewFunctionsSection";
+import RecordViewFunctionsModal from "./RecordViewFunctionsModal";
 
 const RecordViewForm = ({
   stepID,
@@ -21,10 +21,12 @@ const RecordViewForm = ({
     () => recordViews.find((rv) => rv.workflowStepId === stepID),
     [stepID]
   );
-  const viewId = recordView?.recordViewId;
+  const viewId = useMemo(() => recordView?.recordViewId, [recordView]);
 
   const [recordViewValues, setRecordViewValues] = useState(recordView);
   const [openRecordFieldsModal, setOpenRecordFieldsModal] = useState(false);
+  const [openRecordFunctionsModal, setOpenRecordFunctionsModal] =
+    useState(false);
 
   const { updateRecordViewValue, updateWorkflowStepValue } = useWorkflowForms();
 
@@ -41,13 +43,11 @@ const RecordViewForm = ({
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
-
     updateRecordViewValue(name, inputValue, viewId);
   };
 
   const handleWorkflowStepBlur = (e) => {
     const { name, value } = e.target;
-
     updateWorkflowStepValue(name, value, stepID);
   };
 
@@ -83,6 +83,11 @@ const RecordViewForm = ({
         setOpen={setOpenRecordFieldsModal}
         entityFields={entityFields}
         recordViewId={viewId}
+      />
+      <RecordViewFunctionsModal
+        recordViewId={viewId}
+        open={openRecordFunctionsModal}
+        setOpen={setOpenRecordFunctionsModal}
       />
 
       <div className={css.form_container}>
@@ -154,8 +159,15 @@ const RecordViewForm = ({
                 onClick={() => setOpenRecordFieldsModal(true)}
                 fullWidth
               >
-                {" "}
-                open record-view-fields
+                open record fields
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => setOpenRecordFunctionsModal(true)}
+                fullWidth
+              >
+                open record functions
               </Button>
             </div>
           </div>
@@ -164,9 +176,6 @@ const RecordViewForm = ({
       <div className={css.flex_column}>
         <div className={css.header_form_wrapper}>
           <ViewHeaderForm viewId={viewId} defaultExpanded={false} />
-        </div>
-        <div className={css.form_container}>
-          <RecordViewFunctionsSection recordViewId={viewId} />
         </div>
       </div>
     </>
