@@ -1,14 +1,19 @@
 import IconSelect from "@/components/form-elements/IconSelect";
 import ListViewElementRow from "./ListViewElementRow";
 import css from "@/styles/workflow-forms/list-view-form.module.css";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-const ListViewElement = ({ element, listViewId }) => {
+const ListViewElement = ({ element, entityFields }) => {
   const [elementValues, setElementValues] = useState(element);
 
   const { listViewElementRows } = useSelector((state) => state.workflow);
@@ -19,7 +24,7 @@ const ListViewElement = ({ element, listViewId }) => {
   const elementRows = listViewElementRows.filter(
     (lver) => lver.listViewElementId === element?.listViewElementId
   );
-  const addListViewElementRow = () => {
+  const handleAddListViewElementRow = () => {
     createListViewElementRow(element.listViewElementId);
   };
 
@@ -34,7 +39,6 @@ const ListViewElement = ({ element, listViewId }) => {
   };
   return (
     <>
-      {/* <div className={css.section_container}> */}
       <Accordion>
         <AccordionSummary
           sx={{ fontSize: "smaller" }}
@@ -45,44 +49,29 @@ const ListViewElement = ({ element, listViewId }) => {
           List View Element
         </AccordionSummary>
         <AccordionDetails>
-          <div className={css.flex_column} style={{ rowGap: "10px" }}>
-            <div className={css.flex_row}>
-              <div className={css.flex_column}>
-                <IconSelect
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  value={elementValues?.icon || ""}
+          <div className={css.flex_column}>
+            <div className={css.flex_column}>
+              <IconSelect
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                value={elementValues?.icon || ""}
+              />
+              {elementRows.map((row) => (
+                <ListViewElementRow
+                  key={row.listViewElementRowId}
+                  elementID={element.listViewElementRowId}
+                  elementRowValues={row}
+                  entityFields={entityFields}
                 />
-                {elementRows.map((row) => (
-                  <ListViewElementRow
-                    key={row.listViewElementRowId}
-                    elementID={element.listViewElementRowId}
-                    elementRowValues={row}
-                  />
-                ))}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "end",
-                  width: "40px",
-                  rowGap: "5px",
-                }}
-              >
-                <span
-                  className={css.add_row_btn}
-                  title="Add Row"
-                  onClick={addListViewElementRow}
-                >
-                  <AddCircleOutlineIcon fontSize="inherit" />
-                </span>
-              </div>
-            </div>{" "}
+              ))}
+            </div>
+
+            <Button variant="contained" onClick={handleAddListViewElementRow}>
+              List Element Anlegen
+            </Button>
           </div>
         </AccordionDetails>
       </Accordion>
-      {/* </div> */}
     </>
   );
 };

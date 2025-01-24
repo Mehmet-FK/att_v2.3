@@ -9,7 +9,46 @@ import {
   fontFamilies,
   headerColumnTextAlignments,
   headerColumnTypes,
+  headerColumnValueVariables,
 } from "@/helpers/Enums";
+import { columnTypeConstants } from "@/helpers/Constants";
+
+const ColumnValueInput = ({
+  handleChange,
+  handleBlur,
+  columnType,
+  columnValue,
+}) => {
+  if (columnType === columnTypeConstants.VARIABLE) {
+    console.log(headerColumnValueVariables);
+    console.log(columnValue);
+    return (
+      <CustomSelect
+        handleChange={handleChange}
+        handleBlur={handleBlur}
+        value={columnValue}
+        label="Column Value"
+        name="columnValue"
+        preferences={{ key: "id", value: "id", caption: "caption" }}
+        options={headerColumnValueVariables}
+        size="small"
+      />
+    );
+  } else {
+    return (
+      <TextField
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={columnValue || ""}
+        variant="outlined"
+        size="small"
+        label="Column Value"
+        name="columnValue"
+        fullWidth
+      />
+    );
+  }
+};
 
 const ViewHeaderColumn = ({ columnValues }) => {
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
@@ -29,7 +68,6 @@ const ViewHeaderColumn = ({ columnValues }) => {
   const removeColumnOnDoubleClick = (e) => {
     if (e.detail < 2) return;
     const columnId = columnValues.headerColumnId;
-    console.log(columnId);
     deleteViewHeaderColumn(columnId);
   };
   useEffect(() => {
@@ -69,8 +107,13 @@ const ViewHeaderColumn = ({ columnValues }) => {
           options={headerColumnTypes}
           size="small"
         />
-
-        <TextField
+        <ColumnValueInput
+          handleChange={handleChange}
+          handleBlur={handleBlur}
+          columnType={columnFormValues?.columnType}
+          columnValue={columnFormValues?.columnValue}
+        />
+        {/* <TextField
           onChange={handleChange}
           onBlur={handleBlur}
           value={columnFormValues?.columnValue || ""}
@@ -79,7 +122,7 @@ const ViewHeaderColumn = ({ columnValues }) => {
           label="Column Value"
           name="columnValue"
           fullWidth
-        />
+        /> */}
       </div>
       <div className={css.flex_row}>
         <TextField

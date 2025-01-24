@@ -292,6 +292,30 @@ const workflowSlice = createSlice({
       );
     },
 
+    //! LIST-VIEW-FILTER-DEFINITION
+    addListViewFilterDefinition: (state, { payload: { filterDefinition } }) => {
+      state.listViewFilterDefinitions.push(filterDefinition);
+    },
+
+    changeListViewFilterDefinitionValue: (
+      state,
+      { payload: { name, value, definitionID } }
+    ) => {
+      state.listViewFilterDefinitions = state.listViewFilterDefinitions.map(
+        (lvfd) => {
+          if (lvfd.filterDefinitionId === definitionID) {
+            return { ...lvfd, [name]: value };
+          } else {
+            return lvfd;
+          }
+        }
+      );
+    },
+    removeListViewFilterDefinition: (state, { payload: { definitionID } }) => {
+      state.listViewFilterDefinitions = state.listViewFilterDefinitions.filter(
+        (lvfd) => lvfd.filterDefinitionId !== definitionID
+      );
+    },
     addViewHeader: (state, { payload: { viewHeader } }) => {
       state.headers.push(viewHeader);
     },
@@ -455,5 +479,11 @@ export const {
   removeViewHeaderColumn,
   removeScannerDialog,
   removeModalDialog,
+
+  //LIST-VIEW-FILTER-DEFINITION
+
+  addListViewFilterDefinition,
+  changeListViewFilterDefinitionValue,
+  removeListViewFilterDefinition,
 } = workflowSlice.actions;
 export default workflowSlice.reducer;

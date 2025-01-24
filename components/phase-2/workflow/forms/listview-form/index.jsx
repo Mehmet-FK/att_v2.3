@@ -19,6 +19,8 @@ const ListViewForm = ({
     (state) => state.workflow
   );
 
+  const { entities } = useSelector((state) => state.attensam.data);
+
   const listView = useMemo(
     () => listViews.find((lv) => lv.workflowStepId === stepID),
     [stepID]
@@ -39,6 +41,23 @@ const ListViewForm = ({
   );
 
   const { updateListViewValue, updateWorkflowStepValue } = useWorkflowForms();
+
+  const prepareEntityFields = () => {
+    const selectedEntity = entities?.find(
+      (entity) => entity.id === listViewValues?.entityId
+    );
+    if (!selectedEntity) return [];
+    console.log(selectedEntity);
+    return selectedEntity.fields.map((field) => ({
+      id: field.id,
+      caption: field.name,
+    }));
+  };
+
+  const entityFields = useMemo(
+    () => prepareEntityFields(),
+    [listViewValues?.entityId]
+  );
 
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
@@ -142,12 +161,17 @@ const ListViewForm = ({
       </div>
       <div className={css.flex_row} style={{ paddingInline: "10px" }}>
         <div className={css.section_container}>
-          <ListViewElement element={listViewElement} listViewId={viewId} />
+          <ListViewElement
+            element={listViewElement}
+            entityFields={entityFields}
+            listViewId={viewId}
+          />
         </div>
         <div className={css.section_container}>
           <ListViewFilterDefinitions
             listViewId={viewId}
             selectedEntityId={selectedEntityId}
+            entityFields={entityFields}
           />
         </div>
       </div>

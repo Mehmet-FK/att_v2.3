@@ -4,6 +4,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Badge,
+  Button,
   Card,
   CardContent,
   TextField,
@@ -13,11 +14,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomSelect from "../common-form-elements/CustomSelect";
+import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 
 const FilterDefinitionForm = ({
   definitionValues,
   deleteDefinition,
-  updateFilterDefinitionValue,
+  updateDefinitionValue,
   entityFields,
 }) => {
   const [definitionFormValues, setDefinitionFormValues] =
@@ -31,17 +33,19 @@ const FilterDefinitionForm = ({
   const handleBlur = (e) => {
     const { value, name, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    updateFilterDefinitionValue(name, newValue, functionID);
+    const definitionID = definitionFormValues.filterDefinitionId;
+    updateDefinitionValue(name, newValue, definitionID);
   };
 
-  const handleDeleteDefinition = () => {
+  const handleDeleteDefinition = (e) => {
+    if (e.detail < 2) return;
     const definitionID = definitionFormValues.filterDefinitionId;
     deleteDefinition(definitionID);
   };
 
   useEffect(() => {
     setDefinitionFormValues(definitionValues);
-  }, [definitionValues.filterDefinitionId]);
+  }, [definitionValues?.filterDefinitionId]);
 
   return (
     <div style={{ maxWidth: "30%", width: "100%" }}>
@@ -106,16 +110,13 @@ const FilterDefinitionForm = ({
   );
 };
 
-const filterDefinitionTemplate = {
-  filterDefinitionId: "44",
-  listViewId: "4",
-  fieldId: 51,
-  filterValue: "{Username}",
-};
-
-const ListViewFilterDefinitions = ({ listViewId, selectedEntityId }) => {
+const ListViewFilterDefinitions = ({ listViewId, entityFields }) => {
   const { listViewFilterDefinitions } = useSelector((state) => state.workflow);
-  const entities = useSelector((state) => state.attensam.data?.entities);
+  const {
+    createListViewFilterDefinition,
+    updateFilterDefinitionValue,
+    deleteFilterDefinition,
+  } = useWorkflowForms();
 
   const filterDefinitions = useMemo(
     () =>
@@ -123,21 +124,11 @@ const ListViewFilterDefinitions = ({ listViewId, selectedEntityId }) => {
     [listViewFilterDefinitions, listViewId]
   );
 
-  const [definitionList, setDefinitionList] = useState([...filterDefinitions]);
+  const [definitionList, setDefinitionList] = useState(filterDefinitions);
 
-  const prepareEntityFields = () => {
-    const selectedEntity = entities?.find(
-      (entity) => entity.id === selectedEntityId
-    );
-    if (!selectedEntity) return [];
-
-    return selectedEntity.fields.map((field) => ({
-      id: field.id,
-      caption: field.id + "-" + field.name,
-    }));
+  const handleAddFilterDefinition = () => {
+    createListViewFilterDefinition(listViewId);
   };
-
-  const entityFields = useMemo(() => prepareEntityFields(), [selectedEntityId]);
 
   return (
     <Accordion>
@@ -150,16 +141,24 @@ const ListViewFilterDefinitions = ({ listViewId, selectedEntityId }) => {
         Filter Definitionen
       </AccordionSummary>
       <AccordionDetails>
-        <div
-          className={css.flex_row}
-          style={{ flexWrap: "wrap", rowGap: "10px" }}
-        >
-          {definitionList.map((definition) => (
-            <FilterDefinitionForm
-              definitionValues={definition}
-              entityFields={entityFields}
-            />
-          ))}
+        <div className={css.flex_column}>
+          <div
+            className={css.flex_row}
+            style={{ flexWrap: "wrap", rowGap: "10px" }}
+          >
+            {filterDefinitions.map((definition) => (
+              <FilterDefinitionForm
+                definitionValues={definition}
+                deleteDefinition={deleteFilterDefinition}
+                updateDefinitionValue={updateFilterDefinitionValue}
+                entityFields={entityFields}
+              />
+            ))}
+          </div>
+
+          <Button variant="contained" onClick={handleAddFilterDefinition}>
+            Definition Anlegen
+          </Button>
         </div>
       </AccordionDetails>
     </Accordion>

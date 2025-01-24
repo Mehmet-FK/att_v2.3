@@ -407,8 +407,11 @@ const useWorkflow = () => {
   ) => {
     if (!existingWorkflow) return;
     const launchElement = existingWorkflow.launchElements[0];
-    const launchNode = restoreExistingLaunchElement(launchElement);
-    _setNodes((nds) => nds.concat(launchNode));
+
+    if (launchElement) {
+      const launchNode = restoreExistingLaunchElement(launchElement);
+      _setNodes((nds) => nds.concat(launchNode));
+    }
 
     const listViews = existingWorkflow.listViews;
     const listNodes = restoreExistingListViews(listViews);

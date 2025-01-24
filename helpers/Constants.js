@@ -145,3 +145,10 @@ export const pageTitleConstants = {
   ITEMS_TABLE: "Datensätze",
   USERS_TABLE: "Benutzer",
 };
+
+export const columnTypeConstants = {
+  TEXT: 0,
+  VALUE: 1,
+  ICON: 2,
+  VARIABLE: 3,
+};

@@ -8,7 +8,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { fontFamilies } from "@/helpers/Enums";
 import CustomSelect from "../common-form-elements/CustomSelect";
 
-const ListViewElementRow = ({ elementRowValues }) => {
+const ListViewElementRow = ({ elementRowValues, entityFields }) => {
   const [rowValues, setRowValues] = useState(elementRowValues);
 
   const { updateListViewElementRowValue, deleteListViewElementRowByRowId } =
@@ -36,16 +36,17 @@ const ListViewElementRow = ({ elementRowValues }) => {
 
   return (
     <div className={css.list_element_container}>
-      <TextField
-        onChange={handleChange}
-        onBlur={handleBlur}
-        value={rowValues?.text || ""}
-        variant="outlined"
-        size="small"
+      <CustomSelect
+        handleChange={handleChange}
+        handleBlur={handleBlur}
+        value={rowValues?.text}
         label="Text"
         name="text"
-        fullWidth
+        preferences={{ key: "id", value: "caption", caption: "caption" }}
+        options={entityFields}
+        size={"small"}
       />
+
       <TextField
         onChange={handleChange}
         onBlur={handleBlur}

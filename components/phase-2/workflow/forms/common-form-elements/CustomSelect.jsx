@@ -15,6 +15,7 @@ const CustomSelect = ({
   defaultValue,
 }) => {
   const optKey = preferences.key;
+  const optValue = preferences?.value;
   const optCaption = preferences.caption;
 
   const validateValue = (value) => {
@@ -50,7 +51,10 @@ const CustomSelect = ({
           <em>None</em>
         </MenuItem>
         {options?.map((option) => (
-          <MenuItem key={option[optKey]} value={option[optKey]}>
+          <MenuItem
+            key={option[optKey]}
+            value={optValue ? option[optValue] : option[optKey]}
+          >
             {option[optCaption]}
           </MenuItem>
         ))}

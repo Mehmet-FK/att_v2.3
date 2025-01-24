@@ -92,8 +92,8 @@ const WorkflowForm = ({
         <div className={css.flex_row}>
           <IconSelect
             size={"medium"}
-            handleChange={() => console.log("change")}
-            handleBlur={() => console.log("blur")}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
             value={workflowFormValues?.icon || ""}
           />
 

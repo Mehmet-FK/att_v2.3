@@ -48,6 +48,9 @@ import {
   updateSelectedStep as updateStep,
   updateTotalWorkflow,
   changeAllRecordViewFunctions,
+  addListViewFilterDefinition,
+  removeListViewFilterDefinition,
+  changeListViewFilterDefinitionValue,
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -245,6 +248,35 @@ const useWorkflowForms = () => {
 
     deleteListViewElement(listViewElementId);
     dispatch(removeListView({ viewId: listViewId }));
+  };
+  // LIST-VIEW-FILTER-DEFINITION
+
+  const createListViewFilterDefinition = (listViewId) => {
+    const filterDefinitionTemplate = {
+      filterDefinitionId: "",
+      listViewId: "",
+      fieldId: null,
+      filterValue: "",
+    };
+
+    const newFilterDefinition = {
+      ...filterDefinitionTemplate,
+      filterDefinitionId: generateRandomId("filter-def", null),
+      listViewId,
+    };
+
+    dispatch(
+      addListViewFilterDefinition({ filterDefinition: newFilterDefinition })
+    );
+  };
+  const updateFilterDefinitionValue = (name, value, definitionID) => {
+    dispatch(
+      changeListViewFilterDefinitionValue({ name, value, definitionID })
+    );
+  };
+
+  const deleteFilterDefinition = (definitionID) => {
+    dispatch(removeListViewFilterDefinition({ definitionID }));
   };
 
   // RECORD-VIEW
@@ -633,6 +665,12 @@ const useWorkflowForms = () => {
 
     //RECORD_VIEW_FUNCTION
     updateAllRecordViewFunctions,
+
+    //LIST-VIEW-FILTER-DEFINITION
+
+    createListViewFilterDefinition,
+    updateFilterDefinitionValue,
+    deleteFilterDefinition,
   };
 };
 
