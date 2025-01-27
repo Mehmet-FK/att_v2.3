@@ -6,8 +6,8 @@ import ViewHeaderForm from "../header-form";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
-import RecordViewFieldsModal from "./RecordViewFieldsModal";
-import RecordViewFunctionsModal from "./RecordViewFunctionsModal";
+import RecordViewFieldsModal from "./recordview-fields/RecordViewFieldsModal";
+import RecordViewFunctionsModal from "./recordview-functions/RecordViewFunctionsModal";
 
 const RecordViewForm = ({
   stepID,
