@@ -11,6 +11,7 @@ const recordViewTemplate = {
   recordViewId: "",
   fieldId: null,
   differingCaption: "",
+  differingGroupName: "",
   isDefault: false,
   isReadOnly: false,
   imageMode: null,
@@ -54,7 +55,7 @@ const RecordViewFieldsModal = ({
   const draggingElementRef = useRef(null);
   const draggedOverElementRef = useRef(null);
 
-  const handleDragStart = (e, field, index) => {
+  const dragStart = (e, field, index) => {
     draggingElementRef.current = { field, index };
 
     const dragElement = e.target;
@@ -81,11 +82,11 @@ const RecordViewFieldsModal = ({
       document.body.removeChild(clone);
     }, 0);
   };
-  const handleDragEnter = (field, index) => {
+  const dragEnter = (field, index) => {
     draggedOverElementRef.current = { field, index };
   };
 
-  const handleDragEnd = (e, field, index) => {
+  const dragEnd = (e, field, index) => {
     let tempFields = [...fields];
     console.log({
       draggedOverField: draggedOverElementRef.current,
@@ -169,9 +170,9 @@ const RecordViewFieldsModal = ({
                   entityFields={entityFields}
                   deleteRecordViewField={deleteRecordViewField}
                   changeRecordFieldValue={changeRecordFieldValue}
-                  handleDragStart={handleDragStart}
-                  handleDragEnter={handleDragEnter}
-                  handleDragEnd={handleDragEnd}
+                  dragStart={dragStart}
+                  dragEnter={dragEnter}
+                  dragEnd={dragEnd}
                 />
               ))}
             </div>

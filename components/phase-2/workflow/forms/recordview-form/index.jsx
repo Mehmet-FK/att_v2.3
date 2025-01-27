@@ -28,7 +28,11 @@ const RecordViewForm = ({
   const [openRecordFunctionsModal, setOpenRecordFunctionsModal] =
     useState(false);
 
-  const { updateRecordViewValue, updateWorkflowStepValue } = useWorkflowForms();
+  const {
+    updateRecordViewValue,
+    updateWorkflowStepValue,
+    prepareEntityFields,
+  } = useWorkflowForms();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -51,20 +55,20 @@ const RecordViewForm = ({
     updateWorkflowStepValue(name, value, stepID);
   };
 
-  const prepareEntityFields = () => {
-    const selectedEntity = entities?.find(
-      (entity) => entity.id == recordView?.entityId
-    );
-    if (!selectedEntity) return [];
+  // const prepareEntityFields = () => {
+  //   const selectedEntity = entities?.find(
+  //     (entity) => entity.id == recordView?.entityId
+  //   );
+  //   if (!selectedEntity) return [];
 
-    return selectedEntity.fields.map((field) => ({
-      id: field.id,
-      caption: field.name,
-    }));
-  };
+  //   return selectedEntity.fields.map((field) => ({
+  //     id: field.id,
+  //     caption: field.name,
+  //   }));
+  // };
 
   const entityFields = useMemo(
-    () => prepareEntityFields(),
+    () => prepareEntityFields(entities, recordView?.entityId),
     [recordView?.entityId, entities]
   );
 

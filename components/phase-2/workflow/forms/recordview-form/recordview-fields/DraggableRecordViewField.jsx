@@ -20,19 +20,59 @@ const DraggableRecordViewField = ({
   entityFields,
   deleteRecordViewField,
   changeRecordFieldValue,
-  handleDragStart,
-  handleDragEnter,
-  handleDragEnd,
+  dragStart,
+  dragEnter,
+  dragEnd,
 }) => {
   const [fieldFormValues, setFieldFormValues] = useState(recordViewField);
   const [accordionExpanded, setAccordionExpanded] = useState(false);
 
   const isDraggedOver = fieldFormValues.isDraggedOver;
 
+  const handleDragStart = (e) => {
+    setAccordionExpanded(false);
+    dragStart(e, fieldFormValues, index);
+  };
+
+  const handleDragEnter = (e) => {
+    dragEnter(fieldFormValues, index);
+    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: true }));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+  const handleDragLeave = (e) => {
+    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
+  };
+
+  const handleDragEnd = (e) => {
+    dragEnd(e, fieldFormValues, index);
+
+    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
+  };
+
+  const handleFieldInputChange = (fieldID) => {
+    const selectedField = entityFields?.find((field) => field.id === fieldID);
+    if (!selectedField) return;
+    console.log({ selectedField });
+    setFieldFormValues((prev) => ({
+      ...prev,
+      fieldId: fieldID,
+      fieldCaption: selectedField.fieldCaption,
+      groupName: selectedField.fieldGroupName,
+    }));
+  };
+
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
+
+    if (name === "fieldId") {
+      handleFieldInputChange(value);
+    } else {
+      setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
+    }
   };
 
   const handleBlur = (e) => {
@@ -45,10 +85,14 @@ const DraggableRecordViewField = ({
     if (e.detail < 2) return;
     deleteRecordViewField(fieldFormValues.recordViewFieldId);
   };
-
   useEffect(() => {
     setFieldFormValues(recordViewField);
   }, [recordViewField.fieldId]);
+
+  useEffect(() => {
+    handleFieldInputChange(fieldFormValues?.fieldId);
+  }, []);
+
   return (
     <div
       droppable
@@ -64,22 +108,11 @@ const DraggableRecordViewField = ({
           "rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset",
         transition: "all 0.2s ease-in-out ",
       }}
-      onDragStart={(e) => {
-        setAccordionExpanded(false);
-        handleDragStart(e, fieldFormValues, index);
-      }}
-      onDragEnter={(e) => {
-        handleDragEnter(fieldFormValues, index);
-        setFieldFormValues((prev) => ({ ...prev, isDraggedOver: true }));
-      }}
-      onDragOver={(e) => e.preventDefault()}
-      onDragLeave={() => {
-        setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
-      }}
-      onDragEnd={(e) => {
-        handleDragEnd(fieldFormValues, index);
-        setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
-      }}
+      onDragStart={handleDragStart}
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDragEnd={handleDragEnd}
     >
       <Badge
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
@@ -125,15 +158,35 @@ const DraggableRecordViewField = ({
             aria-controls="panel1-content"
             id="panel1-header"
           >
-            {entityFields?.find((f) => f.id === fieldFormValues?.fieldId)
-              ?.caption ||
-              fieldFormValues?.differingCaption ||
-              "Neues Feld"}
+            {(fieldFormValues?.fieldId
+              ? fieldFormValues?.fieldCaption +
+                " (Feld ID: " +
+                fieldFormValues?.fieldId +
+                ")"
+              : fieldFormValues?.differingCaption) || "Neues Feld"}
           </AccordionSummary>
           <AccordionDetails>
             <div className={css.flex_row} style={{ alignItems: "center" }}>
               <div className={css.flex_column}>
                 <div className={css.flex_row}>
+                  <TextField
+                    value={fieldFormValues?.fieldCaption || ""}
+                    variant="outlined"
+                    size="small"
+                    label="Caption"
+                    name="fieldCaption"
+                    disabled
+                    fullWidth
+                  />
+                  <TextField
+                    value={fieldFormValues?.groupName || ""}
+                    variant="outlined"
+                    size="small"
+                    label="Gruppenname"
+                    name="groupName"
+                    disabled
+                    fullWidth
+                  />
                   <AutoCompleteSelect
                     mainProps={{
                       handleChange: handleChange,
@@ -147,9 +200,10 @@ const DraggableRecordViewField = ({
                     helperProps={{
                       fullWidth: true,
                       size: "small",
-                      //   className: css.form_control,
                     }}
                   />
+                </div>
+                <div className={css.flex_row}>
                   <TextField
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -158,6 +212,16 @@ const DraggableRecordViewField = ({
                     size="small"
                     label="differingCaption"
                     name="differingCaption"
+                    fullWidth
+                  />
+                  <TextField
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={fieldFormValues?.differingGroupName || ""}
+                    variant="outlined"
+                    size="small"
+                    label="differingGroupName"
+                    name="differingGroupName"
                     fullWidth
                   />
 
@@ -172,7 +236,6 @@ const DraggableRecordViewField = ({
                     fullWidth
                   />
                 </div>
-
                 <div className={css.flex_row}>
                   <TextField
                     onChange={handleChange}

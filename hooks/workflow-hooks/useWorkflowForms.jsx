@@ -101,6 +101,8 @@ const useWorkflowForms = () => {
     if (!selectedEntity) return [];
     return selectedEntity.fields.map((field) => ({
       id: field.id,
+      fieldCaption: field.caption,
+      fieldGroupName: field.groupName,
       caption: field.name,
     }));
   };
