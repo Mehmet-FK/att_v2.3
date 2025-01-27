@@ -175,7 +175,11 @@ const RecordViewForm = ({
       </div>
       <div className={css.flex_column}>
         <div className={css.header_form_wrapper}>
-          <ViewHeaderForm viewId={viewId} defaultExpanded={false} />
+          <ViewHeaderForm
+            viewId={viewId}
+            entityFields={entityFields}
+            defaultExpanded={false}
+          />
         </div>
       </div>
     </>

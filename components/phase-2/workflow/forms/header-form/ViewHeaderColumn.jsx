@@ -18,10 +18,13 @@ const ColumnValueInput = ({
   handleBlur,
   columnType,
   columnValue,
+  entityFields,
 }) => {
   if (columnType === columnTypeConstants.VARIABLE) {
-    console.log(headerColumnValueVariables);
-    console.log(columnValue);
+    const entityFieldsForSelect = [
+      ...headerColumnValueVariables,
+      ...(entityFields ? entityFields : []),
+    ];
     return (
       <CustomSelect
         handleChange={handleChange}
@@ -30,7 +33,7 @@ const ColumnValueInput = ({
         label="Column Value"
         name="columnValue"
         preferences={{ key: "id", value: "id", caption: "caption" }}
-        options={headerColumnValueVariables}
+        options={entityFieldsForSelect}
         size="small"
       />
     );
@@ -50,7 +53,7 @@ const ColumnValueInput = ({
   }
 };
 
-const ViewHeaderColumn = ({ columnValues }) => {
+const ViewHeaderColumn = ({ columnValues, entityFields }) => {
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
 
   const { updateViewHeaderColumnValue, deleteViewHeaderColumn } =
@@ -112,6 +115,7 @@ const ViewHeaderColumn = ({ columnValues }) => {
           handleBlur={handleBlur}
           columnType={columnFormValues?.columnType}
           columnValue={columnFormValues?.columnValue}
+          entityFields={entityFields}
         />
         {/* <TextField
           onChange={handleChange}

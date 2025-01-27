@@ -96,6 +96,15 @@ const useWorkflowForms = () => {
     }${_suffix}`;
   };
 
+  const prepareEntityFields = (entities, entityId) => {
+    const selectedEntity = entities?.find((entity) => entity.id === entityId);
+    if (!selectedEntity) return [];
+    return selectedEntity.fields.map((field) => ({
+      id: field.id,
+      caption: field.name,
+    }));
+  };
+
   const isLaunchElement = (viewType) =>
     viewType?.toLowerCase()?.includes("launch");
 
@@ -625,6 +634,8 @@ const useWorkflowForms = () => {
   };
 
   return {
+    //HELPER-FUNCTIONS
+    prepareEntityFields,
     clearWorkflowState,
     generateRandomId,
     createWorkflowStep,

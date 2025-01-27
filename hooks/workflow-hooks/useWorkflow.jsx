@@ -333,7 +333,6 @@ const useWorkflow = () => {
         rv.recordViewId
       );
       createdRecordViewNodes.push(newNode);
-      // setNodes((nds) => nds.concat(newNode));
     });
     return createdRecordViewNodes;
   };

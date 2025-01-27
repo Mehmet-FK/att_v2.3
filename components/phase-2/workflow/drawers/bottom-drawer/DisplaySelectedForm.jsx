@@ -2,12 +2,12 @@ import { useSelector } from "react-redux";
 import ListViewForm from "../../forms/listview-form";
 import RecordViewForm from "../../forms/recordview-form";
 import ScannerDialogForm from "../../forms/scanner-dialog-form";
-import TileViewForm from "../../forms/TileViewForm";
 import WorkflowForm from "../../forms/workflow-form";
 import { useEffect, useMemo } from "react";
 import { viewTypeConstants } from "@/helpers/Constants";
 import ModalDialogForm from "../../forms/modal-dialog-form";
 import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
+import TileViewForm from "../../forms/tile-view-form";
 
 const DisplaySelectedForm = ({ selectedNode }) => {
   const entities = useSelector((state) => state.attensam.data?.entities);

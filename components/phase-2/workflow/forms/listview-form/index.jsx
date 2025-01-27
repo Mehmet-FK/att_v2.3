@@ -40,22 +40,11 @@ const ListViewForm = ({
     [stepID]
   );
 
-  const { updateListViewValue, updateWorkflowStepValue } = useWorkflowForms();
-
-  const prepareEntityFields = () => {
-    const selectedEntity = entities?.find(
-      (entity) => entity.id === listViewValues?.entityId
-    );
-    if (!selectedEntity) return [];
-    console.log(selectedEntity);
-    return selectedEntity.fields.map((field) => ({
-      id: field.id,
-      caption: field.name,
-    }));
-  };
+  const { updateListViewValue, updateWorkflowStepValue, prepareEntityFields } =
+    useWorkflowForms();
 
   const entityFields = useMemo(
-    () => prepareEntityFields(),
+    () => prepareEntityFields(entities, listViewValues?.entityId),
     [listViewValues?.entityId]
   );
 
@@ -85,12 +74,6 @@ const ListViewForm = ({
     };
 
     setListViewValues(listViewFormValue);
-  }, [stepID]);
-
-  useEffect(() => {
-    return () => {
-      console.log("list form return", stepID);
-    };
   }, [stepID]);
 
   return (
@@ -157,7 +140,11 @@ const ListViewForm = ({
         </div>
       </div>
       <div className={css.header_form_wrapper}>
-        <ViewHeaderForm viewId={viewId} defaultExpanded={false} />
+        <ViewHeaderForm
+          viewId={viewId}
+          entityFields={entityFields}
+          defaultExpanded={false}
+        />
       </div>
       <div className={css.flex_row} style={{ paddingInline: "10px" }}>
         <div className={css.section_container}>

@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import ColorPicker from "../common-form-elements/ColorPicker";
 
-const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
+const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
   const { headerRows, headers, selectedStepId } = useSelector(
     (state) => state.workflow
   );
@@ -52,16 +52,16 @@ const ViewHeaderForm = ({ viewId, defaultExpanded }) => {
         <ViewHeaderRow
           key={rowValue?.headerRowId}
           rowId={rowValue?.headerRowId}
+          entityFields={entityFields}
           headerId={headerValues?.headerId}
         />
       )),
-    [viewHeaderRows]
+    [viewHeaderRows, entityFields]
   );
 
   useEffect(() => {
     setHeaderValues(header);
   }, [selectedStepId]);
-
   return (
     <div className={css.header_container}>
       <Accordion defaultExpanded={defaultExpanded}>

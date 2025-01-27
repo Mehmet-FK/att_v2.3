@@ -5,9 +5,8 @@ import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useMemo } from "react";
-import { Divider } from "@mui/material";
 
-const ViewHeaderRow = ({ rowId }) => {
+const ViewHeaderRow = ({ rowId, entityFields }) => {
   const { headerColumns } = useSelector((state) => state.workflow);
   const { createViewHeaderColumn, deleteViewHeaderRow } = useWorkflowForms();
   const removeRowOnDoubleClick = (e) => {
@@ -28,9 +27,13 @@ const ViewHeaderRow = ({ rowId }) => {
   const MemoViewHeaderColumns = useMemo(
     () =>
       columns.map((col) => (
-        <ViewHeaderColumn key={col.headerColumnId} columnValues={col} />
+        <ViewHeaderColumn
+          key={col.headerColumnId}
+          entityFields={entityFields}
+          columnValues={col}
+        />
       )),
-    [columns]
+    [columns, entityFields]
   );
 
   return (

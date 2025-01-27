@@ -10,15 +10,14 @@ import { useSelector } from "react-redux";
 const ScannerDialogFormBase = ({
   scannerDialog,
   viewId,
+  scannerDialogValues,
+  setScannerDialogValues,
+  entityFields,
   entitiesForAutoSelect,
   workflowsForAutoCompleteSelect,
   workflowStepValues,
   children,
 }) => {
-  const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
-
-  const entities = useSelector((state) => state.attensam.data?.entities);
-
   const { updateScannerDialogValue, updateWorkflowStepValue } =
     useWorkflowForms();
 
@@ -44,23 +43,6 @@ const ScannerDialogFormBase = ({
     handleBlur(e);
   };
 
-  const prepareEntityFields = () => {
-    const selectedEntity = entities?.find(
-      (entity) => entity.id == scannerDialogValues?.entityId
-    );
-    if (!selectedEntity) return [];
-
-    return selectedEntity.fields.map((field) => ({
-      id: field.id,
-      caption: field.name,
-    }));
-  };
-
-  const entityFields = useMemo(
-    () => prepareEntityFields(),
-    [scannerDialogValues.entityId]
-  );
-
   useEffect(() => {
     const scannerDialogFormValue = {
       ...scannerDialog,
@@ -69,7 +51,6 @@ const ScannerDialogFormBase = ({
 
     setScannerDialogValues(scannerDialogFormValue);
   }, [viewId]);
-  console.log(entityFields);
   return (
     <>
       <div className={css.form_container}>

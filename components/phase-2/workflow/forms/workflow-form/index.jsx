@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../common-form-elements/CustomSelect";
-import LaunchElementForm from "../LaunchElementForm";
+import LaunchElementForm from "../launch-element-from";
 import { workflowPermissionTypes } from "@/helpers/Enums";
 import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
 
