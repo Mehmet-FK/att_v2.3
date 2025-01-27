@@ -25,8 +25,9 @@ const EntityForm = ({ existingEntity }) => {
   const entityId = router.query?.entityId;
 
   const handleSubmit = () => {
-    console.log("submit");
-    postEntityCall(entity);
+    postEntityCall(entity).then((res) =>
+      res ? router.push("/entities") : null
+    );
   };
 
   useEffect(() => {

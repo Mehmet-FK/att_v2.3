@@ -1,12 +1,18 @@
-import { Autocomplete, Avatar, Box, Paper, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Avatar, Box, TextField } from "@mui/material";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import { useEffect, useMemo, useState } from "react";
 
 /**
  *
  * @param {preferences} preferences
  * An Object with two paramaters
- * e.g {key:"workflowId", caption:"workflowName"}
- * key: key to select property which will be sent to backend
+ * e.g {
+ * @field key: key to select property which will be sent to backend
+ * @field title:"A Value to show on hover",
+ * @field image:"image path if an image needs to be displayed",
+ * @field caption:"workflowName"
+ * @field filterKeys:["property","keys","to be", "filtered by"]
+ * }
  * caption: key to select property to show to the User
  */
 const AutoCompleteSelect = ({ mainProps, helperProps }) => {
@@ -19,6 +25,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const optCaption = preferences.caption;
   const optImage = preferences.image;
   const optTitle = preferences?.title;
+  const optFilterKeys = preferences?.filterKeys;
   const handleChangeLocal = (newValue) => {
     const pseudoEvent = {
       target: {
@@ -63,10 +70,20 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
           sx={{ width: 24, height: 24, mr: 1 }}
           src={option.icon}
         />
-        {option[optCaption]}
+        {option[optKey] + " - " + option[optCaption]}
       </Box>
     );
   };
+
+  const filterOptions = useMemo(() => {
+    const unifiedValue = (option) =>
+      optFilterKeys?.map((key) => option[key])?.join(" ");
+    if (!optFilterKeys) return createFilterOptions();
+    return createFilterOptions({
+      matchFrom: "any",
+      stringify: (option) => unifiedValue(option),
+    });
+  }, []);
 
   useEffect(() => {
     const tempSelectedValue = options.find((opt) => opt[optKey] === value);
@@ -77,10 +94,9 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     <Autocomplete
       {...helperProps}
       value={selectedValue}
-      onChange={(event, newValue) => {
-        handleChangeLocal(newValue);
-      }}
+      onChange={(event, newValue) => handleChangeLocal(newValue)}
       getOptionKey={(opt) => opt.id}
+      filterOptions={filterOptions}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);

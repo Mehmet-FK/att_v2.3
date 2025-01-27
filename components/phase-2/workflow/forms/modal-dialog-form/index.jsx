@@ -62,7 +62,6 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
 
     setModalDialogValues(modalDialogValues);
   }, [stepID]);
-
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>
@@ -101,19 +100,16 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
           />
         </div>
         <div className={css.flex_row}>
-          {/* <CustomSelect
+          <CustomSelect
             handleChange={handleChange}
             handleBlur={handleBlur}
             value={modalDialogValues?.fieldId}
             label="Feld"
             name="fieldId"
-            preferences={{ key: "id", caption: "name" }}
-            options={[
-              { id: "1", name: "fieldId" },
-              { id: "2", name: "fieldId_2" },
-            ]}
-          /> */}
-          <AutoCompleteSelect
+            preferences={{ key: "id", caption: "caption" }}
+            options={entityFieldsForAutoSelect || []}
+          />
+          {/* <AutoCompleteSelect
             mainProps={{
               handleChange: handleChange,
               handleBlur: handleBlur,
@@ -126,7 +122,7 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
             helperProps={{
               className: css.form_control,
             }}
-          />
+          /> */}
 
           <TextField
             onChange={handleChange}

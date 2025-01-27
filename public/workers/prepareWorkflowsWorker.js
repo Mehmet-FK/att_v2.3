@@ -8,6 +8,7 @@ self.onmessage = (event) => {
     return workflows.map((wf) => ({
       id: wf.id,
       caption: wf.caption,
+      name: wf.name || "",
       path: wf.path,
       icon: wf.icon,
     }));

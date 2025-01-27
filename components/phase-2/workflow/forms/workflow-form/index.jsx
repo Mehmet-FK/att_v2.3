@@ -9,7 +9,6 @@ import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import LaunchElementForm from "../launch-element-from";
 import { workflowPermissionTypes } from "@/helpers/Enums";
-import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
 
 const WorkflowForm = ({
   entitiesForAutoSelect,
@@ -78,7 +77,13 @@ const WorkflowForm = ({
             mainProps={{
               handleChange: handleChange,
               handleBlur: handleBlur,
-              preferences: { key: "id", caption: "caption", image: "icon" },
+              preferences: {
+                key: "id",
+                caption: "caption",
+                image: "icon",
+                title: "path",
+                filterKeys: ["id", "caption", "path"],
+              },
               options: workflowsForAutoCompleteSelect || [],
               name: "parentWorkflowId",
               value: workflowFormValues?.parentWorkflowId || "",
@@ -86,6 +91,7 @@ const WorkflowForm = ({
             }}
             helperProps={{
               className: css.form_control,
+              placeholder: "test placeholder",
             }}
           />
         </div>

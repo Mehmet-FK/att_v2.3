@@ -88,7 +88,7 @@ const EntitySortingSection = ({ fieldID }) => {
               <CustomSelect
                 handleChange={handleChange}
                 handleBlur={handleBlur}
-                label="sortOrder"
+                label="Sort Order"
                 name="sortOrder"
                 value={sortingRuleFormValues.sortOrder}
                 size="small"
@@ -101,13 +101,13 @@ const EntitySortingSection = ({ fieldID }) => {
               <CustomSelect
                 handleChange={handleChange}
                 handleBlur={handleBlur}
+                label="Sort Direction"
                 name="sortDirection"
-                label="sortDirection"
                 value={sortingRuleFormValues.sortDirection}
                 size="small"
                 options={[
-                  { key: 0, caption: "0" },
-                  { key: 1, caption: "1" },
+                  { key: 0, caption: "Aufsteigend" },
+                  { key: 1, caption: "Absteigend" },
                 ]}
                 preferences={{ key: "key", caption: "caption" }}
               />

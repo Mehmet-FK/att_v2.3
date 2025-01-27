@@ -13,6 +13,7 @@ import CheckBox from "../../common-form-elements/CheckBox";
 import { useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CustomSelect from "../../common-form-elements/CustomSelect";
 
 const DraggableRecordViewField = ({
   index,
@@ -48,7 +49,6 @@ const DraggableRecordViewField = ({
 
   const handleDragEnd = (e) => {
     dragEnd(e, fieldFormValues, index);
-    // handleFieldInputChange(fieldFormValues?.fieldId);
 
     setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
   };
@@ -68,11 +68,7 @@ const DraggableRecordViewField = ({
     const { value, name, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
 
-    if (name === "fieldId") {
-      //   handleFieldInputChange(value);
-    } else {
-      setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
-    }
+    setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleBlur = (e) => {
@@ -169,6 +165,16 @@ const DraggableRecordViewField = ({
             <div className={css.flex_row} style={{ alignItems: "center" }}>
               <div className={css.flex_column}>
                 <div className={css.flex_row}>
+                  <CustomSelect
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    value={fieldFormValues?.fieldId || ""}
+                    label="Feld"
+                    name="fieldId"
+                    preferences={{ key: "id", caption: "caption" }}
+                    options={entityFields || []}
+                    size="small"
+                  />
                   <TextField
                     value={fieldFormValues?.fieldCaption || ""}
                     variant="outlined"
@@ -186,21 +192,6 @@ const DraggableRecordViewField = ({
                     name="groupName"
                     disabled
                     fullWidth
-                  />
-                  <AutoCompleteSelect
-                    mainProps={{
-                      handleChange: handleChange,
-                      handleBlur: handleBlur,
-                      preferences: { key: "id", caption: "caption" },
-                      options: entityFields,
-                      name: "fieldId",
-                      value: fieldFormValues?.fieldId || "",
-                      label: "Field",
-                    }}
-                    helperProps={{
-                      fullWidth: true,
-                      size: "small",
-                    }}
                   />
                 </div>
                 <div className={css.flex_row}>

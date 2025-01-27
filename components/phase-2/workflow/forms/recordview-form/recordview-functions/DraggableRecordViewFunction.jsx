@@ -20,10 +20,25 @@ const DraggableRecordViewFunction = ({
   const isDraggedOver = functionFormValues.isDraggedOver;
   const functionID = functionFormValues.recordViewFunctionId;
 
+  const handleWorkflowInputChange = (workflowID) => {
+    const selectedWorkflow = workflowsForAutoCompleteSelect?.find(
+      (wf) => wf.id === workflowID
+    );
+
+    setFunctionFormValues((prev) => ({
+      ...prev,
+      workflowId: workflowID,
+      functionCaption: selectedWorkflow?.caption || "",
+    }));
+  };
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-    setFunctionFormValues((prev) => ({ ...prev, [name]: newValue }));
+    if (name === "workflowId") {
+      handleWorkflowInputChange(value);
+    } else {
+      setFunctionFormValues((prev) => ({ ...prev, [name]: newValue }));
+    }
   };
   const handleBlur = (e) => {
     const { value, name, type, checked } = e.target;
@@ -58,6 +73,10 @@ const DraggableRecordViewFunction = ({
   useEffect(() => {
     setFunctionFormValues(functionValues);
   }, [functionValues.recordViewFunctionId]);
+
+  useEffect(() => {
+    handleWorkflowInputChange(functionFormValues?.workflowId);
+  }, [functionFormValues?.workflowId]);
 
   return (
     <div
@@ -110,13 +129,13 @@ const DraggableRecordViewFunction = ({
         <Card sx={{ width: "100%", backgroundColor: "inherit" }}>
           <CardContent>
             <div className={css.flex_row}>
-              <TextField
+              {/* <TextField
                 value={functionFormValues?.recordViewFunctionId || ""}
                 variant="outlined"
                 size="small"
                 label="ID"
                 name="recordViewFunctionId"
-              />
+              /> */}
               <TextField
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -126,6 +145,15 @@ const DraggableRecordViewFunction = ({
                 label="sortOrder"
                 name="sortOrder"
               />
+              <TextField
+                value={functionFormValues?.functionCaption || ""}
+                variant="outlined"
+                size="small"
+                label="Caption"
+                name="functionCaption"
+                disabled
+                fullWidth
+              />
               <AutoCompleteSelect
                 mainProps={{
                   handleChange: handleChange,
@@ -133,9 +161,9 @@ const DraggableRecordViewFunction = ({
                   preferences: {
                     key: "id",
                     caption: "path",
-
                     image: "icon",
                     title: "path",
+                    filterKeys: ["id", "caption", "path"],
                   },
                   options: workflowsForAutoCompleteSelect || [],
                   name: "workflowId",
