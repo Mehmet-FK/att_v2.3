@@ -88,16 +88,19 @@ const RecordViewFieldsModal = ({
 
   const dragEnd = (e, field, index) => {
     let tempFields = [...fields];
-    console.log({
-      draggedOverField: draggedOverElementRef.current,
-      draggingElementRef: draggingElementRef.current,
-    });
 
     if (!draggedOverElementRef.current || !draggingElementRef.current) return;
 
     const draggingField = draggingElementRef.current.field;
     const draggingFieldIndex = draggingElementRef.current.index;
     const draggedOverFieldIndex = draggedOverElementRef.current.index;
+    if (draggingFieldIndex === draggedOverFieldIndex) {
+      return;
+    }
+    console.log({
+      draggedOverField: draggedOverElementRef.current,
+      draggingElementRef: draggingElementRef.current,
+    });
 
     tempFields.splice(draggingFieldIndex, 1);
     tempFields.splice(draggedOverFieldIndex, 0, draggingField);

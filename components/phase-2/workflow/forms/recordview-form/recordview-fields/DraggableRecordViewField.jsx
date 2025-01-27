@@ -48,6 +48,7 @@ const DraggableRecordViewField = ({
 
   const handleDragEnd = (e) => {
     dragEnd(e, fieldFormValues, index);
+    // handleFieldInputChange(fieldFormValues?.fieldId);
 
     setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
   };
@@ -55,7 +56,6 @@ const DraggableRecordViewField = ({
   const handleFieldInputChange = (fieldID) => {
     const selectedField = entityFields?.find((field) => field.id === fieldID);
     if (!selectedField) return;
-    console.log({ selectedField });
     setFieldFormValues((prev) => ({
       ...prev,
       fieldId: fieldID,
@@ -69,7 +69,7 @@ const DraggableRecordViewField = ({
     const newValue = type === "checkbox" ? checked : value;
 
     if (name === "fieldId") {
-      handleFieldInputChange(value);
+      //   handleFieldInputChange(value);
     } else {
       setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
     }
@@ -91,7 +91,7 @@ const DraggableRecordViewField = ({
 
   useEffect(() => {
     handleFieldInputChange(fieldFormValues?.fieldId);
-  }, []);
+  }, [fieldFormValues?.fieldId]);
 
   return (
     <div
