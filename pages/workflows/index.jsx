@@ -69,7 +69,6 @@ const Workflow = () => {
       caption: "Group View",
     },
   ];
-
   const filterByLaunchType = (value) => {
     const temp = workflows?.filter(
       (wf) => parseInt(wf.launchType) === value || value === ""
@@ -99,13 +98,6 @@ const Workflow = () => {
     getWorkflowsCall();
   }, []);
 
-  const findParentWorkflowById = (workflowId) => {
-    return workflows.find((wf) => {
-      if (!wf.workflows) return undefined;
-      return wf.workflows.includes(workflowId);
-    });
-  };
-
   useEffect(() => {
     if (workflows) {
       setExistingWorkflows(multiSortWorkflows(workflows));
@@ -119,16 +111,16 @@ const Workflow = () => {
         <DashboardSearchBar
           itemsState={workflows}
           setItemsState={setExistingWorkflows}
-          filterKey="caption"
+          filterKeys={["id", "caption", "path"]}
           addNewLink="/workflows/new"
-          filter={{ key: "launchType", value: workflowLaunchType }}
+          // filter={{ key: "launchType", value: workflowLaunchType }}
         />
-        <DashboardFilterNavigation
+        {/* <DashboardFilterNavigation
           value={workflowLaunchType}
           setValue={setWorkflowLaunchType}
           filterOptions={launchTypeFilterOptions}
           handleFilter={filterByLaunchType}
-        />
+        /> */}
         <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
           {existingWorkflows?.map((wf) => (
@@ -139,6 +131,7 @@ const Workflow = () => {
                 caption: `${wf.id} - ${wf.caption}`,
                 defaultIconUrl: wf.icon,
               }}
+              additionalTitles={[wf.name]}
               key={wf.id}
             />
           ))}

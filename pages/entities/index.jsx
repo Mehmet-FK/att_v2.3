@@ -28,6 +28,9 @@ const Entities = () => {
       setExistingEntities(entities);
     }
   }, [entities]);
+  useEffect(() => {
+    console.log(existingEntities);
+  }, [existingEntities]);
 
   return (
     <div className="page-wrapper">
@@ -36,7 +39,7 @@ const Entities = () => {
         <DashboardSearchBar
           itemsState={entities}
           setItemsState={setExistingEntities}
-          filterKey="caption"
+          filterKeys={["caption"]}
           addNewLink="/entities/new"
         />
         <DashboardSkeletonLoader />
@@ -49,6 +52,7 @@ const Entities = () => {
                 caption: entity.caption,
                 defaultIconUrl: entity.defaultIconPath,
               }}
+              additionalTitles={[entity?.name]}
               key={entity.id}
             />
           ))}

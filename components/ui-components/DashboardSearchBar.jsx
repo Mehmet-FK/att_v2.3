@@ -2,38 +2,69 @@ import SearchIcon from "@mui/icons-material/Search";
 import css from "@/styles/dashboard-searchbar.module.css";
 import Link from "next/link";
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
 
 const DashboardSearchBar = ({
   itemsState,
   setItemsState,
-  filterKey,
+  filterKeys,
   addNewLink,
   filter,
 }) => {
-  const [searchVal, setSearchVal] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleChange = (e) => {
-    setSearchVal(e.target.value);
-  };
-
+  /* 
   const filterItems = (_itemsState) => {
     return _itemsState?.filter((el) => {
       const condition =
-        filter?.value !== "" ? el[filter?.key] == filter?.value : true;
-
+      filter?.value !== "" ? el[filter?.key] == filter?.value : true;
+      
       return (
         condition &&
-        el[filterKey].toLowerCase().includes(searchVal.toLowerCase())
-      );
-    });
+        el[filterKey].toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        });
+        };
+        */
+
+  const filterItems = (_itemsState, term) => {
+    const lowerCaseSearchTerm = term.toLowerCase();
+
+    if (!_itemsState) return;
+
+    return _itemsState.filter((item) =>
+      filterKeys.some((key) => {
+        const value = item[key];
+
+        return (
+          value && value.toString().toLowerCase().includes(lowerCaseSearchTerm)
+        );
+      })
+    );
   };
 
-  useEffect(() => {
-    //updates the entities everytime when the search value changes //
-    setItemsState((prev) => filterItems(itemsState));
-  }, [searchVal]);
+  const debouncedFilter = useCallback(
+    debounce((term) => {
+      const result = filterItems(itemsState, term);
+      setItemsState(result);
+    }, 300),
+    [itemsState]
+  );
 
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+    debouncedFilter(e.target.value);
+  };
   return (
     <div className={css.utilbarContainer}>
       <div className={css.searchbarWrapper}>
@@ -41,7 +72,7 @@ const DashboardSearchBar = ({
           <SearchIcon />
         </span>
         <input
-          value={searchVal || ""}
+          value={searchTerm || ""}
           onChange={handleChange}
           type="text"
           className={css.searchbar}
