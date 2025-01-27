@@ -23,20 +23,6 @@ const DashboardSearchBar = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* 
-  const filterItems = (_itemsState) => {
-    return _itemsState?.filter((el) => {
-      const condition =
-      filter?.value !== "" ? el[filter?.key] == filter?.value : true;
-      
-      return (
-        condition &&
-        el[filterKey].toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        });
-        };
-        */
-
   const filterItems = (_itemsState, term) => {
     const lowerCaseSearchTerm = term.toLowerCase();
 

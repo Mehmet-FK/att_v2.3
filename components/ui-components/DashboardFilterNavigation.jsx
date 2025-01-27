@@ -9,20 +9,25 @@ const DashboardFilterNavigation = ({
   filterOptions,
   handleFilter,
 }) => {
+  const handleChange = (option) => {
+    handleFilter(option.id);
+  };
+
   return (
     <>
       <Box sx={{ width: "100%" }}>
         <BottomNavigation
-          // showLabels
+          showLabels
           value={value}
           onChange={(event, newValue) => {
+            console.log(newValue);
             setValue(newValue);
-            handleFilter(newValue);
           }}
         >
           {filterOptions.map((opt) => (
             <BottomNavigationAction
               key={opt.id}
+              onClick={() => handleChange(opt)}
               label={opt.caption}
               icon={opt.icon}
               sx={{

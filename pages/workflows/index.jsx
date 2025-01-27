@@ -15,7 +15,7 @@ const Workflow = () => {
   const { getWorkflowsCall } = useAttensamCalls();
   const workflows = useSelector((state) => state.attensam.data?.workflows);
   const [existingWorkflows, setExistingWorkflows] = useState(workflows);
-  const [workflowLaunchType, setWorkflowLaunchType] = useState("");
+  const [workflowLaunchType, setWorkflowLaunchType] = useState(6);
 
   const launchTypeFilterOptions = [
     {
@@ -68,13 +68,36 @@ const Workflow = () => {
       ),
       caption: "Group View",
     },
+    {
+      id: 5,
+      icon: (
+        <CustomSvgIcon
+          src="/assets/launch-type-icons/default-listview.svg"
+          width="30px"
+        />
+      ),
+      caption: "Default List View",
+    },
+    {
+      id: -1,
+      icon: (
+        <CustomSvgIcon
+          src="/assets/launch-type-icons/workflow-fliter-show-all.svg"
+          width="30px"
+        />
+      ),
+      caption: "Alle anzeigen",
+    },
   ];
   const filterByLaunchType = (value) => {
-    const temp = workflows?.filter(
-      (wf) => parseInt(wf.launchType) === value || value === ""
-    );
-
-    setExistingWorkflows(temp);
+    if (value === -1) {
+      setExistingWorkflows(workflows);
+    } else {
+      const temp = workflows?.filter(
+        (wf) => parseInt(wf.launchType) === value || value === ""
+      );
+      setExistingWorkflows(temp);
+    }
   };
 
   const multiSortWorkflows = (array) => {
@@ -113,14 +136,14 @@ const Workflow = () => {
           setItemsState={setExistingWorkflows}
           filterKeys={["id", "caption", "path"]}
           addNewLink="/workflows/new"
-          // filter={{ key: "launchType", value: workflowLaunchType }}
+          filter={{ key: "launchType", value: workflowLaunchType }}
         />
-        {/* <DashboardFilterNavigation
+        <DashboardFilterNavigation
           value={workflowLaunchType}
           setValue={setWorkflowLaunchType}
           filterOptions={launchTypeFilterOptions}
           handleFilter={filterByLaunchType}
-        /> */}
+        />
         <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
           {existingWorkflows?.map((wf) => (

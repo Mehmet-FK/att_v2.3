@@ -82,8 +82,8 @@ const EntityAccordion = () => {
               name="dataSource"
               width="100%"
               value={entityFormValues?.dataSource || ""}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleBlur}
+              // onBlur={handleBlur}
             >
               {views?.map((opt, index) => (
                 <MenuItem key={index} value={opt}>

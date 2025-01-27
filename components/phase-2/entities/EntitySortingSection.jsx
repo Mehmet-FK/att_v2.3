@@ -48,6 +48,15 @@ const EntitySortingSection = ({ fieldID }) => {
 
   const sortingRulenExists = sortingRule ? true : false;
 
+  const entitySortingsForSelect = useMemo(
+    () =>
+      entitySortings?.map((es, index) => ({
+        key: index,
+        caption: JSON.stringify(index),
+      })),
+    [entitySortings]
+  );
+
   return (
     <div
       style={{
@@ -92,10 +101,7 @@ const EntitySortingSection = ({ fieldID }) => {
                 name="sortOrder"
                 value={sortingRuleFormValues.sortOrder}
                 size="small"
-                options={[
-                  { key: 0, caption: "0" },
-                  { key: 1, caption: "1" },
-                ]}
+                options={entitySortingsForSelect}
                 preferences={{ key: "key", caption: "caption" }}
               />
               <CustomSelect
