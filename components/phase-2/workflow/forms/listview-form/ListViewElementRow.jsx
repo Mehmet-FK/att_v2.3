@@ -1,14 +1,18 @@
 import { TextField } from "@mui/material";
-import css from "@/styles/workflow-forms/list-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/list-view-form.module.css";
 import { useState } from "react";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useEffect } from "react";
 import ColorPicker from "../common-form-elements/ColorPicker";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { fontFamilies } from "@/helpers/Enums";
 import CustomSelect from "../common-form-elements/CustomSelect";
 
-const ListViewElementRow = ({ elementRowValues, entityFields }) => {
+const ListViewElementRow = ({
+  elementRowValues,
+  entityFields,
+  openConfirmModalToDelete,
+}) => {
   const [rowValues, setRowValues] = useState(elementRowValues);
 
   const { updateListViewElementRowValue, deleteListViewElementRowByRowId } =
@@ -17,6 +21,10 @@ const ListViewElementRow = ({ elementRowValues, entityFields }) => {
   const removeRow = () => {
     const rowId = elementRowValues?.listViewElementRowId;
     deleteListViewElementRowByRowId(rowId);
+  };
+
+  const handleDeleteElementRow = () => {
+    openConfirmModalToDelete(removeRow);
   };
 
   const handleChange = (e) => {
@@ -81,7 +89,7 @@ const ListViewElementRow = ({ elementRowValues, entityFields }) => {
       <span
         title="remove row"
         className={css.remove_row_btn}
-        onClick={removeRow}
+        onClick={handleDeleteElementRow}
       >
         <HighlightOffIcon fontSize="small" />
       </span>

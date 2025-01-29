@@ -48,6 +48,7 @@ const IconSelect = ({ handleChange, handleBlur, size, value, name, label }) => {
                 width={25}
                 height={25}
                 style={{ borderRadius: "5px", padding: 0 }}
+                alt="Icon"
               />
               <span
                 style={{

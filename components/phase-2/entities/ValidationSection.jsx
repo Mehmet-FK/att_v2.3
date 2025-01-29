@@ -4,10 +4,11 @@ import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
 import { Badge, Button, Fab, IconButton, TextField } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
 
 const ValidationSection = ({ fieldID }) => {
   const { fieldValidations } = useSelector((state) => state.entity);
@@ -57,8 +58,8 @@ const ValidationSection = ({ fieldID }) => {
         width: "100%",
       }}
     >
-      <Badge
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      <ElementBadge
+        handleClickOnBadge={addOrDeleteValidation}
         badgeContent={
           validationExists ? (
             <DeleteIcon color="secondary" fontSize="small" />
@@ -66,23 +67,12 @@ const ValidationSection = ({ fieldID }) => {
             <AddBoxIcon color="primary" fontSize="small" />
           )
         }
-        slotProps={{
-          badge: {
-            sx: {
-              marginLeft: "10px",
-              width: "1.7rem",
-              height: "1.7rem",
-              cursor: "pointer",
-              backgroundColor: "#ccc",
-            },
-            onClick: addOrDeleteValidation,
-          },
-        }}
-        sx={{ width: "100%", height: "100%" }}
       >
         <Accordion
-          sx={{ paddingBlock: 0, width: "100%" }}
-          disabled={!validationExists}
+          accordionProps={{
+            sx: { paddingBlock: 0, width: "100%" },
+            disabled: !validationExists,
+          }}
           header={"Validation"}
         >
           {validationExists && (
@@ -188,7 +178,7 @@ const ValidationSection = ({ fieldID }) => {
             </>
           )}
         </Accordion>
-      </Badge>
+      </ElementBadge>
     </div>
   );
 };

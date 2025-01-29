@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addEdge, MarkerType, useReactFlow } from "reactflow";
-import useWorkflowForms from "./useWorkflowForms";
-import useLocalStorage from "../storage-hooks/useLocalStorage";
+import useWorkflowForms from "../workflow-form-hooks/useWorkflowForms";
+import useLocalStorage from "../../storage-hooks/useLocalStorage";
 import { toastSuccessNotify } from "@/helpers/ToastNotify";
 import {
   launchTypes,
@@ -34,13 +34,13 @@ const useWorkflow = () => {
   //Creates random id
   const getId = (type) => `${type}_${idRef.current++}`;
 
-  const randomPositions = (xMax = 1000, yMax = 500) => {
+  const randomPositions = (x, y, xMax = 1000, yMax = 500) => {
     const getRandomValue = (max) => Math.floor(Math.random() * (max / 10)) * 10;
 
-    const randomX = getRandomValue(xMax) + 100;
-    const randomY = getRandomValue(yMax);
+    const coordinateX = x ? x : getRandomValue(xMax) + 100;
+    const coordinateY = y ? y : getRandomValue(yMax);
 
-    return { x: randomX, y: randomY };
+    return { x: coordinateX, y: coordinateY };
   };
 
   const isValidConnection = (connection) => {
@@ -198,13 +198,21 @@ const useWorkflow = () => {
   };
   const createNewReqularNode = (name, caption, position, nodeId, viewId) => {
     const _nodeId = nodeId ? nodeId : getId(name);
+
+    console.log(workflow.workflowSteps);
+
     return {
       id: _nodeId,
       type: "view",
       viewType: name,
       name: "",
       position,
-      data: { label: `${caption}`, nodeId: _nodeId, type: name, viewId },
+      data: {
+        label: `${caption}`,
+        nodeId: _nodeId,
+        type: name,
+        viewId: viewId || _nodeId,
+      },
       changeEvent: (e, selectedNode) =>
         setNodes((nds) => [
           ...nds.filter((n) => n.id !== newNode.id),
@@ -303,10 +311,12 @@ const useWorkflow = () => {
 
   const restoreExistingListViews = (listViews) => {
     const createdListViewsNodes = [];
-    listViews.forEach((lv) => {
+    const initialX = 450;
+    listViews.forEach((lv, index) => {
       const viewType = viewTypeConstants.LISTVIEW;
       const caption = "List View";
-      const position = randomPositions();
+      const positionX = initialX * (index + 1);
+      const position = randomPositions(positionX, 400);
       const newNode = createNewReqularNode(
         viewType,
         caption,
@@ -324,7 +334,7 @@ const useWorkflow = () => {
     recordViews.forEach((rv) => {
       const viewType = viewTypeConstants.RECORDVIEW;
       const caption = "Record View";
-      const position = randomPositions();
+      const position = randomPositions(750, 400);
       const newNode = createNewReqularNode(
         viewType,
         caption,
@@ -399,12 +409,29 @@ const useWorkflow = () => {
     );
   };
 
+  const restoreExistingRemoteWorkflowByNodesAndEdges = (existingWorkflow) => {
+    console.log(
+      "restoreExistingRemoteWorkflowByNodesAndEdges => ",
+      existingWorkflow
+    );
+  };
+
   const restoreExistingRemoteWorkflow = (
     existingWorkflow,
     _setNodes,
     _setEdges
   ) => {
     if (!existingWorkflow) return;
+
+    if (existingWorkflow?.nodes && existingWorkflow?.edges) {
+      restoreExistingRemoteWorkflowByNodesAndEdges(existingWorkflow);
+
+      //!DANGER: Remove the return comment after implemetation
+      // return
+    }
+
+    const createdElements = [];
+
     const launchElement = existingWorkflow.launchElements[0];
 
     if (launchElement) {
@@ -413,8 +440,10 @@ const useWorkflow = () => {
     }
 
     const listViews = existingWorkflow.listViews;
-    const listNodes = restoreExistingListViews(listViews);
-    _setNodes((nds) => nds.concat(listNodes));
+    if (listViews.length) {
+      const listNodes = restoreExistingListViews(listViews);
+      _setNodes((nds) => nds.concat(listNodes));
+    }
 
     const recordViews = existingWorkflow.recordViews;
     const recordNodes = restoreExistingRecordViews(recordViews);

@@ -1,24 +1,17 @@
-import css from "@/styles/workflow-forms/list-view-form.module.css";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  TextField,
-} from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import css from "@/styles/workflow-forms-styles/list-view-form.module.css";
+import { Badge, Button, Card, CardContent, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomSelect from "../common-form-elements/CustomSelect";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
+import Accordion from "@/components/ui-components/Accordion";
+import ElementBadge from "../common-form-elements/ElementBadge";
+import ConfirmModal from "@/components/ui-components/ConfirmModal";
 
 const FilterDefinitionForm = ({
   definitionValues,
-  deleteDefinition,
+  openConfirmModalToDelete,
   updateDefinitionValue,
   entityFields,
 }) => {
@@ -38,9 +31,8 @@ const FilterDefinitionForm = ({
   };
 
   const handleDeleteDefinition = (e) => {
-    if (e.detail < 2) return;
     const definitionID = definitionFormValues.filterDefinitionId;
-    deleteDefinition(definitionID);
+    openConfirmModalToDelete(definitionID);
   };
 
   useEffect(() => {
@@ -49,33 +41,7 @@ const FilterDefinitionForm = ({
 
   return (
     <div style={{ maxWidth: "30%", width: "100%" }}>
-      <Badge
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        badgeContent={<DeleteIcon color="secondary" fontSize="small" />}
-        slotProps={{
-          badge: {
-            sx: {
-              marginLeft: "10px",
-              width: "1.7rem",
-              height: "1.7rem",
-              backgroundColor: "#ccc",
-              cursor: "pointer",
-              display: "flex",
-              opacity: "0",
-              transition: "all 0.2s ease-in-out",
-            },
-            onClick: handleDeleteDefinition,
-          },
-        }}
-        sx={{
-          width: "100%",
-
-          backgroundColor: "inherit",
-          "&:hover .MuiBadge-badge": {
-            opacity: "1",
-          },
-        }}
-      >
+      <ElementBadge handleClickOnBadge={handleDeleteDefinition}>
         <Card
           title={definitionFormValues?.filterDefinitionId}
           sx={{ width: "100%", backgroundColor: "inherit" }}
@@ -105,13 +71,22 @@ const FilterDefinitionForm = ({
             </div>
           </CardContent>
         </Card>
-      </Badge>
+      </ElementBadge>{" "}
     </div>
   );
 };
 
 const ListViewFilterDefinitions = ({ listViewId, entityFields }) => {
+  const [confirmModalValues, setConfirmModalValues] = useState({
+    isOpen: false,
+    dialogTitle: "",
+    dialogContent: "",
+    confirmBtnText: "",
+    confirmFunction: null,
+  });
+
   const { listViewFilterDefinitions } = useSelector((state) => state.workflow);
+
   const {
     createListViewFilterDefinition,
     updateFilterDefinitionValue,
@@ -124,23 +99,36 @@ const ListViewFilterDefinitions = ({ listViewId, entityFields }) => {
     [listViewFilterDefinitions, listViewId]
   );
 
-  const [definitionList, setDefinitionList] = useState(filterDefinitions);
+  // const [definitionList, setDefinitionList] = useState(filterDefinitions);
 
   const handleAddFilterDefinition = () => {
     createListViewFilterDefinition(listViewId);
   };
 
+  const openConfirmModalToDelete = (definitionID) => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie die Filterdefinition löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteFilterDefinition(definitionID),
+    };
+    setConfirmModalValues(temp);
+  };
+
   return (
-    <Accordion>
-      <AccordionSummary
-        sx={{ fontSize: "smaller" }}
-        expandIcon={<ExpandMoreIcon fontSize="small" />}
-        aria-controls="panel2-content"
-        id="panel2-header"
+    <>
+      <ConfirmModal
+        confirmModalValues={confirmModalValues}
+        setConfirmModalValues={setConfirmModalValues}
+      />
+      <Accordion
+        accordionProps={{
+          sx: { paddingBlock: 0, width: "100%" },
+        }}
+        headerProps={{ sx: { fontSize: "smaller" } }}
+        header={"Filter Definitionen"}
       >
-        Filter Definitionen
-      </AccordionSummary>
-      <AccordionDetails>
         <div className={css.flex_column}>
           <div
             className={css.flex_row}
@@ -148,8 +136,10 @@ const ListViewFilterDefinitions = ({ listViewId, entityFields }) => {
           >
             {filterDefinitions.map((definition) => (
               <FilterDefinitionForm
+                key={definition?.filterDefinitionId}
                 definitionValues={definition}
                 deleteDefinition={deleteFilterDefinition}
+                openConfirmModalToDelete={openConfirmModalToDelete}
                 updateDefinitionValue={updateFilterDefinitionValue}
                 entityFields={entityFields}
               />
@@ -160,8 +150,8 @@ const ListViewFilterDefinitions = ({ listViewId, entityFields }) => {
             Definition Anlegen
           </Button>
         </div>
-      </AccordionDetails>
-    </Accordion>
+      </Accordion>
+    </>
   );
 };
 

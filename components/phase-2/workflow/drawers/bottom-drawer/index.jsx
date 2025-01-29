@@ -5,8 +5,8 @@ import Drawer from "@mui/material/Drawer";
 import css from "@/styles/workflow-comp-styles.module.css";
 
 import { useSelector } from "react-redux";
-import DisplaySelectedForm from "./DisplaySelectedForm";
 import DrawerHead from "./DrawerHead";
+import DisplaySelectedForm from "../../forms/DisplaySelectedForm";
 
 const defaultOpenHeight = 350;
 const minHeight = 45;
@@ -18,6 +18,8 @@ const BottomDrawer = ({
   onSave,
   restoreWorkflowFromLocalStorage,
   nodes,
+  bottomDrawerExpanded,
+  setBottomDrawerExpanded,
 }) => {
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
@@ -34,10 +36,19 @@ const BottomDrawer = ({
     resizeStartHeightRef.current = newHeight;
   };
 
+  const expandBottomDrawer = () => {
+    if (newHeight < 150) {
+      setNewHeight(defaultOpenHeight);
+    }
+  };
+
   const handleDoubleClick = (e) => {
     if (e.detail >= 2) {
-      if (newHeight < 150) setNewHeight(defaultOpenHeight);
-      else setNewHeight(minHeight);
+      if (newHeight < 150) {
+        setNewHeight(defaultOpenHeight);
+      } else {
+        setNewHeight(minHeight);
+      }
     }
   };
 
@@ -72,8 +83,14 @@ const BottomDrawer = ({
     if (selectedStepId === selectedNodeStoreRef.current) return;
 
     selectedNodeStoreRef.current = selectedStepId;
-    // if (newHeight < 150) setNewHeight(defaultOpenHeight);
   }, [selectedStepId]);
+
+  useEffect(() => {
+    if (bottomDrawerExpanded) {
+      expandBottomDrawer();
+      setBottomDrawerExpanded(false);
+    }
+  }, [bottomDrawerExpanded]);
 
   const findSelectedNode = (_nodes) =>
     _nodes.find((nds) => nds.id === selectedStepId);

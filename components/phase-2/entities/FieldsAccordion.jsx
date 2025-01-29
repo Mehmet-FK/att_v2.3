@@ -1,4 +1,4 @@
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import Accordion from "@/components/ui-components/Accordion";
@@ -51,7 +51,7 @@ const FieldsAccordion = ({ entitiesForAutoSelect }) => {
   }, []);
 
   return (
-    <Accordion expandDefault header={"FELDER"}>
+    <Accordion accordionProps={{ defaultExpanded: true }} header={"FELDER"}>
       {entityFields?.map((field) => (
         <FieldGroup
           key={field.fieldId}

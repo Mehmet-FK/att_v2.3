@@ -2,30 +2,42 @@ import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const Accordion = ({
   children,
   header,
-  expandDefault,
-  sx,
-  disabled,
+  accordionProps,
   headerProps,
+  bodyProps,
 }) => {
+  const defaultExpanded = accordionProps?.defaultExpanded !== undefined;
+  const expanded = accordionProps?.expanded !== undefined;
+
   const [accordionExpanded, setAccordionExpanded] = useState(
-    expandDefault || false
+    defaultExpanded ? defaultExpanded : expanded || false
   );
 
   const handleExpandToggle = () => setAccordionExpanded(!accordionExpanded);
 
+  useEffect(() => {
+    if (!children) {
+      setAccordionExpanded(false);
+    }
+  }, [children]);
+
+  const isControlled = useMemo(
+    () => accordionProps?.onChange,
+    [accordionProps]
+  );
   return (
     <MuiAccordion
-      defaultExpanded={expandDefault}
-      disabled={disabled}
+      expanded={accordionExpanded}
       onChange={handleExpandToggle}
-      sx={sx ? sx : {}}
+      sx={{ width: "100%" }}
+      {...accordionProps}
     >
-      <MuiAccordionSummary {...headerProps} expandIcon={<ExpandMoreIcon />}>
+      <MuiAccordionSummary expandIcon={<ExpandMoreIcon />} {...headerProps}>
         {header}
       </MuiAccordionSummary>
       <MuiAccordionDetails
@@ -34,8 +46,9 @@ const Accordion = ({
           flexDirection: "column",
           rowGap: "0.5rem",
         }}
+        {...bodyProps}
       >
-        {accordionExpanded && children}
+        {(isControlled ? expanded : accordionExpanded) && children}
       </MuiAccordionDetails>
     </MuiAccordion>
   );

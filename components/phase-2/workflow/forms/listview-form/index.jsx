@@ -2,10 +2,10 @@ import { TextField } from "@mui/material";
 
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/workflow-forms/list-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/list-view-form.module.css";
 import ViewHeaderForm from "../header-form";
 import ListViewElement from "./ListViewElement";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import ListViewFilterDefinitions from "./ListViewFilterDefinitions";

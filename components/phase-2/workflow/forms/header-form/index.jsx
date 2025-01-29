@@ -1,19 +1,23 @@
 import IconSelect from "@/components/form-elements/IconSelect";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import css from "@/styles/workflow-forms/header-form.module.css";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  TextField,
-} from "@mui/material";
+import css from "@/styles/workflow-forms-styles/header-form.module.css";
+import { TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import ViewHeaderRow from "./ViewHeaderRow";
 import { useSelector } from "react-redux";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import ColorPicker from "../common-form-elements/ColorPicker";
+import Accordion from "@/components/ui-components/Accordion";
+import ConfirmModal from "@/components/ui-components/ConfirmModal";
 
 const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
+  const [confirmModalValues, setConfirmModalValues] = useState({
+    isOpen: false,
+    dialogTitle: "",
+    dialogContent: "",
+    confirmBtnText: "",
+    confirmFunction: null,
+  });
+
   const { headerRows, headers, selectedStepId } = useSelector(
     (state) => state.workflow
   );
@@ -54,6 +58,7 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
           rowId={rowValue?.headerRowId}
           entityFields={entityFields}
           headerId={headerValues?.headerId}
+          setConfirmModalValues={setConfirmModalValues}
         />
       )),
     [viewHeaderRows, entityFields]
@@ -63,17 +68,16 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
     setHeaderValues(header);
   }, [selectedStepId]);
   return (
-    <div className={css.header_container}>
-      <Accordion defaultExpanded={defaultExpanded}>
-        <AccordionSummary
-          sx={{ fontSize: "smaller", paddingBlock: "0" }}
-          expandIcon={<ExpandMoreIcon fontSize="small" />}
-          aria-controls="panel1-content"
-          id="panel1-header"
+    <>
+      <ConfirmModal
+        confirmModalValues={confirmModalValues}
+        setConfirmModalValues={setConfirmModalValues}
+      />
+      <div className={css.header_container}>
+        <Accordion
+          headerProps={{ sx: { fontSize: "smaller", paddingBlock: "0" } }}
+          header={"Header"}
         >
-          Header
-        </AccordionSummary>
-        <AccordionDetails>
           <div className={css.flex_column}>
             <div className={css.flex_row}>
               <div className={css.flex_column}>
@@ -114,39 +118,33 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
               </div>
             </div>
 
-            <Accordion defaultExpanded={defaultExpanded}>
-              <AccordionSummary
-                sx={{ fontSize: "smaller", paddingBlock: "0" }}
-                expandIcon={<ExpandMoreIcon fontSize="small" />}
-                aria-controls="panel1-content"
-                id="panel1-header"
+            <Accordion
+              headerProps={{ sx: { fontSize: "smaller", paddingBlock: "0" } }}
+              bodyProps={{ sx: { paddingTop: "0" } }}
+              header={"Header Zeilen"}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  rowGap: "5px",
+                }}
               >
-                Header Zeilen
-              </AccordionSummary>
-              <AccordionDetails sx={{ paddingTop: "0" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    rowGap: "5px",
-                  }}
+                {MemoViewHeaderRows}
+              </div>
+              <div>
+                <button
+                  disabled={viewHeaderRows.length > 4}
+                  onClick={addViewHeaderRow}
                 >
-                  {MemoViewHeaderRows}
-                </div>
-                <div>
-                  <button
-                    disabled={viewHeaderRows.length > 4}
-                    onClick={addViewHeaderRow}
-                  >
-                    add row
-                  </button>
-                </div>
-              </AccordionDetails>
+                  add row
+                </button>
+              </div>
             </Accordion>
           </div>
-        </AccordionDetails>
-      </Accordion>
-    </div>
+        </Accordion>
+      </div>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
-import css from "@/styles/workflow-forms/workflow-form.module.css";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import css from "@/styles/workflow-forms-styles/workflow-form.module.css";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { TextField } from "@mui/material";
@@ -19,9 +19,9 @@ const LaunchElementForm = () => {
   };
 
   const handleBlur = (e) => {
-    const launchElementId = launchElement?.launchElementId;
+    const stepID = launchElement?.workflowStepId;
     const { name, value } = e.target;
-    updateLaunchElementValue(name, value, launchElementId);
+    updateLaunchElementValue(name, value, stepID);
   };
 
   const handleWorkflowStepBlur = (e) => {

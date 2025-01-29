@@ -8,12 +8,12 @@ import ReactFlow, {
 import nodeTypes from "./NodeTypes";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "reactflow/dist/style.css";
-import useWorkflow from "@/hooks/workflow-hooks/useWorkflow";
+import useWorkflow from "@/hooks/workflow-hooks/workflow-tool-hooks/useWorkflow";
 import edgeTypes from "./EdgeTypes";
 import BottomDrawer from "./drawers/bottom-drawer";
 import ToolsDrawer from "./drawers/tools-drawer";
 import { useSelector } from "react-redux";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useRouter } from "next/router";
 import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 import RestoreWorkflowConfirmDialog from "./dialogs/RestoreWorkflowConfirmDialog";
@@ -42,6 +42,7 @@ const Sheet = ({ existingWorkflow }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [bottomDrawerExpanded, setBottomDrawerExpanded] = useState(false);
 
   const [openRestoreConfirmDialog, setOpenRestoreConfirmDialog] =
     useState(false);
@@ -98,6 +99,12 @@ const Sheet = ({ existingWorkflow }) => {
     const _nodes = reactFlowInstance.getNodes();
     updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
+
+  const handleClickOnNode = (e, node) => {
+    updateSelectedStep(node.id);
+    setBottomDrawerExpanded(true);
+  };
+
   const handleDeleteNode = (deletedNodes) => {
     deletedNodes.forEach((node) => deleteWorkflowStep(node));
     saveToHistory();
@@ -111,6 +118,7 @@ const Sheet = ({ existingWorkflow }) => {
 
     const handleRouteChange = () => {
       updateNodesEdgesAndViewport(nodes, edges, viewport);
+      updateSelectedStep("");
     };
 
     router.events.on("routeChangeStart", handleRouteChange);
@@ -143,6 +151,10 @@ const Sheet = ({ existingWorkflow }) => {
       setOpenRestoreConfirmDialog(true);
       setSessionFlagForWorkflow();
     }
+
+    return () => {
+      console.log({ edges, nodes });
+    };
   }, []);
 
   useEffect(() => {
@@ -169,7 +181,8 @@ const Sheet = ({ existingWorkflow }) => {
         onNodeDragStop={(e, n) => onNodeDragStop(e, n, updateSelectedStep)}
         onNodesDelete={handleDeleteNode}
         onEdgesDelete={handleDeleteEdge}
-        onNodeClick={(e, n) => updateSelectedStep(n.id)}
+        // onNodeClick={(e, n) => updateSelectedStep(n.id)}
+        onNodeClick={handleClickOnNode}
         onPaneClick={() => updateSelectedStep("")}
         isValidConnection={isValidConnection}
         nodeTypes={nodeTypes}
@@ -193,6 +206,8 @@ const Sheet = ({ existingWorkflow }) => {
         onSave={onSave}
         restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
         nodes={nodes}
+        bottomDrawerExpanded={bottomDrawerExpanded}
+        setBottomDrawerExpanded={setBottomDrawerExpanded}
       />
     </div>
   );

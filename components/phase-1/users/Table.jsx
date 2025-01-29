@@ -15,7 +15,7 @@ import {
   TableRow,
   Tooltip,
 } from "@mui/material";
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 
 import FilterPanel from "./FilterPanel";
 import useTableDataCalls from "@/hooks/remote-api-hooks/useTableDataCalls";

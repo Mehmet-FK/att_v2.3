@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import css from "@/styles/workflow-forms/record-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 
 const CustomSelect = ({
   handleChange,

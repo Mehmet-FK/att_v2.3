@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import css from "@/styles/tools-drawer.module.css";
+import css from "@/styles/drawer-styles/tools-drawer.module.css";
 import {
   AttachmentShape,
   ImageShape,

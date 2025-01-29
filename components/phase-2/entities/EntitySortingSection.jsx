@@ -4,11 +4,12 @@ import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
 import { Badge, Button, IconButton, TextField } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomSelect from "../workflow/forms/common-form-elements/CustomSelect";
+import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
 
 const EntitySortingSection = ({ fieldID }) => {
   const { entitySortings } = useSelector((state) => state.entity);
@@ -46,7 +47,7 @@ const EntitySortingSection = ({ fieldID }) => {
     updateEntitySortingValue(name, newValue, sortingRule.entitySortingId);
   };
 
-  const sortingRulenExists = sortingRule ? true : false;
+  const sortingRuleExists = sortingRule ? true : false;
 
   const entitySortingsForSelect = useMemo(
     () =>
@@ -63,36 +64,24 @@ const EntitySortingSection = ({ fieldID }) => {
         width: "100%",
       }}
     >
-      <Badge
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      <ElementBadge
+        handleClickOnBadge={addOrDeleteEntitySorting}
         badgeContent={
-          sortingRulenExists ? (
+          sortingRuleExists ? (
             <DeleteIcon color="secondary" fontSize="small" />
           ) : (
             <AddBoxIcon color="primary" fontSize="small" />
           )
         }
-        slotProps={{
-          badge: {
-            sx: {
-              marginLeft: "10px",
-              width: "1.7rem",
-              height: "1.7rem",
-              backgroundColor: "#ccc",
-              cursor: "pointer",
-            },
-            onClick: addOrDeleteEntitySorting,
-          },
-        }}
-        sx={{ width: "100%", height: "100%" }}
       >
         <Accordion
-          sx={{ paddingBlock: 0, width: "100%" }}
-          disabled={!sortingRulenExists}
+          accordionProps={{
+            sx: { paddingBlock: 0, width: "100%" },
+            disabled: !sortingRuleExists,
+          }}
           header={"Sortierungsregel"}
-          headerProps={{ sx: { width: "100%" } }}
         >
-          {sortingRulenExists && (
+          {sortingRuleExists && (
             <div className={css.flex_column}>
               <CustomSelect
                 handleChange={handleChange}
@@ -120,7 +109,7 @@ const EntitySortingSection = ({ fieldID }) => {
             </div>
           )}
         </Accordion>
-      </Badge>
+      </ElementBadge>
     </div>
   );
 };

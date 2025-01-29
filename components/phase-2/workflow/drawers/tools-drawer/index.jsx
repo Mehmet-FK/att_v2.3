@@ -5,7 +5,7 @@ import { DrawerHeader } from "@/layout/layout_helpers";
 import ToolList from "./ToolList";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import css from "@/styles/tools-drawer.module.css";
+import css from "@/styles/drawer-styles/tools-drawer.module.css";
 import { useEffect, useState } from "react";
 // SEPERATOR
 import { styled } from "@mui/material/styles";

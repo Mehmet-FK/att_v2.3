@@ -1,5 +1,5 @@
 import Link from "next/link";
-import css from "@/styles/dashboard-card.module.css";
+import css from "@/styles/dashboard-styles/dashboard-card.module.css";
 
 const Card = ({ cardInfo, additionalTitles }) => {
   const iconUrl = cardInfo.defaultIconUrl

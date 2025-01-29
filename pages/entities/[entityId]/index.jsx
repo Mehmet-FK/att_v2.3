@@ -1,5 +1,5 @@
 import PageHeader from "@/components/ui-components/PageHeader";
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@mui/material";
 import { useRouter } from "next/router";

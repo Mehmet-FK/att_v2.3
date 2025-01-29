@@ -4,7 +4,7 @@ import TableContainer from "@mui/material/TableContainer";
 import { Paper, TableBody, TableHead, TableRow } from "@mui/material";
 import ColumnHead from "./ColumnHead";
 import CustomTableRow from "./CustomTableRow";
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 import { contextMenuConstants } from "@/helpers/Constants";
 import useContextMenu from "@/hooks/table-hooks/useContextMenu";
 import useTable from "@/hooks/table-hooks/useTable";

@@ -1,14 +1,13 @@
-import DateInput from "@/components/form-elements/DateInput";
 import Accordion from "@/components/ui-components/Accordion";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/entities.module.css";
-import { Badge, Card, CardContent, TextField } from "@mui/material";
+import css from "@/styles/entity-styles/entities.module.css";
+import { Card, CardContent, TextField } from "@mui/material";
 import IconSelect from "@/components/form-elements/IconSelect";
 import CustomSelect from "../../workflow/forms/common-form-elements/CustomSelect";
-import DeleteIcon from "@mui/icons-material/Delete";
+import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
 
 const FieldProperty = ({ property }) => {
   const [propertyFormValues, setPropertyFormValues] = useState(property);
@@ -39,22 +38,18 @@ const FieldProperty = ({ property }) => {
   }, [property]);
 
   return (
-    <Badge
-      badgeContent={<DeleteIcon color="secondary" />}
-      slotProps={{
-        badge: {
-          sx: {
-            marginRight: "10px",
-            marginTop: "10px",
-            width: "1.7rem",
-            height: "1.7rem",
-            backgroundColor: "#ccc",
-            cursor: "pointer",
-          },
-          onClick: deleteProperty,
-        },
+    <ElementBadge
+      handleClickOnBadge={deleteProperty}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      badgeSx={{
+        marginRight: "10px",
+        marginTop: "5px",
+        width: "1.7rem",
+        height: "1.7rem",
+        backgroundColor: "#ccc",
+        cursor: "pointer",
       }}
-      sx={{ maxWidth: "100%", minWidth: "49%" }}
+      containerSx={{ width: "auto", maxWidth: "100%", minWidth: "49%" }}
     >
       <Card sx={{ width: "100%" }}>
         <CardContent>
@@ -119,7 +114,7 @@ const FieldProperty = ({ property }) => {
           </div>
         </CardContent>{" "}
       </Card>
-    </Badge>
+    </ElementBadge>
   );
 };
 
@@ -146,36 +141,26 @@ const FieldPropertiesSection = ({ fieldID }) => {
         width: "100%",
       }}
     >
-      <Badge
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      <ElementBadge
+        handleClickOnBadge={addFieldProperty}
         badgeContent={<AddBoxIcon color="primary" fontSize="small" />}
-        slotProps={{
-          badge: {
-            sx: {
-              marginLeft: "10px",
-              width: "1.7rem",
-              height: "1.7rem",
-              backgroundColor: "#ccc",
-              cursor: "pointer",
-            },
-            onClick: addFieldProperty,
-          },
-        }}
-        sx={{ width: "100%" }}
       >
         <Accordion
-          sx={{ paddingBlock: 0, width: "100%" }}
-          disabled={!propertyExists}
+          accordionProps={{
+            sx: { paddingBlock: 0, width: "100%" },
+            disabled: !propertyExists,
+          }}
           header={"Feld Eigenschaften"}
         >
-          <div className={css.flex_wrap_row}>
-            {propertyExists &&
-              properties?.map((property) => (
+          {propertyExists && (
+            <div className={css.flex_wrap_row}>
+              {properties?.map((property) => (
                 <FieldProperty property={property} />
               ))}
-          </div>
-        </Accordion>{" "}
-      </Badge>
+            </div>
+          )}
+        </Accordion>
+      </ElementBadge>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import css from "@/styles/rf-node-styles.module.css";
+import css from "@/styles/workflow-tool-styles/workflow-tool-node-styles.module.css";
 import { Box } from "@mui/material";
 
 import { useMemo } from "react";

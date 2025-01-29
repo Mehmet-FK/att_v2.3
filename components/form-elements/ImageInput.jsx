@@ -1,4 +1,4 @@
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import ImageIcon from "@mui/icons-material/Image";
 
 const ImageInput = ({ id, name, value, onChange }) => {

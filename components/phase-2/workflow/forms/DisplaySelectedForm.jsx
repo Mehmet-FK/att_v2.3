@@ -1,13 +1,19 @@
 import { useSelector } from "react-redux";
-import ListViewForm from "../../forms/listview-form";
-import RecordViewForm from "../../forms/recordview-form";
-import ScannerDialogForm from "../../forms/scanner-dialog-form";
-import WorkflowForm from "../../forms/workflow-form";
+// import ListViewForm from "../../forms/listview-form";
+// import RecordViewForm from "../../forms/recordview-form";
+// import ScannerDialogForm from "../../forms/scanner-dialog-form";
+// import WorkflowForm from "../../forms/workflow-form";
 import { useEffect, useMemo } from "react";
 import { viewTypeConstants } from "@/helpers/Constants";
-import ModalDialogForm from "../../forms/modal-dialog-form";
+// import ModalDialogForm from "../../forms/modal-dialog-form";
 import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
-import TileViewForm from "../../forms/tile-view-form";
+import RecordViewForm from "./recordview-form";
+import ListViewForm from "./listview-form";
+import TileViewForm from "./tile-view-form";
+import ScannerDialogForm from "./scanner-dialog-form";
+import ModalDialogForm from "./modal-dialog-form";
+import WorkflowForm from "./workflow-form";
+// import TileViewForm from "../../forms/tile-view-form";
 
 const DisplaySelectedForm = ({ selectedNode }) => {
   const entities = useSelector((state) => state.attensam.data?.entities);

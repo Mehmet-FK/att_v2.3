@@ -1,4 +1,4 @@
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 import { TableCell } from "@mui/material";
 
 const RowCell = ({ widths, colID, column, content }) => {

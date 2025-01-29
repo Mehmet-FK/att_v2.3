@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { getSession } from "next-auth/react";
-import css from "@/styles/dashboard-card.module.css";
+import css from "@/styles/dashboard-styles/dashboard-card.module.css";
 import Card from "@/components/ui-components/DashboardCard";
 
 export default function Home() {

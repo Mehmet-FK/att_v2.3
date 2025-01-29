@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/workflow-forms/record-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 import { scannerTypeConstants } from "@/helpers/Constants";
 import ScannerDialogFormBase from "./ScannerDialogFormBase";
 import ViewHeaderForm from "../header-form";

@@ -149,6 +149,7 @@ const useWorkflowForms = () => {
     const viewType = step.viewType;
     deleteView(viewType, workflowStepId);
     dispatch(removeWorkflowStep({ id: workflowStepId }));
+    updateSelectedStep("");
   };
 
   const createLaunchElementOnDrop = (launchType, workflowStepId) => {
@@ -164,6 +165,7 @@ const useWorkflowForms = () => {
   };
 
   const updateLaunchElementValue = (name, value, workflowStepId) => {
+    console.log({ name, value, workflowStepId });
     dispatch(changeLaunchElementValue({ name, value, workflowStepId }));
   };
 
@@ -572,7 +574,7 @@ const useWorkflowForms = () => {
     } else if (viewType === viewTypeConstants.SCANNER_DIALOG_QR) {
       createScannerDialogQR(workflowStepId, viewType);
     } else if (viewType === viewTypeConstants.MODALDIALOG) {
-      createModalDialog(workflowStepId, viewType);
+      createModalDialog(workflowStepId);
     } else if (viewType === viewTypeConstants.TILEVIEW) {
       createTileViewOnDrop();
     } else if (isLaunchElement(viewType)) {

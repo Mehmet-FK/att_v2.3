@@ -1,7 +1,7 @@
 import { Box, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
-import css from "@/styles/workflow-forms/record-view-form.module.css";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";

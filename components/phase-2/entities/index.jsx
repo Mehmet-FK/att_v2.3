@@ -1,4 +1,4 @@
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import EntityAccordion from "@/components/phase-2/entities/EntityAccordion";
 import FieldsAccordion from "@/components/phase-2/entities/FieldsAccordion";
 import { useEffect } from "react";

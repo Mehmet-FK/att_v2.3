@@ -1,10 +1,12 @@
 import { Button, Card, CardContent, Modal } from "@mui/material";
-import css from "@/styles/workflow-forms/record-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 import { useSelector } from "react-redux";
 import { useMemo, useRef, useState } from "react";
 import { useEffect } from "react";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import DraggableRecordViewField from "./DraggableRecordViewField";
+import ConfirmModal from "@/components/ui-components/ConfirmModal";
+import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-ui-hooks/useDragAndDropUtils";
 
 const recordViewTemplate = {
   recordViewFieldId: "",
@@ -27,6 +29,14 @@ const RecordViewFieldsModal = ({
   recordViewId,
   entityFields,
 }) => {
+  const [confirmModalValues, setConfirmModalValues] = useState({
+    isOpen: false,
+    dialogTitle: "",
+    dialogContent: "",
+    confirmBtnText: "",
+    confirmFunction: null,
+  });
+
   const { recordViewFields } = useSelector((state) => state.workflow);
 
   const filteredRecordViewFields = useMemo(
@@ -36,82 +46,19 @@ const RecordViewFieldsModal = ({
 
   const [fields, setFields] = useState([...filteredRecordViewFields]);
 
-  const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
+  const {
+    assignSortOrderAndDragIndicator,
+    onDragStart,
+    onDragEnter,
+    onDragEnd,
+  } = useDragAndDropUtils(fields, setFields);
 
-  const assignFieldIndexToSortOrder = () => {
-    const preparedFields = filteredRecordViewFields?.map((field, index) => ({
-      ...field,
-      sortOrder: index + 1,
-      isDraggedOver: false,
-    }));
-    setFields(preparedFields);
-  };
+  const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
 
   useEffect(() => {
     if (filteredRecordViewFields?.length < 1) return;
-    assignFieldIndexToSortOrder();
+    assignSortOrderAndDragIndicator(filteredRecordViewFields);
   }, [filteredRecordViewFields]);
-
-  const draggingElementRef = useRef(null);
-  const draggedOverElementRef = useRef(null);
-
-  const dragStart = (e, field, index) => {
-    draggingElementRef.current = { field, index };
-
-    const dragElement = e.target;
-    const clone = dragElement.cloneNode(true);
-    clone.style.position = "absolute";
-    clone.style.top = "-1000px";
-    clone.style.left = "-1000px";
-    clone.style.background = "#f00";
-    clone.style.marginTop = "500px";
-    clone.style.width = `${dragElement.offsetWidth}px`;
-    clone.style.height = `60px`;
-    // clone.style.height = `${dragElement.offsetHeight}px`;
-    clone.style.cursor = "grab";
-    clone.style.pointerEvents = "none";
-
-    document.body.appendChild(clone);
-
-    const offsetX = dragElement.offsetWidth - 10;
-    const offsetY = dragElement.offsetHeight - 20;
-
-    e.dataTransfer.setDragImage(clone, offsetX, offsetY);
-
-    setTimeout(() => {
-      document.body.removeChild(clone);
-    }, 0);
-  };
-  const dragEnter = (field, index) => {
-    draggedOverElementRef.current = { field, index };
-  };
-
-  const dragEnd = (e, field, index) => {
-    let tempFields = [...fields];
-
-    if (!draggedOverElementRef.current || !draggingElementRef.current) return;
-
-    const draggingField = draggingElementRef.current.field;
-    const draggingFieldIndex = draggingElementRef.current.index;
-    const draggedOverFieldIndex = draggedOverElementRef.current.index;
-    if (draggingFieldIndex === draggedOverFieldIndex) {
-      return;
-    }
-    console.log({
-      draggedOverField: draggedOverElementRef.current,
-      draggingElementRef: draggingElementRef.current,
-    });
-
-    tempFields.splice(draggingFieldIndex, 1);
-    tempFields.splice(draggedOverFieldIndex, 0, draggingField);
-
-    tempFields = tempFields.map((f, index) => ({ ...f, sortOrder: index + 1 }));
-
-    draggingElementRef.current = null;
-    draggedOverElementRef.current = null;
-
-    setFields(tempFields);
-  };
 
   //TODO: Refactoring is needed
   const handleAddRecordView = () => {
@@ -127,6 +74,18 @@ const RecordViewFieldsModal = ({
 
   const deleteRecordViewField = (fieldID) => {
     setFields((prev) => prev.filter((f) => f.recordViewFieldId !== fieldID));
+  };
+
+  const openConfirmModalToDelete = (recordField) => {
+    const { fieldId, fieldCaption, recordViewFieldId } = recordField;
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie das Feld "${fieldId} - ${fieldCaption}" löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteRecordViewField(recordViewFieldId),
+    };
+    setConfirmModalValues(temp);
   };
 
   const changeRecordFieldValue = (name, value, fieldID) => {
@@ -150,43 +109,53 @@ const RecordViewFieldsModal = ({
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={updateStoreOnClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Card className={css.card}>
-        <CardContent className={css.content}>
-          <div
-            className={css.flex_column}
-            style={{
-              minHeight: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <div className={css.flex_column}>
-              {fields?.map((recordViewField, index) => (
-                <DraggableRecordViewField
-                  index={index}
-                  recordViewField={recordViewField}
-                  entityFields={entityFields}
-                  deleteRecordViewField={deleteRecordViewField}
-                  changeRecordFieldValue={changeRecordFieldValue}
-                  dragStart={dragStart}
-                  dragEnter={dragEnter}
-                  dragEnd={dragEnd}
-                />
-              ))}
-            </div>
+    <>
+      <ConfirmModal
+        confirmModalValues={confirmModalValues}
+        setConfirmModalValues={setConfirmModalValues}
+      />
 
-            <Button onClick={handleAddRecordView} variant="contained">
-              Recordview Feld anlegen
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </Modal>
+      <Modal
+        open={open}
+        onClose={updateStoreOnClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Card className={css.card}>
+          <CardContent className={css.content}>
+            <div
+              className={css.flex_column}
+              style={{
+                minHeight: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <div className={css.flex_column}>
+                {fields?.map((recordViewField, index) => (
+                  <DraggableRecordViewField
+                    key={recordViewField?.recordViewFieldId}
+                    index={index}
+                    recordViewField={recordViewField}
+                    entityFields={entityFields}
+                    openConfirmModalToDelete={openConfirmModalToDelete}
+                    changeRecordFieldValue={changeRecordFieldValue}
+                    onDragStart={onDragStart}
+                    onDragEnter={onDragEnter}
+                    onDragEnd={onDragEnd}
+                    // elements={fields}
+                    // setElements={setFields}
+                  />
+                ))}
+              </div>
+
+              <Button onClick={handleAddRecordView} variant="contained">
+                Recordview Feld anlegen
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </Modal>
+    </>
   );
 };
 

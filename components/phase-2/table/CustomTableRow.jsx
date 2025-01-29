@@ -1,4 +1,4 @@
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 import RowCell from "./RowCell";
 import { useEffect, useState } from "react";
 import { TableRow } from "@mui/material";

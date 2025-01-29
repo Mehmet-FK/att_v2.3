@@ -1,4 +1,4 @@
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 import RowCell from "../RowCell";
 import { Checkbox, Collapse, TableCell, TableRow } from "@mui/material";
 import { useCallback, useState } from "react";

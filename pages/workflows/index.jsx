@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getSession } from "next-auth/react";
 
-import css from "@/styles/dashboard-card.module.css";
+import css from "@/styles/dashboard-styles/dashboard-card.module.css";
 import Card from "@/components/ui-components/DashboardCard";
 import PageHeader from "@/components/ui-components/PageHeader";
 import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";

@@ -1,5 +1,5 @@
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
-import css from "@/styles/workflow-forms/header-form.module.css";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
+import css from "@/styles/workflow-forms-styles/header-form.module.css";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import {
   headerColumnValueVariables,
 } from "@/helpers/Enums";
 import { columnTypeConstants } from "@/helpers/Constants";
+import ElementBadge from "../common-form-elements/ElementBadge";
 
 const ColumnValueInput = ({
   handleChange,
@@ -53,7 +54,11 @@ const ColumnValueInput = ({
   }
 };
 
-const ViewHeaderColumn = ({ columnValues, entityFields }) => {
+const ViewHeaderColumn = ({
+  columnValues,
+  entityFields,
+  setConfirmModalValues,
+}) => {
   const [columnFormValues, setColumnFormValues] = useState(columnValues);
 
   const { updateViewHeaderColumnValue, deleteViewHeaderColumn } =
@@ -68,125 +73,111 @@ const ViewHeaderColumn = ({ columnValues, entityFields }) => {
     const { name, value } = e.target;
     updateViewHeaderColumnValue(name, value, columnValues.headerColumnId);
   };
-  const removeColumnOnDoubleClick = (e) => {
-    if (e.detail < 2) return;
+
+  const openConfirmModalToDelete = () => {
     const columnId = columnValues.headerColumnId;
-    deleteViewHeaderColumn(columnId);
+    console.log(columnValues);
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie die Header Spalte löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteViewHeaderColumn(columnId),
+    };
+    setConfirmModalValues(temp);
   };
+
   useEffect(() => {
     setColumnFormValues(columnValues);
   }, [columnValues.headerColumnId]);
 
   return (
     <div className={css.header_column_container}>
-      <span title="Spalte löschen">
-        <HighlightOffIcon
-          onClick={removeColumnOnDoubleClick}
-          sx={{
-            position: "absolute",
-            right: "0",
-            top: "0",
-            opacity: "0.3",
-            color: "#fff",
-            backgroundColor: "#f00",
-            zIndex: 5,
-            cursor: "pointer",
-            padding: "2px",
-            borderRadius: "2px 2px 2px 8px",
-            transition: "all 0.1s ease-in-out",
+      <ElementBadge
+        handleClickOnBadge={openConfirmModalToDelete}
+        badgeSx={{ marginLeft: "-5px" }}
+      >
+        <div className={css.flex_column}>
+          <div className={css.flex_row}>
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={columnFormValues?.columnType}
+              label="Spaltentyp"
+              name="columnType"
+              preferences={{ key: "id", caption: "caption" }}
+              options={headerColumnTypes}
+              size="small"
+            />
+            <ColumnValueInput
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              columnType={columnFormValues?.columnType}
+              columnValue={columnFormValues?.columnValue}
+              entityFields={entityFields}
+            />
+          </div>
+          <div className={css.flex_row}>
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={columnFormValues?.colSpan || ""}
+              variant="outlined"
+              size="small"
+              label="Column Span"
+              name="colSpan"
+              type="number"
+              fullWidth
+            />
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={columnFormValues?.rowSpan || ""}
+              variant="outlined"
+              size="small"
+              label="Row Span"
+              type="number"
+              name="rowSpan"
+              fullWidth
+            />
+          </div>
+          <div className={css.flex_row}>
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={columnFormValues?.fontFamily}
+              label="Font Family"
+              name="fontFamily"
+              preferences={{ key: "id", caption: "caption" }}
+              options={fontFamilies}
+              size={"small"}
+            />
 
-            "&:hover": { opacity: 1, color: "#fff", backgroundColor: "#f00" },
-          }}
-        />
-      </span>
-      <div className={css.flex_row}>
-        <CustomSelect
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          value={columnFormValues?.columnType}
-          label="Spaltentyp"
-          name="columnType"
-          preferences={{ key: "id", caption: "caption" }}
-          options={headerColumnTypes}
-          size="small"
-        />
-        <ColumnValueInput
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          columnType={columnFormValues?.columnType}
-          columnValue={columnFormValues?.columnValue}
-          entityFields={entityFields}
-        />
-        {/* <TextField
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={columnFormValues?.columnValue || ""}
-          variant="outlined"
-          size="small"
-          label="Column Value"
-          name="columnValue"
-          fullWidth
-        /> */}
-      </div>
-      <div className={css.flex_row}>
-        <TextField
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={columnFormValues?.colSpan || ""}
-          variant="outlined"
-          size="small"
-          label="Column Span"
-          name="colSpan"
-          type="number"
-          fullWidth
-        />
-        <TextField
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={columnFormValues?.rowSpan || ""}
-          variant="outlined"
-          size="small"
-          label="Row Span"
-          type="number"
-          name="rowSpan"
-          fullWidth
-        />
-      </div>
-      <div className={css.flex_row}>
-        <CustomSelect
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          value={columnFormValues?.fontFamily}
-          label="Font Family"
-          name="fontFamily"
-          preferences={{ key: "id", caption: "caption" }}
-          options={fontFamilies}
-          size={"small"}
-        />
-
-        <CustomSelect
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          value={columnFormValues?.textAlignment}
-          label="Ausrichtung"
-          name="textAlignment"
-          preferences={{ key: "id", caption: "caption" }}
-          options={headerColumnTextAlignments}
-          size="small"
-        />
-      </div>
-      <div className={css.flex_row}>
-        <ColorPicker
-          handleChange={handleChange}
-          handleBlur={handleBlur}
-          value={columnFormValues?.fontColor || "#000000"}
-          label="Font Color"
-          name="fontColor"
-          size="small"
-          fullWidth
-        />
-        <div style={{ width: "100%" }} />
-      </div>
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={columnFormValues?.textAlignment}
+              label="Ausrichtung"
+              name="textAlignment"
+              preferences={{ key: "id", caption: "caption" }}
+              options={headerColumnTextAlignments}
+              size="small"
+            />
+          </div>
+          <div className={css.flex_row}>
+            <ColorPicker
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={columnFormValues?.fontColor || "#000000"}
+              label="Font Color"
+              name="fontColor"
+              size="small"
+              fullWidth
+            />
+            <div style={{ width: "100%" }} />
+          </div>
+        </div>
+      </ElementBadge>
     </div>
   );
 };

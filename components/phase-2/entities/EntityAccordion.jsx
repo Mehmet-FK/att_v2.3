@@ -1,4 +1,4 @@
-import css from "@/styles/entities.module.css";
+import css from "@/styles/entity-styles/entities.module.css";
 import Accordion from "@/components/ui-components/Accordion";
 import { MenuItem, TextField } from "@mui/material";
 import Select from "@/components/form-elements/Select";
@@ -50,7 +50,7 @@ const EntityAccordion = () => {
     setEntityFormValues(entityData);
   }, [entityState]);
   return (
-    <Accordion expandDefault header={"ENTITIY"}>
+    <Accordion accordionProps={{ defaultExpanded: true }} header={"ENTITÄT"}>
       <div className={css.entityFormGroup}>
         <div className={css.flex_column}>
           <div className={css.flex_row}>

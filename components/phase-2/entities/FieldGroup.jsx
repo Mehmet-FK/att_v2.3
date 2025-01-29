@@ -1,5 +1,5 @@
 import TextField from "@mui/material/TextField";
-import css from "@/styles/entities-comp.module.css";
+import css from "@/styles/entity-styles/entities-comp.module.css";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
@@ -42,7 +42,10 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
   };
 
   return (
-    <Accordion sx={{ paddingBlock: 0 }} header={field?.name || "Neues Feld"}>
+    <Accordion
+      accordionProps={{ sx: { paddingBlock: 0 } }}
+      header={field?.name || "Neues Feld"}
+    >
       <div className={css.field_from_group}>
         <span
           className={css.close_button}

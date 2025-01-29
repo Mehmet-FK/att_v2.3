@@ -93,7 +93,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   return (
     <Autocomplete
       {...helperProps}
-      value={selectedValue}
+      value={selectedValue || ""}
       onChange={(event, newValue) => handleChangeLocal(newValue)}
       getOptionKey={(opt) => opt.id}
       filterOptions={filterOptions}
@@ -103,7 +103,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
       }}
       onBlur={handleBlurLocal}
       id="controllable-states"
-      getOptionLabel={(opt) => opt[optCaption]}
+      getOptionLabel={(opt) => opt[optCaption] || ""}
       slotProps={{ popper: { sx: { zIndex: 35001 } } }}
       options={options}
       renderInput={(params) => (

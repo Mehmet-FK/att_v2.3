@@ -4,7 +4,7 @@ import { ReactFlowProvider } from "reactflow";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 

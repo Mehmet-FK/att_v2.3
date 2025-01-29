@@ -1,11 +1,13 @@
 import { Button, Card, CardContent, Modal } from "@mui/material";
-import css from "@/styles/workflow-forms/record-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 import { useSelector } from "react-redux";
 import { useEffect, useMemo, useRef } from "react";
 import { useState } from "react";
 import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataWorker";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import DraggableRecordViewFunction from "./DraggableRecordViewFunction";
+import ConfirmModal from "@/components/ui-components/ConfirmModal";
+import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-ui-hooks/useDragAndDropUtils";
 
 const recordFunctionTemplate = {
   recordViewFunctionId: "",
@@ -16,6 +18,14 @@ const recordFunctionTemplate = {
 };
 
 const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
+  const [confirmModalValues, setConfirmModalValues] = useState({
+    isOpen: false,
+    dialogTitle: "",
+    dialogContent: "",
+    confirmBtnText: "",
+    confirmFunction: null,
+  });
+
   const { recordViewFunctions } = useSelector((state) => state.workflow);
   const workflows = useSelector((state) => state.attensam.data?.workflows);
 
@@ -34,16 +44,12 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
     ...filteredRecordFunctions,
   ]);
 
-  const assignFunctionIndexToSortOrder = () => {
-    const preparedRecordFunction = filteredRecordFunctions?.map(
-      (recordFunction, index) => ({
-        ...recordFunction,
-        sortOrder: index + 1,
-        isDraggedOver: false,
-      })
-    );
-    setRecordFunctions(preparedRecordFunction);
-  };
+  const {
+    assignSortOrderAndDragIndicator,
+    onDragStart,
+    onDragEnter,
+    onDragEnd,
+  } = useDragAndDropUtils(recordFunctions, setRecordFunctions);
 
   const changeRecordFunctionValue = (name, value, functionID) => {
     const changedFunctions = recordFunctions.map((el) => {
@@ -78,65 +84,19 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
     setRecordFunctions(tempFunctions);
   };
 
-  const draggingElementRef = useRef(null);
-  const draggedOverElementRef = useRef(null);
-
-  const handleDragStart = (e, element, index) => {
-    draggingElementRef.current = { element, index };
-
-    const dragElement = e.target;
-    const clone = dragElement.cloneNode(true);
-    clone.style.position = "absolute";
-    clone.style.top = "-1000px";
-    clone.style.left = "-1000px";
-    clone.style.background = "#f00";
-    clone.style.marginTop = "500px";
-    clone.style.width = `${dragElement.offsetWidth}px`;
-    clone.style.height = `60px`;
-    clone.style.cursor = "grab";
-    clone.style.pointerEvents = "none";
-
-    document.body.appendChild(clone);
-
-    const offsetX = dragElement.offsetWidth - 10;
-    const offsetY = dragElement.offsetHeight - 20;
-
-    e.dataTransfer.setDragImage(clone, offsetX, offsetY);
-
-    setTimeout(() => {
-      document.body.removeChild(clone);
-    }, 0);
+  const openConfirmModalToDelete = (recordFunction) => {
+    const { functionCaption, recordViewFunctionId } = recordFunction;
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie die Funktion "${
+        functionCaption || recordViewFunctionId
+      }" löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteRecordFunction(recordViewFunctionId),
+    };
+    setConfirmModalValues(temp);
   };
-
-  const handleDragEnter = (element, index) => {
-    draggedOverElementRef.current = { element, index };
-  };
-
-  const handleDragEnd = (e, elements, setElements) => {
-    let tempElements = [...recordFunctions];
-
-    if (!draggedOverElementRef.current || !draggingElementRef.current) return;
-
-    const draggingElement = draggingElementRef.current.element;
-    const draggingElementIndex = draggingElementRef.current.index;
-    const draggedOverElementIndex = draggedOverElementRef.current.index;
-
-    tempElements.splice(draggingElementIndex, 1);
-    tempElements.splice(draggedOverElementIndex, 0, draggingElement);
-
-    tempElements = tempElements.map((element, index) => ({
-      ...element,
-      sortOrder: index + 1,
-    }));
-
-    console.log(tempElements);
-
-    draggingElementRef.current = null;
-    draggedOverElementRef.current = null;
-
-    setRecordFunctions(tempElements);
-  };
-
   const updateStoreOnClose = () => {
     updateAllRecordViewFunctions(recordViewId, recordFunctions);
     setOpen(false);
@@ -144,7 +104,7 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
 
   useEffect(() => {
     if (filteredRecordFunctions?.length < 1) return;
-    assignFunctionIndexToSortOrder();
+    assignSortOrderAndDragIndicator(filteredRecordFunctions);
   }, [filteredRecordFunctions]);
 
   useEffect(() => {
@@ -154,70 +114,53 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
   }, [workflows]);
 
   return (
-    <Modal
-      open={open}
-      onClose={updateStoreOnClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Card className={css.card}>
-        <CardContent className={css.content}>
-          <div
-            className={css.flex_column}
-            style={{
-              height: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <div className={css.flex_column}>
-              {recordFunctions?.map((recordFunction, index) => (
-                <DraggableRecordViewFunction
-                  index={index}
-                  functionValues={recordFunction}
-                  workflowsForAutoCompleteSelect={
-                    workflowsForAutoCompleteSelect
-                  }
-                  changeRecordFunctionValue={changeRecordFunctionValue}
-                  deleteRecordFunction={deleteRecordFunction}
-                  onDragStart={handleDragStart}
-                  onDragEnter={handleDragEnter}
-                  onDragEnd={handleDragEnd}
-                />
-              ))}
-            </div>
+    <>
+      <ConfirmModal
+        confirmModalValues={confirmModalValues}
+        setConfirmModalValues={setConfirmModalValues}
+      />
+      <Modal
+        open={open}
+        onClose={updateStoreOnClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Card className={css.card}>
+          <CardContent className={css.content}>
+            <div
+              className={css.flex_column}
+              style={{
+                height: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <div className={css.flex_column}>
+                {recordFunctions?.map((recordFunction, index) => (
+                  <DraggableRecordViewFunction
+                    key={recordFunction?.recordViewFunctionId}
+                    index={index}
+                    functionValues={recordFunction}
+                    workflowsForAutoCompleteSelect={
+                      workflowsForAutoCompleteSelect
+                    }
+                    changeRecordFunctionValue={changeRecordFunctionValue}
+                    openConfirmModalToDelete={openConfirmModalToDelete}
+                    onDragStart={onDragStart}
+                    onDragEnter={onDragEnter}
+                    onDragEnd={onDragEnd}
+                  />
+                ))}
+              </div>
 
-            <Button onClick={handleAddRecordFunction} variant="contained">
-              Funktion anlegen
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </Modal>
+              <Button onClick={handleAddRecordFunction} variant="contained">
+                Funktion anlegen
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </Modal>
+    </>
   );
 };
 
 export default RecordViewFunctionsModal;
-
-{
-  /* <Accordion sx={{ width: "100%" }}>
-<AccordionSummary
-  sx={{ fontSize: "smaller", paddingBlock: "0" }}
-  expandIcon={<ExpandMoreIcon fontSize="small" />}
-  aria-controls="record-functions-content"
-  id="record-functions-header"
->
-  Record Funktionen
-</AccordionSummary>
-<AccordionDetails>
-  <div className={css.flex_row}>
-    {Object.values(recordFunctions)?.map((rvf) => (
-      <RecordViewFunctionCard
-        functionValues={rvf}
-        handleChange={handleChange}
-        workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect}
-      />
-    ))}
-  </div>
-</AccordionDetails>
-</Accordion> */
-}

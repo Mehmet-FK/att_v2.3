@@ -1,4 +1,4 @@
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 import TotalEntries from "./TotalEntries";
 import Loading_Icon from "./Loading_Icon";
 import Pagination from "./Pagination";

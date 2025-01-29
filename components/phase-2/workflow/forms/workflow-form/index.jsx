@@ -1,6 +1,6 @@
 import { Divider, TextField } from "@mui/material";
-import css from "@/styles/workflow-forms/workflow-form.module.css";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import css from "@/styles/workflow-forms-styles/workflow-form.module.css";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import IconSelect from "@/components/form-elements/IconSelect";
 import { useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";

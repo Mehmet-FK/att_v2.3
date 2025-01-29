@@ -1,14 +1,15 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
+  // Accordion,
+  // AccordionDetails,
+  // AccordionSummary,
   IconButton,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Accordion from "@/components/ui-components/Accordion";
 
 const nfcRoleDefinitions = [
   {
@@ -87,7 +88,7 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
   };
 
   const expandAccordion = (e) => {
-    e.stopPropagation();
+    // e.stopPropagation();
     setExpanded(!expanded);
   };
 
@@ -111,25 +112,30 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
     }
   };
 
+  const accordionIcon = useMemo(
+    () =>
+      subWorkflows && (
+        <IconButton onClick={expandAccordion} aria-label="expand">
+          <ArrowDropDownIcon />
+        </IconButton>
+      ),
+    [subWorkflows]
+  );
+
   return (
     <>
-      <Accordion expanded={subWorkflows ? expanded : false}>
-        <AccordionSummary
-          sx={{ height: "2rem" }}
-          expandIcon={
-            subWorkflows && (
-              <IconButton
-                onClick={expandAccordion}
-                // size="small"
-                aria-label="expand"
-              >
-                <ArrowDropDownIcon />
-              </IconButton>
-            )
-          }
-          aria-controls={`${workflow.id}-header`}
-          id={`${workflow.id}-header`}
-        >
+      <Accordion
+        accordionProps={{
+          defaultExpanded: false,
+          expanded: expanded,
+          onChange: expandAccordion,
+        }}
+        headerProps={{
+          sx: { height: "2rem" },
+          expandIcon: accordionIcon,
+        }}
+        bodyProps={{ sx: { padding: "10px" } }}
+        header={
           <FormControlLabel
             sx={{ width: "100%" }}
             onClick={(e) => e.preventDefault()}
@@ -160,22 +166,21 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
               </div>
             }
           />
-        </AccordionSummary>
-        {subWorkflows && (
-          <AccordionDetails sx={{ padding: "10px" }}>
-            {subWorkflows?.map((swf) => {
-              return (
-                <WfSection
-                  key={swf?.id}
-                  workflow={swf}
-                  data={data}
-                  roleIds={roleIds}
-                  setInputVal={setInputVal}
-                />
-              );
-            })}
-          </AccordionDetails>
-        )}
+        }
+        aria-controls={`${workflow.id}-header`}
+        id={`${workflow.id}-header`}
+      >
+        {subWorkflows?.map((swf) => {
+          return (
+            <WfSection
+              key={swf?.id}
+              workflow={swf}
+              data={data}
+              roleIds={roleIds}
+              setInputVal={setInputVal}
+            />
+          );
+        })}
       </Accordion>
     </>
   );

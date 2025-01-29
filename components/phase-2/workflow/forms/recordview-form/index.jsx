@@ -1,9 +1,9 @@
 import { Button, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import css from "@/styles/workflow-forms/record-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 import ViewHeaderForm from "../header-form";
-import useWorkflowForms from "@/hooks/workflow-hooks/useWorkflowForms";
+import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import RecordViewFieldsModal from "./recordview-fields/RecordViewFieldsModal";

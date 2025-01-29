@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
-import css from "@/styles/dashboard-card.module.css";
+import css from "@/styles/dashboard-styles/dashboard-card.module.css";
 import Card from "@/components/ui-components/DashboardCard";
 import PageHeader from "@/components/ui-components/PageHeader";
 import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";

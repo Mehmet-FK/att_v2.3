@@ -1,8 +1,8 @@
+import css from "@/styles/dashboard-styles/dashboard-searchbar.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-import css from "@/styles/dashboard-searchbar.module.css";
 import Link from "next/link";
 import { Button } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 function debounce(func, delay) {
   let timer;

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import css from "@/styles/workflow-forms/list-view-form.module.css";
+import css from "@/styles/workflow-forms-styles/list-view-form.module.css";
 import ViewHeaderForm from "../header-form";
 
 const TileViewForm = () => {

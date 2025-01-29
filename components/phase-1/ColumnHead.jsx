@@ -2,7 +2,7 @@ import { Box, TableCell, TableHead } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import css from "@/styles/table.module.css";
+import css from "@/styles/table-styles/table.module.css";
 import { useSelector } from "react-redux";
 
 const ColumnHead = ({
