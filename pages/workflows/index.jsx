@@ -133,7 +133,7 @@ const Workflow = () => {
         <DashboardSearchBar
           itemsState={workflows}
           setItemsState={setExistingWorkflows}
-          filterKeys={["id", "caption", "path"]}
+          filterKeys={["id", "caption", "path", "name"]}
           addNewLink="/workflows/new"
           filter={{ key: "launchType", value: workflowLaunchType }}
         />
