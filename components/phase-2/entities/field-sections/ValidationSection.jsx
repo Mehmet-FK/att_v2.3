@@ -1,16 +1,16 @@
 import DateInput from "@/components/form-elements/DateInput";
 import Accordion from "@/components/ui-components/Accordion";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
-import { Badge, Button, Fab, IconButton, TextField } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import TextField from "@mui/material/TextField";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/entity-styles/entities.module.css";
-import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
+import CheckBox from "../../workflow/forms/common-form-elements/CheckBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
+import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
 
-const ValidationSection = ({ fieldID }) => {
+const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
   const { fieldValidations } = useSelector((state) => state.entity);
 
   const validation = useMemo(
@@ -27,10 +27,21 @@ const ValidationSection = ({ fieldID }) => {
     deleteFieldValidationById,
   } = useEntityForm();
 
+  const handleDeleteFieldValidation = () => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie den Validierungsregel löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () =>
+        deleteFieldValidationById(validation.fieldValidationId),
+    };
+    setConfirmModalValues(temp);
+  };
+
   const addOrDeleteValidation = (e) => {
     if (validation) {
-      if (e.detail < 2) return;
-      deleteFieldValidationById(validation.fieldValidationId);
+      handleDeleteFieldValidation();
     } else {
       createFieldValidation(fieldID);
     }

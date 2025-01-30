@@ -7,6 +7,7 @@ const ElementBadge = ({
   badgeContent,
   badgeSx,
   badgeProps,
+  badgeTitle,
   handleClickOnBadge,
   containerSx,
   conteinerProps,
@@ -23,6 +24,7 @@ const ElementBadge = ({
       badgeContent={_badgeContent}
       slotProps={{
         badge: {
+          title: badgeTitle || "",
           sx: {
             marginLeft: "10px",
             width: "1.7rem",
@@ -42,8 +44,8 @@ const ElementBadge = ({
         width: "100%",
 
         backgroundColor: "inherit",
-        "&:hover .MuiBadge-badge": {
-          opacity: "1",
+        "&:hover  .MuiBadge-badge": {
+          opacity: 1,
         },
         ...containerSx,
       }}

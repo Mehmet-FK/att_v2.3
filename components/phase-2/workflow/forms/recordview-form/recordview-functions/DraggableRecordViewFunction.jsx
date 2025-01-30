@@ -1,10 +1,11 @@
 import { Badge, Card, CardContent, TextField } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import AutoCompleteSelect from "../../common-form-elements/AutoCompleteSelect";
 import ElementBadge from "../../common-form-elements/ElementBadge";
+import DragItemContainer from "../../common-form-elements/DragItemContainer";
 
 const DraggableRecordViewFunction = ({
   index,
@@ -62,7 +63,7 @@ const DraggableRecordViewFunction = ({
     setFunctionFormValues((prev) => ({ ...prev, isDraggedOver: false }));
   };
   const handleDragEnd = (e) => {
-    onDragEnd(functionFormValues, index);
+    onDragEnd(e, functionFormValues, index);
     setFunctionFormValues((prev) => ({ ...prev, isDraggedOver: false }));
   };
 
@@ -75,26 +76,30 @@ const DraggableRecordViewFunction = ({
   }, [functionFormValues?.workflowId]);
 
   return (
-    <div
-      droppable
-      draggable
-      style={{
-        marginRight: "-15px",
-        paddingRight: "10px",
-        paddingBlock: isDraggedOver ? "15px" : "5px",
-        borderBlock: isDraggedOver && "1px solid #ccc",
-        transition: "all 0.2s ease-in-out ",
-      }}
-      onDragStart={handleDragStart}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragEnd={handleDragEnd}
+    <DragItemContainer
+      isDraggedOver={isDraggedOver}
+      handleDragStart={handleDragStart}
+      handleDragEnter={handleDragEnter}
+      handleDragLeave={handleDragLeave}
+      handleDragEnd={handleDragEnd}
     >
       <ElementBadge
         handleClickOnBadge={handleDeleteFunction}
-        containerSx={{ pointerEvents: isDraggedOver ? "none" : "auto" }}
+        containerSx={{
+          pointerEvents: isDraggedOver ? "none" : "auto",
+          backgroundColor: "#0000",
+
+          borderRadius: "inherit",
+        }}
       >
-        <Card sx={{ width: "100%", backgroundColor: "inherit" }}>
+        <Card
+          sx={{
+            width: "100%",
+            backgroundColor: "#0000",
+            borderRadius: "inherit",
+          }}
+          className="drag-image-element"
+        >
           <CardContent>
             <div className={css.flex_row}>
               <TextField
@@ -150,7 +155,9 @@ const DraggableRecordViewFunction = ({
           <DragIndicatorIcon />
         </div>
       </ElementBadge>
-    </div>
+    </DragItemContainer>
+
+    // </div>
   );
 };
 export default DraggableRecordViewFunction;

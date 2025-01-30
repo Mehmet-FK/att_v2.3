@@ -198,9 +198,6 @@ const useWorkflow = () => {
   };
   const createNewReqularNode = (name, caption, position, nodeId, viewId) => {
     const _nodeId = nodeId ? nodeId : getId(name);
-
-    console.log(workflow.workflowSteps);
-
     return {
       id: _nodeId,
       type: "view",
@@ -409,29 +406,38 @@ const useWorkflow = () => {
     );
   };
 
-  const restoreExistingRemoteWorkflowByNodesAndEdges = (existingWorkflow) => {
-    console.log(
-      "restoreExistingRemoteWorkflowByNodesAndEdges => ",
-      existingWorkflow
-    );
+  const parseNodesAndEdgesFromString = (nodes, edges) => {
+    try {
+      const nodesObject = JSON.parse(nodes);
+      const edgesObject = JSON.parse(edges);
+      return { ok: true, nodes: nodesObject, edges: edgesObject };
+    } catch (error) {
+      console.log({ JSONPARSE_ERROR: error });
+      return { ok: false, nodes: null, edges: null };
+    }
   };
 
-  const restoreExistingRemoteWorkflow = (
+  const restoreExistingRemoteWorkflowByNodesAndEdges = (
     existingWorkflow,
     _setNodes,
     _setEdges
   ) => {
-    if (!existingWorkflow) return;
+    const { nodes, edges } = existingWorkflow;
+    const parsedResponse = parseNodesAndEdgesFromString(nodes, edges);
 
-    if (existingWorkflow?.nodes && existingWorkflow?.edges) {
-      restoreExistingRemoteWorkflowByNodesAndEdges(existingWorkflow);
+    if (!parsedResponse.ok) return false;
 
-      //!DANGER: Remove the return comment after implemetation
-      // return
-    }
+    _setNodes(parsedResponse.nodes);
+    _setEdges(parsedResponse.edges);
 
-    const createdElements = [];
+    return true;
+  };
 
+  const restoreExistingRemoteWorkflowBySteps = (
+    existingWorkflow,
+    _setNodes,
+    _setEdges
+  ) => {
     const launchElement = existingWorkflow.launchElements[0];
 
     if (launchElement) {
@@ -459,6 +465,31 @@ const useWorkflow = () => {
 
     const workflowSteps = existingWorkflow.workflowSteps;
     restoreExistingEdges(workflowSteps, _setEdges);
+  };
+
+  const restoreExistingRemoteWorkflow = (
+    existingWorkflow,
+    _setNodes,
+    _setEdges
+  ) => {
+    if (!existingWorkflow) return;
+
+    let isParseSuccessfull = false;
+    if (existingWorkflow?.nodes && existingWorkflow?.edges) {
+      isParseSuccessfull = restoreExistingRemoteWorkflowByNodesAndEdges(
+        existingWorkflow,
+        _setNodes,
+        _setEdges
+      );
+    }
+
+    if (!isParseSuccessfull) {
+      restoreExistingRemoteWorkflowBySteps(
+        existingWorkflow,
+        _setNodes,
+        _setEdges
+      );
+    }
   };
 
   useEffect(() => {

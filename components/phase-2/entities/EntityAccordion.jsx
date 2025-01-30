@@ -83,7 +83,6 @@ const EntityAccordion = () => {
               width="100%"
               value={entityFormValues?.dataSource || ""}
               onChange={handleBlur}
-              // onBlur={handleBlur}
             >
               {views?.map((opt, index) => (
                 <MenuItem key={index} value={opt}>
@@ -98,7 +97,7 @@ const EntityAccordion = () => {
               value={entityFormValues?.dataSourceType?.toString() || ""}
               onChange={handleChange}
               onBlur={handleBlur}
-              fullWidth
+              width="100%"
             >
               {[0, 1]?.map((opt, index) => (
                 <MenuItem key={index} value={opt}>
@@ -132,7 +131,7 @@ const EntityAccordion = () => {
             <TextField
               onChange={handleChange}
               onBlur={handleBlur}
-              value={entityFormValues?.defaultIconPath || null}
+              value={entityFormValues?.defaultIconPath || ""}
               size="small"
               name="defaultIconPath"
               label="defaultIconPath"

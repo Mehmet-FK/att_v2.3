@@ -46,8 +46,6 @@ const ScannerDialogForm = ({
       <ScannerDialogFormBase
         scannerDialog={scannerDialog}
         viewId={viewId}
-        scannerDialogValues={scannerDialogValues}
-        setScannerDialogValues={setScannerDialogValues}
         entityFields={entityFields}
         entitiesForAutoSelect={entitiesForAutoSelect}
         workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect}
@@ -67,8 +65,6 @@ const ScannerDialogForm = ({
       <ScannerDialogFormBase
         scannerDialog={scannerDialog}
         viewId={viewId}
-        scannerDialogValues={scannerDialogValues}
-        setScannerDialogValues={setScannerDialogValues}
         entityFields={entityFields}
         entitiesForAutoSelect={entitiesForAutoSelect}
         workflowsForAutoCompleteSelect={workflowsForAutoCompleteSelect}

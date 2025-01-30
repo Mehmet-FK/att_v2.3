@@ -28,9 +28,6 @@ const Entities = () => {
       setExistingEntities(entities);
     }
   }, [entities]);
-  useEffect(() => {
-    console.log(existingEntities);
-  }, [existingEntities]);
 
   return (
     <div className="page-wrapper">
@@ -48,8 +45,7 @@ const Entities = () => {
             <Card
               cardInfo={{
                 url: `/entities/${entity.id}`,
-                texts: [`ID: ${entity.id}`],
-                caption: entity.caption,
+                caption: `${entity.id} - ${entity.caption}`,
                 defaultIconUrl: entity.defaultIconPath,
               }}
               additionalTitles={[entity?.name]}

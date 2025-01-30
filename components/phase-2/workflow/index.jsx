@@ -19,6 +19,8 @@ import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 import RestoreWorkflowConfirmDialog from "./dialogs/RestoreWorkflowConfirmDialog";
 import useSessionStorage from "@/hooks/storage-hooks/useSessionStorage";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
+import { AutoCompleteWorkflowProvider } from "@/context/AutoCompleteWorkflowContext";
+import { AutoCompleteEntityProvider } from "@/context/AutoCompleteEntityContext";
 
 const initialNodes = [
   {
@@ -136,7 +138,7 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-
+    console.log({ workflowToPost });
     postWorkflowCall(workflowToPost).then((res) =>
       res ? router.push("/workflows") : null
     );
@@ -151,10 +153,6 @@ const Sheet = ({ existingWorkflow }) => {
       setOpenRestoreConfirmDialog(true);
       setSessionFlagForWorkflow();
     }
-
-    return () => {
-      console.log({ edges, nodes });
-    };
   }, []);
 
   useEffect(() => {
@@ -201,14 +199,19 @@ const Sheet = ({ existingWorkflow }) => {
       </ReactFlow>
 
       <ToolsDrawer />
-      <BottomDrawer
-        onSubmit={handleSubmit}
-        onSave={onSave}
-        restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
-        nodes={nodes}
-        bottomDrawerExpanded={bottomDrawerExpanded}
-        setBottomDrawerExpanded={setBottomDrawerExpanded}
-      />
+
+      <AutoCompleteWorkflowProvider>
+        <AutoCompleteEntityProvider>
+          <BottomDrawer
+            onSubmit={handleSubmit}
+            onSave={onSave}
+            restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
+            nodes={nodes}
+            bottomDrawerExpanded={bottomDrawerExpanded}
+            setBottomDrawerExpanded={setBottomDrawerExpanded}
+          />
+        </AutoCompleteEntityProvider>
+      </AutoCompleteWorkflowProvider>
     </div>
   );
 };

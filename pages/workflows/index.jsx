@@ -126,7 +126,6 @@ const Workflow = () => {
       setExistingWorkflows(multiSortWorkflows(workflows));
     }
   }, [workflows]);
-
   return (
     <div className="page-wrapper">
       <PageHeader title="WORKFLOWS" />

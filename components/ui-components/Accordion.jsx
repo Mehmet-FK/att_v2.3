@@ -17,7 +17,6 @@ const Accordion = ({
   const [accordionExpanded, setAccordionExpanded] = useState(
     defaultExpanded ? defaultExpanded : expanded || false
   );
-
   const handleExpandToggle = () => setAccordionExpanded(!accordionExpanded);
 
   useEffect(() => {
@@ -30,6 +29,7 @@ const Accordion = ({
     () => accordionProps?.onChange,
     [accordionProps]
   );
+
   return (
     <MuiAccordion
       expanded={accordionExpanded}

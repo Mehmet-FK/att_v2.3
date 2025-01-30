@@ -46,12 +46,10 @@ const RecordViewFieldsModal = ({
 
   const [fields, setFields] = useState([...filteredRecordViewFields]);
 
-  const {
-    assignSortOrderAndDragIndicator,
-    onDragStart,
-    onDragEnter,
-    onDragEnd,
-  } = useDragAndDropUtils(fields, setFields);
+  const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
+    fields,
+    setFields
+  );
 
   const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
 
@@ -99,7 +97,6 @@ const RecordViewFieldsModal = ({
     if (name === "sortOrder") {
       changedFieds.sort((a, b) => a.sortOrder - b.sortOrder);
     }
-    console.log(changedFieds);
     setFields(changedFieds);
   };
 
@@ -139,11 +136,7 @@ const RecordViewFieldsModal = ({
                     entityFields={entityFields}
                     openConfirmModalToDelete={openConfirmModalToDelete}
                     changeRecordFieldValue={changeRecordFieldValue}
-                    onDragStart={onDragStart}
-                    onDragEnter={onDragEnter}
-                    onDragEnd={onDragEnd}
-                    // elements={fields}
-                    // setElements={setFields}
+                    dragUtils={dragUtils}
                   />
                 ))}
               </div>

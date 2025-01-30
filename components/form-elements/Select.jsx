@@ -11,7 +11,7 @@ const Select = ({
   disabled,
 }) => {
   return (
-    <FormControl disabled={disabled} fullWidth sx={{ width: width }}>
+    <FormControl disabled={disabled} fullWidth sx={{ width: width || "auto" }}>
       <InputLabel size="small" id="demo-simple-select-label">
         {label}
       </InputLabel>

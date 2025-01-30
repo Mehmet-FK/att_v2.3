@@ -1,17 +1,14 @@
-import DateInput from "@/components/form-elements/DateInput";
 import Accordion from "@/components/ui-components/Accordion";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
-import { Badge, Button, IconButton, TextField } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/entity-styles/entities.module.css";
-import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CustomSelect from "../workflow/forms/common-form-elements/CustomSelect";
-import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
+import CustomSelect from "../../workflow/forms/common-form-elements/CustomSelect";
+import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
 
-const EntitySortingSection = ({ fieldID }) => {
+const EntitySortingSection = ({ fieldID, setConfirmModalValues }) => {
   const { entitySortings } = useSelector((state) => state.entity);
   const sortingRule = useMemo(
     () => entitySortings.find((rule) => rule.fieldId === fieldID),
@@ -25,10 +22,20 @@ const EntitySortingSection = ({ fieldID }) => {
   const { createEntitySorting, updateEntitySortingValue, deleteEntitySorting } =
     useEntityForm();
 
+  const handleDeleteEntitySorting = () => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie den Sortierungsregel löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteEntitySorting(sortingRule.entitySortingId),
+    };
+    setConfirmModalValues(temp);
+  };
+
   const addOrDeleteEntitySorting = (e) => {
     if (sortingRule) {
-      if (e.detail < 2) return;
-      deleteEntitySorting(sortingRule.entitySortingId);
+      handleDeleteEntitySorting();
     } else {
       createEntitySorting(fieldID);
     }

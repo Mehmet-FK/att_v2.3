@@ -10,14 +10,14 @@ import { useSelector } from "react-redux";
 const ScannerDialogFormBase = ({
   scannerDialog,
   viewId,
-  scannerDialogValues,
-  setScannerDialogValues,
   entityFields,
   entitiesForAutoSelect,
   workflowsForAutoCompleteSelect,
   workflowStepValues,
   children,
 }) => {
+  const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
+
   const { updateScannerDialogValue, updateWorkflowStepValue } =
     useWorkflowForms();
 
@@ -32,7 +32,6 @@ const ScannerDialogFormBase = ({
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
-    console.log(viewId);
     updateScannerDialogValue(name, inputValue, viewId);
   };
 
@@ -51,6 +50,7 @@ const ScannerDialogFormBase = ({
 
     setScannerDialogValues(scannerDialogFormValue);
   }, [viewId]);
+
   return (
     <>
       <div className={css.form_container}>
@@ -99,9 +99,9 @@ const ScannerDialogFormBase = ({
               preferences={{ key: "id", caption: "caption" }}
               options={scannerDialogActions}
             />
-          </div>{" "}
+          </div>
           <div className={css.flex_row}>
-            <CustomSelect
+            {/* <CustomSelect
               handleChange={handleChange}
               handleBlur={handleBlur}
               value={scannerDialogValues?.targetFiedId}
@@ -109,8 +109,18 @@ const ScannerDialogFormBase = ({
               name="targetFiedId"
               preferences={{ key: "id", caption: "caption" }}
               options={entityFields}
+            /> */}
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={scannerDialogValues?.targetFieldId || ""}
+              variant="outlined"
+              size="medium"
+              label="Target Field"
+              name="targetFieldId"
+              type="number"
+              fullWidth
             />
-
             <AutoCompleteSelect
               mainProps={{
                 handleChange: handleChange,

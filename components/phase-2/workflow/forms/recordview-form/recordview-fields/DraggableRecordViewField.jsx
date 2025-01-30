@@ -6,6 +6,7 @@ import CheckBox from "../../common-form-elements/CheckBox";
 import CustomSelect from "../../common-form-elements/CustomSelect";
 import Accordion from "@/components/ui-components/Accordion";
 import ElementBadge from "../../common-form-elements/ElementBadge";
+import DragItemContainer from "../../common-form-elements/DragItemContainer";
 
 const DraggableRecordViewField = ({
   index,
@@ -13,16 +14,14 @@ const DraggableRecordViewField = ({
   entityFields,
   openConfirmModalToDelete,
   changeRecordFieldValue,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
+  dragUtils,
 }) => {
   const [fieldFormValues, setFieldFormValues] = useState(recordViewField);
   const [accordionExpanded, setAccordionExpanded] = useState(false);
-  const dropTimeoutRef = useRef(null);
+
+  const { onDragStart, onDragEnter, onDragEnd } = dragUtils;
 
   const handleDragStart = (e) => {
-    setAccordionExpanded(false);
     onDragStart(e, fieldFormValues, index);
   };
   const handleDragEnter = (e) => {
@@ -35,15 +34,6 @@ const DraggableRecordViewField = ({
   const handleDragEnd = (e) => {
     onDragEnd(e, fieldFormValues, index);
   };
-  const handleDrop = (e) => {
-    if (dropTimeoutRef.current) {
-      clearTimeout(dropTimeoutRef.current);
-    }
-    dropTimeoutRef.current = setTimeout(() => {
-      setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
-      dropTimeoutRef.current = null;
-    }, 300);
-  };
 
   const handleFieldInputChange = (fieldID) => {
     const selectedField = entityFields?.find((field) => field.id === fieldID);
@@ -54,6 +44,7 @@ const DraggableRecordViewField = ({
       fieldCaption: selectedField.fieldCaption,
       groupName: selectedField.fieldGroupName,
     }));
+    console.log({ fieldFormValues });
   };
 
   const handleChange = (e) => {
@@ -90,28 +81,20 @@ const DraggableRecordViewField = ({
       (fieldFormValues?.imageType ? fieldFormValues?.imageType : "Neues Feld");
 
   return (
-    <div
-      droppable
-      draggable
-      className={css.flex_row}
+    <DragItemContainer
       title={"RecordField ID: " + fieldFormValues?.recordViewFieldId}
-      style={{
-        marginRight: "-15px",
-        paddingLeft: "5px",
-        paddingRight: "10px",
-        paddingBlock: isDraggedOver ? "15px" : "5px",
-        borderBlock: isDraggedOver && "1px solid #ccc",
-        transition: "all 0.2s ease-in-out ",
-      }}
-      onDragStart={handleDragStart}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragEnd={handleDragEnd}
-      onDrop={handleDrop}
+      isDraggedOver={isDraggedOver}
+      handleDragStart={handleDragStart}
+      handleDragEnter={handleDragEnter}
+      handleDragLeave={handleDragLeave}
+      handleDragEnd={handleDragEnd}
     >
       <ElementBadge
         handleClickOnBadge={handleDeleteField}
-        containerSx={{ pointerEvents: isDraggedOver ? "none" : "auto" }}
+        containerSx={{
+          pointerEvents: isDraggedOver ? "none" : "auto",
+          backgroundColor: "#0000",
+        }}
       >
         <Accordion
           accordionProps={{
@@ -120,10 +103,15 @@ const DraggableRecordViewField = ({
             sx: {
               width: "100%",
               backgroundColor: "inherit",
+              borderRadius: "inherit",
+
               pointerEvents: isDraggedOver ? "none" : "auto",
             },
           }}
-          headerProps={{ sx: { fontSize: "smaller", paddingBlock: "0" } }}
+          headerProps={{
+            sx: { fontSize: "smaller", paddingBlock: "0" },
+            className: "drag-image-element",
+          }}
           header={accordionHeader}
         >
           <div className={css.flex_row} style={{ alignItems: "center" }}>
@@ -263,7 +251,7 @@ const DraggableRecordViewField = ({
           <DragIndicatorIcon />
         </div>
       </ElementBadge>
-    </div>
+    </DragItemContainer>
   );
 };
 

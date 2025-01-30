@@ -51,7 +51,6 @@
   flex-direction: column;
   height: 100%;
   justify-content: center;
-  /* align-items: space-between; */
 }
 
 .card_helper_text {
@@ -71,8 +70,8 @@
   word-wrap: break-word;
   line-break: anywhere;
 }
-.additional_card_itle {
-  font-size: smaller;
+.additional_card_title {
+  font-size: 0.7rem;
   font-weight: 300;
   word-wrap: break-word;
   line-break: anywhere;

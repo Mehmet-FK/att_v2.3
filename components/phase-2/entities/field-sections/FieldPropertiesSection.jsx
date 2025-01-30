@@ -9,10 +9,10 @@ import IconSelect from "@/components/form-elements/IconSelect";
 import CustomSelect from "../../workflow/forms/common-form-elements/CustomSelect";
 import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
 
-const FieldProperty = ({ property }) => {
+const FieldProperty = ({ property, setConfirmModalValues }) => {
   const [propertyFormValues, setPropertyFormValues] = useState(property);
 
-  const { updateFieldProperyValue, deleteFieldPropery } = useEntityForm();
+  const { updateFieldProperyValue, deleteFieldProperty } = useEntityForm();
 
   const handleChange = (e) => {
     const { type, name, value, checked } = e.target;
@@ -28,9 +28,15 @@ const FieldProperty = ({ property }) => {
     updateFieldProperyValue(name, newValue, property.listViewPropertyId);
   };
 
-  const deleteProperty = (e) => {
-    if (e.detail < 2) return;
-    deleteFieldPropery(property.listViewPropertyId);
+  const handleDeleteFieldProperty = () => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie die Feldeigenschaft löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteFieldProperty(property.listViewPropertyId),
+    };
+    setConfirmModalValues(temp);
   };
 
   useEffect(() => {
@@ -39,7 +45,7 @@ const FieldProperty = ({ property }) => {
 
   return (
     <ElementBadge
-      handleClickOnBadge={deleteProperty}
+      handleClickOnBadge={handleDeleteFieldProperty}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
       badgeSx={{
         marginRight: "10px",
@@ -101,24 +107,23 @@ const FieldProperty = ({ property }) => {
                 handleBlur={handleBlur}
                 label="priorityType"
                 name="priorityType"
-                value={propertyFormValues.priorityType}
+                value={propertyFormValues.priorityType || ""}
                 size="small"
                 options={[
                   { key: 0, caption: "Niedrig" },
                   { key: 1, caption: "Hoch" },
                 ]}
-                defaultValue={null}
                 preferences={{ key: "key", caption: "caption" }}
               />
             </div>
           </div>
-        </CardContent>{" "}
+        </CardContent>
       </Card>
     </ElementBadge>
   );
 };
 
-const FieldPropertiesSection = ({ fieldID }) => {
+const FieldPropertiesSection = ({ fieldID, setConfirmModalValues }) => {
   const { fieldProperties } = useSelector((state) => state.entity);
 
   const properties = useMemo(
@@ -126,8 +131,7 @@ const FieldPropertiesSection = ({ fieldID }) => {
     [fieldProperties]
   );
 
-  const { createFieldProperty, updateFieldProperyValue, deleteFieldPropery } =
-    useEntityForm();
+  const { createFieldProperty } = useEntityForm();
 
   const addFieldProperty = () => {
     createFieldProperty(fieldID);
@@ -136,32 +140,29 @@ const FieldPropertiesSection = ({ fieldID }) => {
   const propertyExists = properties?.length > 0 ? true : false;
 
   return (
-    <div
-      style={{
-        width: "100%",
-      }}
+    <ElementBadge
+      handleClickOnBadge={addFieldProperty}
+      badgeContent={<AddBoxIcon color="primary" fontSize="small" />}
     >
-      <ElementBadge
-        handleClickOnBadge={addFieldProperty}
-        badgeContent={<AddBoxIcon color="primary" fontSize="small" />}
+      <Accordion
+        accordionProps={{
+          disabled: !propertyExists,
+        }}
+        header={"Feld Eigenschaften"}
       >
-        <Accordion
-          accordionProps={{
-            sx: { paddingBlock: 0, width: "100%" },
-            disabled: !propertyExists,
-          }}
-          header={"Feld Eigenschaften"}
-        >
-          {propertyExists && (
-            <div className={css.flex_wrap_row}>
-              {properties?.map((property) => (
-                <FieldProperty property={property} />
-              ))}
-            </div>
-          )}
-        </Accordion>
-      </ElementBadge>
-    </div>
+        {propertyExists && (
+          <div className={css.flex_wrap_row}>
+            {properties?.map((property) => (
+              <FieldProperty
+                key={property.listViewPropertyId}
+                property={property}
+                setConfirmModalValues={setConfirmModalValues}
+              />
+            ))}
+          </div>
+        )}
+      </Accordion>
+    </ElementBadge>
   );
 };
 

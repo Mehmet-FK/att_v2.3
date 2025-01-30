@@ -1,21 +1,25 @@
 import TextField from "@mui/material/TextField";
 import css from "@/styles/entity-styles/entities-comp.module.css";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import AutoCompleteSelect from "../workflow/forms/common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../workflow/forms/common-form-elements/CustomSelect";
-import ValidationSection from "./ValidationSection";
+import ValidationSection from "./field-sections/ValidationSection";
 import Accordion from "@/components/ui-components/Accordion";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
-import EntitySortingSection from "./EntitySortingSection";
+import EntitySortingSection from "./field-sections/EntitySortingSection";
 import FieldPropertiesSection from "./field-sections/FieldPropertiesSection";
+import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
+import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 
-const FieldGroup = ({ field, entitiesForAutoSelect }) => {
+const FieldGroup = ({ field, setConfirmModalValues }) => {
   const { viewColumns, fieldTypes } = useSelector(
     (state) => state.attensam.data
   );
   const [fieldForm, setFieldForm] = useState(field);
+
+  const { autoCompleteEntities } = useAutoCompleteEntities();
 
   const { updateEntityFieldValue, deleteEntityField } = useEntityForm();
 
@@ -29,8 +33,17 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
     (opt, index) => ({ id: fieldTypes[opt], caption: opt })
   );
 
-  const removeField = () => {
-    deleteEntityField(field.fieldId);
+  const handleDeleteEntityField = () => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie das Feld "${
+        fieldForm?.name || fieldForm?.fieldId
+      }" löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteEntityField(field.fieldId),
+    };
+    setConfirmModalValues(temp);
   };
 
   const handleBlur = (e) => {
@@ -40,21 +53,17 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
 
     updateEntityFieldValue(name, inputValue, field.fieldId);
   };
-
+  const accordionHeader = field?.name
+    ? field?.fieldId + " - " + field?.name
+    : "Neues Feld";
   return (
-    <Accordion
-      accordionProps={{ sx: { paddingBlock: 0 } }}
-      header={field?.name || "Neues Feld"}
+    <ElementBadge
+      handleClickOnBadge={handleDeleteEntityField}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      badgeSx={{ marginRight: "10px" }}
+      badgeTitle="Feld Löschen"
     >
-      <div className={css.field_from_group}>
-        <span
-          className={css.close_button}
-          onClick={() => removeField(field.id)}
-        >
-          ✖
-        </span>
-
-        {/* <div className={css.inputs_wrapper}> */}
+      <Accordion header={accordionHeader}>
         <div className={css.flex_column}>
           <div className={css.flex_row}>
             <TextField
@@ -120,7 +129,7 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
                 handleChange: handleChange,
                 handleBlur: handleBlur,
                 preferences: { key: "id", caption: "caption" },
-                options: entitiesForAutoSelect || [],
+                options: autoCompleteEntities || [],
                 name: "linkedEntityId",
                 value: fieldForm.linkedEntityId || "",
                 label: "Verlinkte Entität",
@@ -189,14 +198,23 @@ const FieldGroup = ({ field, entitiesForAutoSelect }) => {
           </div>
           <div className={css.flex_column} style={{ rowGap: "20px" }}>
             <div className={css.flex_row} style={{ paddingTop: "10px" }}>
-              <ValidationSection fieldID={field.fieldId} />
-              <EntitySortingSection fieldID={field.fieldId} />
+              <ValidationSection
+                fieldID={field.fieldId}
+                setConfirmModalValues={setConfirmModalValues}
+              />
+              <EntitySortingSection
+                fieldID={field.fieldId}
+                setConfirmModalValues={setConfirmModalValues}
+              />
             </div>
-            <FieldPropertiesSection fieldID={field.fieldId} />
+            <FieldPropertiesSection
+              fieldID={field.fieldId}
+              setConfirmModalValues={setConfirmModalValues}
+            />
           </div>
         </div>
-      </div>
-    </Accordion>
+      </Accordion>
+    </ElementBadge>
   );
 };
 

@@ -133,7 +133,7 @@ const useEntityForm = () => {
       validationIdToDelete,
     });
     deleteEntitySorting(sortingIdToDelete);
-    deleteFieldPropery(fieldPropertyIdToDelete);
+    deleteFieldProperty(fieldPropertyIdToDelete);
     deleteFieldValidationById(validationIdToDelete);
     dispatch(removeEntityField({ fieldID }));
   };
@@ -237,7 +237,7 @@ const useEntityForm = () => {
     dispatch(changeFieldPropertyValue({ name, value, propertyID }));
   };
 
-  const deleteFieldPropery = (propertyID) => {
+  const deleteFieldProperty = (propertyID) => {
     dispatch(removeFieldProperty({ propertyID }));
   };
 
@@ -262,7 +262,7 @@ const useEntityForm = () => {
     // FIELD-PROPERTY
     createFieldProperty,
     updateFieldProperyValue,
-    deleteFieldPropery,
+    deleteFieldProperty,
   };
 };
 

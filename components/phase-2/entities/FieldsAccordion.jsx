@@ -1,31 +1,23 @@
 import css from "@/styles/entity-styles/entities.module.css";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import Accordion from "@/components/ui-components/Accordion";
 import FieldGroup from "@/components/phase-2/entities/FieldGroup";
-import { toastWarnNotify } from "@/helpers/ToastNotify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 import { useSelector } from "react-redux";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
+import Accordion from "@/components/ui-components/Accordion";
+import ConfirmModal from "@/components/ui-components/ConfirmModal";
 
-const fieldTemplate = {
-  id: null,
-  name: "",
-  caption: "",
-  type: 0,
-  dataSourceColumn: "",
-  linkedEntityId: null,
-  showMobile: false,
-  validationId: null,
-  isReadOnly: false,
-  maxLength: null,
-  decimalPlaces: null,
-  showByDefault: false,
-  groupName: "Allgemein",
-};
+const FieldsAccordion = () => {
+  const [confirmModalValues, setConfirmModalValues] = useState({
+    isOpen: false,
+    dialogTitle: "",
+    dialogContent: "",
+    confirmBtnText: "",
+    confirmFunction: null,
+  });
 
-const FieldsAccordion = ({ entitiesForAutoSelect }) => {
   const { dataSource, entityFields, fieldTypes } = useSelector(
     (state) => state.entity
   );
@@ -51,25 +43,37 @@ const FieldsAccordion = ({ entitiesForAutoSelect }) => {
   }, []);
 
   return (
-    <Accordion accordionProps={{ defaultExpanded: true }} header={"FELDER"}>
-      {entityFields?.map((field) => (
-        <FieldGroup
-          key={field.fieldId}
-          field={field}
-          entitiesForAutoSelect={entitiesForAutoSelect}
-        />
-      ))}
-      <Tooltip title="Neues Feld anlegen" placement="right" arrow>
-        <Button
-          variant="outlined"
-          size="small"
-          sx={{ alignSelf: "flex-end", fontSize: 20 }}
-          onClick={addNewField}
-        >
-          +
-        </Button>
-      </Tooltip>
-    </Accordion>
+    <>
+      <ConfirmModal
+        confirmModalValues={confirmModalValues}
+        setConfirmModalValues={setConfirmModalValues}
+      />
+
+      <Accordion
+        accordionProps={{
+          defaultExpanded: true,
+        }}
+        header={"FELDER"}
+      >
+        {entityFields?.map((field) => (
+          <FieldGroup
+            key={field.fieldId}
+            field={field}
+            setConfirmModalValues={setConfirmModalValues}
+          />
+        ))}
+        <Tooltip title="Neues Feld anlegen" placement="right" arrow>
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ alignSelf: "flex-end", fontSize: 20 }}
+            onClick={addNewField}
+          >
+            +
+          </Button>
+        </Tooltip>
+      </Accordion>
+    </>
   );
 };
 

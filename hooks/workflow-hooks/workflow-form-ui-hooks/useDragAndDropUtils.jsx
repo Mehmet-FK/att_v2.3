@@ -4,24 +4,38 @@ const useDragAndDropUtils = (elements, setElements) => {
   const draggingElementRef = useRef(null);
   const draggedOverElementRef = useRef(null);
 
+  const cloneDraggedItem = (dragElement) => {
+    const dragItem = dragElement.querySelector(".drag-image-element");
+    const clone = dragItem.cloneNode(true);
+    return clone;
+  };
+
+  const addOpacityOnDragStart = (e) => {
+    e.target.style.opacity = "0.5";
+  };
+
+  const removeOpacityOnDragEnd = (e) => {
+    e.target.style.opacity = "1";
+  };
+
   const setDragImageOnDragStart = (e) => {
     const dragElement = e.target;
-    const clone = dragElement.cloneNode(true);
+    const clone = cloneDraggedItem(dragElement);
     clone.style.position = "absolute";
     clone.style.top = "-1000px";
     clone.style.left = "-1000px";
-    clone.style.background = "#ff0000";
-    e.target.style.borderRadius = "8px";
+    clone.style.backgroundColor = "#e1000080";
+    clone.style.borderRadius = "8px";
     clone.style.marginTop = "500px";
-    clone.style.width = `${dragElement.offsetWidth}px`;
-    clone.style.height = `60px`;
+    clone.style.width = "100%";
+    clone.style.maxWidth = "300px";
     clone.style.cursor = "grab";
     clone.style.pointerEvents = "none";
 
     document.body.appendChild(clone);
 
-    const offsetX = dragElement.offsetWidth - 10;
-    const offsetY = dragElement.offsetHeight - 20;
+    const offsetX = clone.offsetWidth - 10;
+    const offsetY = clone.offsetHeight - 20;
 
     e.dataTransfer.setDragImage(clone, offsetX, offsetY);
 
@@ -31,7 +45,7 @@ const useDragAndDropUtils = (elements, setElements) => {
   };
 
   const createDropAnimationOnDragEnd = (e) => {
-    e.target.style.backgroundColor = "rgba(0, 157, 255, 0.30)";
+    e.target.style.backgroundColor = "#009dff80";
     e.target.style.borderRadius = "8px";
     setTimeout(() => {
       e.target.style.backgroundColor = "";
@@ -51,6 +65,7 @@ const useDragAndDropUtils = (elements, setElements) => {
   const onDragStart = (e, element, index) => {
     draggingElementRef.current = { element, index };
     setDragImageOnDragStart(e);
+    addOpacityOnDragStart(e);
   };
 
   const onDragEnter = (element, index) => {
@@ -77,6 +92,7 @@ const useDragAndDropUtils = (elements, setElements) => {
     draggingElementRef.current = null;
     draggedOverElementRef.current = null;
 
+    removeOpacityOnDragEnd(e);
     setTimeout(() => {
       setElements(tempElements);
       createDropAnimationOnDragEnd(e);
