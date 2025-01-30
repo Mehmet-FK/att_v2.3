@@ -8,6 +8,17 @@ import Accordion from "@/components/ui-components/Accordion";
 import ElementBadge from "../../common-form-elements/ElementBadge";
 import DragItemContainer from "../../common-form-elements/DragItemContainer";
 
+const AccordionRenderTest = ({ header }) => {
+  useEffect(() => {
+    console.log("AccordionRenderTest mounted >", header);
+    return () => {
+      console.log("AccordionRenderTest unmounted--->", header);
+    };
+  }, []);
+
+  return <div></div>;
+};
+
 const DraggableRecordViewField = ({
   index,
   recordViewField,
@@ -44,7 +55,6 @@ const DraggableRecordViewField = ({
       fieldCaption: selectedField.fieldCaption,
       groupName: selectedField.fieldGroupName,
     }));
-    console.log({ fieldFormValues });
   };
 
   const handleChange = (e) => {
@@ -66,7 +76,7 @@ const DraggableRecordViewField = ({
   };
 
   useEffect(() => {
-    setFieldFormValues(recordViewField);
+    setFieldFormValues((prev) => ({ ...prev, ...recordViewField }));
   }, [recordViewField.fieldId]);
 
   useEffect(() => {

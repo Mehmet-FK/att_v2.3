@@ -11,11 +11,14 @@ const Accordion = ({
   headerProps,
   bodyProps,
 }) => {
-  const defaultExpanded = accordionProps?.defaultExpanded !== undefined;
-  const expanded = accordionProps?.expanded !== undefined;
+  const isDefaultExpandedProvided =
+    accordionProps?.defaultExpanded !== undefined;
+  const defaultExpanded = accordionProps?.defaultExpanded;
+  const expanded = accordionProps?.expanded;
+  const isControlled = accordionProps?.onChange;
 
   const [accordionExpanded, setAccordionExpanded] = useState(
-    defaultExpanded ? defaultExpanded : expanded || false
+    isDefaultExpandedProvided ? defaultExpanded : expanded || false
   );
   const handleExpandToggle = () => setAccordionExpanded(!accordionExpanded);
 
@@ -24,12 +27,6 @@ const Accordion = ({
       setAccordionExpanded(false);
     }
   }, [children]);
-
-  const isControlled = useMemo(
-    () => accordionProps?.onChange,
-    [accordionProps]
-  );
-
   return (
     <MuiAccordion
       expanded={accordionExpanded}

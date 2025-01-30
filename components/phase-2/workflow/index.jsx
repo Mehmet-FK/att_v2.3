@@ -5,17 +5,15 @@ import ReactFlow, {
   ConnectionMode,
   useReactFlow,
 } from "reactflow";
-import nodeTypes from "./NodeTypes";
-import { useCallback, useEffect, useRef, useState } from "react";
+import nodeTypes from "@/components/phase-2/workflow/nodes/node-components/NodeTypes";
+import { useEffect, useState } from "react";
 import "reactflow/dist/style.css";
 import useWorkflow from "@/hooks/workflow-hooks/workflow-tool-hooks/useWorkflow";
-import edgeTypes from "./EdgeTypes";
+import edgeTypes from "@/components/phase-2/workflow/edges/EdgeTypes";
 import BottomDrawer from "./drawers/bottom-drawer";
 import ToolsDrawer from "./drawers/tools-drawer";
-import { useSelector } from "react-redux";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useRouter } from "next/router";
-import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 import RestoreWorkflowConfirmDialog from "./dialogs/RestoreWorkflowConfirmDialog";
 import useSessionStorage from "@/hooks/storage-hooks/useSessionStorage";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
@@ -67,6 +65,7 @@ const Sheet = ({ existingWorkflow }) => {
     isValidConnection,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
+    initializeWorkflowLabel,
   } = useWorkflow();
 
   const {
@@ -89,7 +88,7 @@ const Sheet = ({ existingWorkflow }) => {
 
   const onDrop = (e) => {
     e.preventDefault();
-
+    console.log({ nodes });
     const { viewType, launchTypeId, newNode } =
       addNodeAndUpdateHistoryOnDrop(e);
 
@@ -179,7 +178,6 @@ const Sheet = ({ existingWorkflow }) => {
         onNodeDragStop={(e, n) => onNodeDragStop(e, n, updateSelectedStep)}
         onNodesDelete={handleDeleteNode}
         onEdgesDelete={handleDeleteEdge}
-        // onNodeClick={(e, n) => updateSelectedStep(n.id)}
         onNodeClick={handleClickOnNode}
         onPaneClick={() => updateSelectedStep("")}
         isValidConnection={isValidConnection}

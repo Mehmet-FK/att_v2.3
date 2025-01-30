@@ -1,13 +1,8 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
-import {
-  // Accordion,
-  // AccordionDetails,
-  // AccordionSummary,
-  IconButton,
-} from "@mui/material";
+import { useMemo, useState } from "react";
+import { IconButton } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Accordion from "@/components/ui-components/Accordion";
 

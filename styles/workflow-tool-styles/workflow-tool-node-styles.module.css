@@ -7,6 +7,15 @@
   text-align: center;
 }
 
+.launch_group_node {
+  border: 1px solid red !important;
+  outline: 1px solid transparent !important;
+  display: flex;
+  height: 500px;
+  min-width: 200px;
+  min-height: 500px;
+}
+
 .node_body {
   padding: 0.5rem;
   border-radius: 8px;
@@ -22,6 +31,7 @@
   position: relative;
   outline-offset: 5px !important;
   transition: all 0.15s ease-in-out;
+  background-color: #fff;
 }
 
 .node_body div[data-handleid] {

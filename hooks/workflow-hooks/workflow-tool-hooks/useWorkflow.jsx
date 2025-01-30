@@ -11,7 +11,6 @@ import {
 } from "@/helpers/Constants";
 
 const KEY_WORKFLOW_LOCALSTORAGE = "atina-flow";
-const capacity = 100;
 const useWorkflow = () => {
   const { setViewport, getIntersectingNodes } = useReactFlow();
   const { restoreWorkflowState } = useWorkflowForms();
@@ -269,8 +268,10 @@ const useWorkflow = () => {
         return { viewType, launchTypeId, newNode: null };
 
       newNode = createNewLaunchNode(viewType, caption);
-    } else {
+    } else if (type === "view") {
       newNode = createNewReqularNode(viewType, caption, position);
+    } else {
+      return {};
     }
 
     setNodes((nds) => nds.concat(newNode));
@@ -426,7 +427,6 @@ const useWorkflow = () => {
     const parsedResponse = parseNodesAndEdgesFromString(nodes, edges);
 
     if (!parsedResponse.ok) return false;
-
     _setNodes(parsedResponse.nodes);
     _setEdges(parsedResponse.edges);
 
@@ -490,6 +490,18 @@ const useWorkflow = () => {
         _setEdges
       );
     }
+    // const wfCaption = existingWorkflow?.caption;
+    // initializeWorkflowLabel(wfCaption, _setNodes);
+  };
+
+  const initializeWorkflowLabel = (label, _setNodes) => {
+    _setNodes((nds) => {
+      console.log("before: ", nds);
+      const first = { ...nds[0], data: { label: label || "test" } };
+      const rest = nds.slice(1);
+      console.log("after: ", [first, ...rest]);
+      return [first, ...rest];
+    });
   };
 
   useEffect(() => {
@@ -516,6 +528,7 @@ const useWorkflow = () => {
     createNewReqularNode,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
+    initializeWorkflowLabel,
   };
 };
 
