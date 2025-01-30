@@ -50,7 +50,6 @@ const ScannerDialogFormBase = ({
 
     setScannerDialogValues(scannerDialogFormValue);
   }, [viewId]);
-
   return (
     <>
       <div className={css.form_container}>
@@ -101,15 +100,6 @@ const ScannerDialogFormBase = ({
             />
           </div>
           <div className={css.flex_row}>
-            {/* <CustomSelect
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={scannerDialogValues?.targetFiedId}
-              label="Target Field"
-              name="targetFiedId"
-              preferences={{ key: "id", caption: "caption" }}
-              options={entityFields}
-            /> */}
             <TextField
               onChange={handleChange}
               onBlur={handleBlur}
@@ -128,7 +118,8 @@ const ScannerDialogFormBase = ({
                 preferences: { key: "id", caption: "caption", image: "icon" },
                 options: workflowsForAutoCompleteSelect || [],
                 name: "inputDataSourceId",
-                value: scannerDialogValues?.inputDataSourceId || "",
+                value:
+                  JSON.stringify(scannerDialogValues?.inputDataSourceId) || "",
                 label: "Workflow für Manuelle Eingabe",
               }}
               helperProps={{
