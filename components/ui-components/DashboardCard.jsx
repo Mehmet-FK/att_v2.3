@@ -23,7 +23,9 @@ const Card = ({ cardInfo, additionalTitles }) => {
 
             <div style={{ display: "flex", gap: "2px", flexWrap: "wrap" }}>
               {cardInfo?.texts?.map((text) => (
-                <p className={css.card_helper_text}>{text} </p>
+                <p key={text} className={css.card_helper_text}>
+                  {text}{" "}
+                </p>
               ))}
             </div>
           </div>

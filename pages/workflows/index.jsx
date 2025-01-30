@@ -147,6 +147,7 @@ const Workflow = () => {
         <div className={css.gridContainer}>
           {existingWorkflows?.map((wf) => (
             <Card
+              key={wf.id}
               cardInfo={{
                 url: `/workflows/${wf.id}`,
                 texts: wf.path.split("/"),
@@ -154,7 +155,6 @@ const Workflow = () => {
                 defaultIconUrl: wf.icon,
               }}
               additionalTitles={[wf.name]}
-              key={wf.id}
             />
           ))}
         </div>

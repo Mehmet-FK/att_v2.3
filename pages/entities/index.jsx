@@ -36,20 +36,20 @@ const Entities = () => {
         <DashboardSearchBar
           itemsState={entities}
           setItemsState={setExistingEntities}
-          filterKeys={["caption"]}
+          filterKeys={["id", "name", "caption"]}
           addNewLink="/entities/new"
         />
         <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
           {existingEntities?.map((entity) => (
             <Card
+              key={entity.id}
               cardInfo={{
                 url: `/entities/${entity.id}`,
                 caption: `${entity.id} - ${entity.caption}`,
                 defaultIconUrl: entity.defaultIconPath,
               }}
               additionalTitles={[entity?.name]}
-              key={entity.id}
             />
           ))}
         </div>

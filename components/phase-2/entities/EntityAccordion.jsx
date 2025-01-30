@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
+import AutoCompleteSelect from "../workflow/forms/common-form-elements/AutoCompleteSelect";
+import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 
 const EntityAccordion = () => {
   const entityState = useSelector((state) => state.entity);
@@ -15,6 +17,7 @@ const EntityAccordion = () => {
   const [entityFormValues, setEntityFormValues] = useState({});
 
   const { views } = useSelector((state) => state.attensam.data); // DataSource
+  const { autoCompleteEntities } = useAutoCompleteEntities();
 
   const { getViewsCall } = useAttensamCalls();
   const { updateEntityValue } = useEntityForm();
@@ -90,21 +93,22 @@ const EntityAccordion = () => {
                 </MenuItem>
               ))}
             </Select>
-
-            <Select
-              label="DataSourceType"
-              name="dataSourceType"
-              value={entityFormValues?.dataSourceType?.toString() || ""}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              width="100%"
-            >
-              {[0, 1]?.map((opt, index) => (
-                <MenuItem key={index} value={opt}>
-                  {opt}
-                </MenuItem>
-              ))}
-            </Select>
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: { key: "id", caption: "caption" },
+                options: autoCompleteEntities || [],
+                name: "parentEntityId",
+                value: entityFormValues.parentEntityId || "",
+                label: "Parent Entity",
+              }}
+              helperProps={{
+                className: css.auto_complete_select,
+                fullWidth: true,
+                size: "small",
+              }}
+            />
           </div>
           <div className={css.flex_row}>
             <TextField
@@ -138,17 +142,33 @@ const EntityAccordion = () => {
               variant="outlined"
               fullWidth
             />
-            <CheckBox
-              label="isSystemEntity"
-              name="isSystemEntity"
-              checked={entityFormValues.isSystemEntity}
-              handleChange={handleChange}
-              onBlur={handleBlur}
-              size={"small"}
-              sx={{
-                width: "100%",
-              }}
-            />
+            <div className={css.flex_row}>
+              <Select
+                label="DataSourceType"
+                name="dataSourceType"
+                value={entityFormValues?.dataSourceType?.toString() || ""}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                width="100%"
+              >
+                {[0, 1]?.map((opt, index) => (
+                  <MenuItem key={index} value={opt}>
+                    {opt}
+                  </MenuItem>
+                ))}
+              </Select>
+              <CheckBox
+                label="isSystemEntity"
+                name="isSystemEntity"
+                checked={entityFormValues.isSystemEntity}
+                handleChange={handleChange}
+                onBlur={handleBlur}
+                size={"small"}
+                sx={{
+                  width: "100%",
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
