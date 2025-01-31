@@ -9,15 +9,17 @@ import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import LaunchElementForm from "../launch-element-from";
 import { workflowPermissionTypes } from "@/helpers/Enums";
+import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
+import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
 
-const WorkflowForm = ({
-  entitiesForAutoSelect,
-  workflowsForAutoCompleteSelect,
-}) => {
+const WorkflowForm = ({}) => {
   const workflowState = useSelector((state) => state.workflow);
   const [workflowFormValues, setWorkflowFormValues] = useState(workflowState);
 
   const { updateWorkflowValue } = useWorkflowForms();
+
+  const { autoCompleteEntities } = useAutoCompleteEntities();
+  const { autoCompleteWorkflows } = useAutoCompleteWorkflows();
 
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
@@ -84,7 +86,7 @@ const WorkflowForm = ({
                 title: "path",
                 filterKeys: ["id", "caption", "path"],
               },
-              options: workflowsForAutoCompleteSelect || [],
+              options: autoCompleteWorkflows || [],
               name: "parentWorkflowId",
               value: workflowFormValues?.parentWorkflowId || "",
               label: "Parent Workflow",
@@ -118,7 +120,7 @@ const WorkflowForm = ({
               handleChange: handleChange,
               handleBlur: handleBlur,
               preferences: { key: "id", caption: "caption" },
-              options: entitiesForAutoSelect,
+              options: autoCompleteEntities,
               name: "entityId",
               value: workflowFormValues?.entityId || "",
               label: "Entität",

@@ -84,7 +84,6 @@ const useAttensamCalls = () => {
         "/atina/api/Workflow/CreateAndUpdateWorkflow",
         formData
       );
-      console.log(data);
       toastSuccessNotify("Element wurde erfolgreich angelegt");
       responseFlag = true;
     } catch (error) {
@@ -130,8 +129,14 @@ const useAttensamCalls = () => {
       false
     );
   const getModulesCall = () => getAttData("/api/Modules", "modules", true);
-  const getSingleEntityCall = (id) =>
-    getAttData(`/api/Entity/${id}`, "entity", true);
+
+  const getRecordViewFields = (id) =>
+    getAttData(
+      `/atina/api/RecordView/GetRecordViewFields?recordViewId=${id}`,
+      "rv-fields",
+      false
+    );
+
   const getViewsCall = () =>
     getAttData("/api/DatabaseSchema/views", "views", true);
   const getViewColumnsCall = (view) =>
@@ -153,9 +158,6 @@ const useAttensamCalls = () => {
   const postFieldCall = (entityId, data) =>
     postAttData(`/api/Field/${entityId}`, data);
 
-  //TODO: Do not forget to delete
-  // const postWorkflowCall = (data) => console.log(data);
-
   //PUT
   const updateEntityCall = (id, data) => putAttData(`/api/Entity/${id}`, data);
   const updateFieldCall = (id, data) => putAttData(`/api/Field/${id}`, data);
@@ -170,18 +172,20 @@ const useAttensamCalls = () => {
 
     getWorkflowsCall,
     getWorkflowDefinitionsCall,
+    getEntityDefinitionsCall,
     getEntitiesCall,
-    getSingleEntityCall,
+
+    getRecordViewFields,
+
     getViewTypes,
     getLaunchTypes,
     getFieldTypes,
     getViewsCall,
     getViewColumnsCall,
     getModulesCall,
-    getEntityDefinitionsCall,
 
-    updateEntityCall,
     updateFieldCall,
+    updateEntityCall,
 
     deleteEntityCall,
     deleteFieldCall,

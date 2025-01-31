@@ -9,23 +9,22 @@ import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWork
 import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import ListViewFilterDefinitions from "./ListViewFilterDefinitions";
+import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 
-const ListViewForm = ({
-  stepID,
-  entitiesForAutoSelect,
-  workflowStepValues,
-}) => {
+const ListViewForm = ({ stepID, workflowStepValues }) => {
   const { listViewElements, listViews } = useSelector(
     (state) => state.workflow
   );
 
   const { entities } = useSelector((state) => state.attensam.data);
+  const { autoCompleteEntities } = useAutoCompleteEntities();
 
   const listView = useMemo(
     () => listViews.find((lv) => lv.workflowStepId === stepID),
     [stepID]
   );
   const [listViewValues, setListViewValues] = useState(listView);
+
   const viewId = useMemo(() => listView?.listViewId, [stepID]);
   const selectedEntityId = useMemo(
     () => listViewValues?.entityId,
@@ -45,7 +44,7 @@ const ListViewForm = ({
 
   const entityFields = useMemo(
     () => prepareEntityFields(entities, listViewValues?.entityId),
-    [listViewValues?.entityId]
+    [entities, listViewValues?.entityId]
   );
 
   const handleChange = (e) => {
@@ -96,7 +95,7 @@ const ListViewForm = ({
               handleChange: handleChange,
               handleBlur: handleBlur,
               preferences: { key: "id", caption: "caption" },
-              options: entitiesForAutoSelect,
+              options: autoCompleteEntities,
               name: "entityId",
               value: listViewValues?.entityId || "",
               label: "Entität",

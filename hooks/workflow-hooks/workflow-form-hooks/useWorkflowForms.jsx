@@ -54,25 +54,6 @@ import {
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-const initialWorkflowState = {
-  selectedStepID: "",
-
-  workflowName: "",
-  workflowCaption: "",
-  workflowIcon: "",
-  permissionType: "",
-  parentWorkflowId: "",
-  entityId: "",
-
-  launchElementName: "",
-  launchElementDescription: "",
-  launchElementType: "",
-
-  childAdapter: "",
-  parentAdapter: "",
-  workflowSteps: [],
-};
-
 const useWorkflowForms = () => {
   const dispatch = useDispatch();
   const workflow = useSelector((state) => state.workflow);
@@ -129,6 +110,8 @@ const useWorkflowForms = () => {
     dispatch(changeWorkflowValue({ value, name }));
   };
 
+  // WORKFLOW-STEP
+
   const createWorkflowStep = (stepID) => {
     const step = {
       workflowStepId: stepID,
@@ -152,6 +135,8 @@ const useWorkflowForms = () => {
     updateSelectedStep("");
   };
 
+  // LAUNCH-ELEMENT
+
   const createLaunchElementOnDrop = (launchType, workflowStepId) => {
     const template = {
       launchElementId: workflowStepId + "-launch",
@@ -172,6 +157,8 @@ const useWorkflowForms = () => {
   const deleteLaunchElement = (workflowStepId) => {
     dispatch(removeLaunchElement({ workflowStepId }));
   };
+
+  // LIST-VIEW-ELEMENT-ROW
 
   const createListViewElementRow = (listViewElementId) => {
     const template = {
@@ -201,6 +188,8 @@ const useWorkflowForms = () => {
     dispatch(removeListViewElementRowByRowId({ rowId: listViewElementRowId }));
   };
 
+  // LIST-VIEW-ELEMENT
+
   const createListViewElement = (listViewElementId) => {
     const template = {
       listViewElementId: listViewElementId,
@@ -221,6 +210,8 @@ const useWorkflowForms = () => {
     deleteListViewElementRowByElementId(listViewElementId);
     dispatch(removeListViewElement({ elementId: listViewElementId }));
   };
+
+  // LIST-VIEW
 
   const createListViewOnDrop = (workflowStepId) => {
     const listViewId = workflowStepId + "-listview";
@@ -367,6 +358,7 @@ const useWorkflowForms = () => {
     dispatch(changeAllRecordViewFunctions({ recordViewId, recordFunctions }));
   };
 
+  // VIEW-HEADER
   const createViewHeaderWithRowsAndColumns = (viewId, viewType, headerId) => {
     createViewHeader(viewId, viewType, headerId);
     createViewHeaderRow(headerId);
@@ -407,6 +399,7 @@ const useWorkflowForms = () => {
     );
   };
 
+  // VIEW-HEADER-ROW
   const createViewHeaderRow = (headerId) => {
     const rowId = generateRandomId("vhr-", null);
     const template = {
@@ -424,6 +417,7 @@ const useWorkflowForms = () => {
     dispatch(removeViewHeaderRow({ rowId }));
   };
 
+  // VIEW-HEADER-COLUMN
   const createViewHeaderColumn = (headerRowId) => {
     const columnId = () => generateRandomId("vhc-", null);
     const template = {
@@ -444,19 +438,17 @@ const useWorkflowForms = () => {
 
     dispatch(addViewHeaderColumn({ viewHeaderColumn: column }));
   };
-
   const updateViewHeaderColumnValue = (name, value, columnId) => {
     dispatch(changeViewHeaderColumnValue({ name, value, columnId }));
   };
-
   const deleteViewHeaderColumn = (columnId) => {
     dispatch(removeViewHeaderColumn({ columnId }));
   };
 
+  // SCANNER-DIALOG
   const createScannerDialog = (dialogTemplate) => {
     dispatch(addScannerDialog({ scannerDialog: dialogTemplate }));
   };
-
   const createScannerDialogNFC = (workflowStepId) => {
     const scannerDialogId = workflowStepId + "-scannerdialog";
     const headerId = scannerDialogId + "-vh";
@@ -465,13 +457,13 @@ const useWorkflowForms = () => {
       workflowStepId: workflowStepId,
       scannerType: scannerTypeConstants.NFC,
       scannerAction: 1,
-      targetFieldId: "",
+      targetFieldId: null,
       entityId: "",
       name: "",
       description: "",
       filterField: "",
       allowManualInput: true,
-      inputDataSourceId: "",
+      inputDataSourceId: null,
       headerId: headerId,
     };
     createWorkflowStep(workflowStepId);
@@ -489,25 +481,23 @@ const useWorkflowForms = () => {
       workflowStepId: workflowStepId,
       scannerType: scannerTypeConstants.QR_CODE,
       scannerAction: 1,
-      targetFieldId: "",
+      targetFieldId: null,
       entityId: "",
       name: "",
       description: "",
       filterField: "",
       allowManualInput: true,
-      inputDataSourceId: "",
+      inputDataSourceId: null,
       headerId: "",
     };
     createWorkflowStep(workflowStepId);
     createScannerDialog(template);
   };
-
   const updateScannerDialogValue = (name, value, scannerDialogId) => {
     dispatch(
       changeScannerDialogValue({ name, value, dialogId: scannerDialogId })
     );
   };
-
   const deleteScannerDialogNFC = (workflowStepId) => {
     const scannerDialogToDelete = findViewByStepId(
       scannerDialogs,
@@ -518,10 +508,11 @@ const useWorkflowForms = () => {
     deleteViewHeader(headerId);
     dispatch(removeScannerDialog({ stepId: workflowStepId }));
   };
-
   const deleteScannerDialogQR = (workflowStepId) => {
     dispatch(removeScannerDialog({ stepId: workflowStepId }));
   };
+
+  // MODAL-DIALOG
 
   const createModalDialog = (workflowStepId) => {
     const modalId = workflowStepId + "-modal";
@@ -547,6 +538,8 @@ const useWorkflowForms = () => {
   const deleteModalDialog = (workflowStepId) => {
     dispatch(removeModalDialog({ stepId: workflowStepId }));
   };
+
+  // TILE-VIEW
 
   const createTileViewOnDrop = () => {
     const viewId = workflowId;
@@ -620,11 +613,7 @@ const useWorkflowForms = () => {
     if (workflow) {
       dispatch(updateTotalWorkflow({ workflow }));
     } else {
-      dispatch(
-        updateTotalWorkflow({
-          workflow: initialWorkflowState,
-        })
-      );
+      clearWorkflowState();
     }
   };
 

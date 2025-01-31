@@ -7,7 +7,7 @@ import useAutoCompleteDataWorker from "@/hooks/worker-hooks/useAutoCompleteDataW
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import DraggableRecordViewFunction from "./DraggableRecordViewFunction";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
-import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-ui-hooks/useDragAndDropUtils";
+import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-utility-hooks/useDragAndDropUtils";
 
 const recordFunctionTemplate = {
   recordViewFunctionId: "",

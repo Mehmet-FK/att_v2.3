@@ -1,25 +1,26 @@
-import { Box, TextField } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { TextField } from "@mui/material";
 import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import CheckBox from "../common-form-elements/CheckBox";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import { scannerDialogActions } from "@/helpers/Enums";
-import { useSelector } from "react-redux";
+import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
+import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
 const ScannerDialogFormBase = ({
-  scannerDialog,
   viewId,
+  scannerDialogValues,
+  setScannerDialogValues,
   entityFields,
-  entitiesForAutoSelect,
-  workflowsForAutoCompleteSelect,
   workflowStepValues,
+  targetFieldOptions,
   children,
 }) => {
-  const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
-
   const { updateScannerDialogValue, updateWorkflowStepValue } =
     useWorkflowForms();
+
+  const { autoCompleteEntities } = useAutoCompleteEntities();
+  const { autoCompleteWorkflows } = useAutoCompleteWorkflows();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -42,14 +43,6 @@ const ScannerDialogFormBase = ({
     handleBlur(e);
   };
 
-  useEffect(() => {
-    const scannerDialogFormValue = {
-      ...scannerDialog,
-      name: workflowStepValues?.name,
-    };
-
-    setScannerDialogValues(scannerDialogFormValue);
-  }, [viewId]);
   return (
     <>
       <div className={css.form_container}>
@@ -80,7 +73,7 @@ const ScannerDialogFormBase = ({
                 handleChange: handleChange,
                 handleBlur: handleBlur,
                 preferences: { key: "id", caption: "caption" },
-                options: entitiesForAutoSelect,
+                options: autoCompleteEntities,
                 name: "entityId",
                 value: scannerDialogValues?.entityId || "",
                 label: "Entität",
@@ -100,26 +93,30 @@ const ScannerDialogFormBase = ({
             />
           </div>
           <div className={css.flex_row}>
-            <TextField
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={scannerDialogValues?.targetFieldId || ""}
-              variant="outlined"
-              size="medium"
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={scannerDialogValues?.targetFieldId || null}
               label="Target Field"
               name="targetFieldId"
-              type="number"
-              fullWidth
+              defaultValue={null}
+              preferences={{ key: "id", caption: "caption" }}
+              options={targetFieldOptions}
+              FormControlProps={{
+                disabled: !targetFieldOptions?.length,
+              }}
             />
             <AutoCompleteSelect
               mainProps={{
                 handleChange: handleChange,
                 handleBlur: handleBlur,
                 preferences: { key: "id", caption: "caption", image: "icon" },
-                options: workflowsForAutoCompleteSelect || [],
+                options: autoCompleteWorkflows || [],
                 name: "inputDataSourceId",
+                defaultValue: null,
                 value:
-                  JSON.stringify(scannerDialogValues?.inputDataSourceId) || "",
+                  JSON.stringify(scannerDialogValues?.inputDataSourceId) ||
+                  null,
                 label: "Workflow für Manuelle Eingabe",
               }}
               helperProps={{

@@ -140,29 +140,35 @@ const FieldPropertiesSection = ({ fieldID, setConfirmModalValues }) => {
   const propertyExists = properties?.length > 0 ? true : false;
 
   return (
-    <ElementBadge
-      handleClickOnBadge={addFieldProperty}
-      badgeContent={<AddBoxIcon color="primary" fontSize="small" />}
+    <div
+      style={{
+        width: "100%",
+      }}
     >
-      <Accordion
-        accordionProps={{
-          disabled: !propertyExists,
-        }}
-        header={"Feld Eigenschaften"}
+      <ElementBadge
+        handleClickOnBadge={addFieldProperty}
+        badgeContent={<AddBoxIcon color="primary" fontSize="small" />}
       >
-        {propertyExists && (
-          <div className={css.flex_wrap_row}>
-            {properties?.map((property) => (
-              <FieldProperty
-                key={property.listViewPropertyId}
-                property={property}
-                setConfirmModalValues={setConfirmModalValues}
-              />
-            ))}
-          </div>
-        )}
-      </Accordion>
-    </ElementBadge>
+        <Accordion
+          accordionProps={{
+            disabled: !propertyExists,
+          }}
+          header={"Feld Eigenschaften"}
+        >
+          {propertyExists && (
+            <div className={css.flex_wrap_row}>
+              {properties?.map((property) => (
+                <FieldProperty
+                  key={property.listViewPropertyId}
+                  property={property}
+                  setConfirmModalValues={setConfirmModalValues}
+                />
+              ))}
+            </div>
+          )}
+        </Accordion>
+      </ElementBadge>
+    </div>
   );
 };
 

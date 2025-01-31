@@ -8,12 +8,9 @@ import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import RecordViewFieldsModal from "./recordview-fields/RecordViewFieldsModal";
 import RecordViewFunctionsModal from "./recordview-functions/RecordViewFunctionsModal";
+import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 
-const RecordViewForm = ({
-  stepID,
-  entitiesForAutoSelect,
-  workflowStepValues,
-}) => {
+const RecordViewForm = ({ stepID, workflowStepValues }) => {
   const { recordViews } = useSelector((state) => state.workflow);
   const { entities } = useSelector((state) => state.attensam.data);
 
@@ -34,10 +31,11 @@ const RecordViewForm = ({
     prepareEntityFields,
   } = useWorkflowForms();
 
+  const { autoCompleteEntities } = useAutoCompleteEntities();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const inputValue = type === "checkbox" ? checked : value;
-
     setRecordViewValues((prev) => ({
       ...prev,
       [name]: inputValue,
@@ -55,21 +53,9 @@ const RecordViewForm = ({
     updateWorkflowStepValue(name, value, stepID);
   };
 
-  // const prepareEntityFields = () => {
-  //   const selectedEntity = entities?.find(
-  //     (entity) => entity.id == recordView?.entityId
-  //   );
-  //   if (!selectedEntity) return [];
-
-  //   return selectedEntity.fields.map((field) => ({
-  //     id: field.id,
-  //     caption: field.name,
-  //   }));
-  // };
-
   const entityFields = useMemo(
-    () => prepareEntityFields(entities, recordView?.entityId),
-    [recordView?.entityId, entities]
+    () => prepareEntityFields(entities, recordViewValues?.entityId),
+    [recordViewValues?.entityId, entities]
   );
 
   useEffect(() => {
@@ -113,7 +99,7 @@ const RecordViewForm = ({
                 handleChange: handleChange,
                 handleBlur: handleBlur,
                 preferences: { key: "id", caption: "caption" },
-                options: entitiesForAutoSelect,
+                options: autoCompleteEntities,
                 name: "entityId",
                 value: recordViewValues?.entityId || "",
                 label: "Entität",

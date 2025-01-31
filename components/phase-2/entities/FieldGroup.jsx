@@ -12,6 +12,7 @@ import EntitySortingSection from "./field-sections/EntitySortingSection";
 import FieldPropertiesSection from "./field-sections/FieldPropertiesSection";
 import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
+import FieldOptionsSection from "./field-options/FieldOptionsSection";
 
 const FieldGroup = ({ field, setConfirmModalValues }) => {
   const { viewColumns, fieldTypes } = useSelector(
@@ -207,10 +208,13 @@ const FieldGroup = ({ field, setConfirmModalValues }) => {
                 setConfirmModalValues={setConfirmModalValues}
               />
             </div>
-            <FieldPropertiesSection
-              fieldID={field.fieldId}
-              setConfirmModalValues={setConfirmModalValues}
-            />
+            <div className={css.flex_row} style={{ paddingTop: "10px" }}>
+              <FieldPropertiesSection
+                fieldID={field.fieldId}
+                setConfirmModalValues={setConfirmModalValues}
+              />
+              <FieldOptionsSection fieldID={field.fieldId} />
+            </div>
           </div>
         </div>
       </Accordion>

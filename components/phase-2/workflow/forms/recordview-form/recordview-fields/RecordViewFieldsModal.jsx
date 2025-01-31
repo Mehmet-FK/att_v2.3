@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import DraggableRecordViewField from "./DraggableRecordViewField";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
-import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-ui-hooks/useDragAndDropUtils";
+import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-utility-hooks/useDragAndDropUtils";
 
 const recordViewTemplate = {
   recordViewFieldId: "",

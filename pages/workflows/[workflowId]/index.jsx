@@ -37,11 +37,13 @@ const WorkflowTool = () => {
 
   useEffect(() => {
     if (router.query.workflowId === "new") {
-      clearWorkflowState();
+      // clearWorkflowState();
     } else {
       fetchWorkflowDefinition();
     }
-  }, [router.query.workflowId]);
+  }, []);
+  //! DANGER RESET THIS AFTER TESTING
+  // }, [router.query.workflowId]);
 
   useEffect(() => {
     getViewTypes();

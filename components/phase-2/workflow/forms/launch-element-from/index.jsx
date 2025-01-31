@@ -3,6 +3,7 @@ import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWork
 import { useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { TextField } from "@mui/material";
+import { parseClipboardText } from "@/helpers/readTextFile";
 
 const LaunchElementForm = () => {
   const { launchElements } = useSelector((state) => state.workflow);

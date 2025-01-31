@@ -10,7 +10,7 @@ const ElementBadge = ({
   badgeTitle,
   handleClickOnBadge,
   containerSx,
-  conteinerProps,
+  containerProps,
 }) => {
   const _badgeContent = badgeContent ? (
     badgeContent
@@ -49,7 +49,7 @@ const ElementBadge = ({
         },
         ...containerSx,
       }}
-      {...conteinerProps}
+      {...containerProps}
     >
       {children}
     </Badge>
