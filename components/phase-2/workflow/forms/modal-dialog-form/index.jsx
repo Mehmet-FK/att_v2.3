@@ -109,20 +109,6 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
             preferences={{ key: "id", caption: "caption" }}
             options={entityFieldsForAutoSelect || []}
           />
-          {/* <AutoCompleteSelect
-            mainProps={{
-              handleChange: handleChange,
-              handleBlur: handleBlur,
-              preferences: { key: "id", caption: "caption" },
-              options: entityFieldsForAutoSelect,
-              name: "fieldId",
-              value: modalDialogValues?.fieldId || "",
-              label: "Feld",
-            }}
-            helperProps={{
-              className: css.form_control,
-            }}
-          /> */}
 
           <TextField
             onChange={handleChange}

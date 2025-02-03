@@ -8,7 +8,7 @@ import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWork
 import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
-const WorkflowTool = () => {
+const WorkflowManager = () => {
   const dataRemote = useSelector((state) => state.attensam.data);
 
   const {
@@ -37,7 +37,7 @@ const WorkflowTool = () => {
 
   useEffect(() => {
     if (router.query.workflowId === "new") {
-      // clearWorkflowState();
+      clearWorkflowState();
     } else {
       fetchWorkflowDefinition();
     }
@@ -69,7 +69,7 @@ const WorkflowTool = () => {
   );
 };
 
-export default WorkflowTool;
+export default WorkflowManager;
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);

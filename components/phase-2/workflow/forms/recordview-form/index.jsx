@@ -101,8 +101,9 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
                 preferences: { key: "id", caption: "caption" },
                 options: autoCompleteEntities,
                 name: "entityId",
-                value: recordViewValues?.entityId || "",
+                value: recordViewValues?.entityId,
                 label: "Entität",
+                defaultValue: null,
               }}
               helperProps={{
                 className: css.form_control,

@@ -12,7 +12,6 @@ const ScannerDialogFormBase = ({
   scannerDialogValues,
   setScannerDialogValues,
   entityFields,
-  workflowStepValues,
   targetFieldOptions,
   children,
 }) => {
@@ -38,7 +37,8 @@ const ScannerDialogFormBase = ({
 
   const handleWorkflowStepBlur = (e) => {
     const { name, value } = e.target;
-    const stepID = workflowStepValues?.workflowStepId;
+    const stepID = scannerDialogValues?.workflowStepId;
+    console.log({ name, value, stepID });
     updateWorkflowStepValue(name, value, stepID);
     handleBlur(e);
   };
@@ -75,8 +75,9 @@ const ScannerDialogFormBase = ({
                 preferences: { key: "id", caption: "caption" },
                 options: autoCompleteEntities,
                 name: "entityId",
-                value: scannerDialogValues?.entityId || "",
+                value: scannerDialogValues?.entityId,
                 label: "Entität",
+                defaultValue: null,
               }}
               helperProps={{
                 className: css.form_control,
@@ -113,9 +114,9 @@ const ScannerDialogFormBase = ({
                 preferences: { key: "id", caption: "caption", image: "icon" },
                 options: autoCompleteWorkflows || [],
                 name: "inputDataSourceId",
-                defaultValue: null,
-                value: JSON.stringify(scannerDialogValues?.inputDataSourceId),
+                value: scannerDialogValues?.inputDataSourceId,
                 label: "Workflow für Manuelle Eingabe",
+                defaultValue: null,
               }}
               helperProps={{
                 className: css.form_control,

@@ -21,8 +21,10 @@ const DisplaySelectedForm = ({ selectedNode }) => {
     );
   };
 
-  const findWorkflowStepById = (_stepID) =>
-    workflowSteps.find((wfs) => wfs.workflowStepId === _stepID);
+  const findWorkflowStepById = (_stepID) => {
+    const step = workflowSteps.find((wfs) => wfs.workflowStepId === _stepID);
+    return step;
+  };
 
   const selectedWorkflowStep = useMemo(
     () => findWorkflowStepById(stepID),

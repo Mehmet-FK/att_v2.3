@@ -292,7 +292,7 @@ const useWorkflowForms = () => {
     const template = {
       recordViewId: recordViewId,
       workflowStepId: workflowStepId,
-      entityId: "",
+      entityId: null,
       headerId: headerId || "",
       isEditable: false,
       showMenue: true,

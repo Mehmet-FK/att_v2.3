@@ -16,7 +16,6 @@ export const AutoCompleteEntityProvider = ({ children }) => {
   useEffect(() => {
     if (entities && !autoCompleteEntities.length) {
       runWorker(entities);
-      console.log({ context_Run_Worker: entities[0] });
     }
   }, [entities]);
 

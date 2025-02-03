@@ -300,7 +300,7 @@ const useWorkflow = () => {
   const restoreExistingLaunchElement = (launchElement) => {
     const viewType = launchTypes.find(
       (lt) => lt.id === launchElement.launchType
-    ).type;
+    )?.type;
     const caption = viewType; //TODO: refoctoring is needed
     const nodeId = launchElement.workflowStepId;
     const newLaunchNode = createNewLaunchNode(viewType, caption, nodeId);
@@ -418,6 +418,101 @@ const useWorkflow = () => {
     }
   };
 
+  const matchNodesAndEdgesToWorkflowSteps = (existingWorkflow, nodes) => {
+    const {
+      launchElements,
+      scannerDialogs,
+      listViews,
+      recordViews,
+      modalDialogs,
+    } = existingWorkflow;
+
+    const nodesMap = Object.fromEntries(
+      nodes.map((node) => [node.viewType, { ...node }])
+    );
+
+    const scannerDialogsQR = scannerDialogs?.find(
+      (sc) => scannerType === scannerTypeConstants.QR_CODE
+    );
+    const scannerDialogsNFC = scannerDialogs?.find(
+      (sc) => scannerType === scannerTypeConstants.NFC
+    );
+
+    const launchElementType = launchTypes.find(
+      (lt) => lt.id === launchElements[0]?.launchType
+    )?.type;
+
+    const views = [
+      { elementType: launchElementType, elements: launchElements },
+      {
+        elementType: viewTypeConstants.SCANNER_DIALOG_QR,
+        elements: scannerDialogsQR,
+      },
+      {
+        elementType: viewTypeConstants.SCANNER_DIALOG_NFC,
+        elements: scannerDialogsNFC,
+      },
+      { elementType: viewTypeConstants.LISTVIEW, elements: listViews },
+      { elementType: viewTypeConstants.RECORDVIEW, elements: recordViews },
+      { elementType: viewTypeConstants.MODALDIALOG, elements: modalDialogs },
+    ];
+    const launchElementWrapperNode = nodes[0];
+
+    const updatedNodes = [launchElementWrapperNode];
+
+    views.forEach((view) => {
+      if (view.elements || view.elements?.length) {
+        view.elements?.forEach((element) => {
+          const stepId = element.workflowStepId;
+          const elementType = view.elementType;
+          nodesMap[elementType].id = stepId;
+          updatedNodes.push(nodesMap[elementType]);
+        });
+      }
+    });
+
+    return updatedNodes;
+  };
+
+  const updateEdgesAccordingToWorkflowSteps = (workflowSteps) => {
+    return workflowSteps.flatMap((wfs) =>
+      addEdge(
+        {
+          source: wfs.workflowStepId,
+          sourceHandle: "a",
+          target: wfs.nextStep,
+          targetHandle: "c",
+          type: "floating",
+          markerEnd: { type: MarkerType.ArrowClosed },
+          style: { strokeWidth: 2 },
+          sourceID: wfs.workflowStepId,
+          targetID: wfs.nextStep,
+        },
+        []
+      )
+    );
+  };
+
+  //TODO: Use it if new Logic does not work
+  // const matchNodesAndEdgesToWorkflowSteps = (existingWorkflow) => {
+  //   const { nodes, edges, workflowSteps } = existingWorkflow;
+  //   const parsedResponse = parseNodesAndEdgesFromString(nodes, edges);
+
+  //   const _nodes = parsedResponse.nodes;
+
+  //   if (!parsedResponse.ok) return false;
+
+  //   const sortedSteps = sortWorkflowSteps(workflowSteps);
+  //   const updatedNodes = updateNodesAccordingToWorkflowSteps(
+  //     sortedSteps,
+  //     _nodes
+  //   );
+
+  //   const updatedEdges = updateEdgesAccordingToWorkflowSteps(workflowSteps);
+
+  //   return { updatedNodes, updatedEdges };
+  // };
+
   const restoreExistingRemoteWorkflowByNodesAndEdges = (
     existingWorkflow,
     _setNodes,
@@ -427,8 +522,17 @@ const useWorkflow = () => {
     const parsedResponse = parseNodesAndEdgesFromString(nodes, edges);
 
     if (!parsedResponse.ok) return false;
-    _setNodes(parsedResponse.nodes);
-    _setEdges(parsedResponse.edges);
+
+    const updatedNodes = matchNodesAndEdgesToWorkflowSteps(
+      existingWorkflow,
+      parsedResponse.nodes
+    );
+    const updatedEdges = updateEdgesAccordingToWorkflowSteps(
+      existingWorkflow.workflowSteps
+    );
+
+    _setNodes(updatedNodes);
+    _setEdges(updatedEdges);
 
     return true;
   };
@@ -490,8 +594,6 @@ const useWorkflow = () => {
         _setEdges
       );
     }
-    // const wfCaption = existingWorkflow?.caption;
-    // initializeWorkflowLabel(wfCaption, _setNodes);
   };
 
   const initializeWorkflowLabel = (label, _setNodes) => {

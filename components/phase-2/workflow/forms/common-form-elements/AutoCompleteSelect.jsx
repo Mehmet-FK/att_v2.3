@@ -63,7 +63,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     const pseudoEvent = {
       target: {
         name: name,
-        value: "",
+        value: defaultValue !== undefined ? defaultValue : "",
         type: "auto-complete",
         checked: false,
       },

@@ -97,8 +97,9 @@ const ListViewForm = ({ stepID, workflowStepValues }) => {
               preferences: { key: "id", caption: "caption" },
               options: autoCompleteEntities,
               name: "entityId",
-              value: listViewValues?.entityId || "",
+              value: listViewValues?.entityId,
               label: "Entität",
+              defaultValue: null,
             }}
             helperProps={{
               className: css.form_control,

@@ -137,6 +137,9 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
+    console.log({ _edges, _nodes });
+    // //TODO: DELETE return below
+    // return;
     postWorkflowCall(workflowToPost).then((res) =>
       res ? router.push("/workflows") : null
     );

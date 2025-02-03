@@ -16,7 +16,6 @@ export const AutoCompleteWorkflowProvider = ({ children }) => {
   useEffect(() => {
     if (workflows && !autoCompleteWorkflows.length) {
       runWorker(workflows);
-      console.log({ context_Run_Worker: workflows[0] });
     }
   }, [workflows]);
 
