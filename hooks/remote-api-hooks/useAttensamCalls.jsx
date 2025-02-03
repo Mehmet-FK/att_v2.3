@@ -11,7 +11,6 @@ import useAxios from "./useAxios";
 
 const useAttensamCalls = () => {
   const { axiosWithToken, axiosFormData } = useAxios();
-  const { token } = useSelector((state) => state.settings.user);
   const dispatch = useDispatch();
 
   //BASE GET CALL
@@ -65,6 +64,7 @@ const useAttensamCalls = () => {
   const postAttData = async (url, formData) => {
     try {
       const { data } = await axiosFormData.post(url, formData);
+
       toastSuccessNotify("Element wurde erfolgreich angelegt");
     } catch (error) {
       toastErrorNotify(error?.response?.data);
@@ -80,10 +80,12 @@ const useAttensamCalls = () => {
 
     try {
       console.log({ POST_Workflow: formData });
+
       const { data } = await axiosWithToken.post(
         "/atina/api/Workflow/CreateAndUpdateWorkflow",
         formData
       );
+      console.log(data);
       toastSuccessNotify("Element wurde erfolgreich angelegt");
       responseFlag = true;
     } catch (error) {

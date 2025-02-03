@@ -137,7 +137,6 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    console.log({ workflowToPost });
     postWorkflowCall(workflowToPost).then((res) =>
       res ? router.push("/workflows") : null
     );

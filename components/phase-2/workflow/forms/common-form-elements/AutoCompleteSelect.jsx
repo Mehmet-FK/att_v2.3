@@ -16,8 +16,16 @@ import { useEffect, useMemo, useState } from "react";
  * caption: key to select property to show to the User
  */
 const AutoCompleteSelect = ({ mainProps, helperProps }) => {
-  const { handleChange, handleBlur, preferences, options, name, value, label } =
-    mainProps;
+  const {
+    handleChange,
+    handleBlur,
+    preferences,
+    options,
+    name,
+    value,
+    label,
+    defaultValue,
+  } = mainProps;
   const [inputValue, setInputValue] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
 
@@ -26,6 +34,15 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const optImage = preferences.image;
   const optTitle = preferences?.title;
   const optFilterKeys = preferences?.filterKeys;
+
+  const validateValue = (value) => {
+    if (typeof value === "number" || value) {
+      return value;
+    } else {
+      return defaultValue !== undefined ? defaultValue : "";
+    }
+  };
+
   const handleChangeLocal = (newValue) => {
     const pseudoEvent = {
       target: {
@@ -93,7 +110,10 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   return (
     <Autocomplete
       {...helperProps}
-      value={selectedValue || ""}
+      value={
+        validateValue(selectedValue)
+        // selectedValue || (defaultValue !== undefined && defaultValue) || ""
+      }
       onChange={(event, newValue) => handleChangeLocal(newValue)}
       getOptionKey={(opt) => opt.id}
       filterOptions={filterOptions}

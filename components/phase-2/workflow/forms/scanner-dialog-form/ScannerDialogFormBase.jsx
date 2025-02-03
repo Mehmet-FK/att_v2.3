@@ -114,9 +114,7 @@ const ScannerDialogFormBase = ({
                 options: autoCompleteWorkflows || [],
                 name: "inputDataSourceId",
                 defaultValue: null,
-                value:
-                  JSON.stringify(scannerDialogValues?.inputDataSourceId) ||
-                  null,
+                value: JSON.stringify(scannerDialogValues?.inputDataSourceId),
                 label: "Workflow für Manuelle Eingabe",
               }}
               helperProps={{
