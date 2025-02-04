@@ -19,7 +19,9 @@ const ListViewElement = ({ element, entityFields }) => {
     confirmFunction: null,
   });
 
-  const { listViewElementRows } = useSelector((state) => state.workflow);
+  const listViewElementRows = useSelector(
+    (state) => state.workflow.listViewElementRows
+  );
 
   const { createListViewElementRow, updateListViewElementValue } =
     useWorkflowForms();

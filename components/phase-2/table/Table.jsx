@@ -49,8 +49,6 @@ const Table = () => {
     columnOptions,
   } = useTable(module);
 
-  // const { loading } = useSelector((state) => state.attensam);
-
   const { paginationParams, sortingParams, filterParams, columnWidths } =
     useSelector(
       (state) => state.tableUtils[module] || state.tableUtils.tableTemplate
@@ -61,28 +59,6 @@ const Table = () => {
   const extractHeaders = (data) => {
     return Object.keys(data).filter((el) => data[el].isVisible);
   };
-
-  // useLayoutEffect(() => {
-  //   const dataArray = [
-  //     dummyDataItems,
-  //     dummyDataBookings,
-  //     dummyData1,
-  //     dummyData1,
-  //     dummyDataBookings,
-  //     dummyData1,
-  //     dummyDataItems,
-  //     dummyDataItems,
-  //   ];
-  //   const randomIndex = Math.floor(Math.random() * 8);
-  //   const data = dataArray[randomIndex];
-  //   setTimeout(() => {
-  //     setDataSets(data);
-  //   }, 500);
-  //   if (data) {
-  //     const extractedHeaders = extractHeaders(data.fields);
-  //     setHeaders(extractedHeaders);
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (!dataSets?.fields) return;

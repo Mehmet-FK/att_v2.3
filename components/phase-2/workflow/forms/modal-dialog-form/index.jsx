@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import CustomSelect from "../common-form-elements/CustomSelect";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { TextField } from "@mui/material";
-import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 
 const ModalDialogForm = ({ stepID, workflowStepValues }) => {
-  const { modalDialogs, entityId } = useSelector((state) => state.workflow);
+  const modalDialogs = useSelector((state) => state.workflow.modalDialogs);
+  const entityId = useSelector((state) => state.workflow.entityId);
   const entities = useSelector((state) => state.attensam.data?.entities);
 
   const viewId = useMemo(() => stepID + "-modal", [stepID]);

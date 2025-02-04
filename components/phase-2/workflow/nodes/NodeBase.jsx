@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import NodeHandles from "./node-components/Handles";
 
 const NodeBase = ({ data, isConnectable, shape }) => {
-  const { selectedStepId } = useSelector((state) => state.workflow);
+  const selectedStepId = useSelector((state) => state.workflow.selectedStepId);
 
   const isNodeSelected = useMemo(
     () => selectedStepId === data.nodeId,

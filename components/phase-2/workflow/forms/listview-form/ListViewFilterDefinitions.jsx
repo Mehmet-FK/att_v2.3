@@ -85,7 +85,9 @@ const ListViewFilterDefinitions = ({ listViewId, entityFields }) => {
     confirmFunction: null,
   });
 
-  const { listViewFilterDefinitions } = useSelector((state) => state.workflow);
+  const listViewFilterDefinitions = useSelector(
+    (state) => state.workflow.listViewFilterDefinitions
+  );
 
   const {
     createListViewFilterDefinition,

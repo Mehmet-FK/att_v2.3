@@ -12,7 +12,6 @@ import LoadingButton from "@mui/lab/LoadingButton";
 const Login = () => {
   const [inputVal, setInputVal] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const { error, errorMsg } = useSelector((state) => state.attensam);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();

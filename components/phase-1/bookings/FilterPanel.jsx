@@ -43,12 +43,13 @@ const bookingsFilterParams = {
 
 const BookingsFilter = ({ setTriggerAPICall }) => {
   const { filterBookings, resetFilter } = useFilters();
-  // const { bookingTypes } = useSelector((state) => state.atina);
   const [open, setOpen] = useState(false);
 
   const [filterVal, setFilterVal] = useState(bookingsFilterParams);
 
-  const { bookingTypes } = useSelector((state) => state.attensam.data);
+  const bookingTypes = useSelector(
+    (state) => state.attensam.data?.bookingTypes
+  );
   const { getBookingTypes } = useTableDataCalls();
 
   const handleFilter = (e) => {

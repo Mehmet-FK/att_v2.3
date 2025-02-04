@@ -45,7 +45,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const SessionExpiredModal = () => {
-  const { sessionExpired } = useSelector((state) => state.settings);
+  const sessionExpired = useSelector((state) => state.settings.sessionExpired);
   const handleNavigateToLogin = () => {
     signOut();
   };

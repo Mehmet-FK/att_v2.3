@@ -3,7 +3,8 @@ import { Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const LaunchGroupNode = () => {
-  const { workflowId, caption } = useSelector((state) => state.workflow);
+  const caption = useSelector((state) => state.workflow.caption);
+  const workflowId = useSelector((state) => state.workflow.workflowId);
 
   return (
     <div

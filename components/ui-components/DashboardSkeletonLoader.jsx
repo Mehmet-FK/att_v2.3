@@ -20,7 +20,7 @@ const SkeletonCard = () => {
 };
 
 const DashboardSkeletonLoader = () => {
-  const { loading } = useSelector((state) => state.attensam);
+  const loading = useSelector((state) => state.attensam.loading);
   const mockArray = Array(25).fill(null);
 
   return (

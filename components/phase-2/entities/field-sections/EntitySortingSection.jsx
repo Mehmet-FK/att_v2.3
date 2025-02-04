@@ -9,7 +9,7 @@ import CustomSelect from "../../workflow/forms/common-form-elements/CustomSelect
 import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
 
 const EntitySortingSection = ({ fieldID, setConfirmModalValues }) => {
-  const { entitySortings } = useSelector((state) => state.entity);
+  const entitySortings = useSelector((state) => state.entity.entitySortings);
   const sortingRule = useMemo(
     () => entitySortings.find((rule) => rule.fieldId === fieldID),
     [entitySortings]

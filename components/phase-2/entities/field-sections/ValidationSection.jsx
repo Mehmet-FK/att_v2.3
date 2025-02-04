@@ -11,7 +11,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
 
 const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
-  const { fieldValidations } = useSelector((state) => state.entity);
+  const fieldValidations = useSelector(
+    (state) => state.entity.fieldValidations
+  );
 
   const validation = useMemo(
     () => fieldValidations.find((v) => v.fieldId === fieldID),

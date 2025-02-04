@@ -10,7 +10,6 @@ import { SessionProvider, getSession } from "next-auth/react";
 import store from "@/redux/app/store";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/ui-components/Loading";
-import SessionHandler from "@/components/handlers/SessionHandler";
 import SessionExpiredModal from "@/components/ui-components/SessionExpiredModal";
 // import Providers from "@/redux/Provider";
 

@@ -3,7 +3,7 @@ import css from "@/styles/workflow-forms-styles/list-view-form.module.css";
 import ViewHeaderForm from "../header-form";
 
 const TileViewForm = () => {
-  const { workflowId } = useSelector((state) => state.workflow);
+  const workflowId = useSelector((state) => state.workflow.workflowId);
 
   return (
     <div className={css.form_container}>

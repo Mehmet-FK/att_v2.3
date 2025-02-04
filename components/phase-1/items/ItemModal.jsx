@@ -6,7 +6,6 @@ import { itemTableTypeConstants } from "@/helpers/Constants";
 
 const ItemsModal = ({ setOpenItemsModal, openItemsModal, item, type }) => {
   const [inputVal, setInputVal] = useState(item ? item : {});
-  // const { user } = useSelector((state) => state.settings);
 
   const handleClose = () => {
     setOpenItemsModal(false);
