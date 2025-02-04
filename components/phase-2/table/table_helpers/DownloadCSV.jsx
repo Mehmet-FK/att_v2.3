@@ -13,8 +13,6 @@ const DownloadCSV = ({ rawData, fileName, type, table }) => {
 
   const { axiosTableDataPhase2 } = useAxios();
 
-  //* const { data } = useSelector((state) => state.attensam);
-
   const { filterParams } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
