@@ -19,7 +19,7 @@ const UserInfoTab = ({
   setInputVal,
   setOpenPasswordDialog,
 }) => {
-  const { user } = useSelector((state) => state.settings);
+  const user = useSelector((state) => state.settings.user);
   const handleChange = (e) => {
     if (!user?.isAdministrator) return;
     setInputVal({ ...inputVal, [e.target.name]: e.target.value });

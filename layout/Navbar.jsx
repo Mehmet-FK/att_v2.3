@@ -12,7 +12,7 @@ import { useState } from "react";
 const Navbar = ({ handleDrawerOpen, toggleTheme, open }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const { user } = useSelector((state) => state.settings);
+  const user = useSelector((state) => state.settings.user);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

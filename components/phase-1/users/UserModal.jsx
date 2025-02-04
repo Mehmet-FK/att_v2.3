@@ -37,12 +37,10 @@ const UserModal = ({ setOpenUserModal, openUserModal, userInfo }) => {
   const [inputVal, setInputVal] = useState(userInfo);
   const [roleIds, setRoleIds] = useState(userInfo?.roles);
   // const user = { isAdmin: true };
-  const { user } = useSelector((state) => state.settings);
+  const user = useSelector((state) => state.settings.user);
   // To keep the value of which tab is selected
   const [tab, setTab] = useState("Allgemein");
   const [tabValue, setTabValue] = useState(0);
-
-  // const { client, settlement } = useSelector((state) => state.atina);
 
   const { putUserData, postUserData } = useTableDataCalls();
 

@@ -66,7 +66,7 @@ const nfcRoleDefinitions = [
 const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
   const subWorkflows = workflow.workflows;
   const [expanded, setExpanded] = useState(false);
-  const { user } = useSelector((state) => state.settings);
+  const user = useSelector((state) => state.settings.user);
 
   const checkAllSubWorkflows = (workflow, idArray) => {
     const subWorkflows = workflow.workflows;
@@ -182,7 +182,7 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
 };
 
 const RolesList_phase2 = ({ inputVal, setInputVal }) => {
-  const { userRoles } = useSelector((state) => state.attensam.data);
+  const userRoles = useSelector((state) => state.attensam.data?.userRoles);
 
   const roleIds = inputVal.roleIds;
 

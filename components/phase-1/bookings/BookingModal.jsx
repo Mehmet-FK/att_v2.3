@@ -16,7 +16,9 @@ import { useSelector } from "react-redux";
 import css from "@/styles/modals.module.css";
 
 const BookingModal = ({ setOpenBookingModal, openBookingModal, booking }) => {
-  const { bookingTypes } = useSelector((state) => state.attensam.data);
+  const bookingTypes = useSelector(
+    (state) => state.attensam.data?.bookingTypes
+  );
   const handleClose = () => {
     setOpenBookingModal(false);
   };

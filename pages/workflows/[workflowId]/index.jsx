@@ -9,7 +9,10 @@ import { useSelector } from "react-redux";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 
 const WorkflowManager = () => {
-  const dataRemote = useSelector((state) => state.attensam.data);
+  const entitiesRemote = useSelector((state) => state.attensam.data?.entities);
+  const workflowsRemote = useSelector(
+    (state) => state.attensam.data?.workflows
+  );
 
   const {
     getWorkflowDefinitionsCall,
@@ -48,11 +51,11 @@ const WorkflowManager = () => {
   useEffect(() => {
     getViewTypes();
     getLaunchTypes();
-    if (!dataRemote?.entities) {
+    if (!entitiesRemote) {
       getEntitiesCall();
     }
 
-    if (!dataRemote?.workflows) {
+    if (!workflowsRemote) {
       getWorkflowsCall();
     }
   }, []);

@@ -51,7 +51,7 @@ const BookingsTable = () => {
   } = useTable(tableNameConstants.BOOKINGS);
 
   const bookings = useSelector((state) => state.attensam?.data?.bookings); // Bookings Data From Redux Store
-  const { loading } = useSelector((state) => state.attensam);
+  const loading = useSelector((state) => state.attensam.loading);
 
   const { paginationParams, sortingParams, filterParams, columnWidths } =
     useSelector(

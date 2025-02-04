@@ -67,7 +67,7 @@ const drawerListAdmin = [
 const LayoutDrawer = ({ open, handleDrawerClose }) => {
   const theme = useTheme();
 
-  const { user } = useSelector((state) => state.settings);
+  const user = useSelector((state) => state.settings.user);
 
   return (
     <Drawer variant="permanent" open={open}>

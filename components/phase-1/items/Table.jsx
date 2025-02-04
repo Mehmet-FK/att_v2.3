@@ -58,7 +58,7 @@ const ItemsTable = () => {
   } = useTable(tableNameConstants.ITEMS);
 
   const items = useSelector((state) => state.attensam?.data?.items); // Items Data From Redux Store
-  const { loading } = useSelector((state) => state.attensam);
+  const loading = useSelector((state) => state.attensam.loading);
   const { paginationParams, sortingParams, filterParams, columnWidths } =
     useSelector(
       (state) => state.tableUtils?.items || state.tableUtils.tableTemplate

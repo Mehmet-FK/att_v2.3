@@ -34,7 +34,8 @@ const BottomDrawer = ({
     confirmFunction: null,
   });
 
-  const { selectedStepId, workflowId } = useSelector((state) => state.workflow);
+  const workflowId = useSelector((state) => state.workflow.workflowId);
+  const selectedStepId = useSelector((state) => state.workflow.selectedStepId);
 
   const resizeStartHeightRef = useRef(null);
   const selectedNodeStoreRef = useRef(selectedStepId);

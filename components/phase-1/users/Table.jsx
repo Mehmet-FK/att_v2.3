@@ -69,8 +69,8 @@ const UsersTable = () => {
   } = useTable(tableNameConstants.USERS);
 
   const users = useSelector((state) => state.attensam?.data?.users); // Users Data From Redux Store
-  const { user } = useSelector((state) => state.settings);
-  const { loading } = useSelector((state) => state.attensam);
+  const user = useSelector((state) => state.settings.user);
+  const loading = useSelector((state) => state.attensam?.loading);
 
   const { paginationParams, sortingParams, filterParams, columnWidths } =
     useSelector(

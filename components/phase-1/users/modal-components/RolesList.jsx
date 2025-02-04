@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { userRoles } from "@/helpers/Constants";
 
 const RolesList = ({ inputVal, setInputVal, roleIds, setRoleIds }) => {
-  const { roles } = useSelector((state) => state.settings.user);
   const user = { isAdmin: false };
 
   const handleClick = (e) => {

@@ -39,7 +39,9 @@ const RecordViewFieldsModal = ({
     confirmFunction: null,
   });
 
-  const { recordViewFields } = useSelector((state) => state.workflow);
+  const recordViewFields = useSelector(
+    (state) => state.workflow.recordViewFields
+  );
 
   const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
     fields,

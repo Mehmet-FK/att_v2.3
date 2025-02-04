@@ -124,7 +124,7 @@ const FieldProperty = ({ property, setConfirmModalValues }) => {
 };
 
 const FieldPropertiesSection = ({ fieldID, setConfirmModalValues }) => {
-  const { fieldProperties } = useSelector((state) => state.entity);
+  const fieldProperties = useSelector((state) => state.entity.fieldProperties);
 
   const properties = useMemo(
     () => fieldProperties.filter((property) => property.fieldID === fieldID),

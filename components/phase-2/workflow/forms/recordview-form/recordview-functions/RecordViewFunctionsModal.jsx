@@ -26,7 +26,9 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
     confirmFunction: null,
   });
 
-  const { recordViewFunctions } = useSelector((state) => state.workflow);
+  const recordViewFunctions = useSelector(
+    (state) => state.workflow.recordViewFunctions
+  );
 
   const { generateRandomId, updateAllRecordViewFunctions } = useWorkflowForms();
 

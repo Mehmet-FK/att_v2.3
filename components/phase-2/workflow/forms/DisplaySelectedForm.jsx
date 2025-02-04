@@ -9,7 +9,7 @@ import ModalDialogForm from "./modal-dialog-form";
 import WorkflowForm from "./workflow-form";
 
 const DisplaySelectedForm = ({ selectedNode }) => {
-  const { workflowSteps } = useSelector((state) => state.workflow);
+  const workflowSteps = useSelector((state) => state.workflow.workflowSteps);
 
   const viewType = selectedNode?.viewType;
   const stepID = selectedNode?.id;
@@ -20,7 +20,6 @@ const DisplaySelectedForm = ({ selectedNode }) => {
       viewType === viewTypeConstants.SCANNER_DIALOG_QR
     );
   };
-
   const findWorkflowStepById = (_stepID) => {
     const step = workflowSteps.find((wfs) => wfs.workflowStepId === _stepID);
     return step;

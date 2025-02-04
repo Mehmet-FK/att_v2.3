@@ -1,12 +1,11 @@
 import css from "@/styles/workflow-forms-styles/workflow-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
-import { parseClipboardText } from "@/helpers/readTextFile";
 
 const LaunchElementForm = () => {
-  const { launchElements } = useSelector((state) => state.workflow);
+  const launchElements = useSelector((state) => state.workflow.launchElements);
 
   const { updateLaunchElementValue, updateWorkflowStepValue } =
     useWorkflowForms();

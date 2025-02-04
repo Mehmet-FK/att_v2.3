@@ -16,7 +16,7 @@ const ListViewForm = ({ stepID, workflowStepValues }) => {
     (state) => state.workflow
   );
 
-  const { entities } = useSelector((state) => state.attensam.data);
+  const entities = useSelector((state) => state.attensam.data?.entities);
   const { autoCompleteEntities } = useAutoCompleteEntities();
 
   const listView = useMemo(

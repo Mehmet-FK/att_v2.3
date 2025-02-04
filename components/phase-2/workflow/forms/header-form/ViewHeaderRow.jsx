@@ -6,7 +6,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useMemo } from "react";
 const ViewHeaderRow = ({ rowId, entityFields, setConfirmModalValues }) => {
-  const { headerColumns } = useSelector((state) => state.workflow);
+  const headerColumns = useSelector((state) => state.workflow.headerColumns);
   const { createViewHeaderColumn, deleteViewHeaderRow } = useWorkflowForms();
 
   const openConfirmModalToDelete = () => {

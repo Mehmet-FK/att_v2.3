@@ -16,7 +16,7 @@ const EntityAccordion = () => {
 
   const [entityFormValues, setEntityFormValues] = useState({});
 
-  const { views } = useSelector((state) => state.attensam.data); // DataSource
+  const views = useSelector((state) => state.attensam.data?.views); // DataSource
   const { autoCompleteEntities } = useAutoCompleteEntities();
 
   const { getViewsCall } = useAttensamCalls();

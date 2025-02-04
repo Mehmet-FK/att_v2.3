@@ -11,8 +11,8 @@ import RecordViewFunctionsModal from "./recordview-functions/RecordViewFunctions
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 
 const RecordViewForm = ({ stepID, workflowStepValues }) => {
-  const { recordViews } = useSelector((state) => state.workflow);
-  const { entities } = useSelector((state) => state.attensam.data);
+  const recordViews = useSelector((state) => state.workflow.recordViews);
+  const entities = useSelector((state) => state.attensam.data?.entities);
 
   const recordView = useMemo(
     () => recordViews.find((rv) => rv.workflowStepId === stepID),

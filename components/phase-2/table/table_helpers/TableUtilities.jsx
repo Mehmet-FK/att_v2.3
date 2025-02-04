@@ -12,7 +12,7 @@ const TableUtilities = ({
   paginationParams,
   rawData,
 }) => {
-  const { loading } = useSelector((state) => state.attensam);
+  const loading = useSelector((state) => state.attensam.loading);
   const router = useRouter();
   let table = router.query.module;
 

@@ -5,7 +5,9 @@ import SyncProblemIcon from "@mui/icons-material/SyncProblem";
 import { useSelector } from "react-redux";
 
 const useColumns = () => {
-  const { bookingTypes } = useSelector((state) => state.attensam.data);
+  const bookingTypes = useSelector(
+    (state) => state.attensam.data?.bookingTypes
+  );
 
   const PROTOCOL_TABLE_COLUMNS = [
     {
