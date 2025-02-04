@@ -42,7 +42,6 @@ const DashboardSearchBar = ({
   const debouncedFilter = useCallback(
     debounce((term) => {
       const result = filterItems(itemsState, term);
-      console.log({ term, result });
       setItemsState(result);
     }, 300),
     [itemsState]

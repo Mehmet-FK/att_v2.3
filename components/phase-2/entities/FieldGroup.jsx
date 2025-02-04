@@ -14,11 +14,17 @@ import ElementBadge from "../workflow/forms/common-form-elements/ElementBadge";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 import FieldOptionsSection from "./field-options/FieldOptionsSection";
 
+const optionTypesForSelect = [
+  { id: 0, caption: "Benutzerdefiniert" },
+  { id: 1, caption: "Auswahl" },
+  { id: 2, caption: "Mehrfachauswahl" },
+];
+
 const FieldGroup = ({ field, setConfirmModalValues }) => {
   const { viewColumns, fieldTypes } = useSelector(
     (state) => state.attensam.data
   );
-  const [fieldForm, setFieldForm] = useState(field);
+  const [fieldForm, setFieldForm] = useState({ ...field, optionType: 0 });
 
   const { autoCompleteEntities } = useAutoCompleteEntities();
 
@@ -175,27 +181,39 @@ const FieldGroup = ({ field, setConfirmModalValues }) => {
             />
           </div>
           <div className={css.flex_row}>
-            <CheckBox
-              name="showMobile"
-              checked={fieldForm.showMobile}
+            <CustomSelect
               handleChange={handleChange}
-              handleBlur={handleBlur}
-              label="Show Mobile"
+              value={fieldForm.optionType || 0}
+              label="Optionstyp"
+              name="optionType"
+              preferences={{ key: "id", caption: "caption" }}
+              options={optionTypesForSelect}
+              size={"small"}
             />
-            <CheckBox
-              name="isReadOnly"
-              checked={fieldForm.isReadOnly}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              label="isReadOnly"
-            />
-            <CheckBox
-              name="showByDefault"
-              checked={fieldForm.showByDefault}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              label="showByDefault"
-            />
+            <div className={css.flex_row}>
+              <CheckBox
+                name="showMobile"
+                checked={fieldForm.showMobile}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                label="Show Mobile"
+              />
+              <CheckBox
+                name="isReadOnly"
+                checked={fieldForm.isReadOnly}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                label="isReadOnly"
+              />
+              <CheckBox
+                name="showByDefault"
+                checked={fieldForm.showByDefault}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                label="showByDefault"
+              />
+            </div>
+            <div className={css.flex_row} />
           </div>
           <div className={css.flex_column} style={{ rowGap: "20px" }}>
             <div className={css.flex_row} style={{ paddingTop: "10px" }}>
@@ -213,7 +231,11 @@ const FieldGroup = ({ field, setConfirmModalValues }) => {
                 fieldID={field.fieldId}
                 setConfirmModalValues={setConfirmModalValues}
               />
-              <FieldOptionsSection fieldID={field.fieldId} />
+              <FieldOptionsSection
+                fieldID={field.fieldId}
+                optionType={fieldForm.optionType}
+                setConfirmModalValues={setConfirmModalValues}
+              />
             </div>
           </div>
         </div>

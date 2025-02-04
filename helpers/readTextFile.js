@@ -1,47 +1,71 @@
-const createRows = (text) => {
-  return text
-    .replace(/"((?:[^"]*(?:\r\n|\n\r|\n|\r))+[^"]+)"/gm, (match, p1) => {
+const createObjectsFromText = (text) => {
+  const rows = text
+    .replace(/"((?:[^"]*(?:\r\n|\n\r|\n|\r))+[^"]+)"/gm, function (match, p1) {
       return p1.replace(/""/g, '"').replace(/\r\n|\n\r|\n|\r/g, " ");
     })
     .split(/\r\n|\n\r|\n|\r/g);
-};
 
-const fetchText = async () => {
-  fetch("myText.txt")
-    .then((res) => res.text())
-    .then((text) => {
-      // do something with "text"
-      console.log({ rawText: text });
-
-      const editedText = createRows(text);
-      console.log({ editedText });
+  return rows
+    .map((r) => {
+      const [value, caption] = r.split("\t");
+      return { value: value.trim(), caption: caption.trim() };
     })
-    .catch((e) => console.error(e));
+    .filter((cell) => cell.caption && cell.value);
 };
 
-export const parseClipboardText = (window, event) => {
+const getClipboardDataOnPaste = (window, event) => {
   const clipboardData =
     window.clipboardData ||
     event.clipboardData ||
     (event.originalEvent && event.originalEvent.clipboardData);
-  console.log({ clipboardData });
+
+  return clipboardData;
+};
+
+const parseClipboardDataOnPaste = async () => {
+  try {
+    const pastedText = await navigator.clipboard.readText();
+
+    if (!pastedText && pastedText.length) return;
+    const objects = createObjectsFromText(pastedText);
+    return objects;
+  } catch (error) {
+    console.log("parseClipboardDataOnPaste", { error });
+  }
+};
+
+const parseClipboardDataOnClick = (clipboardData) => {
   const pastedText =
     clipboardData.getData("Text") || clipboardData.getData("text/plain");
 
   if (!pastedText && pastedText.length) {
     return;
   }
-  console.log({ pastedText });
-  const rows = pastedText
-    .replace(/"((?:[^"]*(?:\r\n|\n\r|\n|\r))+[^"]+)"/gm, function (match, p1) {
-      return p1.replace(/""/g, '"').replace(/\r\n|\n\r|\n|\r/g, " ");
-    })
-    .split(/\r\n|\n\r|\n|\r/g);
+  const objects = createObjectsFromText(pastedText);
+  return objects;
+};
 
-  console.log({ rows });
+export const parseClipboardText = async (window, event) => {
+  let clipboardData = getClipboardDataOnPaste(window, event);
+  if (clipboardData) {
+    return parseClipboardDataOnClick(clipboardData);
+  } else {
+    return await parseClipboardDataOnPaste();
+  }
 
-  rows.forEach((r) => {
-    const cells = r.split("\t");
-    console.log(cells);
-  });
+  // // console.log({ pastedText });
+  // const rows = pastedText
+  //   .replace(/"((?:[^"]*(?:\r\n|\n\r|\n|\r))+[^"]+)"/gm, function (match, p1) {
+  //     return p1.replace(/""/g, '"').replace(/\r\n|\n\r|\n|\r/g, " ");
+  //   })
+  //   .split(/\r\n|\n\r|\n|\r/g);
+
+  // // console.log({ rows });
+
+  // return rows
+  //   .map((r) => {
+  //     const [value, caption] = r.split("\t");
+  //     return { value, caption };
+  //   })
+  //   .filter((cell) => cell.caption && cell.value);
 };

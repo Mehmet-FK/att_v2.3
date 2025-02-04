@@ -12,7 +12,7 @@ import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge
 const FieldProperty = ({ property, setConfirmModalValues }) => {
   const [propertyFormValues, setPropertyFormValues] = useState(property);
 
-  const { updateFieldProperyValue, deleteFieldProperty } = useEntityForm();
+  const { updateFieldPropertyValue, deleteFieldProperty } = useEntityForm();
 
   const handleChange = (e) => {
     const { type, name, value, checked } = e.target;
@@ -25,7 +25,7 @@ const FieldProperty = ({ property, setConfirmModalValues }) => {
     const { type, name, value, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
 
-    updateFieldProperyValue(name, newValue, property.listViewPropertyId);
+    updateFieldPropertyValue(name, newValue, property.listViewPropertyId);
   };
 
   const handleDeleteFieldProperty = () => {

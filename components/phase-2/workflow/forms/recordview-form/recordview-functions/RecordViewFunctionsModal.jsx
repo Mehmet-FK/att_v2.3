@@ -27,22 +27,10 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
   });
 
   const { recordViewFunctions } = useSelector((state) => state.workflow);
-  const workflows = useSelector((state) => state.attensam.data?.workflows);
-
-  const [runWorkflowWorker, workflowsForAutoCompleteSelect] =
-    useAutoCompleteDataWorker("/workers/prepareWorkflowsWorker.js");
 
   const { generateRandomId, updateAllRecordViewFunctions } = useWorkflowForms();
 
-  const filteredRecordFunctions = useMemo(
-    () =>
-      recordViewFunctions?.filter((rvf) => rvf.recordViewId === recordViewId),
-    [recordViewFunctions, recordViewId]
-  );
-
-  const [recordFunctions, setRecordFunctions] = useState([
-    ...filteredRecordFunctions,
-  ]);
+  const [recordFunctions, setRecordFunctions] = useState([]);
 
   const {
     assignSortOrderAndDragIndicator,
@@ -103,15 +91,12 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
   };
 
   useEffect(() => {
-    if (filteredRecordFunctions?.length < 1) return;
-    assignSortOrderAndDragIndicator(filteredRecordFunctions);
-  }, [filteredRecordFunctions]);
-
-  useEffect(() => {
-    if (workflows) {
-      runWorkflowWorker(workflows);
-    }
-  }, [workflows]);
+    const filteredRecordFunctions = recordViewFunctions?.filter(
+      (rvf) => rvf.recordViewId === recordViewId
+    );
+    if (!filteredRecordFunctions) return;
+    setRecordFunctions(filteredRecordFunctions);
+  }, [recordViewId]);
 
   return (
     <>

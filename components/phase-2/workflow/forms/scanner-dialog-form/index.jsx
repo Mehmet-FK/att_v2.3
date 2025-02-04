@@ -9,9 +9,11 @@ import { selectTargetRecordViewIdOfScanner } from "@/redux/selectors/workflowSel
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 
 const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
-  const { getRecordViewFields } = useAttensamCalls();
+  // const { getRecordViewFields } = useAttensamCalls();
   const { prepareEntityFields } = useWorkflowForms();
-  const { scannerDialogs } = useSelector((state) => state.workflow);
+  const { scannerDialogs, recordViewFields, recordViews } = useSelector(
+    (state) => state.workflow
+  );
   const entities = useSelector((state) => state.attensam.data?.entities);
 
   const scannerDialog = useMemo(
@@ -22,11 +24,19 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
   const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
   const [targetFieldOptions, setTargetFieldOptions] = useState([]);
 
-  const selectMemoizedRecordViewId = useMemo(
-    () => selectTargetRecordViewIdOfScanner(stepID),
-    [stepID]
+  const findNextRecordViewId = () => {
+    const nextStep = workflowStepValues.nextStep;
+    if (!nextStep) return null;
+    const recordView = recordViews.find((rv) => rv.workflowStepId === nextStep);
+    console.log({ recordView });
+
+    return recordView ? recordView.recordViewId : null;
+  };
+
+  const recordViewId = useMemo(
+    () => findNextRecordViewId(),
+    [workflowStepValues]
   );
-  const recordViewId = useSelector(selectMemoizedRecordViewId);
 
   const entityFields = useMemo(
     () => prepareEntityFields(entities, scannerDialogValues?.entityId),
@@ -37,20 +47,17 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
   const isNfcScanner = scannerDialog?.scannerType === scannerTypeConstants.NFC;
 
   useEffect(() => {
-    if (!recordViewId || isNaN(recordViewId)) {
+    if (!recordViewId) {
       setTargetFieldOptions([]);
       return;
     }
-    getRecordViewFields(recordViewId).then((res) => setTargetFieldOptions(res));
-  }, [recordViewId]);
 
-  useEffect(() => {
-    const scannerDialogFormValueTemp = {
-      ...scannerDialogValues,
-      name: workflowStepValues?.name,
-    };
-    setScannerDialogValues(scannerDialogFormValueTemp);
-  }, [viewId]);
+    const filteredRecordViewFields = recordViewFields?.filter(
+      (rvf) => rvf.recordViewId === recordViewId
+    );
+    console.log({ filteredRecordViewFields });
+    setTargetFieldOptions(filteredRecordViewFields);
+  }, [recordViewId, recordViewFields]);
 
   if (isNfcScanner) {
     return (
@@ -73,9 +80,9 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
   } else {
     return (
       <ScannerDialogFormBase
+        viewId={viewId}
         scannerDialogValues={scannerDialogValues}
         setScannerDialogValues={setScannerDialogValues}
-        viewId={viewId}
         entityFields={entityFields}
         targetFieldOptions={targetFieldOptions}
       />

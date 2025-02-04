@@ -49,7 +49,7 @@ const Sheet = ({ existingWorkflow }) => {
 
   const { setViewport, getViewport } = useReactFlow();
   const router = useRouter();
-  const { postWorkflowCall } = useAttensamCalls();
+  const { postWorkflowCall, deleteWorkflowCall } = useAttensamCalls();
   const { isWorkflowSessionExisting, setSessionFlagForWorkflow } =
     useSessionStorage();
 
@@ -88,7 +88,6 @@ const Sheet = ({ existingWorkflow }) => {
 
   const onDrop = (e) => {
     e.preventDefault();
-    console.log({ nodes });
     const { viewType, launchTypeId, newNode } =
       addNodeAndUpdateHistoryOnDrop(e);
 
@@ -138,9 +137,14 @@ const Sheet = ({ existingWorkflow }) => {
       _viewport
     );
     console.log({ _edges, _nodes });
-    // //TODO: DELETE return below
-    // return;
     postWorkflowCall(workflowToPost).then((res) =>
+      res ? router.push("/workflows") : null
+    );
+  };
+
+  const handleDeleteWorkflow = () => {
+    const { workflowId } = router.query;
+    deleteWorkflowCall(workflowId).then((res) =>
       res ? router.push("/workflows") : null
     );
   };
@@ -204,6 +208,7 @@ const Sheet = ({ existingWorkflow }) => {
         <AutoCompleteEntityProvider>
           <BottomDrawer
             onSubmit={handleSubmit}
+            handleDeleteWorkflow={handleDeleteWorkflow}
             onSave={onSave}
             restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
             nodes={nodes}

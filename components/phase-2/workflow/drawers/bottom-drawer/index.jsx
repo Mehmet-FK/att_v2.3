@@ -7,6 +7,7 @@ import css from "@/styles/workflow-comp-styles.module.css";
 import { useSelector } from "react-redux";
 import DrawerHead from "./DrawerHead";
 import DisplaySelectedForm from "../../forms/DisplaySelectedForm";
+import ConfirmModal from "@/components/ui-components/ConfirmModal";
 
 const defaultOpenHeight = 350;
 const minHeight = 45;
@@ -15,6 +16,7 @@ const drawerHeaderHeight = "25px";
 
 const BottomDrawer = ({
   onSubmit,
+  handleDeleteWorkflow,
   onSave,
   restoreWorkflowFromLocalStorage,
   nodes,
@@ -24,10 +26,29 @@ const BottomDrawer = ({
   const [open, setOpen] = useState(true);
   const [isResizing, setIsResizing] = useState(false);
   const [newHeight, setNewHeight] = useState(45);
+  const [confirmModalValues, setConfirmModalValues] = useState({
+    isOpen: false,
+    dialogTitle: "",
+    dialogContent: "",
+    confirmBtnText: "",
+    confirmFunction: null,
+  });
+
   const { selectedStepId, workflowId } = useSelector((state) => state.workflow);
 
   const resizeStartHeightRef = useRef(null);
   const selectedNodeStoreRef = useRef(selectedStepId);
+
+  const openConfirmModalToDelete = () => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie die aktuelles Workflow löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => handleDeleteWorkflow(),
+    };
+    setConfirmModalValues(temp);
+  };
 
   const handleClose = () => setOpen(false);
 
@@ -99,6 +120,10 @@ const BottomDrawer = ({
 
   return (
     <>
+      <ConfirmModal
+        confirmModalValues={confirmModalValues}
+        setConfirmModalValues={setConfirmModalValues}
+      />
       <Drawer
         anchor={"bottom"}
         variant="persistent"
@@ -126,6 +151,7 @@ const BottomDrawer = ({
               : `Workflow: ${workflowId}`
           }
           onSubmit={onSubmit}
+          onDelete={openConfirmModalToDelete}
           onSave={onSave}
           restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
         />

@@ -123,6 +123,33 @@ const entitySlice = createSlice({
         (fieldProperty) => fieldProperty.listViewPropertyId !== propertyID
       );
     },
+
+    // ENTITY-FIELD-OPTION
+
+    addFieldOption: (state, { payload: { newFieldOption } }) => {
+      state.fieldOptions.push(newFieldOption);
+    },
+
+    addMultipleFieldOptions: (state, { payload: { newFieldOptions } }) => {
+      console.log({ newFieldOptions });
+      state.fieldOptions = [...state.fieldOptions, ...newFieldOptions];
+    },
+
+    changeFieldOptionValue: (state, { payload: { name, value, optionID } }) => {
+      state.fieldOptions = state.fieldOptions.map((option) => {
+        if (option.fieldOptionId === optionID) {
+          return { ...option, [name]: value };
+        } else {
+          return option;
+        }
+      });
+    },
+
+    removeFieldOption: (state, { payload: { optionID } }) => {
+      state.fieldOptions = state.fieldOptions.filter(
+        (option) => option.fieldOptionId !== optionID
+      );
+    },
   },
 });
 
@@ -147,5 +174,10 @@ export const {
   addFieldProperty,
   changeFieldPropertyValue,
   removeFieldProperty,
+  // FIELD-OPTION
+  addFieldOption,
+  addMultipleFieldOptions,
+  changeFieldOptionValue,
+  removeFieldOption,
 } = entitySlice.actions;
 export default entitySlice.reducer;

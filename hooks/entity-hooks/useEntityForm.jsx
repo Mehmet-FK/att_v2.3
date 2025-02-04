@@ -1,15 +1,19 @@
 import {
   addEntityField,
   addEntitySorting,
+  addFieldOption,
   addFieldProperty,
   addFieldValidation,
+  addMultipleFieldOptions,
   changeEntityFieldValue,
   changeEntitySortingValue,
   changeEntityValue,
+  changeFieldOptionValue,
   changeFieldPropertyValue,
   changeFieldValidationValue,
   removeEntityField,
   removeEntitySorting,
+  removeFieldOption,
   removeFieldProperty,
   removeFieldValidation,
   setEntityToInitial,
@@ -65,6 +69,15 @@ const fieldPropertyTemplate = {
   differingListviewItemIcon: "",
   priorityType: null,
   priorityText: null,
+};
+const fieldOptionTemplate = {
+  fieldOptionId: "",
+  fieldId: "",
+  optionType: 0,
+  optionSource: null,
+  optionSourceFilter: null,
+  caption: "",
+  value: "",
 };
 
 const useEntityForm = () => {
@@ -232,13 +245,30 @@ const useEntityForm = () => {
     dispatch(addFieldProperty({ newFieldProperty }));
   };
 
-  const updateFieldProperyValue = (name, value, propertyID) => {
+  const updateFieldPropertyValue = (name, value, propertyID) => {
     console.log({ name, value, propertyID });
     dispatch(changeFieldPropertyValue({ name, value, propertyID }));
   };
 
   const deleteFieldProperty = (propertyID) => {
     dispatch(removeFieldProperty({ propertyID }));
+  };
+
+  //! ======== FIELD-PROPERTIES ======== //
+
+  const createFieldOption = (newFieldOption) => {
+    dispatch(addFieldOption({ newFieldOption }));
+  };
+  const createMultipleFieldOptions = (newFieldOptions) => {
+    dispatch(addMultipleFieldOptions({ newFieldOptions }));
+  };
+
+  const updateFieldOptionValue = (name, value, optionID) => {
+    dispatch(changeFieldOptionValue({ name, value, optionID }));
+  };
+
+  const deleteFieldOption = (optionID) => {
+    dispatch(removeFieldOption({ optionID }));
   };
 
   return {
@@ -261,8 +291,13 @@ const useEntityForm = () => {
     deleteEntitySorting,
     // FIELD-PROPERTY
     createFieldProperty,
-    updateFieldProperyValue,
+    updateFieldPropertyValue,
     deleteFieldProperty,
+    // FIELD-OPTION
+    createFieldOption,
+    createMultipleFieldOptions,
+    updateFieldOptionValue,
+    deleteFieldOption,
   };
 };
 

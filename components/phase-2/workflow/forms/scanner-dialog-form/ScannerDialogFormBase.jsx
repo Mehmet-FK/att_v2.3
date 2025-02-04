@@ -7,6 +7,7 @@ import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import { scannerDialogActions } from "@/helpers/Enums";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
+import { useEffect } from "react";
 const ScannerDialogFormBase = ({
   viewId,
   scannerDialogValues,
@@ -31,7 +32,15 @@ const ScannerDialogFormBase = ({
 
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
-    const inputValue = type === "checkbox" ? checked : value;
+    let inputValue = type === "checkbox" ? checked : value;
+    if (
+      name === "inputDataSourceId" ||
+      name === "targetFieldId" ||
+      name === "entityId"
+    ) {
+      inputValue = Number(inputValue);
+    }
+    console.log(inputValue);
     updateScannerDialogValue(name, inputValue, viewId);
   };
 
@@ -101,7 +110,10 @@ const ScannerDialogFormBase = ({
               label="Target Field"
               name="targetFieldId"
               defaultValue={null}
-              preferences={{ key: "id", caption: "caption" }}
+              preferences={{
+                key: "recordViewFieldId",
+                caption: "differingCaption",
+              }}
               options={targetFieldOptions}
               FormControlProps={{
                 disabled: !targetFieldOptions?.length,

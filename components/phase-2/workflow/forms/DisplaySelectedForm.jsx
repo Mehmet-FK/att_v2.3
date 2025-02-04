@@ -28,7 +28,7 @@ const DisplaySelectedForm = ({ selectedNode }) => {
 
   const selectedWorkflowStep = useMemo(
     () => findWorkflowStepById(stepID),
-    [selectedNode]
+    [selectedNode, workflowSteps]
   );
 
   if (viewType === viewTypeConstants.RECORDVIEW) {

@@ -2,171 +2,85 @@ import css from "@/styles/entity-styles/entities.module.css";
 
 import Accordion from "@/components/ui-components/Accordion";
 import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
-import { Card, CardContent, TextField } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-
-import { useSelector } from "react-redux";
 import ElementBadge from "../../workflow/forms/common-form-elements/ElementBadge";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import ClipBoardInput from "./ClipboardInput";
+import UserDefinedOption from "./UserDefinedOption";
+import { useSelector } from "react-redux";
 import { parseClipboardText } from "@/helpers/readTextFile";
-import ContentPasteIcon from "@mui/icons-material/ContentPaste";
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
+import { entityFieldOptionTypes } from "@/helpers/Constants";
 
-const ClipBoardInput = () => {
-  const [expandInput, setExpandInput] = useState(false);
+const FieldOptionsSection = ({
+  fieldID,
+  optionType,
+  setConfirmModalValues,
+}) => {
+  const fieldOptions = useSelector((state) => state.entity.fieldOptions);
+  const {
+    generateRandomId,
+    createFieldOption,
+    createMultipleFieldOptions,
+    updateFieldOptionValue,
+    deleteFieldOption,
+  } = useEntityForm();
 
-  return (
-    <div
-      className={css.flex_row}
-      style={{
-        border: "1px solid red",
-        justifyContent: "flex-end",
-        alignItems: "start",
-        maxHeight: expandInput ? "55rem" : "2.5rem",
-        transition: "max-height 0.5s ease-in-out",
-      }}
-    >
-      <textarea
-        label="ClipboardContent"
-        onPaste={(e) => parseClipboardText(window, e)}
-        disabled={!expandInput}
-        rows="15"
-        style={{
-          border: "none",
-          outline: "none",
-          width: expandInput ? "100%" : "2rem",
-          height: "100%",
-          opacity: expandInput ? "1" : "0",
-          transition: "all 0.5s ease-in-out",
-        }}
-      />
-      {/* <TextField
-        variant="outlined"
-        size="medium"
-        label="ClipboardContent"
-        onPaste={(e) => parseClipboardText(window, e)}
-        fullWidth
-        multiline
-        rows={5}
-        disabled={!expandInput}
-        sx={{
-          width: expandInput ? "100%" : "2rem",
-
-          opacity: expandInput ? "1" : "0",
-          transition: "all 0.5s ease-in-out",
-        }}
-      /> */}
-      {!expandInput && (
-        <IconButton onClick={() => setExpandInput(true)}>
-          <ContentPasteIcon
-            fontSize="smaller"
-            // sx={{ marginRight: "-40px", marginTop: "-20px" }}
-          />
-        </IconButton>
-      )}
-      {expandInput && (
-        <>
-          <IconButton onClick={() => setExpandInput(false)}>
-            <CloseIcon
-              fontSize="smaller"
-              // sx={{ marginRight: "-40px", marginTop: "-20px" }}
-            />
-          </IconButton>
-        </>
-      )}
-    </div>
+  const filteredFieldOptions = useMemo(
+    () => fieldOptions.filter((option) => option?.fieldId === fieldID),
+    [fieldOptions]
   );
-};
 
-const FieldOption = ({ fieldOption }) => {
-  const [optionFormValues, setOptionFormValues] = useState(fieldOption);
-
-  const handleChange = (e) => {
-    const { type, name, value, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-
-    setOptionFormValues((prev) => ({ ...prev, [name]: newValue }));
-  };
-
-  const handleBlur = (e) => {
-    const { type, name, value, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-  };
-
-  useEffect(() => {
-    setOptionFormValues(fieldOption);
-  }, [fieldOption]);
-
-  return (
-    <ElementBadge
-      handleClickOnBadge={() => null}
-      badgeSx={{
-        marginRight: "10px",
-        marginTop: "5px",
-        width: "1.7rem",
-        height: "1.7rem",
-        backgroundColor: "#ccc",
-        cursor: "pointer",
-      }}
-      containerSx={{ width: "auto", maxWidth: "100%", minWidth: "49%" }}
-    >
-      <Card sx={{ width: "100%" }}>
-        <CardContent>
-          <div className={css.flex_column}>
-            <TextField
-              size="small"
-              label="caption"
-              value={optionFormValues?.caption || ""}
-              name="caption"
-              variant="outlined"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              fullWidth
-            />
-
-            <TextField
-              size="small"
-              label="value"
-              value={optionFormValues?.value || ""}
-              name="value"
-              variant="outlined"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              fullWidth
-            />
-          </div>
-        </CardContent>
-      </Card>
-    </ElementBadge>
-  );
-};
-
-const FieldOptionsSection = ({ fieldID, setConfirmModalValues }) => {
-  //   const { fieldOptions } = useSelector((state) => state.entity);
-
-  const [fieldOptions, setFieldOptions] = useState([]);
-  const { generateRandomId } = useEntityForm();
-
-  //   const options = useMemo(
-  //     () => fieldOptions.filter((option) => option.fieldID === fieldID),
-  //     [fieldOptions]
-  //   );
-
-  const addFieldOption = (caption, value) => {
+  const addFieldOption = (e) => {
     const template = {
       fieldOptionId: generateRandomId("field-option-", null),
-      fieldID: fieldID,
+      fieldId: fieldID,
+      optionType: optionType,
+      optionSource: null,
+      optionSourceFilter: null,
       caption: "",
       value: "",
     };
 
-    setFieldOptions((prev) => [...prev, template]);
+    createFieldOption(template);
   };
 
-  const handlePasteOptions = (e) => {
-    // parseClipboardText(window, e);
+  const openConfirmModaltoDeleteOption = (option) => {
+    const temp = {
+      isOpen: true,
+      dialogTitle: "Löschen!",
+      dialogContent: `Möchten Sie das Feldoption "${
+        option?.caption || option?.value
+      }" löschen?`,
+      confirmBtnText: "Löschen",
+      handleConfirm: () => deleteFieldOption(option.fieldOptionId),
+    };
+    setConfirmModalValues(temp);
   };
+
+  const handlePasteOptions = async (e) => {
+    const cells = await parseClipboardText(window, e);
+    const newFieldOptions = [];
+    if (cells.length < 0) return;
+    cells.forEach((cell) => {
+      const template = {
+        fieldOptionId: generateRandomId("field-option-", null),
+        fieldId: fieldID,
+        optionType: optionType,
+        optionSource: null,
+        optionSourceFilter: null,
+        caption: cell.caption,
+        value: cell.value,
+      };
+
+      newFieldOptions.push(template);
+    });
+    console.log({ parsedCells: cells });
+
+    createMultipleFieldOptions(newFieldOptions);
+  };
+  const isOptionTypeSelected = optionType !== undefined;
+  const optionExists = filteredFieldOptions.length > 0;
+  const accordionDisabled = !isOptionTypeSelected && !optionExists;
 
   return (
     <div
@@ -177,28 +91,43 @@ const FieldOptionsSection = ({ fieldID, setConfirmModalValues }) => {
       <ElementBadge
         handleClickOnBadge={addFieldOption}
         badgeContent={<AddBoxIcon color="primary" fontSize="small" />}
-        containerProps={{
-          onPaste: handlePasteOptions,
-        }}
+        badgeSx={{ display: !isOptionTypeSelected && "none" }}
       >
         <Accordion
-          accordionProps={
-            {
-              // disabled: fieldOptions.length < 1,
-            }
-          }
+          accordionProps={{
+            disabled: accordionDisabled,
+          }}
+          bodyProps={{
+            sx: {
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "0.5rem",
+              position: "relative",
+              minHeight: "200px",
+            },
+          }}
           header={"Feld Optionen"}
         >
-          <ClipBoardInput />
-
-          <div className={css.flex_wrap_row}>
-            {fieldOptions?.map((fieldOption) => (
-              <FieldOption
-                key={fieldOption.fieldOptionId}
-                fieldOption={fieldOption}
-              />
-            ))}
-          </div>
+          {optionType === entityFieldOptionTypes.USER_DEFINED ? (
+            <>
+              <ClipBoardInput handlePasteOptions={handlePasteOptions} />
+              <div className={css.flex_wrap_row}>
+                {filteredFieldOptions?.map((fieldOption) => (
+                  <UserDefinedOption
+                    key={fieldOption.fieldOptionId}
+                    fieldOption={fieldOption}
+                    deleteFieldOption={deleteFieldOption}
+                    updateFieldOptionValue={updateFieldOptionValue}
+                    openConfirmModaltoDeleteOption={
+                      openConfirmModaltoDeleteOption
+                    }
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <h2>In Bearbeitung...</h2>
+          )}
         </Accordion>
       </ElementBadge>
     </div>

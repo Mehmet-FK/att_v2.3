@@ -11,13 +11,11 @@ const CheckBox = ({
   sx,
   style,
   size,
-  fullWidth,
 }) => {
   return (
     <FormControlLabel
       sx={sx || {}}
       style={style || {}}
-      fullWidth={fullWidth || false}
       control={
         <Checkbox
           size={size || "medium"}

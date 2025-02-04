@@ -25,6 +25,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     value,
     label,
     defaultValue,
+    inputType,
   } = mainProps;
   const [inputValue, setInputValue] = useState("");
   const [selectedValue, setSelectedValue] = useState(null);
@@ -69,7 +70,8 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
       },
     };
     if (selectedValue) {
-      pseudoEvent.target.value = selectedValue[optKey];
+      const selectedValueKey = selectedValue[optKey];
+      pseudoEvent.target.value = selectedValueKey;
     }
     handleBlur(pseudoEvent);
   };
@@ -103,7 +105,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   }, []);
 
   useEffect(() => {
-    const tempSelectedValue = options.find((opt) => opt[optKey] === value);
+    const tempSelectedValue = options.find((opt) => opt[optKey] == value);
     setSelectedValue(tempSelectedValue);
   }, [value]);
 

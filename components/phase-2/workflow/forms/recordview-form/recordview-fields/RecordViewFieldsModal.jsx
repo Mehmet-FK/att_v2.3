@@ -29,6 +29,8 @@ const RecordViewFieldsModal = ({
   recordViewId,
   entityFields,
 }) => {
+  const [fields, setFields] = useState([]);
+
   const [confirmModalValues, setConfirmModalValues] = useState({
     isOpen: false,
     dialogTitle: "",
@@ -39,13 +41,6 @@ const RecordViewFieldsModal = ({
 
   const { recordViewFields } = useSelector((state) => state.workflow);
 
-  const filteredRecordViewFields = useMemo(
-    () => recordViewFields?.filter((rvf) => rvf.recordViewId === recordViewId),
-    [recordViewFields, recordViewId]
-  );
-
-  const [fields, setFields] = useState([...filteredRecordViewFields]);
-
   const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
     fields,
     setFields
@@ -53,10 +48,10 @@ const RecordViewFieldsModal = ({
 
   const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
 
-  useEffect(() => {
-    if (filteredRecordViewFields?.length < 1) return;
-    assignSortOrderAndDragIndicator(filteredRecordViewFields);
-  }, [filteredRecordViewFields]);
+  // useEffect(() => {
+  //   if (filteredRecordViewFields?.length < 1) return;
+  //   assignSortOrderAndDragIndicator(filteredRecordViewFields);
+  // }, [filteredRecordViewFields]);
 
   //TODO: Refactoring is needed
   const handleAddRecordView = () => {
@@ -104,6 +99,16 @@ const RecordViewFieldsModal = ({
     updateAllRecordViewFields(recordViewId, fields);
     setOpen(false);
   };
+
+  useEffect(() => {
+    const filteredRecordViewFields = recordViewFields?.filter(
+      (rvf) => rvf.recordViewId === recordViewId
+    );
+
+    if (!filteredRecordViewFields) return;
+
+    setFields(filteredRecordViewFields);
+  }, [recordViewId]);
 
   return (
     <>

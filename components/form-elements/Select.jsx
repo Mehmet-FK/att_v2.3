@@ -1,5 +1,6 @@
 import { FormControl, InputLabel, MenuItem, TextField } from "@mui/material";
 import MuiSelect from "@mui/material/Select";
+import { useId } from "react";
 
 const Select = ({
   label,
@@ -11,14 +12,13 @@ const Select = ({
   disabled,
 }) => {
   return (
-    <FormControl disabled={disabled} fullWidth sx={{ width: width || "auto" }}>
-      <InputLabel size="small" id="demo-simple-select-label">
+    <FormControl disabled={disabled} sx={{ width: width ? width : "auto" }}>
+      <InputLabel size="small" id={label + "ID"}>
         {label}
       </InputLabel>
       <MuiSelect
         size="small"
-        labelId="demo-simple-select-label"
-        // id="demo-simple-select"
+        labelId={label + "ID"}
         value={value || ""}
         name={name}
         label={label}

@@ -152,3 +152,9 @@ export const columnTypeConstants = {
   ICON: 2,
   VARIABLE: 3,
 };
+
+export const entityFieldOptionTypes = {
+  USER_DEFINED: 0,
+  LOOKUP: 1,
+  MULTISELECT_LOOKUP: 2,
+};

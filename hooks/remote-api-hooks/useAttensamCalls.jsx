@@ -60,6 +60,25 @@ const useAttensamCalls = () => {
     dispatch(stopLoading());
   };
 
+  const deleteWorkflowCall = async (workflowId) => {
+    let responseFlag = false;
+
+    try {
+      console.log({ workflowId });
+      const { data } = await axiosWithToken.delete(
+        `/atina/api/Workflow/DeleteWorkflow?id=${workflowId}`
+      );
+      console.log(data);
+      toastSuccessNotify("Workflow wurde erfolgreich gelöscht");
+      responseFlag = true;
+    } catch (error) {
+      toastErrorNotify(error?.response?.data);
+    } finally {
+      dispatch(stopLoading());
+    }
+    return responseFlag;
+  };
+
   //  POST CALL
   const postAttData = async (url, formData) => {
     try {
@@ -188,6 +207,7 @@ const useAttensamCalls = () => {
     updateFieldCall,
     updateEntityCall,
 
+    deleteWorkflowCall,
     deleteEntityCall,
     deleteFieldCall,
   };

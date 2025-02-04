@@ -38,7 +38,59 @@
   flex-wrap: wrap;
   row-gap: 10px;
   justify-content: center;
-  /* padding-inline: 2rem; */
+}
+
+.clipboard_wrapper {
+  display: flex;
+  flex-direction: column;
+  column-gap: 10px;
+  width: 100%;
+  border: none;
+  outline: none;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  transition: box-shadow 0.2s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.clipboard_wrapper:hover {
+  /* cursor: url("/assets/cursor-image/cursor-paste.png") 10 3, auto; */
+  box-shadow: rgba(50, 50, 93, 0.116) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.098) 0px 18px 36px -18px inset;
+}
+
+.clipboard_helpertext {
+  color: #ccc;
+  opacity: 0;
+  transition: all 0.1s ease-in-out;
+  user-select: none;
+}
+
+.clipboard_wrapper:hover .clipboard_helpertext {
+  opacity: 1;
+}
+
+.context_menu {
+  z-index: 20;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 5px;
+  border: 1px solid #00000055;
+  border-radius: 3px;
+  width: 180px;
+  min-width: 180px;
+  max-height: 350px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+    rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  padding-block: 0.4rem;
 }
 
 @media (max-width: 1000px) {

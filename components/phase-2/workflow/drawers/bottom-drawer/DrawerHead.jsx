@@ -15,6 +15,7 @@ const Puller = styled("div")(({ theme }) => ({
 
 const DrawerHead = ({
   onSubmit,
+  onDelete,
   onSave,
   restoreWorkflowFromLocalStorage,
   handleMouseDown,
@@ -65,7 +66,14 @@ const DrawerHead = ({
             style={{ userSelect: "none", color: "#000" }}
             onClick={restoreWorkflowFromLocalStorage}
           >
-            Restore
+            Wiederherstellen
+          </div>
+          <div
+            className={css.console_btn}
+            style={{ userSelect: "none", color: "#000" }}
+            onClick={onDelete}
+          >
+            Löschen
           </div>
         </div>
       </div>
