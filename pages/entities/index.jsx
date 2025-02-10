@@ -39,7 +39,6 @@ const Entities = () => {
           filterKeys={["id", "name", "caption"]}
           addNewLink="/entities/new"
         />
-        <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
           {existingEntities?.map((entity) => (
             <Card
@@ -53,6 +52,7 @@ const Entities = () => {
             />
           ))}
         </div>
+        <DashboardSkeletonLoader />
       </div>
     </div>
   );

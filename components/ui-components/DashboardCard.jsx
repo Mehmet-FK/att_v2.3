@@ -17,14 +17,16 @@ const Card = ({ cardInfo, additionalTitles }) => {
           <div className={css.card_title_wrapper}>
             <h5 className={css.cardTitle}>{cardInfo?.caption}</h5>
 
-            {additionalTitles?.map((title) => (
-              <h6 className={css.additional_card_title}>{title}</h6>
+            {additionalTitles?.map((title, index) => (
+              <h6 key={title + index} className={css.additional_card_title}>
+                {title}
+              </h6>
             ))}
 
             <div style={{ display: "flex", gap: "2px", flexWrap: "wrap" }}>
-              {cardInfo?.texts?.map((text) => (
-                <p key={text} className={css.card_helper_text}>
-                  {text}{" "}
+              {cardInfo?.texts?.map((text, index) => (
+                <p key={text + index} className={css.card_helper_text}>
+                  {text}
                 </p>
               ))}
             </div>

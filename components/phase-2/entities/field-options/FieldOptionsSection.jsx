@@ -10,6 +10,7 @@ import UserDefinedOption from "./UserDefinedOption";
 import { useSelector } from "react-redux";
 import { parseClipboardText } from "@/helpers/readTextFile";
 import { entityFieldOptionTypes } from "@/helpers/Constants";
+import FieldOptionElement from "./FieldOptionElement";
 
 const FieldOptionsSection = ({
   fieldID,
@@ -59,8 +60,9 @@ const FieldOptionsSection = ({
 
   const handlePasteOptions = async (e) => {
     const cells = await parseClipboardText(window, e);
+    console.log({ cells });
     const newFieldOptions = [];
-    if (cells.length < 0) return;
+    if (cells?.length < 1) return;
     cells.forEach((cell) => {
       const template = {
         fieldOptionId: generateRandomId("field-option-", null),
@@ -109,24 +111,26 @@ const FieldOptionsSection = ({
           header={"Feld Optionen"}
         >
           {optionType === entityFieldOptionTypes.USER_DEFINED ? (
-            <>
-              <ClipBoardInput handlePasteOptions={handlePasteOptions} />
-              <div className={css.flex_wrap_row}>
-                {filteredFieldOptions?.map((fieldOption) => (
-                  <UserDefinedOption
-                    key={fieldOption.fieldOptionId}
-                    fieldOption={fieldOption}
-                    deleteFieldOption={deleteFieldOption}
-                    updateFieldOptionValue={updateFieldOptionValue}
-                    openConfirmModaltoDeleteOption={
-                      openConfirmModaltoDeleteOption
-                    }
-                  />
-                ))}
-              </div>
-            </>
+            <ClipBoardInput
+              filteredFieldOptions={filteredFieldOptions}
+              openConfirmModaltoDeleteOption={openConfirmModaltoDeleteOption}
+              handlePasteOptions={handlePasteOptions}
+            />
           ) : (
-            <h2>In Bearbeitung...</h2>
+            <div className={css.flex_wrap_row}>
+              {filteredFieldOptions?.map((fieldOption) => (
+                <FieldOptionElement
+                  key={fieldOption.fieldOptionId}
+                  fieldOption={fieldOption}
+                  optionType={optionType}
+                  deleteFieldOption={deleteFieldOption}
+                  updateFieldOptionValue={updateFieldOptionValue}
+                  openConfirmModaltoDeleteOption={
+                    openConfirmModaltoDeleteOption
+                  }
+                />
+              ))}
+            </div>
           )}
         </Accordion>
       </ElementBadge>

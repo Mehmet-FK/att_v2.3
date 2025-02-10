@@ -5,6 +5,8 @@
   min-width: 65%;
   overflow-x: hidden;
   overflow-y: auto;
+  position: relative;
+  min-height: "90vh";
 }
 
 .gridContainer {
@@ -22,9 +24,9 @@
 
 .card {
   border: 1px solid transparent;
-  padding: 10px;
-  height: 100px;
-  max-height: 150px;
+  padding: 5px 10px;
+  min-height: 100px;
+  max-height: 4000px;
 
   border-radius: 5px;
   background-color: #cccccc15;
@@ -56,10 +58,11 @@
 .card_helper_text {
   font-size: 0.6em;
   padding: 0;
-  color: #717070;
-  border: 1px solid #ccc;
+  /* color: #717070; */
+  border: 1px solid #cccccc87;
+  background-color: inherit;
   border-radius: 5px;
-  padding-inline: 2px;
+  padding: 1px 4px;
   /* word-break: break-all; */
 }
 
@@ -68,7 +71,6 @@
   font-weight: 500;
   text-transform: uppercase;
   word-wrap: break-word;
-  line-break: anywhere;
 }
 .additional_card_title {
   font-size: 0.7rem;

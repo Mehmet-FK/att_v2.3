@@ -127,9 +127,6 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
                     key={recordFunction?.recordViewFunctionId}
                     index={index}
                     functionValues={recordFunction}
-                    workflowsForAutoCompleteSelect={
-                      workflowsForAutoCompleteSelect
-                    }
                     changeRecordFunctionValue={changeRecordFunctionValue}
                     openConfirmModalToDelete={openConfirmModalToDelete}
                     onDragStart={onDragStart}

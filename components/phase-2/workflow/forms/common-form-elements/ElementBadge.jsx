@@ -44,9 +44,10 @@ const ElementBadge = ({
         width: "100%",
 
         backgroundColor: "inherit",
-        "&:hover  .MuiBadge-badge": {
+        "&:hover > .MuiBadge-badge": {
           opacity: 1,
         },
+
         ...containerSx,
       }}
       {...containerProps}

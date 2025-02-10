@@ -55,7 +55,12 @@ const DraggableRecordViewField = ({
 
   const handleBlur = (e) => {
     const { value, name, type, checked } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
+    let newValue = value;
+    if (type === "checkbox") {
+      newValue = checked;
+    } else if (type === "number") {
+      newValue = Number(value);
+    }
     changeRecordFieldValue(name, newValue, fieldFormValues.recordViewFieldId);
   };
 
@@ -149,7 +154,7 @@ const DraggableRecordViewField = ({
                 <TextField
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={fieldFormValues?.differingCaption || ""}
+                  value={fieldFormValues?.differingCaption || null}
                   variant="outlined"
                   size="small"
                   label="differingCaption"
@@ -159,7 +164,7 @@ const DraggableRecordViewField = ({
                 <TextField
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={fieldFormValues?.differingGroupName || ""}
+                  value={fieldFormValues?.differingGroupName || null}
                   variant="outlined"
                   size="small"
                   label="differingGroupName"
@@ -170,7 +175,7 @@ const DraggableRecordViewField = ({
                 <TextField
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={fieldFormValues?.sortOrder || ""}
+                  value={fieldFormValues?.sortOrder || null}
                   variant="outlined"
                   size="small"
                   label="sortOrder"
@@ -183,6 +188,7 @@ const DraggableRecordViewField = ({
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={fieldFormValues?.imageMode || ""}
+                  type="number"
                   variant="outlined"
                   size="small"
                   label="imageMode"

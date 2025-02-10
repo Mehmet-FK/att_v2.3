@@ -143,11 +143,10 @@ const Workflow = () => {
           filterOptions={launchTypeFilterOptions}
           handleFilter={filterByLaunchType}
         />
-        <DashboardSkeletonLoader />
         <div className={css.gridContainer}>
-          {existingWorkflows?.map((wf) => (
+          {existingWorkflows?.map((wf, index) => (
             <Card
-              key={wf.id}
+              key={`${wf.id}-${index}`}
               cardInfo={{
                 url: `/workflows/${wf.id}`,
                 texts: wf.path.split("/"),
@@ -158,6 +157,7 @@ const Workflow = () => {
             />
           ))}
         </div>
+        <DashboardSkeletonLoader />
       </div>
     </div>
   );

@@ -22,9 +22,13 @@ const SkeletonCard = () => {
 const DashboardSkeletonLoader = () => {
   const loading = useSelector((state) => state.attensam.loading);
   const mockArray = Array(25).fill(null);
-
   return (
-    <Fade in={loading} timeout={{ enter: 150, exit: 500 }} unmountOnExit>
+    <Fade
+      in={loading}
+      timeout={{ enter: 150, exit: 500 }}
+      appear={false}
+      unmountOnExit
+    >
       <div className={css.gridContainer}>
         {mockArray.map((item, index) => (
           <SkeletonCard key={index} />

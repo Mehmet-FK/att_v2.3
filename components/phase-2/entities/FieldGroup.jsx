@@ -37,9 +37,8 @@ const FieldGroup = ({ field, setConfirmModalValues }) => {
   };
 
   const fieldTypesForSelect = Object.keys(fieldTypes || {}).map(
-    (opt, index) => ({ id: fieldTypes[opt], caption: opt })
+    (opt, index) => ({ id: Number(fieldTypes[opt]), caption: opt })
   );
-
   const handleDeleteEntityField = () => {
     const temp = {
       isOpen: true,

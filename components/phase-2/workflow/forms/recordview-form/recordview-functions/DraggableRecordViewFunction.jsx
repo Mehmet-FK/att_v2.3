@@ -6,11 +6,11 @@ import { useState } from "react";
 import AutoCompleteSelect from "../../common-form-elements/AutoCompleteSelect";
 import ElementBadge from "../../common-form-elements/ElementBadge";
 import DragItemContainer from "../../common-form-elements/DragItemContainer";
+import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
 
 const DraggableRecordViewFunction = ({
   index,
   functionValues,
-  workflowsForAutoCompleteSelect,
   changeRecordFunctionValue,
   openConfirmModalToDelete,
   onDragStart,
@@ -21,8 +21,10 @@ const DraggableRecordViewFunction = ({
   const isDraggedOver = functionFormValues.isDraggedOver;
   const functionID = functionFormValues.recordViewFunctionId;
 
+  const { autoCompleteWorkflows } = useAutoCompleteWorkflows();
+
   const handleWorkflowIDChange = (workflowID) => {
-    const selectedWorkflow = workflowsForAutoCompleteSelect?.find(
+    const selectedWorkflow = autoCompleteWorkflows?.find(
       (wf) => wf.id === workflowID
     );
     setFunctionFormValues((prev) => ({
@@ -131,7 +133,7 @@ const DraggableRecordViewFunction = ({
                     title: "path",
                     filterKeys: ["id", "caption", "path"],
                   },
-                  options: workflowsForAutoCompleteSelect || [],
+                  options: autoCompleteWorkflows || [],
                   name: "workflowId",
                   value: functionFormValues.workflowId || "",
                   label: "Workflow",

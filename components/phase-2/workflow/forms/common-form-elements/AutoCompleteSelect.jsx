@@ -107,15 +107,13 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   useEffect(() => {
     const tempSelectedValue = options.find((opt) => opt[optKey] == value);
     setSelectedValue(tempSelectedValue);
+    console.log({ [name]: value });
   }, [value]);
 
   return (
     <Autocomplete
       {...helperProps}
-      value={
-        validateValue(selectedValue)
-        // selectedValue || (defaultValue !== undefined && defaultValue) || ""
-      }
+      value={validateValue(selectedValue)}
       onChange={(event, newValue) => handleChangeLocal(newValue)}
       getOptionKey={(opt) => opt.id}
       filterOptions={filterOptions}
@@ -137,17 +135,3 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
 };
 
 export default AutoCompleteSelect;
-
-/* const prepareWorkflowForAutoCompleteSelect = (workflows) => {
-  if (!workflows) return [];
-
-  const notDatasetWorkflows = workflows.filter(
-    (wf) => wf.launchType !== "0" && wf.launchType !== "1"
-  );
-
-  return notDatasetWorkflows.map((wf) => ({
-    id: wf.id,
-    caption: wf.caption,
-    icon: wf.icon,
-  }));
-}; */

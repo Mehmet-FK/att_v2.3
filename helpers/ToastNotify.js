@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { Flip, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const toastWarnNotify = (msg) => {
@@ -30,5 +30,24 @@ export const toastErrorNotify = (msg) => {
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
+  });
+};
+
+export const toastSessionUpdateNotify = () => {
+  toast("Session wurde aktualisiert", {
+    position: "bottom-right",
+    style: {
+      width: "150px",
+      fontSize: "small",
+      textAlign: "center",
+    },
+    autoClose: 500,
+    hideProgressBar: true,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    // theme: "light",
+    transition: Flip,
   });
 };

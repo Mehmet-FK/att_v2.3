@@ -1,4 +1,7 @@
-import { toastErrorNotify } from "@/helpers/ToastNotify";
+import {
+  toastErrorNotify,
+  toastSessionUpdateNotify,
+} from "@/helpers/ToastNotify";
 import { setSessionExpired } from "@/redux/slices/settingsSlice";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -65,6 +68,8 @@ const useAxios = () => {
           refreshSubscribersRef.current = [];
           callRefreshSubscribers(currentSubscribers, newAccessToken);
           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+          toastSessionUpdateNotify();
+          console.log("Session Updated!");
           return axiosInstanceBase(originalRequest);
         } catch (refreshError) {
           dispatch(setSessionExpired({ isSessionExpired: true }));

@@ -13,16 +13,43 @@ const CustomSelect = ({
   FormControlProps,
   SelectProps,
   defaultValue,
+  disabled,
+  showNone,
 }) => {
-  const optKey = preferences.key;
+  const optKey = preferences?.key;
   const optValue = preferences?.value;
-  const optCaption = preferences.caption;
-
+  const optCaption = preferences?.caption;
+  const defaultEmptyValue = defaultValue !== undefined ? defaultValue : "";
   const validateValue = (value) => {
     if (typeof value === "number" || value) {
       return value;
     } else {
-      return defaultValue !== undefined ? defaultValue : "";
+      return defaultEmptyValue;
+    }
+  };
+  const getKey = (option) => {
+    if (optKey) {
+      return option[optKey];
+    } else {
+      return option;
+    }
+  };
+
+  const getValue = (option) => {
+    if (optValue) {
+      return option[optValue];
+    } else if (optKey) {
+      return option[optKey];
+    } else {
+      return option;
+    }
+  };
+
+  const getCaption = (option) => {
+    if (optCaption) {
+      return option[optCaption];
+    } else {
+      return option;
     }
   };
 
@@ -31,6 +58,8 @@ const CustomSelect = ({
       className={css.form_control}
       size={size || "medium"}
       {...FormControlProps}
+      title={value}
+      disabled={disabled}
     >
       <InputLabel id={name}>{label}</InputLabel>
       <Select
@@ -47,15 +76,12 @@ const CustomSelect = ({
         onBlur={handleBlur}
         fullWidth
       >
-        <MenuItem value={""}>
+        <MenuItem value={defaultEmptyValue}>
           <em>None</em>
         </MenuItem>
         {options?.map((option) => (
-          <MenuItem
-            key={option[optKey]}
-            value={optValue ? option[optValue] : option[optKey]}
-          >
-            {option[optCaption]}
+          <MenuItem key={getKey(option)} value={getValue(option)}>
+            {getCaption(option)}
           </MenuItem>
         ))}
       </Select>

@@ -66,7 +66,10 @@ const useAttensamCalls = () => {
     try {
       console.log({ workflowId });
       const { data } = await axiosWithToken.delete(
-        `/atina/api/Workflow/DeleteWorkflow?id=${workflowId}`
+        `/atina/api/Workflow/DeleteWorkflow?id=${workflowId}`,
+        {
+          headers: { mode: "cors" },
+        }
       );
       console.log(data);
       toastSuccessNotify("Workflow wurde erfolgreich gelöscht");
