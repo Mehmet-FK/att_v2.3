@@ -35,15 +35,28 @@ const DraggableRecordViewField = ({
     onDragEnd(e, fieldFormValues, index);
   };
 
-  const handleFieldInputChange = (fieldID) => {
+  const handleFieldInputChange = (e) => {
+    const fieldID = e.target.value;
+
     const selectedField = entityFields?.find((field) => field.id === fieldID);
+    console.log(selectedField);
     if (!selectedField) return;
     setFieldFormValues((prev) => ({
       ...prev,
       fieldId: fieldID,
-      fieldCaption: selectedField.fieldCaption,
+      caption: selectedField.fieldCaption,
       groupName: selectedField.fieldGroupName,
     }));
+    changeRecordFieldValue(
+      "caption",
+      selectedField.fieldCaption,
+      fieldFormValues.recordViewFieldId
+    );
+    changeRecordFieldValue(
+      "groupName",
+      selectedField.fieldGroupName,
+      fieldFormValues.recordViewFieldId
+    );
   };
 
   const handleChange = (e) => {
@@ -69,20 +82,24 @@ const DraggableRecordViewField = ({
     openConfirmModalToDelete(fieldFormValues);
   };
 
-  useEffect(() => {
-    setFieldFormValues((prev) => ({ ...prev, ...recordViewField }));
-  }, [recordViewField.fieldId]);
+  // useEffect(() => {
+  //   setFieldFormValues((prev) => ({ ...prev, ...recordViewField }));
+  // }, [recordViewField.fieldId]);
 
-  useEffect(() => {
-    handleFieldInputChange(fieldFormValues?.fieldId);
-  }, [fieldFormValues?.fieldId]);
+  // useEffect(() => {
+  //   handleFieldInputChange(fieldFormValues?.fieldId);
+  // }, [fieldFormValues?.fieldId]);
 
   const isDraggedOver = fieldFormValues.isDraggedOver;
 
   const accordionHeader = fieldFormValues?.fieldId
-    ? `${fieldFormValues.fieldCaption} (Feld ID: ${fieldFormValues.fieldId})`
+    ? `${fieldFormValues.caption} (Feld ID: ${fieldFormValues.fieldId})`
     : fieldFormValues?.differingCaption ||
       (fieldFormValues?.imageType ? fieldFormValues?.imageType : "Neues Feld");
+
+  useEffect(() => {
+    console.log(fieldFormValues);
+  }, []);
 
   return (
     <DragItemContainer
@@ -122,7 +139,7 @@ const DraggableRecordViewField = ({
             <div className={css.flex_column}>
               <div className={css.flex_row}>
                 <CustomSelect
-                  handleChange={handleChange}
+                  handleChange={handleFieldInputChange}
                   handleBlur={handleBlur}
                   value={fieldFormValues?.fieldId || ""}
                   label="Feld"
@@ -132,11 +149,11 @@ const DraggableRecordViewField = ({
                   size="small"
                 />
                 <TextField
-                  value={fieldFormValues?.fieldCaption || ""}
+                  value={fieldFormValues?.caption || ""}
                   variant="outlined"
                   size="small"
                   label="Caption"
-                  name="fieldCaption"
+                  name="caption"
                   disabled
                   fullWidth
                 />

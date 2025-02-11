@@ -10,6 +10,7 @@ import WorkflowForm from "./workflow-form";
 
 const DisplaySelectedForm = ({ selectedNode }) => {
   const workflowSteps = useSelector((state) => state.workflow.workflowSteps);
+  const workflowId = useSelector((state) => state.workflow.workflowId);
 
   const viewType = selectedNode?.viewType;
   const stepID = selectedNode?.id;
@@ -33,21 +34,31 @@ const DisplaySelectedForm = ({ selectedNode }) => {
   if (viewType === viewTypeConstants.RECORDVIEW) {
     return (
       <RecordViewForm
+        key={stepID}
         stepID={stepID}
         workflowStepValues={selectedWorkflowStep}
       />
     );
   } else if (viewType === viewTypeConstants.LISTVIEW) {
     return (
-      <ListViewForm stepID={stepID} workflowStepValues={selectedWorkflowStep} />
+      <ListViewForm
+        key={stepID}
+        stepID={stepID}
+        workflowStepValues={selectedWorkflowStep}
+      />
     );
   } else if (viewType === viewTypeConstants.TILEVIEW) {
     return (
-      <TileViewForm stepID={stepID} workflowStepValues={selectedWorkflowStep} />
+      <TileViewForm
+        key={stepID}
+        stepID={stepID}
+        workflowStepValues={selectedWorkflowStep}
+      />
     );
   } else if (isScannerDialog(viewType)) {
     return (
       <ScannerDialogForm
+        key={stepID}
         stepID={stepID}
         workflowStepValues={selectedWorkflowStep}
       />
@@ -55,12 +66,13 @@ const DisplaySelectedForm = ({ selectedNode }) => {
   } else if (viewType === viewTypeConstants.MODALDIALOG) {
     return (
       <ModalDialogForm
+        key={stepID}
         stepID={stepID}
         workflowStepValues={selectedWorkflowStep}
       />
     );
   } else {
-    return <WorkflowForm />;
+    return <WorkflowForm key={workflowId} />;
   }
 };
 

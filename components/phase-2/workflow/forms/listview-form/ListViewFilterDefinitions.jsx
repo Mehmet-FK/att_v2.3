@@ -42,10 +42,7 @@ const FilterDefinitionForm = ({
   return (
     <div style={{ maxWidth: "30%", width: "100%" }}>
       <ElementBadge handleClickOnBadge={handleDeleteDefinition}>
-        <Card
-          title={definitionFormValues?.filterDefinitionId}
-          sx={{ width: "100%", backgroundColor: "inherit" }}
-        >
+        <Card sx={{ width: "100%", backgroundColor: "inherit" }}>
           <CardContent>
             <div className={css.flex_column}>
               <CustomSelect

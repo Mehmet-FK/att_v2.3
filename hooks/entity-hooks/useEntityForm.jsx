@@ -14,6 +14,7 @@ import {
   removeEntityField,
   removeEntitySorting,
   removeFieldOption,
+  removeFieldOptionsByFieldID,
   removeFieldProperty,
   removeFieldValidation,
   setEntityToInitial,
@@ -148,6 +149,7 @@ const useEntityForm = () => {
     deleteEntitySorting(sortingIdToDelete);
     deleteFieldProperty(fieldPropertyIdToDelete);
     deleteFieldValidationById(validationIdToDelete);
+    deleteFieldOptionsByFieldID(fieldID);
     dispatch(removeEntityField({ fieldID }));
   };
 
@@ -269,6 +271,10 @@ const useEntityForm = () => {
 
   const deleteFieldOption = (optionID) => {
     dispatch(removeFieldOption({ optionID }));
+  };
+
+  const deleteFieldOptionsByFieldID = (fieldID) => {
+    dispatch(removeFieldOptionsByFieldID({ fieldID }));
   };
 
   return {

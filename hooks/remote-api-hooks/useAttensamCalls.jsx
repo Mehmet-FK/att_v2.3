@@ -65,17 +65,15 @@ const useAttensamCalls = () => {
 
     try {
       console.log({ workflowId });
-      const { data } = await axiosWithToken.delete(
-        `/atina/api/Workflow/DeleteWorkflow?id=${workflowId}`,
-        {
-          headers: { mode: "cors" },
-        }
+      const { data } = await axiosWithToken.post(
+        `/atina/api/Workflow/DeleteWorkflow?id=${workflowId}`
       );
       console.log(data);
       toastSuccessNotify("Workflow wurde erfolgreich gelöscht");
       responseFlag = true;
     } catch (error) {
-      toastErrorNotify(error?.response?.data);
+      toastErrorNotify(error?.response?.data || "Etwas ist schiefgelaufen!");
+      console.log({ error });
     } finally {
       dispatch(stopLoading());
     }
@@ -124,10 +122,10 @@ const useAttensamCalls = () => {
         "/api/Entity/CreateAndUpdateEntity",
         entityData
       );
-      toastSuccessNotify("Element wurde erfolgreich angelegt");
+      toastSuccessNotify("Element wurde erfolgreich gespeichert");
       responseFlag = true;
     } catch (error) {
-      toastErrorNotify(error?.response?.data);
+      toastErrorNotify(error?.response?.data || "Etwas ist schiefgelaufen!");
       console.log(error);
     } finally {
       dispatch(stopLoading());

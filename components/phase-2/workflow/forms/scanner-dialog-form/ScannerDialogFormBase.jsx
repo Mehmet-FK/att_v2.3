@@ -40,7 +40,6 @@ const ScannerDialogFormBase = ({
     ) {
       inputValue = Number(inputValue);
     }
-    console.log(inputValue);
     updateScannerDialogValue(name, inputValue, viewId);
   };
 

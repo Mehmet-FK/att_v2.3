@@ -44,6 +44,8 @@ export const authOptions = {
           return data;
         } catch (error) {
           let code = error?.response?.status || "";
+          console.log({ error });
+          console.log(error.config);
           throw Error(code + " Etwas ist schiefgelaufen!");
         }
       },

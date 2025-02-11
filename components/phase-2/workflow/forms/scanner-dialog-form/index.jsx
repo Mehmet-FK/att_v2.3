@@ -25,10 +25,9 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
   const [targetFieldOptions, setTargetFieldOptions] = useState([]);
 
   const findNextRecordViewId = () => {
-    const nextStep = workflowStepValues.nextStep;
+    const nextStep = workflowStepValues?.nextStep;
     if (!nextStep) return null;
     const recordView = recordViews.find((rv) => rv.workflowStepId === nextStep);
-    console.log({ recordView });
 
     return recordView ? recordView.recordViewId : null;
   };
@@ -55,7 +54,6 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
     const filteredRecordViewFields = recordViewFields?.filter(
       (rvf) => rvf.recordViewId === recordViewId
     );
-    console.log({ filteredRecordViewFields });
     setTargetFieldOptions(filteredRecordViewFields);
   }, [recordViewId, recordViewFields]);
 

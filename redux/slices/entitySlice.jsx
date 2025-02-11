@@ -150,6 +150,11 @@ const entitySlice = createSlice({
         (option) => option.fieldOptionId !== optionID
       );
     },
+    removeFieldOptionsByFieldID: (state, { payload: { fieldID } }) => {
+      state.fieldOptions = state.fieldOptions.filter(
+        (option) => option.fieldId !== fieldID
+      );
+    },
   },
 });
 
@@ -179,5 +184,6 @@ export const {
   addMultipleFieldOptions,
   changeFieldOptionValue,
   removeFieldOption,
+  removeFieldOptionsByFieldID,
 } = entitySlice.actions;
 export default entitySlice.reducer;

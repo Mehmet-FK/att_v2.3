@@ -69,12 +69,14 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
   return (
     <>
       <RecordViewFieldsModal
+        key={viewId}
+        recordViewId={viewId}
         open={openRecordFieldsModal}
         setOpen={setOpenRecordFieldsModal}
         entityFields={entityFields}
-        recordViewId={viewId}
       />
       <RecordViewFunctionsModal
+        key={viewId}
         recordViewId={viewId}
         open={openRecordFunctionsModal}
         setOpen={setOpenRecordFunctionsModal}
@@ -98,12 +100,15 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
               mainProps={{
                 handleChange: handleChange,
                 handleBlur: handleBlur,
-                preferences: { key: "id", caption: "caption" },
+                preferences: {
+                  key: "id",
+                  caption: "caption",
+                  filterKeys: ["id", "caption", "name"],
+                },
                 options: autoCompleteEntities,
                 name: "entityId",
                 value: recordViewValues?.entityId,
                 label: "Entität",
-                defaultValue: null,
               }}
               helperProps={{
                 className: css.form_control,

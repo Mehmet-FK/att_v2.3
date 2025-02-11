@@ -14,6 +14,7 @@ import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext"
 
 const WorkflowForm = ({}) => {
   const workflowState = useSelector((state) => state.workflow);
+
   const [workflowFormValues, setWorkflowFormValues] = useState(workflowState);
 
   const { updateWorkflowValue } = useWorkflowForms();
@@ -38,7 +39,6 @@ const WorkflowForm = ({}) => {
   useEffect(() => {
     setWorkflowFormValues(workflowState);
   }, [workflowState]);
-
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>
@@ -119,10 +119,14 @@ const WorkflowForm = ({}) => {
             mainProps={{
               handleChange: handleChange,
               handleBlur: handleBlur,
-              preferences: { key: "id", caption: "caption" },
+              preferences: {
+                key: "id",
+                caption: "caption",
+                filterKeys: ["id", "caption", "name"],
+              },
               options: autoCompleteEntities,
               name: "entityId",
-              value: workflowFormValues?.entityId || "",
+              value: workflowFormValues?.entityId,
               label: "Entität",
             }}
             helperProps={{

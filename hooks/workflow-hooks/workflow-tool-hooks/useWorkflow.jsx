@@ -209,11 +209,6 @@ const useWorkflow = () => {
         type: name,
         viewId: viewId || _nodeId,
       },
-      changeEvent: (e, selectedNode) =>
-        setNodes((nds) => [
-          ...nds.filter((n) => n.id !== newNode.id),
-          { ...selectedNode, name: e.target.value },
-        ]),
     };
   };
 
@@ -431,11 +426,11 @@ const useWorkflow = () => {
       nodes.map((node) => [node.viewType, { ...node }])
     );
 
-    const scannerDialogsQR = scannerDialogs?.find(
-      (sc) => scannerType === scannerTypeConstants.QR_CODE
+    const scannerDialogsQR = scannerDialogs?.filter(
+      (sc) => sc.scannerType === scannerTypeConstants.QR_CODE
     );
-    const scannerDialogsNFC = scannerDialogs?.find(
-      (sc) => scannerType === scannerTypeConstants.NFC
+    const scannerDialogsNFC = scannerDialogs?.filter(
+      (sc) => sc.scannerType === scannerTypeConstants.NFC
     );
 
     const launchElementType = launchTypes.find(

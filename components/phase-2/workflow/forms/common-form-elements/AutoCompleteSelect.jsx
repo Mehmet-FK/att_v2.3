@@ -27,8 +27,9 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     defaultValue,
     inputType,
   } = mainProps;
+
   const [inputValue, setInputValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState(null);
+  // const [selectedValue, setSelectedValue] = useState(null);
 
   const optKey = preferences.key;
   const optCaption = preferences.caption;
@@ -37,7 +38,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const optFilterKeys = preferences?.filterKeys;
 
   const validateValue = (value) => {
-    if (typeof value === "number" || value) {
+    if (value) {
       return value;
     } else {
       return defaultValue !== undefined ? defaultValue : "";
@@ -55,7 +56,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     };
     if (newValue) {
       pseudoEvent.target.value = newValue[optKey];
-      setSelectedValue(newValue);
+      // setSelectedValue(newValue);
     }
     handleChange(pseudoEvent);
   };
@@ -104,11 +105,14 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
     });
   }, []);
 
-  useEffect(() => {
-    const tempSelectedValue = options.find((opt) => opt[optKey] == value);
-    setSelectedValue(tempSelectedValue);
-    console.log({ [name]: value });
-  }, [value]);
+  const selectedValue = useMemo(() => {
+    return options.find((opt) => opt[optKey] == value) || null;
+  }, [value, options]);
+
+  // useEffect(() => {
+  //   const tempSelectedValue = options.find((opt) => opt[optKey] == value);
+  //   setSelectedValue(tempSelectedValue);
+  // }, [value]);
 
   return (
     <Autocomplete

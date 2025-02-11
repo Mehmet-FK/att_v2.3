@@ -8,10 +8,12 @@ import DraggableRecordViewField from "./DraggableRecordViewField";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-utility-hooks/useDragAndDropUtils";
 
-const recordViewTemplate = {
+const recordFieldTemplate = {
   recordViewFieldId: "",
   recordViewId: "",
   fieldId: null,
+  caption: "",
+  groupName: "",
   differingCaption: null,
   differingGroupName: null,
   isDefault: false,
@@ -29,7 +31,15 @@ const RecordViewFieldsModal = ({
   recordViewId,
   entityFields,
 }) => {
-  const [fields, setFields] = useState([]);
+  const recordViewFields = useSelector(
+    (state) => state.workflow.recordViewFields
+  );
+
+  const filteredRecordViewFields = useMemo(() => {
+    return recordViewFields?.filter((rvf) => rvf.recordViewId === recordViewId);
+  }, [recordViewFields, recordViewId]);
+
+  const [fields, setFields] = useState(filteredRecordViewFields);
 
   const [confirmModalValues, setConfirmModalValues] = useState({
     isOpen: false,
@@ -39,10 +49,6 @@ const RecordViewFieldsModal = ({
     confirmFunction: null,
   });
 
-  const recordViewFields = useSelector(
-    (state) => state.workflow.recordViewFields
-  );
-
   const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
     fields,
     setFields
@@ -50,16 +56,11 @@ const RecordViewFieldsModal = ({
 
   const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
 
-  // useEffect(() => {
-  //   if (filteredRecordViewFields?.length < 1) return;
-  //   assignSortOrderAndDragIndicator(filteredRecordViewFields);
-  // }, [filteredRecordViewFields]);
-
   //TODO: Refactoring is needed
   const handleAddRecordView = () => {
     const newSortOrder = fields.at(-1)?.sortOrder + 1;
     const newRecordViewField = {
-      ...recordViewTemplate,
+      ...recordFieldTemplate,
       recordViewFieldId: generateRandomId("record-field-", null),
       recordViewId,
       sortOrder: newSortOrder,
@@ -72,11 +73,11 @@ const RecordViewFieldsModal = ({
   };
 
   const openConfirmModalToDelete = (recordField) => {
-    const { fieldId, fieldCaption, recordViewFieldId } = recordField;
+    const { fieldId, caption, recordViewFieldId } = recordField;
     const temp = {
       isOpen: true,
       dialogTitle: "Löschen!",
-      dialogContent: `Möchten Sie das Feld "${fieldId} - ${fieldCaption}" löschen?`,
+      dialogContent: `Möchten Sie das Feld "${recordViewFieldId} - ${caption}" löschen?`,
       confirmBtnText: "Löschen",
       handleConfirm: () => deleteRecordViewField(recordViewFieldId),
     };
@@ -84,7 +85,7 @@ const RecordViewFieldsModal = ({
   };
 
   const changeRecordFieldValue = (name, value, fieldID) => {
-    const changedFieds = fields.map((el) => {
+    const fieldsUpdated = fields.map((el) => {
       if (el.recordViewFieldId === fieldID) {
         return { ...el, [name]: value };
       } else {
@@ -92,25 +93,30 @@ const RecordViewFieldsModal = ({
       }
     });
     if (name === "sortOrder") {
-      changedFieds.sort((a, b) => a.sortOrder - b.sortOrder);
+      fieldsUpdated.sort((a, b) => a.sortOrder - b.sortOrder);
     }
-    setFields(changedFieds);
+
+    setFields(fieldsUpdated);
   };
 
   const updateStoreOnClose = () => {
     updateAllRecordViewFields(recordViewId, fields);
     setOpen(false);
   };
+  //TODO: Remove useEffect if possible
+  // useEffect(() => {
+  //   const filteredRecordViewFields = recordViewFields?.filter(
+  //     (rvf) => rvf.recordViewId === recordViewId
+  //   );
+
+  //   if (!filteredRecordViewFields) return;
+
+  //   setFields(filteredRecordViewFields);
+  // }, [recordViewId]);
 
   useEffect(() => {
-    const filteredRecordViewFields = recordViewFields?.filter(
-      (rvf) => rvf.recordViewId === recordViewId
-    );
-
-    if (!filteredRecordViewFields) return;
-
-    setFields(filteredRecordViewFields);
-  }, [recordViewId]);
+    console.log(fields);
+  }, [fields]);
 
   return (
     <>
