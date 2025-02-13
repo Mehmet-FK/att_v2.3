@@ -34,15 +34,25 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
 
   const [recordFunctions, setRecordFunctions] = useState([]);
 
-  const {
-    assignSortOrderAndDragIndicator,
-    onDragStart,
-    onDragEnter,
-    onDragEnd,
-  } = useDragAndDropUtils(recordFunctions, setRecordFunctions);
+  const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
+    recordFunctions,
+    setRecordFunctions
+  );
+
+  const changeRecordFunctionTotally = (recordFunction) => {
+    const updatedFunctions = recordFunctions.map((el) => {
+      if (el.recordViewFunctionId === recordFunction.recordViewFunctionId) {
+        return recordFunction;
+      } else {
+        return el;
+      }
+    });
+
+    setRecordFunctions(updatedFunctions);
+  };
 
   const changeRecordFunctionValue = (name, value, functionID) => {
-    const changedFunctions = recordFunctions.map((el) => {
+    const updatedFunctions = recordFunctions.map((el) => {
       if (el.recordViewFunctionId === functionID) {
         return { ...el, [name]: value };
       } else {
@@ -50,9 +60,9 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
       }
     });
     if (name === "sortOrder") {
-      changedFunctions.sort((a, b) => a.sortOrder - b.sortOrder);
+      updatedFunctions.sort((a, b) => a.sortOrder - b.sortOrder);
     }
-    setRecordFunctions(changedFunctions);
+    setRecordFunctions(updatedFunctions);
   };
 
   const handleAddRecordFunction = () => {
@@ -127,11 +137,10 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
                     key={recordFunction?.recordViewFunctionId}
                     index={index}
                     functionValues={recordFunction}
-                    changeRecordFunctionValue={changeRecordFunctionValue}
                     openConfirmModalToDelete={openConfirmModalToDelete}
-                    onDragStart={onDragStart}
-                    onDragEnter={onDragEnter}
-                    onDragEnd={onDragEnd}
+                    changeRecordFunctionValue={changeRecordFunctionValue}
+                    changeRecordFunctionTotally={changeRecordFunctionTotally}
+                    dragUtils={dragUtils}
                   />
                 ))}
               </div>

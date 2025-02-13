@@ -14,49 +14,26 @@ const DraggableRecordViewField = ({
   entityFields,
   openConfirmModalToDelete,
   changeRecordFieldValue,
+  changeRecordFieldTotally,
   dragUtils,
 }) => {
   const [fieldFormValues, setFieldFormValues] = useState(recordViewField);
   const [accordionExpanded, setAccordionExpanded] = useState(false);
 
-  const { onDragStart, onDragEnter, onDragEnd } = dragUtils;
-
-  const handleDragStart = (e) => {
-    onDragStart(e, fieldFormValues, index);
-  };
-  const handleDragEnter = (e) => {
-    onDragEnter(fieldFormValues, index);
-    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: true }));
-  };
-  const handleDragLeave = (e) => {
-    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
-  };
-  const handleDragEnd = (e) => {
-    onDragEnd(e, fieldFormValues, index);
-  };
-
   const handleFieldInputChange = (e) => {
     const fieldID = e.target.value;
 
     const selectedField = entityFields?.find((field) => field.id === fieldID);
-    console.log(selectedField);
     if (!selectedField) return;
-    setFieldFormValues((prev) => ({
-      ...prev,
+
+    const tempField = {
+      ...fieldFormValues,
       fieldId: fieldID,
       caption: selectedField.fieldCaption,
       groupName: selectedField.fieldGroupName,
-    }));
-    changeRecordFieldValue(
-      "caption",
-      selectedField.fieldCaption,
-      fieldFormValues.recordViewFieldId
-    );
-    changeRecordFieldValue(
-      "groupName",
-      selectedField.fieldGroupName,
-      fieldFormValues.recordViewFieldId
-    );
+    };
+    setFieldFormValues(tempField);
+    changeRecordFieldTotally(tempField);
   };
 
   const handleChange = (e) => {
@@ -78,17 +55,24 @@ const DraggableRecordViewField = ({
   };
 
   const handleDeleteField = (e) => {
-    console.log({ fieldFormValues });
     openConfirmModalToDelete(fieldFormValues);
   };
 
-  // useEffect(() => {
-  //   setFieldFormValues((prev) => ({ ...prev, ...recordViewField }));
-  // }, [recordViewField.fieldId]);
+  const { onDragStart, onDragEnter, onDragEnd } = dragUtils;
 
-  // useEffect(() => {
-  //   handleFieldInputChange(fieldFormValues?.fieldId);
-  // }, [fieldFormValues?.fieldId]);
+  const handleDragStart = (e) => {
+    onDragStart(e, fieldFormValues, index);
+  };
+  const handleDragEnter = (e) => {
+    onDragEnter(fieldFormValues, index);
+    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: true }));
+  };
+  const handleDragLeave = (e) => {
+    setFieldFormValues((prev) => ({ ...prev, isDraggedOver: false }));
+  };
+  const handleDragEnd = (e) => {
+    onDragEnd(e, fieldFormValues, index);
+  };
 
   const isDraggedOver = fieldFormValues.isDraggedOver;
 
@@ -96,10 +80,6 @@ const DraggableRecordViewField = ({
     ? `${fieldFormValues.caption} (Feld ID: ${fieldFormValues.fieldId})`
     : fieldFormValues?.differingCaption ||
       (fieldFormValues?.imageType ? fieldFormValues?.imageType : "Neues Feld");
-
-  useEffect(() => {
-    console.log(fieldFormValues);
-  }, []);
 
   return (
     <DragItemContainer
@@ -140,7 +120,7 @@ const DraggableRecordViewField = ({
               <div className={css.flex_row}>
                 <CustomSelect
                   handleChange={handleFieldInputChange}
-                  handleBlur={handleBlur}
+                  // handleBlur={handleBlur}
                   value={fieldFormValues?.fieldId || ""}
                   label="Feld"
                   name="fieldId"

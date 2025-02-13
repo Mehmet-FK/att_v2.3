@@ -91,7 +91,7 @@ const useDragAndDropUtils = (elements, setElements) => {
 
     draggingElementRef.current = null;
     draggedOverElementRef.current = null;
-
+    console.log({ tempElements });
     removeOpacityOnDragEnd(e);
     setTimeout(() => {
       setElements(tempElements);

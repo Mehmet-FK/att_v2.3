@@ -31,7 +31,7 @@ const useWorkflow = () => {
   const { setNodes, setEdges, getEdges, getNodes } = rfInstance;
 
   //Creates random id
-  const getId = (type) => `${type}_${idRef.current++}`;
+  const generateID = (type) => `${type}_${idRef.current++}`;
 
   const randomPositions = (x, y, xMax = 1000, yMax = 500) => {
     const getRandomValue = (max) => Math.floor(Math.random() * (max / 10)) * 10;
@@ -179,7 +179,7 @@ const useWorkflow = () => {
   };
 
   const createNewLaunchNode = (name, caption, nodeId) => {
-    const _nodeId = nodeId ? nodeId : getId(name);
+    const _nodeId = nodeId ? nodeId : generateID(name);
     return {
       id: _nodeId,
       type: "launch",
@@ -196,7 +196,7 @@ const useWorkflow = () => {
     };
   };
   const createNewReqularNode = (name, caption, position, nodeId, viewId) => {
-    const _nodeId = nodeId ? nodeId : getId(name);
+    const _nodeId = nodeId ? nodeId : generateID(name);
     return {
       id: _nodeId,
       type: "view",
@@ -292,17 +292,24 @@ const useWorkflow = () => {
     saveToHistory();
   };
 
-  const restoreExistingLaunchElement = (launchElement) => {
+  const restoreExistingLaunchElement = (existingWorkflow) => {
+    const launchElement = existingWorkflow.launchElements[0];
+    if (!launchElement) return null;
     const viewType = launchTypes.find(
       (lt) => lt.id === launchElement.launchType
     )?.type;
     const caption = viewType; //TODO: refoctoring is needed
     const nodeId = launchElement.workflowStepId;
     const newLaunchNode = createNewLaunchNode(viewType, caption, nodeId);
+
     return newLaunchNode;
   };
 
-  const restoreExistingListViews = (listViews) => {
+  const restoreExistingListViews = (existingWorkflow) => {
+    const listViews = existingWorkflow.listViews;
+
+    if (!listViews.length) return null;
+
     const createdListViewsNodes = [];
     const initialX = 450;
     listViews.forEach((lv, index) => {
@@ -322,7 +329,11 @@ const useWorkflow = () => {
     return createdListViewsNodes;
   };
 
-  const restoreExistingRecordViews = (recordViews) => {
+  const restoreExistingRecordViews = (existingWorkflow) => {
+    const recordViews = existingWorkflow.recordViews;
+
+    if (!recordViews.length) return null;
+
     const createdRecordViewNodes = [];
     recordViews.forEach((rv) => {
       const viewType = viewTypeConstants.RECORDVIEW;
@@ -340,7 +351,10 @@ const useWorkflow = () => {
     return createdRecordViewNodes;
   };
 
-  const restoreExistingModalDialogs = (modalDialogs) => {
+  const restoreExistingModalDialogs = (existingWorkflow) => {
+    const modalDialogs = existingWorkflow.modalDialogs;
+    if (!modalDialogs.length) return null;
+
     const createdModalDialogNodes = [];
     modalDialogs.forEach((md) => {
       const viewType = viewTypeConstants.MODALDIALOG;
@@ -358,7 +372,10 @@ const useWorkflow = () => {
     return createdModalDialogNodes;
   };
 
-  const restoreExistingScannerDialogs = (scannerDialogs) => {
+  const restoreExistingScannerDialogs = (existingWorkflow) => {
+    const scannerDialogs = existingWorkflow.scannerDialogs;
+    if (!scannerDialogs.length) return null;
+
     const createdScannerDialogNodes = [];
     scannerDialogs.forEach((sc) => {
       const viewType =
@@ -537,31 +554,24 @@ const useWorkflow = () => {
     _setNodes,
     _setEdges
   ) => {
-    const launchElement = existingWorkflow.launchElements[0];
+    let createdNodes = [];
 
-    if (launchElement) {
-      const launchNode = restoreExistingLaunchElement(launchElement);
-      _setNodes((nds) => nds.concat(launchNode));
-    }
+    const launchNode = restoreExistingLaunchElement(existingWorkflow);
+    createdNodes = createdNodes.concat(launchNode ? launchNode : []);
 
-    const listViews = existingWorkflow.listViews;
-    if (listViews.length) {
-      const listNodes = restoreExistingListViews(listViews);
-      _setNodes((nds) => nds.concat(listNodes));
-    }
+    const listNodes = restoreExistingListViews(existingWorkflow);
+    createdNodes = createdNodes.concat(listNodes ? listNodes : []);
 
-    const recordViews = existingWorkflow.recordViews;
-    const recordNodes = restoreExistingRecordViews(recordViews);
-    _setNodes((nds) => nds.concat(recordNodes));
+    const recordNodes = restoreExistingRecordViews(existingWorkflow);
+    createdNodes = createdNodes.concat(recordNodes ? recordNodes : []);
 
-    const modalDialogs = existingWorkflow.modalDialogs;
-    const modalNodes = restoreExistingModalDialogs(modalDialogs);
-    _setNodes((nds) => nds.concat(modalNodes));
+    const modalNodes = restoreExistingModalDialogs(existingWorkflow);
+    createdNodes = createdNodes.concat(modalNodes ? modalNodes : []);
 
-    const scannerDialogs = existingWorkflow.scannerDialogs;
-    const scannerNodes = restoreExistingScannerDialogs(scannerDialogs);
-    _setNodes((nds) => nds.concat(scannerNodes));
+    const scannerNodes = restoreExistingScannerDialogs(existingWorkflow);
+    createdNodes = createdNodes.concat(scannerNodes ? scannerNodes : []);
 
+    _setNodes((nds) => nds.concat(createdNodes));
     const workflowSteps = existingWorkflow.workflowSteps;
     restoreExistingEdges(workflowSteps, _setEdges);
   };

@@ -1,15 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
 import { scannerTypeConstants } from "@/helpers/Constants";
 import ScannerDialogFormBase from "./ScannerDialogFormBase";
 import ViewHeaderForm from "../header-form";
-import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
-import { selectTargetRecordViewIdOfScanner } from "@/redux/selectors/workflowSelectors";
+
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 
 const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
-  // const { getRecordViewFields } = useAttensamCalls();
   const { prepareEntityFields } = useWorkflowForms();
   const { scannerDialogs, recordViewFields, recordViews } = useSelector(
     (state) => state.workflow
@@ -22,7 +20,6 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
   );
 
   const [scannerDialogValues, setScannerDialogValues] = useState(scannerDialog);
-  const [targetFieldOptions, setTargetFieldOptions] = useState([]);
 
   const findNextRecordViewId = () => {
     const nextStep = workflowStepValues?.nextStep;
@@ -42,20 +39,15 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
     [entities, scannerDialogValues?.entityId]
   );
 
+  const targetFieldOptions = useMemo(() => {
+    if (!recordViewId) return [];
+    return (
+      recordViewFields?.filter((rvf) => rvf.recordViewId === recordViewId) || []
+    );
+  }, [recordViewId, recordViewFields]);
+
   const viewId = scannerDialog?.scannerDialogId;
   const isNfcScanner = scannerDialog?.scannerType === scannerTypeConstants.NFC;
-
-  useEffect(() => {
-    if (!recordViewId) {
-      setTargetFieldOptions([]);
-      return;
-    }
-
-    const filteredRecordViewFields = recordViewFields?.filter(
-      (rvf) => rvf.recordViewId === recordViewId
-    );
-    setTargetFieldOptions(filteredRecordViewFields);
-  }, [recordViewId, recordViewFields]);
 
   if (isNfcScanner) {
     return (

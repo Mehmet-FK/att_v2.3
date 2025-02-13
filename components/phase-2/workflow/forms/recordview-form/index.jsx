@@ -20,7 +20,10 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
   );
   const viewId = useMemo(() => recordView?.recordViewId, [recordView]);
 
-  const [recordViewValues, setRecordViewValues] = useState(recordView);
+  const [recordViewValues, setRecordViewValues] = useState({
+    ...recordView,
+    name: workflowStepValues?.name,
+  });
   const [openRecordFieldsModal, setOpenRecordFieldsModal] = useState(false);
   const [openRecordFunctionsModal, setOpenRecordFunctionsModal] =
     useState(false);
@@ -57,14 +60,6 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
     () => prepareEntityFields(entities, recordViewValues?.entityId),
     [recordViewValues?.entityId, entities]
   );
-
-  useEffect(() => {
-    const recordViewFormValue = {
-      ...recordView,
-      name: workflowStepValues?.name,
-    };
-    setRecordViewValues(recordViewFormValue);
-  }, [stepID]);
 
   return (
     <>

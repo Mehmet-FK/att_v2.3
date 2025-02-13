@@ -73,7 +73,7 @@ const RecordViewFieldsModal = ({
   };
 
   const openConfirmModalToDelete = (recordField) => {
-    const { fieldId, caption, recordViewFieldId } = recordField;
+    const { caption, recordViewFieldId } = recordField;
     const temp = {
       isOpen: true,
       dialogTitle: "Löschen!",
@@ -83,7 +83,17 @@ const RecordViewFieldsModal = ({
     };
     setConfirmModalValues(temp);
   };
+  const changeRecordFieldTotally = (recordField) => {
+    const fieldsUpdated = fields.map((el) => {
+      if (el.recordViewFieldId === recordField.recordViewFieldId) {
+        return recordField;
+      } else {
+        return el;
+      }
+    });
 
+    setFields(fieldsUpdated);
+  };
   const changeRecordFieldValue = (name, value, fieldID) => {
     const fieldsUpdated = fields.map((el) => {
       if (el.recordViewFieldId === fieldID) {
@@ -113,10 +123,6 @@ const RecordViewFieldsModal = ({
 
   //   setFields(filteredRecordViewFields);
   // }, [recordViewId]);
-
-  useEffect(() => {
-    console.log(fields);
-  }, [fields]);
 
   return (
     <>
@@ -149,6 +155,7 @@ const RecordViewFieldsModal = ({
                     entityFields={entityFields}
                     openConfirmModalToDelete={openConfirmModalToDelete}
                     changeRecordFieldValue={changeRecordFieldValue}
+                    changeRecordFieldTotally={changeRecordFieldTotally}
                     dragUtils={dragUtils}
                   />
                 ))}

@@ -31,15 +31,24 @@ const ScannerDialogFormBase = ({
   };
 
   const handleBlur = (e) => {
+    const nullFieldsList = ["targetFieldId"];
+
     const { name, value, type, checked } = e.target;
     let inputValue = type === "checkbox" ? checked : value;
-    if (
-      name === "inputDataSourceId" ||
-      name === "targetFieldId" ||
-      name === "entityId"
-    ) {
-      inputValue = Number(inputValue);
+
+    if (nullFieldsList.includes(name) && !value) {
+      inputValue = null;
     }
+    // else if (
+    //   name === "inputDataSourceId" ||
+    //   name === "targetFieldId" ||
+    //   name === "entityId"
+    // ) {
+    //   inputValue = Number(inputValue);
+    // }
+
+    console.log({ inputValue });
+
     updateScannerDialogValue(name, inputValue, viewId);
   };
 
@@ -108,10 +117,9 @@ const ScannerDialogFormBase = ({
               value={scannerDialogValues?.targetFieldId || null}
               label="Target Field"
               name="targetFieldId"
-              defaultValue={null}
               preferences={{
                 key: "recordViewFieldId",
-                caption: "differingCaption",
+                caption: "caption",
               }}
               options={targetFieldOptions}
               FormControlProps={{

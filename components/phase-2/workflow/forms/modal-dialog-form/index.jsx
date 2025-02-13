@@ -6,14 +6,17 @@ import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWork
 import { TextField } from "@mui/material";
 
 const ModalDialogForm = ({ stepID, workflowStepValues }) => {
-  const modalDialogs = useSelector((state) => state.workflow.modalDialogs);
+  const modalDialogs = useSelector((state) => state.workflow?.modalDialogs);
   const entityId = useSelector((state) => state.workflow.entityId);
   const entities = useSelector((state) => state.attensam.data?.entities);
 
-  const viewId = useMemo(() => stepID + "-modal", [stepID]);
-  const modalDialog = modalDialogs.find((md) => md.modalDialogId === viewId);
+  const modalDialog = modalDialogs.find((md) => md.workflowStepId === stepID);
+  const viewId = useMemo(() => modalDialog?.modalDialogId, [stepID]);
 
-  const [modalDialogValues, setModalDialogValues] = useState(modalDialog);
+  const [modalDialogValues, setModalDialogValues] = useState({
+    ...modalDialog,
+    name: workflowStepValues?.name,
+  });
 
   const { updateModalDialogValue, updateWorkflowStepValue } =
     useWorkflowForms();
@@ -54,14 +57,6 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
     updateWorkflowStepValue(name, value, stepID);
   };
 
-  useEffect(() => {
-    const modalDialogValues = {
-      ...modalDialog,
-      name: workflowStepValues?.name,
-    };
-
-    setModalDialogValues(modalDialogValues);
-  }, [stepID]);
   return (
     <div className={css.form_container}>
       <div className={css.flex_column}>

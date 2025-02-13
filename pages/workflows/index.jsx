@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { getSession } from "next-auth/react";
 
@@ -11,13 +11,65 @@ import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 import DashboardFilterNavigation from "@/components/ui-components/DashboardFilterNavigation";
 import { CustomSvgIcon } from "@/layout/layout_helpers";
 
+const multiSortWorkflows = (array) => {
+  const tmpArray = [...array];
+  return tmpArray.sort((a, b) => {
+    // Compare by 'path' first
+    if (a.path < b.path) return -1;
+    if (a.path > b.path) return 1;
+
+    // If 'path' is the same, compare by 'caption'
+    if (a.caption < b.caption) return -1;
+    if (a.caption > b.caption) return 1;
+
+    // If both are the same, return 0
+    return 0;
+  });
+};
+
 const Workflow = () => {
-  const { getWorkflowsCall } = useAttensamCalls();
+  const { getWorkflowsCall, getModulesCall } = useAttensamCalls();
   const workflows = useSelector((state) => state.attensam.data?.workflows);
-  const [existingWorkflows, setExistingWorkflows] = useState(workflows);
-  const [workflowLaunchType, setWorkflowLaunchType] = useState(6);
+  const modules = useSelector((state) => state.attensam.data?.modules);
+
+  const sortedWorkflows = useMemo(() => {
+    return workflows ? multiSortWorkflows(workflows) : [];
+  }, [workflows]);
+
+  const [existingWorkflows, setExistingWorkflows] = useState(sortedWorkflows);
+  const [workflowLaunchType, setWorkflowLaunchType] = useState(0);
 
   const launchTypeFilterOptions = [
+    {
+      id: -1,
+      icon: (
+        <CustomSvgIcon
+          src="/assets/launch-type-icons/workflow-fliter-show-all.svg"
+          width="30px"
+        />
+      ),
+      caption: "Alle anzeigen",
+    },
+    {
+      id: 4,
+      icon: (
+        <CustomSvgIcon
+          src="/assets/launch-type-icons/group-view.svg"
+          width="30px"
+        />
+      ),
+      caption: "Group View",
+    },
+    {
+      id: 2,
+      icon: (
+        <CustomSvgIcon
+          src="/assets/launch-type-icons/module.svg"
+          width="30px"
+        />
+      ),
+      caption: "Module",
+    },
     {
       id: 0,
       icon: (
@@ -38,16 +90,7 @@ const Workflow = () => {
       ),
       caption: "Entity Function",
     },
-    {
-      id: 2,
-      icon: (
-        <CustomSvgIcon
-          src="/assets/launch-type-icons/module.svg"
-          width="30px"
-        />
-      ),
-      caption: "Module",
-    },
+
     {
       id: 3,
       icon: (
@@ -58,16 +101,7 @@ const Workflow = () => {
       ),
       caption: "Element Default Function",
     },
-    {
-      id: 4,
-      icon: (
-        <CustomSvgIcon
-          src="/assets/launch-type-icons/group-view.svg"
-          width="30px"
-        />
-      ),
-      caption: "Group View",
-    },
+
     {
       id: 5,
       icon: (
@@ -78,17 +112,8 @@ const Workflow = () => {
       ),
       caption: "Default List View",
     },
-    {
-      id: -1,
-      icon: (
-        <CustomSvgIcon
-          src="/assets/launch-type-icons/workflow-fliter-show-all.svg"
-          width="30px"
-        />
-      ),
-      caption: "Alle anzeigen",
-    },
   ];
+
   const filterByLaunchType = (value) => {
     if (value === -1) {
       setExistingWorkflows(workflows);
@@ -100,25 +125,15 @@ const Workflow = () => {
     }
   };
 
-  const multiSortWorkflows = (array) => {
-    const tmpArray = [...array];
-    return tmpArray.sort((a, b) => {
-      // Compare by 'path' first
-      if (a.path < b.path) return -1;
-      if (a.path > b.path) return 1;
-
-      // If 'path' is the same, compare by 'caption'
-      if (a.caption < b.caption) return -1;
-      if (a.caption > b.caption) return 1;
-
-      // If both are the same, return 0
-      return 0;
-    });
-  };
+  const moduleFilterOptions = useMemo(
+    () => modules?.map((m) => m.caption),
+    [modules]
+  );
 
   useEffect(() => {
-    if (workflows) return;
+    // if (workflows) return;
     getWorkflowsCall();
+    getModulesCall();
   }, []);
 
   useEffect(() => {
@@ -131,7 +146,8 @@ const Workflow = () => {
       <PageHeader title="WORKFLOWS" />
       <div className={css.container}>
         <DashboardSearchBar
-          itemsState={workflows}
+          itemsState={sortedWorkflows}
+          filterOptions={moduleFilterOptions}
           setItemsState={setExistingWorkflows}
           filterKeys={["id", "caption", "path", "name"]}
           addNewLink="/workflows/new"

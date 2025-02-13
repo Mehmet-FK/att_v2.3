@@ -23,7 +23,10 @@ const ListViewForm = ({ stepID, workflowStepValues }) => {
     () => listViews.find((lv) => lv.workflowStepId === stepID),
     [stepID]
   );
-  const [listViewValues, setListViewValues] = useState(listView);
+  const [listViewValues, setListViewValues] = useState({
+    ...listView,
+    name: workflowStepValues?.name,
+  });
 
   const viewId = useMemo(() => listView?.listViewId, [stepID]);
   const selectedEntityId = useMemo(
@@ -66,14 +69,14 @@ const ListViewForm = ({ stepID, workflowStepValues }) => {
     updateWorkflowStepValue(name, value, stepID);
   };
 
-  useEffect(() => {
-    const listViewFormValue = {
-      ...listView,
-      name: workflowStepValues?.name,
-    };
+  // useEffect(() => {
+  //   const listViewFormValue = {
+  //     ...listView,
+  //     name: workflowStepValues?.name,
+  //   };
 
-    setListViewValues(listViewFormValue);
-  }, [stepID]);
+  //   setListViewValues(listViewFormValue);
+  // }, [stepID]);
 
   return (
     <div className={css.flex_column}>

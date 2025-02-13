@@ -11,15 +11,12 @@ import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext"
 const DraggableRecordViewFunction = ({
   index,
   functionValues,
-  changeRecordFunctionValue,
   openConfirmModalToDelete,
-  onDragStart,
-  onDragEnter,
-  onDragEnd,
+  changeRecordFunctionValue,
+  changeRecordFunctionTotally,
+  dragUtils,
 }) => {
   const [functionFormValues, setFunctionFormValues] = useState(functionValues);
-  const isDraggedOver = functionFormValues.isDraggedOver;
-  const functionID = functionFormValues.recordViewFunctionId;
 
   const { autoCompleteWorkflows } = useAutoCompleteWorkflows();
 
@@ -27,11 +24,16 @@ const DraggableRecordViewFunction = ({
     const selectedWorkflow = autoCompleteWorkflows?.find(
       (wf) => wf.id === workflowID
     );
-    setFunctionFormValues((prev) => ({
-      ...prev,
+
+    const tempFunction = {
+      ...functionFormValues,
       workflowId: workflowID,
       functionCaption: selectedWorkflow?.caption || "",
-    }));
+    };
+
+    setFunctionFormValues(tempFunction);
+
+    changeRecordFunctionTotally(tempFunction);
   };
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
@@ -52,6 +54,8 @@ const DraggableRecordViewFunction = ({
     openConfirmModalToDelete(functionFormValues);
   };
 
+  const { onDragStart, onDragEnter, onDragEnd } = dragUtils;
+
   const handleDragStart = (e) => {
     onDragStart(e, functionFormValues, index);
   };
@@ -69,13 +73,8 @@ const DraggableRecordViewFunction = ({
     setFunctionFormValues((prev) => ({ ...prev, isDraggedOver: false }));
   };
 
-  useEffect(() => {
-    setFunctionFormValues(functionValues);
-  }, [functionValues.recordViewFunctionId]);
-
-  useEffect(() => {
-    handleWorkflowIDChange(functionFormValues?.workflowId);
-  }, [functionFormValues?.workflowId]);
+  const isDraggedOver = functionFormValues.isDraggedOver;
+  const functionID = functionFormValues.recordViewFunctionId;
 
   return (
     <DragItemContainer
@@ -104,7 +103,7 @@ const DraggableRecordViewFunction = ({
         >
           <CardContent>
             <div className={css.flex_row}>
-              <TextField
+              {/* <TextField
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={functionFormValues?.sortOrder || ""}
@@ -112,7 +111,7 @@ const DraggableRecordViewFunction = ({
                 size="small"
                 label="sortOrder"
                 name="sortOrder"
-              />
+              /> */}
               <TextField
                 value={functionFormValues?.functionCaption || ""}
                 variant="outlined"

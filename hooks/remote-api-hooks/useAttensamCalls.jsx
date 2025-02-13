@@ -149,7 +149,8 @@ const useAttensamCalls = () => {
       "entityDefinition",
       false
     );
-  const getModulesCall = () => getAttData("/api/Modules", "modules", true);
+  const getModulesCall = () =>
+    getAttData("/atina/api/Modules", "modules", true);
 
   const getRecordViewFields = (id) =>
     getAttData(

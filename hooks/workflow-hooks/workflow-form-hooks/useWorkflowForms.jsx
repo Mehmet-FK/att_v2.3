@@ -150,7 +150,6 @@ const useWorkflowForms = () => {
   };
 
   const updateLaunchElementValue = (name, value, workflowStepId) => {
-    console.log({ name, value, workflowStepId });
     dispatch(changeLaunchElementValue({ name, value, workflowStepId }));
   };
 
@@ -390,7 +389,6 @@ const useWorkflowForms = () => {
     const headerColumnIds = headerColumns
       .filter((vhc) => headerRowIds.includes(vhc.headerRowID))
       .flatMap((vhc) => vhc.headerColumnId);
-    console.log({ headerColumnIds, headerRowIds });
     headerRowIds.forEach((vhrId) => deleteViewHeaderRow(vhrId));
     headerColumnIds.forEach((vhcId) => deleteViewHeaderColumn(vhcId));
     dispatch(
