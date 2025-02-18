@@ -8,6 +8,7 @@ import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWork
 import DraggableRecordViewFunction from "./DraggableRecordViewFunction";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import useDragAndDropUtils from "@/hooks/workflow-hooks/workflow-form-utility-hooks/useDragAndDropUtils";
+import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
 
 const recordFunctionTemplate = {
   recordViewFunctionId: "",
@@ -29,10 +30,26 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
   const recordViewFunctions = useSelector(
     (state) => state.workflow.recordViewFunctions
   );
+  const { autoCompleteWorkflows } = useAutoCompleteWorkflows();
 
+  const filteredRecordFunctions = useMemo(() => {
+    let filteredFunctions = recordViewFunctions?.filter(
+      (rvf) => rvf.recordViewId === recordViewId
+    );
+
+    filteredFunctions = filteredFunctions.map((func) => ({
+      ...func,
+      functionCaption: autoCompleteWorkflows?.find(
+        (wf) => wf.id === func.workflowId
+      )?.caption,
+    }));
+    return filteredFunctions;
+  }, [recordViewId, recordViewFunctions, autoCompleteWorkflows]);
+
+  const [recordFunctions, setRecordFunctions] = useState(
+    filteredRecordFunctions
+  );
   const { generateRandomId, updateAllRecordViewFunctions } = useWorkflowForms();
-
-  const [recordFunctions, setRecordFunctions] = useState([]);
 
   const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
     recordFunctions,
@@ -102,13 +119,13 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    const filteredRecordFunctions = recordViewFunctions?.filter(
-      (rvf) => rvf.recordViewId === recordViewId
-    );
-    if (!filteredRecordFunctions) return;
-    setRecordFunctions(filteredRecordFunctions);
-  }, [recordViewId]);
+  // useEffect(() => {
+  //   const filteredRecordFunctions = recordViewFunctions?.filter(
+  //     (rvf) => rvf.recordViewId === recordViewId
+  //   );
+  //   if (!filteredRecordFunctions) return;
+  //   setRecordFunctions(filteredRecordFunctions);
+  // }, [recordViewId]);
 
   return (
     <>
@@ -137,6 +154,7 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
                     key={recordFunction?.recordViewFunctionId}
                     index={index}
                     functionValues={recordFunction}
+                    autoCompleteWorkflows={autoCompleteWorkflows}
                     openConfirmModalToDelete={openConfirmModalToDelete}
                     changeRecordFunctionValue={changeRecordFunctionValue}
                     changeRecordFunctionTotally={changeRecordFunctionTotally}

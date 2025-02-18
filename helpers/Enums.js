@@ -48,6 +48,14 @@ export const headerColumnTextAlignments = [
 ];
 
 export const headerColumnValueVariables = [
-  { id: "user.userName", caption: "Benutzer-Name" },
-  { id: "user.number", caption: "Benutzer-Nummer" },
+  {
+    id: "user.userName",
+    caption: "user.userName",
+    fieldCaption: "Benutzer-Name",
+  },
+  {
+    id: "user.number",
+    caption: "user.number",
+    fieldCaption: "Benutzer-Nummer",
+  },
 ];

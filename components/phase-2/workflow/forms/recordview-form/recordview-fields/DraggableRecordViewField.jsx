@@ -17,7 +17,10 @@ const DraggableRecordViewField = ({
   changeRecordFieldTotally,
   dragUtils,
 }) => {
-  const [fieldFormValues, setFieldFormValues] = useState(recordViewField);
+  const [fieldFormValues, setFieldFormValues] = useState({
+    ...recordViewField,
+    sortOrder: index,
+  });
   const [accordionExpanded, setAccordionExpanded] = useState(false);
 
   const handleFieldInputChange = (e) => {
@@ -170,14 +173,15 @@ const DraggableRecordViewField = ({
                 />
 
                 <TextField
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  // onChange={handleChange}
+                  // onBlur={handleBlur}
                   value={fieldFormValues?.sortOrder || null}
                   variant="outlined"
                   size="small"
                   label="sortOrder"
                   name="sortOrder"
                   fullWidth
+                  disabled
                 />
               </div>
               <div className={css.flex_row}>

@@ -69,6 +69,6 @@ export const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export const CustomSvgIcon = ({ src, width }) => {
-  return <img src={src} style={{ width }} />;
+export const CustomSvgIcon = ({ src, styles }) => {
+  return <img src={src} style={styles} />;
 };

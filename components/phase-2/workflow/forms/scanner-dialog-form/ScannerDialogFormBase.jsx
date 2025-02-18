@@ -47,8 +47,6 @@ const ScannerDialogFormBase = ({
     //   inputValue = Number(inputValue);
     // }
 
-    console.log({ inputValue });
-
     updateScannerDialogValue(name, inputValue, viewId);
   };
 
@@ -130,7 +128,13 @@ const ScannerDialogFormBase = ({
               mainProps={{
                 handleChange: handleChange,
                 handleBlur: handleBlur,
-                preferences: { key: "id", caption: "caption", image: "icon" },
+                preferences: {
+                  key: "id",
+                  caption: "caption",
+                  image: "icon",
+                  title: "path",
+                  filterKeys: ["id", "caption", "path"],
+                },
                 options: autoCompleteWorkflows || [],
                 name: "inputDataSourceId",
                 value: scannerDialogValues?.inputDataSourceId,
@@ -139,6 +143,7 @@ const ScannerDialogFormBase = ({
               }}
               helperProps={{
                 className: css.form_control,
+                disabled: !scannerDialogValues?.allowManualInput,
               }}
             />
 

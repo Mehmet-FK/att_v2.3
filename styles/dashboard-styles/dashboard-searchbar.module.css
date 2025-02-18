@@ -45,3 +45,12 @@
   height: 2rem;
   padding: 6px 8px;
 }
+
+@media (max-width: 500px) {
+  .buttonWrapper {
+    min-width: 4rem;
+  }
+  .button {
+    font-size: xx-small;
+  }
+}

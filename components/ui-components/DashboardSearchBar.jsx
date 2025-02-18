@@ -14,22 +14,21 @@ function debounce(func, delay) {
     }, delay);
   };
 }
-
+const FILTER_TYPE = "search-filter";
 const DashboardSearchBar = ({
   itemsState,
   setItemsState,
   filterKeys,
   addNewLink,
-  filterOptions,
   filter,
+  setFilterType,
+  filterType,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filterItems = (_itemsState, term) => {
     const lowerCaseSearchTerm = term.toLowerCase();
-
     if (!_itemsState) return;
-
     return _itemsState.filter((item) =>
       filterKeys.some((key) => {
         const value = item[key];
@@ -45,10 +44,18 @@ const DashboardSearchBar = ({
     );
   };
 
+  const resetFilterState = () => {
+    if (!setFilterType) return;
+
+    if (searchTerm.length > 0) {
+      console.log("resetFilterStates(SEARCHBAR);");
+      setSearchTerm("");
+    }
+  };
+
   const debouncedFilter = useCallback(
     debounce((term) => {
       const result = filterItems(itemsState, term);
-      // console.log({ searchResult: result });
       setItemsState(result);
     }, 300),
     [itemsState]
@@ -57,7 +64,17 @@ const DashboardSearchBar = ({
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
     debouncedFilter(e.target.value);
+    if (!setFilterType) return;
+
+    if (filterType !== FILTER_TYPE) {
+      setFilterType(FILTER_TYPE);
+    }
   };
+
+  if (filterType !== FILTER_TYPE) {
+    resetFilterState();
+  }
+
   return (
     <div className={common_css.flex_column} style={{ rowGap: "0px" }}>
       <div className={css.utilbarContainer}>
@@ -77,6 +94,8 @@ const DashboardSearchBar = ({
             type="text"
             className={css.searchbar}
             placeholder="Suchbegriff eingeben"
+            name="searchbar"
+            autoFocus={true}
           />
         </form>
         <Link href={addNewLink} className={css.buttonWrapper}>
@@ -84,30 +103,6 @@ const DashboardSearchBar = ({
             Neu Anlegen
           </Button>
         </Link>
-      </div>
-
-      <div
-        className={common_css.flex_wrap_row}
-        style={{
-          gap: "5px",
-          justifyContent: "flex-start",
-        }}
-      >
-        {filterOptions?.map((foption) => (
-          <span
-            style={{
-              padding: "3px",
-              backgroundColor: "#ccc5",
-              border: "1px solid #3335",
-              fontSize: "0.6em",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-            onClick={() => handleChange({ target: { value: foption } })}
-          >
-            {foption}
-          </span>
-        ))}
       </div>
     </div>
   );

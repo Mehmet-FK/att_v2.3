@@ -6,19 +6,18 @@ import { useState } from "react";
 import AutoCompleteSelect from "../../common-form-elements/AutoCompleteSelect";
 import ElementBadge from "../../common-form-elements/ElementBadge";
 import DragItemContainer from "../../common-form-elements/DragItemContainer";
-import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
+// import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
 
 const DraggableRecordViewFunction = ({
   index,
   functionValues,
+  autoCompleteWorkflows,
   openConfirmModalToDelete,
   changeRecordFunctionValue,
   changeRecordFunctionTotally,
   dragUtils,
 }) => {
   const [functionFormValues, setFunctionFormValues] = useState(functionValues);
-
-  const { autoCompleteWorkflows } = useAutoCompleteWorkflows();
 
   const handleWorkflowIDChange = (workflowID) => {
     const selectedWorkflow = autoCompleteWorkflows?.find(

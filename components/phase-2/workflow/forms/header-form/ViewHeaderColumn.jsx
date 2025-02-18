@@ -26,6 +26,7 @@ const ColumnValueInput = ({
       ...headerColumnValueVariables,
       ...(entityFields ? entityFields : []),
     ];
+    console.log(entityFieldsForSelect);
     return (
       <CustomSelect
         handleChange={handleChange}
@@ -33,7 +34,11 @@ const ColumnValueInput = ({
         value={columnValue}
         label="Column Value"
         name="columnValue"
-        preferences={{ key: "id", value: "id", caption: "caption" }}
+        preferences={{
+          key: "caption",
+          value: "caption",
+          caption: "fieldCaption",
+        }}
         options={entityFieldsForSelect}
         size="small"
       />
