@@ -37,7 +37,10 @@ const workflowSlice = createSlice({
 
   initialState: _initialState,
   reducers: {
-    setWorkflowToInitial: () => _initialState,
+    setWorkflowToInitial: () => {
+      console.log({ setWorkflowToInitial: new Date() });
+      return _initialState;
+    },
 
     updateSelectedStep: (state, { payload: { stepId } }) => {
       if (state.selectedStepId !== stepId) {
@@ -55,6 +58,8 @@ const workflowSlice = createSlice({
     },
 
     updateTotalWorkflow: (state, { payload: { workflow } }) => {
+      console.log({ updateTotalWorkflow: new Date() });
+
       for (const key in workflow) {
         // if (workflow[key] || workflow[key] === "") {
         state[key] = workflow[key];

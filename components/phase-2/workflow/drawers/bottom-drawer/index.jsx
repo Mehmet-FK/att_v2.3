@@ -118,7 +118,6 @@ const BottomDrawer = ({
     _nodes.find((nds) => nds.id === selectedStepId);
 
   const selectedNode = useMemo(() => findSelectedNode(nodes), [selectedStepId]);
-
   return (
     <>
       <ConfirmModal

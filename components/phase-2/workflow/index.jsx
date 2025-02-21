@@ -65,7 +65,6 @@ const Sheet = ({ existingWorkflow }) => {
     isValidConnection,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
-    initializeWorkflowLabel,
   } = useWorkflow();
 
   const {
@@ -73,6 +72,7 @@ const Sheet = ({ existingWorkflow }) => {
     deleteWorkflowStep,
     updateSelectedStep,
     setPreviousAndNextStepsOnConnect,
+    updatePreviousAndNextStepOnDeleteEdge,
     updateNodesEdgesAndViewport,
     prepareWorkflowStateForPost,
   } = useWorkflowForms();
@@ -83,6 +83,7 @@ const Sheet = ({ existingWorkflow }) => {
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
+    console.log({ _nodes, _edges });
     updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
 
@@ -111,6 +112,7 @@ const Sheet = ({ existingWorkflow }) => {
     saveToHistory();
   };
   const handleDeleteEdge = (deletedEdges) => {
+    updatePreviousAndNextStepOnDeleteEdge(deletedEdges);
     saveToHistory();
   };
 

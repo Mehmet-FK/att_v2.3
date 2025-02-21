@@ -601,9 +601,9 @@ const useWorkflowForms = () => {
     dispatch(updateStep({ stepId }));
   };
 
-  const isStepConditional = (params) => {
+  const isStepConditional = (sourceHandle) => {
     const conditionHandleIds = ["a_bottom", "a_top"];
-    return conditionHandleIds.includes(params.sourceHandle);
+    return conditionHandleIds.includes(sourceHandle);
   };
 
   const updateModalNextStep = (params) => {
@@ -632,12 +632,9 @@ const useWorkflowForms = () => {
   };
 
   const setPreviousAndNextStepsOnConnect = (params) => {
-    console.log({ params });
-
     const previousStepId = params.source;
     const nextStepId = params.target;
-
-    if (isStepConditional(params)) {
+    if (isStepConditional(params.sourceHandle)) {
       updateModalNextStep(params);
     } else {
       dispatch(
@@ -647,6 +644,28 @@ const useWorkflowForms = () => {
         })
       );
     }
+  };
+  const updatePreviousAndNextStepOnDeleteEdge = (deletedEdges) => {
+    if (deletedEdges?.length < 1) return;
+
+    deletedEdges.forEach((ed) => {
+      const sourceStep = ed.sourceID;
+      const targetStep = ed.targetID;
+      dispatch(
+        changeWorkflowStepValue({
+          name: "nextStep",
+          value: "",
+          stepId: sourceStep,
+        })
+      );
+      dispatch(
+        changeWorkflowStepValue({
+          name: "previousStep",
+          value: "",
+          stepId: targetStep,
+        })
+      );
+    });
   };
 
   const restoreWorkflowState = (workflow) => {
@@ -699,6 +718,7 @@ const useWorkflowForms = () => {
     updateViewHeaderColumnValue,
     restoreWorkflowState,
     setPreviousAndNextStepsOnConnect,
+    updatePreviousAndNextStepOnDeleteEdge,
     prepareWorkflowStateForPost,
 
     //RECORD_VIEW_FIELD
