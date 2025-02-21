@@ -376,6 +376,8 @@ const workflowSlice = createSlice({
       );
     },
 
+    //! MODAL DIALOG
+
     addModalDialog: (state, { payload: { modalDialog } }) => {
       state.modalDialogs.push(modalDialog);
     },
@@ -395,14 +397,31 @@ const workflowSlice = createSlice({
         (md) => md.workflowStepId !== stepId
       );
     },
+
+    changeNextStepOnConfirm: (state, { payload: { nextStepId, stepId } }) => {
+      state.modalDialogs = state.modalDialogs.map((md) => {
+        if (md.workflowStepId === stepId) {
+          return { ...md, nextStepOnConfirm: nextStepId };
+        } else {
+          return md;
+        }
+      });
+    },
+    changeNextStepOnCancel: (state, { payload: { nextStepId, stepId } }) => {
+      state.modalDialogs = state.modalDialogs.map((md) => {
+        if (md.workflowStepId === stepId) {
+          return { ...md, nextStepOnCancel: nextStepId };
+        } else {
+          return md;
+        }
+      });
+    },
   },
 });
-
 export const {
   setWorkflowToInitial,
   addWorkflowStep,
   addLaunchElement,
-  addRecordView,
 
   addRecordViewField,
   addListView,
@@ -412,13 +431,16 @@ export const {
   addViewHeaderRow,
   addViewHeaderColumn,
   addScannerDialog,
-  addModalDialog,
   changeNodesEdgesAndViewport,
   changeWorkflowValue,
   changeWorkflowStepValue,
   changeNextAndPreviousStep,
   changeLaunchElementValue,
+
+  // RECORD-VIEW
+  addRecordView,
   changeRecordViewValue,
+  removeRecordView,
   // RECORD-VIEW-FIELDS
   changeAllRecordViewFields,
   changeRecordViewFieldValue,
@@ -433,14 +455,12 @@ export const {
   changeViewHeaderRowValue,
   changeViewHeaderColumnValue,
   changeScannerDialogValue,
-  changeModalDialogValue,
   updateSelectedStep,
   updateTotalWorkflow,
   removeWorkflowStep,
   removeLaunchElement,
   removeListView,
   removeRecordViewField,
-  removeRecordView,
   removeListViewElement,
   removeListViewElementRowByElementId,
   removeListViewElementRowByRowId,
@@ -448,8 +468,13 @@ export const {
   removeViewHeaderRow,
   removeViewHeaderColumn,
   removeScannerDialog,
-  removeModalDialog,
 
+  //MODAL DIALOG
+  addModalDialog,
+  changeModalDialogValue,
+  removeModalDialog,
+  changeNextStepOnConfirm,
+  changeNextStepOnCancel,
   //LIST-VIEW-FILTER-DEFINITION
 
   addListViewFilterDefinition,

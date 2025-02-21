@@ -64,14 +64,14 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
   return (
     <>
       <RecordViewFieldsModal
-        key={viewId}
+        key={viewId + "-record-field"}
         recordViewId={viewId}
         open={openRecordFieldsModal}
         setOpen={setOpenRecordFieldsModal}
         entityFields={entityFields}
       />
       <RecordViewFunctionsModal
-        key={viewId}
+        key={viewId + "-record-function"}
         recordViewId={viewId}
         open={openRecordFunctionsModal}
         setOpen={setOpenRecordFunctionsModal}

@@ -88,6 +88,7 @@ const Sheet = ({ existingWorkflow }) => {
 
   const onDrop = (e) => {
     e.preventDefault();
+    console.log(e);
     const { viewType, launchTypeId, newNode } =
       addNodeAndUpdateHistoryOnDrop(e);
 
@@ -136,8 +137,6 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-
-    console.log({ workflowToPost });
 
     postWorkflowCall(workflowToPost).then((res) =>
       res ? router.push("/workflows") : null

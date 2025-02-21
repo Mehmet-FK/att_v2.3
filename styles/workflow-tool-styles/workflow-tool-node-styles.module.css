@@ -39,6 +39,13 @@
   border: 1px solid transparent !important;
 }
 
+.node_body div[data-handleid="a_bottom"],
+.node_body div[data-handleid="a_top"] {
+  background-color: #1b192b;
+  border-color: #fff !important;
+  border-radius: 50% !important;
+}
+
 .node_body:active div[data-handleid],
 .node_body:hover div[data-handleid],
 .selected_node div[data-handleid] {
@@ -84,6 +91,22 @@
 }
 .handle_bottom {
   bottom: -10px;
+}
+
+.handle_right_top {
+  top: 20px !important;
+  color: #fff;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
+}
+
+.handle_right_bottom {
+  top: 58px !important;
+  color: #fff;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
 }
 
 .launchnode_wrapper {

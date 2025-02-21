@@ -51,6 +51,8 @@ import {
   addListViewFilterDefinition,
   removeListViewFilterDefinition,
   changeListViewFilterDefinitionValue,
+  changeNextStepOnCancel,
+  changeNextStepOnConfirm,
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -525,6 +527,8 @@ const useWorkflowForms = () => {
       caption: "",
       userText: "",
       newValue: "",
+      nextStepOnConfirm: "",
+      nextStepOnCancel: "",
     };
     createWorkflowStep(workflowStepId);
     dispatch(addModalDialog({ modalDialog: template }));
@@ -597,15 +601,52 @@ const useWorkflowForms = () => {
     dispatch(updateStep({ stepId }));
   };
 
+  const isStepConditional = (params) => {
+    const conditionHandleIds = ["a_bottom", "a_top"];
+    return conditionHandleIds.includes(params.sourceHandle);
+  };
+
+  const updateModalNextStep = (params) => {
+    const confirmHandleID = "a_top";
+    const cancelHandleID = "a_bottom";
+    const sourceHandleID = params?.sourceHandle;
+
+    const workflowStepID = params.source;
+    const nextStepID = params.target;
+
+    if (sourceHandleID === confirmHandleID) {
+      dispatch(
+        changeNextStepOnConfirm({
+          nextStepId: nextStepID,
+          stepId: workflowStepID,
+        })
+      );
+    } else if (sourceHandleID === cancelHandleID) {
+      dispatch(
+        changeNextStepOnCancel({
+          nextStepId: nextStepID,
+          stepId: workflowStepID,
+        })
+      );
+    }
+  };
+
   const setPreviousAndNextStepsOnConnect = (params) => {
+    console.log({ params });
+
     const previousStepId = params.source;
     const nextStepId = params.target;
-    dispatch(
-      changeNextAndPreviousStep({
-        nextStepId: nextStepId,
-        previousStepId: previousStepId,
-      })
-    );
+
+    if (isStepConditional(params)) {
+      updateModalNextStep(params);
+    } else {
+      dispatch(
+        changeNextAndPreviousStep({
+          nextStepId: nextStepId,
+          previousStepId: previousStepId,
+        })
+      );
+    }
   };
 
   const restoreWorkflowState = (workflow) => {

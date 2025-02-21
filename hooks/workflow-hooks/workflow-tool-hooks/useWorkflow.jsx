@@ -275,12 +275,21 @@ const useWorkflow = () => {
   };
 
   const addEdgeAndUpdateHistoryOnConnect = (params) => {
-    if (targetAlreadyExist(params) || sourceAlreadyExist(params)) return;
+    // if (targetAlreadyExist(params) || sourceAlreadyExist(params)) return;
+
+    const conditionEdgeIds = ["a_top", "a_bottom"];
+
+    const isConditionEdge = conditionEdgeIds.includes(params.sourceHandle);
+
+    const isTargetHandleConnectible = () => null;
+
+    const edgeType = isConditionEdge ? "smoothstep" : "floating";
+
     setEdges((eds) =>
       addEdge(
         {
           ...params,
-          type: params.sourceHandle !== "start" ? "floating" : "default",
+          type: edgeType,
           markerEnd: { type: MarkerType.ArrowClosed },
           style: { strokeWidth: 2 },
           sourceID: params.source,

@@ -10,6 +10,7 @@ import {
   LaunchGroupShape,
   LaunchModuleShape,
   ListShape,
+  LoopElementShape,
   ModalShape,
   NFCScannerShape,
   QRScannerShape,
@@ -66,6 +67,7 @@ const StepElement = ({ tool }) => {
       {tool.name === "AttachmentView" && <AttachmentShape />}
       {tool.name === "ScannerDialogNFC" && <NFCScannerShape />}
       {tool.name === "ScannerDialogQR" && <QRScannerShape />}
+      {tool.name === "LoopElement" && <LoopElementShape />}
 
       {tool.name === "LaunchDatasetFunction" && <LaunchDatasetShape />}
       {tool.name === "LaunchEntityFunction" && <LaunchEntityShape />}

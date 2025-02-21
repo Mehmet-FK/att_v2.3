@@ -4,31 +4,22 @@ import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import NodeHandles from "./node-components/Handles";
-import { viewTypeConstants } from "@/helpers/Constants";
 
-const NodeBase = ({ data, isConnectable, shape }) => {
+const ModalDialogNode = ({ data, isConnectable, shape }) => {
   const selectedStepId = useSelector((state) => state.workflow.selectedStepId);
 
   const isNodeSelected = useMemo(
     () => selectedStepId === data.nodeId,
     [selectedStepId, data.nodeId]
   );
-  const nodeType = data?.type;
-  const nodeLabel = data?.label;
-  const isModalDialogNode = nodeType === viewTypeConstants.MODALDIALOG;
-  const isLaunchNode = null;
   return (
     <Box className={`${css.node_body} ${isNodeSelected && css.selected_node}`}>
       {shape}
-      <NodeHandles
-        isConnectable={isConnectable}
-        isConditionNode={isModalDialogNode}
-        isLaunchNode={isLaunchNode}
-      />
 
-      <h5 className={css.node_title}>{nodeLabel}</h5>
+      <h5 className={css.node_title}>{data.label}</h5>
+      <NodeHandles isConnectable={isConnectable} />
     </Box>
   );
 };
 
-export default NodeBase;
+export default ModalDialogNode;

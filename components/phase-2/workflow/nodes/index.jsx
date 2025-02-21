@@ -9,6 +9,7 @@ import {
   LaunchGroupShape,
   LaunchModuleShape,
   ListShape,
+  LoopElementShape,
   ModalShape,
   NFCScannerShape,
   QRScannerShape,
@@ -26,6 +27,8 @@ const nodeShapes = {
   AttachmentView: <AttachmentShape />,
   ScannerDialogNFC: <NFCScannerShape />,
   ScannerDialogQR: <QRScannerShape />,
+  // For the future implementations
+  // LoopElement: <LoopElementShape />,
   LaunchDatasetFunction: <LaunchDatasetShape />,
   LaunchEntityFunction: <LaunchEntityShape />,
   LaunchModule: <LaunchModuleShape />,
@@ -36,7 +39,6 @@ const nodeShapes = {
 
 const Nodes = ({ data, isConnectable }) => {
   const nodeType = data?.type;
-
   const shape = nodeShapes[nodeType];
 
   return <NodeBase data={data} isConnectable={isConnectable} shape={shape} />;
