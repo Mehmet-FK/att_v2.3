@@ -281,17 +281,8 @@ const useWorkflow = () => {
 
     const isConditionEdge = conditionEdgeIds.includes(params.sourceHandle);
 
-    const isTargetHandleConnectible = () => null;
-
     const edgeType = isConditionEdge ? "smoothstep" : "floating";
-    console.log({
-      ...params,
-      type: edgeType,
-      markerEnd: { type: MarkerType.ArrowClosed },
-      style: { strokeWidth: 2 },
-      sourceID: params.source,
-      targetID: params.target,
-    });
+
     setEdges((eds) =>
       addEdge(
         {
@@ -476,18 +467,13 @@ const useWorkflow = () => {
 
   const reorderNodesByConnection = (nodes, edges) => {
     const nodesMap = nodes.toHashMap("id");
-    console.log({ nodes });
-    console.log({ edges });
 
-    edges.forEach((edge) => {
-      const sourceID = edge.source;
-      const targetID = edge.target;
-      if (sourceID !== undefined && targetID !== undefined) {
-        nodesMap[edge.source].nextStep = edge.target;
-        nodesMap[edge.target].previousStep = edge.source;
+    edges.forEach(({ source, target }) => {
+      if (source && target) {
+        nodesMap[source].nextStep = target;
+        nodesMap[target].previousStep = source;
       }
     });
-
     const launchNode = Object.values(nodesMap).find(
       (node) =>
         node.type === "launch" || (node.type !== "group" && !node.previousStep)
@@ -496,13 +482,16 @@ const useWorkflow = () => {
     const addedNodeList = [];
     const orderedNodes = [launchNode];
     let currentNode = launchNode;
+
     while (currentNode?.nextStep) {
       currentNode = nodesMap[currentNode.nextStep];
-      if (addedNodeList.includes(currentNode.id)) {
+      if (
+        addedNodeList.includes(currentNode.id) &&
+        currentNode.type !== "ModalDialog"
+      ) {
         currentNode = undefined;
         continue;
       }
-      console.log({ currentNode });
       orderedNodes.push(currentNode);
       addedNodeList.push(currentNode?.id);
     }
@@ -538,6 +527,7 @@ const useWorkflow = () => {
         id: stepID,
         data: { ...nodeData, nodeId: stepID, viewId: stepID },
       };
+
       updatedNodes.push(tempNode);
 
       const edge = edgesMap[node.id];
@@ -552,6 +542,14 @@ const useWorkflow = () => {
       };
       if (targetID) {
         updatedEdges.push(tempEdge);
+      } else if (edge?.sourceHandle.includes("_")) {
+        updatedEdges.push({
+          ...edge,
+          source: node.id,
+          sourceID: node.id,
+          target: node.nextStep,
+          targetID: node.nextStep,
+        });
       }
     });
 
@@ -676,10 +674,8 @@ const useWorkflow = () => {
 
   const initializeWorkflowLabel = (label, _setNodes) => {
     _setNodes((nds) => {
-      console.log("before: ", nds);
       const first = { ...nds[0], data: { label: label || "test" } };
       const rest = nds.slice(1);
-      console.log("after: ", [first, ...rest]);
       return [first, ...rest];
     });
   };
