@@ -476,10 +476,16 @@ const useWorkflow = () => {
 
   const reorderNodesByConnection = (nodes, edges) => {
     const nodesMap = nodes.toHashMap("id");
+    console.log({ nodes });
+    console.log({ edges });
 
     edges.forEach((edge) => {
-      nodesMap[edge.source].nextStep = edge.target;
-      nodesMap[edge.target].previousStep = edge.source;
+      const sourceID = edge.source;
+      const targetID = edge.target;
+      if (sourceID !== undefined && targetID !== undefined) {
+        nodesMap[edge.source].nextStep = edge.target;
+        nodesMap[edge.target].previousStep = edge.source;
+      }
     });
 
     const launchNode = Object.values(nodesMap).find(
@@ -487,11 +493,18 @@ const useWorkflow = () => {
         node.type === "launch" || (node.type !== "group" && !node.previousStep)
     );
 
+    const addedNodeList = [];
     const orderedNodes = [launchNode];
     let currentNode = launchNode;
     while (currentNode?.nextStep) {
       currentNode = nodesMap[currentNode.nextStep];
+      if (addedNodeList.includes(currentNode.id)) {
+        currentNode = undefined;
+        continue;
+      }
+      console.log({ currentNode });
       orderedNodes.push(currentNode);
+      addedNodeList.push(currentNode?.id);
     }
 
     const connectedNodeIds = edges.flatMap((edge) => [
@@ -542,9 +555,6 @@ const useWorkflow = () => {
       }
     });
 
-    console.log({ updatedNodes });
-    console.log({ updatedEdges });
-
     return { updatedNodes, updatedEdges };
   };
 
@@ -565,8 +575,7 @@ const useWorkflow = () => {
       edges
     );
 
-    const launchElementWrapperNode = nodes[0];
-
+    const launchElementWrapperNode = nodes.find((n) => n.id === "launch-group");
     updatedNodes.push(launchElementWrapperNode);
 
     return { updatedNodes, updatedEdges };
