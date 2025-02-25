@@ -468,11 +468,17 @@ const useWorkflow = () => {
   const reorderNodesByConnection = (nodes, edges) => {
     const nodesMap = nodes.toHashMap("id");
 
-    edges.forEach(({ source, target }) => {
-      if (source && target) {
-        nodesMap[source].nextStep = target;
-        nodesMap[target].previousStep = source;
+    edges.forEach(({ source, target, ...edge }) => {
+      if (!source || !target) return;
+
+      if (edge?.sourceHandle === "a_top") {
+        nodesMap[source].nextStepOnConfirm = target;
+      } else if (edge?.sourceHandle === "a_bottom") {
+        nodesMap[source].nextStepOnCancel = target;
       }
+
+      nodesMap[source].nextStep = target;
+      nodesMap[target].previousStep = source;
     });
     const launchNode = Object.values(nodesMap).find(
       (node) =>
@@ -481,6 +487,7 @@ const useWorkflow = () => {
 
     const addedNodeList = [];
     const orderedNodes = [launchNode];
+
     let currentNode = launchNode;
 
     while (currentNode?.nextStep) {
@@ -492,6 +499,7 @@ const useWorkflow = () => {
         currentNode = undefined;
         continue;
       }
+
       orderedNodes.push(currentNode);
       addedNodeList.push(currentNode?.id);
     }
@@ -500,7 +508,6 @@ const useWorkflow = () => {
       edge.source,
       edge.target,
     ]);
-
     nodes.forEach((node) => {
       const isConnected = connectedNodeIds.includes(node.id);
       if (!isConnected && node.type !== "group") {
@@ -511,91 +518,78 @@ const useWorkflow = () => {
     return orderedNodes;
   };
 
+  const updateNodeId = (node, step) => {
+    const nodeData = node?.data;
+    const stepID = step.workflowStepId;
+
+    return {
+      ...node,
+      id: stepID,
+      data: { ...nodeData, nodeId: stepID, viewId: stepID },
+    };
+  };
+
+  const updateEdgeId = (edge, step, node) => {
+    const sourceID = step.workflowStepId;
+    const targetID = step.nextStep;
+    let tempEdge = {
+      ...edge,
+      source: sourceID,
+      sourceID: sourceID,
+      target: targetID,
+      targetID,
+    };
+    if (edge?.sourceHandle === "a_top") {
+      tempEdge = {
+        ...tempEdge,
+        source: node.id,
+        sourceID: node.id,
+        target: node?.nextStepOnConfirm,
+        targetID: node?.nextStepOnConfirm,
+      };
+    } else if (edge?.sourceHandle === "a_bottom") {
+      tempEdge = {
+        ...tempEdge,
+        source: node.id,
+        sourceID: node.id,
+        target: node?.nextStepOnCancel,
+        targetID: node?.nextStepOnCancel,
+      };
+    }
+
+    return tempEdge;
+  };
+
   const updateEdgeAndNodeIds = (orderedSteps, orderedNodes, edges) => {
     const updatedNodes = [];
     const updatedEdges = [];
 
-    const edgesMap = edges.toHashMap("source");
-
+    const edgesMap = edges.toHashMap((edg) => edg.source + "-" + edg.target);
     orderedSteps.forEach((step, index) => {
       const node = orderedNodes[index];
-      const nodeData = node?.data;
-      const stepID = step.workflowStepId;
 
-      const tempNode = {
-        ...node,
-        id: stepID,
-        data: { ...nodeData, nodeId: stepID, viewId: stepID },
-      };
+      const updatedNode = updateNodeId(node, step);
+      if (updatedNode) {
+        updatedNodes.push(updatedNode);
+      }
 
-      updatedNodes.push(tempNode);
-
-      const edge = edgesMap[node.id];
-      const sourceID = step.workflowStepId;
-      const targetID = step.nextStep;
-      const tempEdge = {
-        ...edge,
-        source: sourceID,
-        sourceID: sourceID,
-        target: targetID,
-        targetID,
-      };
-      if (targetID) {
-        updatedEdges.push(tempEdge);
-      } else if (edge?.sourceHandle.includes("_")) {
-        updatedEdges.push({
-          ...edge,
-          source: node.id,
-          sourceID: node.id,
-          target: node.nextStep,
-          targetID: node.nextStep,
-        });
+      const edge = edgesMap[node.id + "-" + node.nextStep];
+      const isModalDialog = node.viewType === "ModalDialog";
+      if (isModalDialog) {
+        const confirmEdge = edgesMap[node.id + "-" + node.nextStepOnConfirm];
+        const cancelEdge = edgesMap[node.id + "-" + node.nextStepOnCancel];
+        const updatedConfirmEdge = updateEdgeId(confirmEdge, step, node);
+        const updatedCancelEdge = updateEdgeId(cancelEdge, step, node);
+        updatedEdges.push(updatedConfirmEdge);
+        updatedEdges.push(updatedCancelEdge);
+      } else {
+        const updatedEdge = updateEdgeId(edge, step, node);
+        if (updatedEdge) {
+          updatedEdges.push(updatedEdge);
+        }
       }
     });
-
     return { updatedNodes, updatedEdges };
-  };
-
-  const restoreModalDialogEdge = (edges) => {};
-
-  const matchNodesAndEdgesToWorkflowSteps = (
-    existingWorkflow,
-    nodes,
-    edges
-  ) => {
-    const { workflowSteps } = existingWorkflow;
-
-    const orderedSteps = reorderWorkflowSteps(workflowSteps);
-    const orderedNodes = reorderNodesByConnection(nodes, edges);
-    const { updatedNodes, updatedEdges } = updateEdgeAndNodeIds(
-      orderedSteps,
-      orderedNodes,
-      edges
-    );
-
-    const launchElementWrapperNode = nodes.find((n) => n.id === "launch-group");
-    updatedNodes.push(launchElementWrapperNode);
-
-    return { updatedNodes, updatedEdges };
-  };
-
-  const updateEdgesAccordingToWorkflowSteps = (workflowSteps) => {
-    return workflowSteps.flatMap((wfs) =>
-      addEdge(
-        {
-          source: wfs.workflowStepId,
-          sourceHandle: "a",
-          target: wfs.nextStep,
-          targetHandle: "c",
-          type: "floating",
-          markerEnd: { type: MarkerType.ArrowClosed },
-          style: { strokeWidth: 2 },
-          sourceID: wfs.workflowStepId,
-          targetID: wfs.nextStep,
-        },
-        []
-      )
-    );
   };
 
   const restoreExistingRemoteWorkflowByNodesAndEdges = (
@@ -603,16 +597,30 @@ const useWorkflow = () => {
     _setNodes,
     _setEdges
   ) => {
-    const { nodes, edges } = existingWorkflow;
-    const parsedResponse = parseNodesAndEdgesFromString(nodes, edges);
+    const {
+      nodes: nodesStringified,
+      edges: edgesStringified,
+      workflowSteps,
+    } = existingWorkflow;
 
-    if (!parsedResponse.ok) return false;
-
-    const { updatedNodes, updatedEdges } = matchNodesAndEdgesToWorkflowSteps(
-      existingWorkflow,
-      parsedResponse.nodes,
-      parsedResponse.edges
+    const { ok, nodes, edges } = parseNodesAndEdgesFromString(
+      nodesStringified,
+      edgesStringified
     );
+
+    if (!ok) return false;
+
+    const orderedSteps = reorderWorkflowSteps(workflowSteps);
+    const orderedNodes = reorderNodesByConnection(nodes, edges);
+
+    const { updatedNodes, updatedEdges } = updateEdgeAndNodeIds(
+      orderedSteps,
+      orderedNodes,
+      edges
+    );
+
+    const launchWrapperNode = nodes.find((n) => n.id === "launch-group");
+    updatedNodes.unshift(launchWrapperNode);
 
     _setNodes(updatedNodes);
     _setEdges(updatedEdges);
@@ -652,8 +660,6 @@ const useWorkflow = () => {
     _setNodes,
     _setEdges
   ) => {
-    if (!existingWorkflow) return;
-
     let isParseSuccessfull = false;
     if (existingWorkflow?.nodes && existingWorkflow?.edges) {
       isParseSuccessfull = restoreExistingRemoteWorkflowByNodesAndEdges(
