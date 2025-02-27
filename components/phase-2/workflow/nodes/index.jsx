@@ -8,6 +8,7 @@ import {
   LaunchEntityShape,
   LaunchGroupShape,
   LaunchModuleShape,
+  LaunchWorkflowHubShape,
   ListShape,
   LoopElementShape,
   ModalShape,
@@ -15,6 +16,7 @@ import {
   QRScannerShape,
   RecordShape,
   TileShape,
+  WorkflowRelayShape,
 } from "./node-components/Shapes";
 import NodeBase from "./NodeBase";
 
@@ -27,6 +29,7 @@ const nodeShapes = {
   AttachmentView: <AttachmentShape />,
   ScannerDialogNFC: <NFCScannerShape />,
   ScannerDialogQR: <QRScannerShape />,
+  WorkflowRelay: <WorkflowRelayShape />,
   // For the future implementations
   // LoopElement: <LoopElementShape />,
   LaunchDatasetFunction: <LaunchDatasetShape />,
@@ -35,6 +38,7 @@ const nodeShapes = {
   LaunchElementDefaultFunction: <LaunchDefaultShape />,
   LaunchGroupView: <LaunchGroupShape />,
   LaunchDefaultListView: <LaunchDefaultListViewShape />,
+  LaunchHub: <LaunchWorkflowHubShape />,
 };
 
 const Nodes = ({ data, isConnectable }) => {

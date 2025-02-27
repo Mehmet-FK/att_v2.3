@@ -53,6 +53,9 @@ import {
   changeListViewFilterDefinitionValue,
   changeNextStepOnCancel,
   changeNextStepOnConfirm,
+  removeWorkflowRelay,
+  addWorkdlowRelay,
+  changeWorkflowRelayValue,
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -560,6 +563,27 @@ const useWorkflowForms = () => {
     deleteViewHeader(headerId);
   };
 
+  // WORKFLOW-RELAY
+  const createWorkflowRelayOnDrop = (workflowStepId) => {
+    const relayID = workflowStepId + "-relay";
+    const template = {
+      workflowRelayId: relayID,
+      workflowStepId: workflowStepId,
+      workflowHubStepId: "",
+    };
+    createWorkflowStep(workflowStepId);
+    dispatch(addWorkdlowRelay({ workflowRelay: template }));
+  };
+
+  const updateWorkflowRelayValue = (name, value, relayId) => {
+    console.log({ name, value, relayId });
+    dispatch(changeWorkflowRelayValue({ name, value, relayId }));
+  };
+
+  const deleteWorkflowRelay = (workflowStepId) => {
+    dispatch(removeWorkflowRelay({ stepId: workflowStepId }));
+  };
+
   const createViewOnDrop = (viewType, workflowStepId, launchTypeId) => {
     if (viewType === viewTypeConstants.LISTVIEW) {
       createListViewOnDrop(workflowStepId);
@@ -573,6 +597,8 @@ const useWorkflowForms = () => {
       createModalDialog(workflowStepId);
     } else if (viewType === viewTypeConstants.TILEVIEW) {
       createTileViewOnDrop();
+    } else if (viewType === viewTypeConstants.WORKFLOW_RELAY) {
+      createWorkflowRelayOnDrop(workflowStepId);
     } else if (isLaunchElement(viewType)) {
       createLaunchElementOnDrop(launchTypeId, workflowStepId);
     }
@@ -591,6 +617,8 @@ const useWorkflowForms = () => {
       deleteModalDialog(workflowStepId);
     } else if (viewType === viewTypeConstants.TILEVIEW) {
       deleteTileView();
+    } else if (viewType === viewTypeConstants.WORKFLOW_RELAY) {
+      deleteWorkflowRelay(workflowStepId);
     } else if (isLaunchElement(viewType)) {
       deleteLaunchElement(workflowStepId);
     }
@@ -735,6 +763,9 @@ const useWorkflowForms = () => {
     createListViewFilterDefinition,
     updateFilterDefinitionValue,
     deleteFilterDefinition,
+
+    //WORKFLOW RELAY
+    updateWorkflowRelayValue,
   };
 };
 

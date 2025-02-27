@@ -89,7 +89,6 @@ const Sheet = ({ existingWorkflow }) => {
 
   const onDrop = (e) => {
     e.preventDefault();
-    console.log(e);
     const { viewType, launchTypeId, newNode } =
       addNodeAndUpdateHistoryOnDrop(e);
 

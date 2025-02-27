@@ -74,6 +74,7 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
       const selectedValueKey = selectedValue[optKey];
       pseudoEvent.target.value = selectedValueKey;
     }
+
     handleBlur(pseudoEvent);
   };
   const renderOptionWithImage = (props, option) => {

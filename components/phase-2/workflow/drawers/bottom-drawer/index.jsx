@@ -118,6 +118,10 @@ const BottomDrawer = ({
     _nodes.find((nds) => nds.id === selectedStepId);
 
   const selectedNode = useMemo(() => findSelectedNode(nodes), [selectedStepId]);
+  const drawerHeadLabel = selectedNode
+    ? `${selectedNode?.data?.label}: ${selectedNode?.data?.viewId}`
+    : `Workflow: ${workflowId}`;
+
   return (
     <>
       <ConfirmModal
@@ -145,11 +149,7 @@ const BottomDrawer = ({
           opacity={newHeight / 150}
           drawerHeaderHeight={drawerHeaderHeight}
           pointerEvents={newHeight < 80 && "none"}
-          label={
-            selectedNode
-              ? `${selectedNode?.data?.label}: ${selectedNode?.data?.viewId}`
-              : `Workflow: ${workflowId}`
-          }
+          label={drawerHeadLabel}
           onSubmit={onSubmit}
           onDelete={openConfirmModalToDelete}
           onSave={onSave}

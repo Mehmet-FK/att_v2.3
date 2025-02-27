@@ -86,12 +86,14 @@ export const viewTypeConstants = {
   SCANNER_DIALOG: "ScannerDialog",
   SCANNER_DIALOG_NFC: "ScannerDialogNFC",
   SCANNER_DIALOG_QR: "ScannerDialogQR",
+  WORKFLOW_RELAY: "WorkflowRelay",
   LAUNCH_DATASET_FUNCTION: "LaunchDatasetFunction",
   LAUNCH_ENTITY_FUNCTION: "LaunchEntityFunction",
   LAUNCH_MODULE: "LaunchModule",
   LAUNCH_ELEMENT_DEFAULT_FUNCTION: "LaunchElementDefaultFunction",
   LAUNCH_GROUPVIEW: "LaunchGroupView",
   LAUNCH_DEAFULT_LISTVIEW: "LaunchDefaultListView",
+  LAUNCH_HUB: "LaunchHub",
 };
 
 export const launchTypes = [
@@ -105,6 +107,7 @@ export const launchTypes = [
   },
   { id: 4, type: "LaunchGroupView", caption: "Group View" },
   { id: 5, type: "LaunchDefaultListView", caption: "Default List View" },
+  { id: 6, type: "LaunchHub ", caption: "Launch Hub" },
 ];
 
 export const workflowStepTypeIds = {
@@ -115,6 +118,7 @@ export const workflowStepTypeIds = {
   CAPTURE_IMAGE: 4,
   ATTACHMENT_VIEW: 5,
   SCANNER_DIALOG: 6,
+  WORKFLOW_RELAY: 7,
   LAUNCH_WORKFLOW: 99,
 };
 

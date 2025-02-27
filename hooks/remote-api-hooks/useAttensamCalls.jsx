@@ -143,6 +143,12 @@ const useAttensamCalls = () => {
       "workflowDefinition",
       false
     );
+  const getWorkflowHubsCall = () =>
+    getAttData(
+      "/atina/api/AtinaMasterData/GetWorkflowHubs",
+      "workflowHubs",
+      true
+    );
   const getEntityDefinitionsCall = (entityId) =>
     getAttData(
       `/api/Entity/GetEntityDefinitions?entityId=${entityId}`,
@@ -194,6 +200,7 @@ const useAttensamCalls = () => {
 
     getWorkflowsCall,
     getWorkflowDefinitionsCall,
+    getWorkflowHubsCall,
     getEntityDefinitionsCall,
     getEntitiesCall,
 

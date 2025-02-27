@@ -12,8 +12,9 @@ import ListViewFilterDefinitions from "./ListViewFilterDefinitions";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 
 const ListViewForm = ({ stepID, workflowStepValues }) => {
-  const { listViewElements, listViews } = useSelector(
-    (state) => state.workflow
+  const listViews = useSelector((state) => state.workflow?.listViews);
+  const listViewElements = useSelector(
+    (state) => state.workflow?.listViewElements
   );
 
   const entities = useSelector((state) => state.attensam.data?.entities);

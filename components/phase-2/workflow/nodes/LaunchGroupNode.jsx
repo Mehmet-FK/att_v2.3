@@ -8,8 +8,6 @@ const LaunchGroupNode = () => {
 
   return (
     <div
-      //   className={`${css.launch_group_node} nodrag`}
-      //   className={`${css.launch_group_node} `}
       style={{
         height: "100%",
         display: "flex",
@@ -30,7 +28,7 @@ const LaunchGroupNode = () => {
           padding: "10px",
         }}
       >
-        {caption}
+        {caption || "Neues Workflow"}
       </Typography>
     </div>
   );

@@ -72,8 +72,7 @@ const ToolsDrawer = () => {
     { name: "AttachmentView", caption: "Attachment View", type: "view" },
     { name: "ScannerDialogNFC", caption: "NFC Scanner Dialog", type: "view" },
     { name: "ScannerDialogQR", caption: "QR Scanner Dialog", type: "view" },
-    // For the future implementations
-    // { name: "LoopElement", caption: "Loop Element", type: "view" },
+    { name: "WorkflowRelay", caption: "WorkflowRelay", type: "view" },
   ];
 
   const launchTypes = [
@@ -107,6 +106,12 @@ const ToolsDrawer = () => {
       caption: "Default List View",
       type: "launch",
       typeId: 5,
+    },
+    {
+      name: "LaunchHub",
+      caption: "Launch Hub",
+      type: "launch",
+      typeId: 6,
     },
   ];
 

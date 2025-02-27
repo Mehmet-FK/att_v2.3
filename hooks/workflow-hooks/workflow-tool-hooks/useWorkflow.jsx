@@ -192,6 +192,7 @@ const useWorkflow = () => {
         label: `${caption}`,
         nodeId: _nodeId,
         type: name,
+        viewId: _nodeId,
       },
     };
   };

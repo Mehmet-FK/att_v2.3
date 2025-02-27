@@ -9,6 +9,7 @@ import {
   LaunchEntityShape,
   LaunchGroupShape,
   LaunchModuleShape,
+  LaunchWorkflowHubShape,
   ListShape,
   LoopElementShape,
   ModalShape,
@@ -16,6 +17,7 @@ import {
   QRScannerShape,
   RecordShape,
   TileShape,
+  WorkflowRelayShape,
 } from "../../nodes/node-components/Shapes";
 
 const StepElement = ({ tool }) => {
@@ -67,7 +69,7 @@ const StepElement = ({ tool }) => {
       {tool.name === "AttachmentView" && <AttachmentShape />}
       {tool.name === "ScannerDialogNFC" && <NFCScannerShape />}
       {tool.name === "ScannerDialogQR" && <QRScannerShape />}
-      {tool.name === "LoopElement" && <LoopElementShape />}
+      {tool.name === "WorkflowRelay" && <WorkflowRelayShape />}
 
       {tool.name === "LaunchDatasetFunction" && <LaunchDatasetShape />}
       {tool.name === "LaunchEntityFunction" && <LaunchEntityShape />}
@@ -75,6 +77,7 @@ const StepElement = ({ tool }) => {
       {tool.name === "LaunchElementDefaultFunction" && <LaunchDefaultShape />}
       {tool.name === "LaunchGroupView" && <LaunchGroupShape />}
       {tool.name === "LaunchDefaultListView" && <LaunchDefaultListViewShape />}
+      {tool.name === "LaunchHub" && <LaunchWorkflowHubShape />}
     </Box>
   );
 };

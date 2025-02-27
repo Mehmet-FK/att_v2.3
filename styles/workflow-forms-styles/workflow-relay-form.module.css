@@ -1,0 +1,20 @@
+.form_container {
+  display: flex;
+  column-gap: 5px;
+  padding: 10px 8px;
+}
+.flex_row {
+  display: flex;
+  column-gap: 10px;
+  width: 100%;
+}
+.flex_column {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  width: 100%;
+}
+.form_control {
+  min-width: 120;
+  width: 100%;
+}

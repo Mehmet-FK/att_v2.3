@@ -20,6 +20,7 @@ const WorkflowManager = () => {
     getLaunchTypes,
     getEntitiesCall,
     getWorkflowsCall,
+    getWorkflowHubsCall,
   } = useAttensamCalls();
   const { restoreWorkflowState, clearWorkflowState } = useWorkflowForms();
   const [fetchedWorkflow, setFetchedWorkflow] = useState(null);
@@ -51,10 +52,10 @@ const WorkflowManager = () => {
   useEffect(() => {
     getViewTypes();
     getLaunchTypes();
+    getWorkflowHubsCall();
     if (!entitiesRemote) {
       getEntitiesCall();
     }
-
     if (!workflowsRemote) {
       getWorkflowsCall();
     }

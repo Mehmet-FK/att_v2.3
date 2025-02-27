@@ -17,6 +17,7 @@ const _initialState = {
   viewport: {},
   workflowSteps: [],
   launchElements: [],
+  workflowRelays: [],
   scannerDialogs: [],
   listViews: [],
   listViewElements: [],
@@ -61,9 +62,7 @@ const workflowSlice = createSlice({
       console.log({ updateTotalWorkflow: new Date() });
 
       for (const key in workflow) {
-        // if (workflow[key] || workflow[key] === "") {
         state[key] = workflow[key];
-        // }
       }
     },
 
@@ -421,6 +420,30 @@ const workflowSlice = createSlice({
         }
       });
     },
+
+    //! WORKFLOW RELAY
+    addWorkdlowRelay: (state, { payload: { workflowRelay } }) => {
+      state.workflowRelays.push(workflowRelay);
+    },
+
+    changeWorkflowRelayValue: (
+      state,
+      { payload: { name, value, relayId } }
+    ) => {
+      state.workflowRelays = state.workflowRelays.map((wfr) => {
+        if (wfr.workflowRelayId === relayId) {
+          return { ...wfr, [name]: value };
+        } else {
+          return wfr;
+        }
+      });
+    },
+
+    removeWorkflowRelay: (state, { payload: { stepId } }) => {
+      state.workflowRelays = state.workflowRelays.filter(
+        (wfr) => wfr.workflowStepId !== stepId
+      );
+    },
   },
 });
 export const {
@@ -480,8 +503,12 @@ export const {
   removeModalDialog,
   changeNextStepOnConfirm,
   changeNextStepOnCancel,
-  //LIST-VIEW-FILTER-DEFINITION
 
+  //WORKFLOW RELAY
+  addWorkdlowRelay,
+  changeWorkflowRelayValue,
+  removeWorkflowRelay,
+  //LIST-VIEW-FILTER-DEFINITION
   addListViewFilterDefinition,
   changeListViewFilterDefinitionValue,
   removeListViewFilterDefinition,
