@@ -3,6 +3,7 @@ import css from "@/styles/drawer-styles/tools-drawer.module.css";
 import {
   AttachmentShape,
   ImageShape,
+  InfoScreenShape,
   LaunchDatasetShape,
   LaunchDefaultListViewShape,
   LaunchDefaultShape,
@@ -70,6 +71,7 @@ const StepElement = ({ tool }) => {
       {tool.name === "ScannerDialogNFC" && <NFCScannerShape />}
       {tool.name === "ScannerDialogQR" && <QRScannerShape />}
       {tool.name === "WorkflowRelay" && <WorkflowRelayShape />}
+      {tool.name === "InfoScreen" && <InfoScreenShape />}
 
       {tool.name === "LaunchDatasetFunction" && <LaunchDatasetShape />}
       {tool.name === "LaunchEntityFunction" && <LaunchEntityShape />}

@@ -73,6 +73,7 @@ const ToolsDrawer = () => {
     { name: "ScannerDialogNFC", caption: "NFC Scanner Dialog", type: "view" },
     { name: "ScannerDialogQR", caption: "QR Scanner Dialog", type: "view" },
     { name: "WorkflowRelay", caption: "WorkflowRelay", type: "view" },
+    { name: "InfoScreen", caption: "Info Screen", type: "view" },
   ];
 
   const launchTypes = [

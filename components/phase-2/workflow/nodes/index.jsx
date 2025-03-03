@@ -2,6 +2,7 @@ import { viewTypeConstants } from "@/helpers/Constants";
 import {
   AttachmentShape,
   ImageShape,
+  InfoScreenShape,
   LaunchDatasetShape,
   LaunchDefaultListViewShape,
   LaunchDefaultShape,
@@ -30,6 +31,7 @@ const nodeShapes = {
   ScannerDialogNFC: <NFCScannerShape />,
   ScannerDialogQR: <QRScannerShape />,
   WorkflowRelay: <WorkflowRelayShape />,
+  InfoScreen: <InfoScreenShape />,
   // For the future implementations
   // LoopElement: <LoopElementShape />,
   LaunchDatasetFunction: <LaunchDatasetShape />,
