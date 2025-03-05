@@ -647,6 +647,7 @@ const useWorkflowForms = () => {
       headerId: headerId,
       confirmButton: "Ok",
       cancelButton: "Nein",
+      submitCache: null,
       title: "",
       infoText: "",
     };

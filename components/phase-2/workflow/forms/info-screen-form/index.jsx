@@ -6,10 +6,12 @@ import ViewHeaderForm from "../header-form";
 import { workflowStepTypeIds } from "@/helpers/Constants";
 import { useSelector } from "react-redux";
 import { TextField } from "@mui/material";
+import CustomSelect from "../common-form-elements/CustomSelect";
 
 const InfoScreenForm = ({ stepID, workflowStepValues }) => {
   const infoScreens = useSelector((state) => state.workflow?.infoScreens);
   const entityId = useSelector((state) => state.workflow.entityId);
+  const workflowSteps = useSelector((state) => state.workflow.workflowSteps);
   const entities = useSelector((state) => state.attensam.data?.entities);
 
   const infoScreen = useMemo(
@@ -85,27 +87,43 @@ const InfoScreenForm = ({ stepID, workflowStepValues }) => {
               />
             </div>
             <div className={css.flex_row}>
-              <TextField
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={infoScreenValues?.confirmButton || ""}
-                variant="outlined"
-                size="medium"
-                label="Button fürs Bestätigen"
-                name="confirmButton"
-                placeholder="z.B Ja"
-                fullWidth
-              />
-              <TextField
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={infoScreenValues?.cancelButton || ""}
-                variant="outlined"
-                size="medium"
-                label="Button fürs Ablehnen"
-                name="cancelButton"
-                placeholder="z.B Nein"
-                fullWidth
+              <div className={css.flex_row}>
+                <TextField
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={infoScreenValues?.confirmButton || ""}
+                  variant="outlined"
+                  size="medium"
+                  label="Button fürs Bestätigen"
+                  name="confirmButton"
+                  placeholder="z.B Ja"
+                  fullWidth
+                />
+                <TextField
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={infoScreenValues?.cancelButton || ""}
+                  variant="outlined"
+                  size="medium"
+                  label="Button fürs Ablehnen"
+                  name="cancelButton"
+                  placeholder="z.B Nein"
+                  fullWidth
+                />
+              </div>
+
+              <CustomSelect
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                value={infoScreenValues?.submitCache}
+                label="submitCache"
+                name="submitCache"
+                preferences={{
+                  key: "workflowStepId",
+                  value: "workflowStepId",
+                  caption: "workflowStepId",
+                }}
+                options={workflowSteps}
               />
             </div>
           </div>

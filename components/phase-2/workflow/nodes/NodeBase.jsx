@@ -18,16 +18,24 @@ const NodeBase = ({ data, isConnectable, shape }) => {
   const isModalDialogNode = nodeType === viewTypeConstants.MODALDIALOG;
   const isLaunchNode = null;
   return (
-    <Box className={`${css.node_body} ${isNodeSelected && css.selected_node}`}>
-      {shape}
-      <NodeHandles
-        isConnectable={isConnectable}
-        isConditionNode={isModalDialogNode}
-        isLaunchNode={isLaunchNode}
-      />
+    <>
+      <Box
+        className={`${css.node_body} ${isNodeSelected && css.selected_node}`}
+      >
+        {shape}
+        <NodeHandles
+          isConnectable={isConnectable}
+          isConditionNode={isModalDialogNode}
+          isLaunchNode={isLaunchNode}
+        />
 
-      <h5 className={css.node_title}>{nodeLabel}</h5>
-    </Box>
+        <h5 className={css.node_title}>
+          <span>{data?.nodeId}</span>
+          <br />
+          <span>{nodeLabel}</span>
+        </h5>
+      </Box>
+    </>
   );
 };
 
