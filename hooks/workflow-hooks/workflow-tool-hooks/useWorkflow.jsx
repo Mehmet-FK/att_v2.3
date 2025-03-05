@@ -406,6 +406,28 @@ const useWorkflow = () => {
     return createdScannerDialogNodes;
   };
 
+  const restoreExistingInfoScreens = (existingWorkflow) => {
+    const infoScreens = existingWorkflow.infoScreens;
+
+    if (!infoScreens.length) return null;
+
+    const createdInfoScreenNodes = [];
+    infoScreens.forEach((screen) => {
+      const viewType = viewTypeConstants.INFO_SCREEN;
+      const caption = "Info Screen";
+      const position = randomPositions(950, 400);
+      const newNode = createNewReqularNode(
+        viewType,
+        caption,
+        position,
+        screen.workflowStepId,
+        screen.infoScreenId
+      );
+      createdInfoScreenNodes.push(newNode);
+    });
+    return createdInfoScreenNodes;
+  };
+
   const restoreExistingEdges = (workflowSteps, _setEdges) => {
     setEdges((eds) =>
       workflowSteps.flatMap(
@@ -477,10 +499,14 @@ const useWorkflow = () => {
       } else if (edge?.sourceHandle === "a_bottom") {
         nodesMap[source].nextStepOnCancel = target;
       }
-
-      nodesMap[source].nextStep = target;
-      nodesMap[target].previousStep = source;
+      if (nodesMap[source]) {
+        nodesMap[source].nextStep = target;
+      }
+      if (nodesMap[target]) {
+        nodesMap[target].previousStep = source;
+      }
     });
+    console.log({ nodesMap });
     const launchNode = Object.values(nodesMap).find(
       (node) =>
         node.type === "launch" || (node.type !== "group" && !node.previousStep)
@@ -493,6 +519,7 @@ const useWorkflow = () => {
 
     while (currentNode?.nextStep) {
       currentNode = nodesMap[currentNode.nextStep];
+      if (!currentNode) break;
       if (
         addedNodeList.includes(currentNode.id) &&
         currentNode.type !== "ModalDialog"
@@ -520,19 +547,22 @@ const useWorkflow = () => {
   };
 
   const updateNodeId = (node, step) => {
+    console.log({ step });
     const nodeData = node?.data;
-    const stepID = step.workflowStepId;
+    const stepID = step?.workflowStepId;
 
-    return {
-      ...node,
-      id: stepID,
-      data: { ...nodeData, nodeId: stepID, viewId: stepID },
-    };
+    return stepID
+      ? {
+          ...node,
+          id: stepID,
+          data: { ...nodeData, nodeId: stepID, viewId: stepID },
+        }
+      : null;
   };
 
   const updateEdgeId = (edge, step, node) => {
-    const sourceID = step.workflowStepId;
-    const targetID = step.nextStep;
+    const sourceID = step?.workflowStepId;
+    const targetID = step?.nextStep;
     let tempEdge = {
       ...edge,
       source: sourceID,
@@ -574,7 +604,7 @@ const useWorkflow = () => {
         updatedNodes.push(updatedNode);
       }
 
-      const edge = edgesMap[node.id + "-" + node.nextStep];
+      const edge = edgesMap[node?.id + "-" + node.nextStep];
       const isModalDialog = node.viewType === "ModalDialog";
       if (isModalDialog) {
         const confirmEdge = edgesMap[node.id + "-" + node.nextStepOnConfirm];
@@ -650,6 +680,9 @@ const useWorkflow = () => {
 
     const scannerNodes = restoreExistingScannerDialogs(existingWorkflow);
     createdNodes = createdNodes.concat(scannerNodes ? scannerNodes : []);
+
+    const infoScreens = restoreExistingInfoScreens(existingWorkflow);
+    createdNodes = createdNodes.concat(infoScreens ? infoScreens : []);
 
     _setNodes((nds) => nds.concat(createdNodes));
     const workflowSteps = existingWorkflow.workflowSteps;

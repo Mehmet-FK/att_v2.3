@@ -65,6 +65,9 @@ import {
   removeRecordViewFieldsByRecordViewID,
   removeRowsByHeaderID,
   removeColumnsByRowID,
+  addInfoScreen,
+  changeInfoScreenValue,
+  removeInfoScreen,
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -78,6 +81,7 @@ const useWorkflowForms = () => {
     recordViews,
     scannerDialogs,
     listViews,
+    infoScreens,
     headers,
     headerRows,
     headerColumns,
@@ -380,7 +384,6 @@ const useWorkflowForms = () => {
   };
 
   //! RECORD-VIEW-FIELDS
-
   const createRecordViewField = (recordViewId) => {
     const generatedID = generateRandomId(null, "-record-field");
 
@@ -417,7 +420,6 @@ const useWorkflowForms = () => {
   };
 
   //! RECORD-VIEW-FUNCTIONS
-
   const updateAllRecordViewFunctions = (recordViewId, recordFunctions) => {
     dispatch(changeAllRecordViewFunctions({ recordViewId, recordFunctions }));
   };
@@ -470,7 +472,7 @@ const useWorkflowForms = () => {
     );
   };
 
-  // VIEW-HEADER-ROW
+  //! VIEW-HEADER-ROW
   const createViewHeaderRow = (headerId) => {
     const rowId = generateRandomId("vhr-", null);
     const template = {
@@ -507,11 +509,10 @@ const useWorkflowForms = () => {
     dispatch(removeViewHeaderRow({ rowId }));
   };
   const deleteRowsByHeaderID = (headerID) => {
-    console.log({ headerID });
     dispatch(removeRowsByHeaderID({ headerID }));
   };
 
-  // VIEW-HEADER-COLUMN
+  //! VIEW-HEADER-COLUMN
   const createViewHeaderColumn = (headerRowId, defaultColumn = {}) => {
     const columnId = () => generateRandomId("vhc-", null);
 
@@ -540,7 +541,7 @@ const useWorkflowForms = () => {
     dispatch(removeColumnsByRowID({ rowID }));
   };
 
-  // SCANNER-DIALOG
+  //! SCANNER-DIALOG
   const createScannerDialog = (dialogTemplate) => {
     dispatch(addScannerDialog({ scannerDialog: dialogTemplate }));
   };
@@ -607,7 +608,7 @@ const useWorkflowForms = () => {
     dispatch(removeScannerDialog({ stepId: workflowStepId }));
   };
 
-  // MODAL-DIALOG
+  //! MODAL-DIALOG
 
   const createModalDialog = (workflowStepId) => {
     const modalId = workflowStepId + "-modal";
@@ -636,8 +637,45 @@ const useWorkflowForms = () => {
     dispatch(removeModalDialog({ stepId: workflowStepId }));
   };
 
-  // TILE-VIEW
+  //! INFO SCREEN
+  const createInfoScreen = (workflowStepId) => {
+    const screenId = workflowStepId + "-info-screen";
+    const headerId = screenId + "-vh";
+    const template = {
+      infoScreenId: screenId,
+      workflowStepId: workflowStepId,
+      headerId: headerId,
+      confirmButton: "Ok",
+      cancelButton: "Nein",
+      title: "",
+      infoText: "",
+    };
 
+    createWorkflowStep(workflowStepId);
+    dispatch(addInfoScreen({ infoScreen: template }));
+    createViewHeaderWithRowsAndColumns(
+      screenId,
+      workflowStepTypeIds.INFO_SCREEN,
+      headerId
+    );
+  };
+
+  const updateInfoScreenValue = (name, value, screenID) => {
+    dispatch(changeInfoScreenValue({ name, value, screenID }));
+  };
+  const deleteInfoScreen = (workflowStepId) => {
+    const infoScreeToDelete = findViewByStepId(infoScreens, workflowStepId);
+    const screenID = infoScreeToDelete.infoScreenId;
+
+    //Header
+    const headerId = findHeaderByViewId(screenID);
+    deleteViewHeader(headerId);
+
+    //Info Screen
+    dispatch(removeInfoScreen({ stepID: workflowStepId }));
+  };
+
+  //! TILE-VIEW
   const createTileViewOnDrop = () => {
     const viewId = workflowId;
     const headerId = viewId + "-vh";
@@ -654,7 +692,7 @@ const useWorkflowForms = () => {
     deleteViewHeader(headerId);
   };
 
-  // WORKFLOW-RELAY
+  //! WORKFLOW-RELAY
   const createWorkflowRelayOnDrop = (workflowStepId) => {
     const relayID = workflowStepId + "-relay";
     const template = {
@@ -690,6 +728,8 @@ const useWorkflowForms = () => {
       createTileViewOnDrop();
     } else if (viewType === viewTypeConstants.WORKFLOW_RELAY) {
       createWorkflowRelayOnDrop(workflowStepId);
+    } else if (viewType === viewTypeConstants.INFO_SCREEN) {
+      createInfoScreen(workflowStepId);
     } else if (isLaunchElement(viewType)) {
       createLaunchElementOnDrop(launchTypeId, workflowStepId);
     }
@@ -710,6 +750,8 @@ const useWorkflowForms = () => {
       deleteTileView();
     } else if (viewType === viewTypeConstants.WORKFLOW_RELAY) {
       deleteWorkflowRelay(workflowStepId);
+    } else if (viewType === viewTypeConstants.INFO_SCREEN) {
+      deleteInfoScreen(workflowStepId);
     } else if (isLaunchElement(viewType)) {
       deleteLaunchElement(workflowStepId);
     }
@@ -850,10 +892,10 @@ const useWorkflowForms = () => {
     updateAllRecordViewFunctions,
 
     //LSTVIEW DEFAULT FILTER
-
     createListViewDefaultFilter,
     updateDefaultListViewFilterValue,
     deleteDefaultListViewFilter,
+
     //LIST-VIEW-FILTER-DEFINITION
     createListViewFilterDefinition,
     updateFilterDefinitionValue,
@@ -861,6 +903,9 @@ const useWorkflowForms = () => {
 
     //WORKFLOW RELAY
     updateWorkflowRelayValue,
+
+    //INFO SCREEN
+    updateInfoScreenValue,
   };
 };
 

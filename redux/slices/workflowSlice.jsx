@@ -19,6 +19,7 @@ const _initialState = {
   launchElements: [],
   workflowRelays: [],
   scannerDialogs: [],
+  infoScreens: [],
   listViews: [],
   listViewDefaultFilters: [],
   listViewElements: [],
@@ -142,7 +143,6 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     removeRecordView: (state, { payload: { viewId } }) => {
       state.recordViews = state.recordViews.filter(
         (rv) => rv.recordViewId !== viewId
@@ -165,7 +165,6 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     changeAllRecordViewFields: (
       state,
       { payload: { recordViewId, fields } }
@@ -175,7 +174,6 @@ const workflowSlice = createSlice({
       );
       state.recordViewFields = otherFields.concat(fields);
     },
-
     removeRecordViewField: (state, { payload: { fieldID } }) => {
       state.recordViewFields = state.recordViewFields.filter(
         (rvf) => rvf.recordViewFieldId !== fieldID
@@ -200,7 +198,6 @@ const workflowSlice = createSlice({
       );
       state.recordViewFunctions = otherFunctions.concat(recordFunctions);
     },
-
     removeFunctionsByRecordViewID: (state, { payload: { recordViewId } }) => {
       state.recordViewFunctions = state.recordViewFunctions.filter(
         (rvf) => rvf.recordViewId !== recordViewId
@@ -211,7 +208,6 @@ const workflowSlice = createSlice({
     addListView: (state, { payload: { listView } }) => {
       state.listViews.push(listView);
     },
-
     changeListViewValue: (state, { payload: { name, value, viewId } }) => {
       state.listViews = state.listViews.map((lv) => {
         if (lv.listViewId === viewId) {
@@ -226,11 +222,9 @@ const workflowSlice = createSlice({
         (lv) => lv.listViewId !== viewId
       );
     },
-
     addListViewElement: (state, { payload: { listViewElement } }) => {
       state.listViewElements.push(listViewElement);
     },
-
     changeListViewElementValue: (
       state,
       { payload: { name, value, elementId } }
@@ -243,17 +237,14 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     removeListViewElement: (state, { payload: { elementId } }) => {
       state.listViewElements = state.listViewElements.filter(
         (lve) => lve.listViewElementId !== elementId
       );
     },
-
     addListViewElementRow: (state, { payload: { elementRow } }) => {
       state.listViewElementRows.push(elementRow);
     },
-
     changeListViewElementRowValue: (
       state,
       { payload: { name, value, rowId } }
@@ -266,7 +257,6 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     removeListViewElementRowByElementId: (
       state,
       { payload: { elementId } }
@@ -344,6 +334,7 @@ const workflowSlice = createSlice({
       );
     },
 
+    //! VIEW HEADER
     addViewHeader: (state, { payload: { viewHeader } }) => {
       state.headers.push(viewHeader);
     },
@@ -364,6 +355,8 @@ const workflowSlice = createSlice({
         (vh) => vh.headerId !== viewHeaderId
       );
     },
+
+    //! VIEW HEADER ROW
     addViewHeaderRow: (state, { payload: { viewHeaderRow } }) => {
       state.headerRows.push(viewHeaderRow);
     },
@@ -391,6 +384,7 @@ const workflowSlice = createSlice({
       );
     },
 
+    //! VIEW HEADER COLUMN
     addViewHeaderColumn: (state, { payload: { viewHeaderColumn } }) => {
       state.headerColumns.push(viewHeaderColumn);
     },
@@ -413,7 +407,6 @@ const workflowSlice = createSlice({
         (vhc) => vhc.headerColumnId !== columnId
       );
     },
-
     removeColumnsByRowID: (state, { payload: { rowID } }) => {
       state.headerColumns = state.headerColumns.filter(
         (vhc) => vhc.headerRowID !== rowID
@@ -424,7 +417,6 @@ const workflowSlice = createSlice({
     addScannerDialog: (state, { payload: { scannerDialog } }) => {
       state.scannerDialogs.push(scannerDialog);
     },
-
     changeScannerDialogValue: (
       state,
       { payload: { name, value, dialogId } }
@@ -437,7 +429,6 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     removeScannerDialog: (state, { payload: { stepId } }) => {
       state.scannerDialogs = state.scannerDialogs.filter(
         (sc) => sc.workflowStepId !== stepId
@@ -445,11 +436,9 @@ const workflowSlice = createSlice({
     },
 
     //! MODAL DIALOG
-
     addModalDialog: (state, { payload: { modalDialog } }) => {
       state.modalDialogs.push(modalDialog);
     },
-
     changeModalDialogValue: (state, { payload: { name, value, modalId } }) => {
       state.modalDialogs = state.modalDialogs.map((md) => {
         if (md.modalDialogId === modalId) {
@@ -459,13 +448,11 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     removeModalDialog: (state, { payload: { stepId } }) => {
       state.modalDialogs = state.modalDialogs.filter(
         (md) => md.workflowStepId !== stepId
       );
     },
-
     changeNextStepOnConfirm: (state, { payload: { nextStepId, stepId } }) => {
       state.modalDialogs = state.modalDialogs.map((md) => {
         if (md.workflowStepId === stepId) {
@@ -489,7 +476,6 @@ const workflowSlice = createSlice({
     addWorkdlowRelay: (state, { payload: { workflowRelay } }) => {
       state.workflowRelays.push(workflowRelay);
     },
-
     changeWorkflowRelayValue: (
       state,
       { payload: { name, value, relayId } }
@@ -502,10 +488,28 @@ const workflowSlice = createSlice({
         }
       });
     },
-
     removeWorkflowRelay: (state, { payload: { stepId } }) => {
       state.workflowRelays = state.workflowRelays.filter(
         (wfr) => wfr.workflowStepId !== stepId
+      );
+    },
+
+    //! INFO SCREEN
+    addInfoScreen: (state, { payload: { infoScreen } }) => {
+      state.infoScreens.push(infoScreen);
+    },
+    changeInfoScreenValue: (state, { payload: { name, value, screenID } }) => {
+      state.infoScreens = state.infoScreens.map((screen) => {
+        if (screen.infoScreenId === screenID) {
+          return { ...screen, [name]: value };
+        } else {
+          return screen;
+        }
+      });
+    },
+    removeInfoScreen: (state, { payload: { stepID } }) => {
+      state.infoScreens = state.infoScreens.filter(
+        (screen) => screen.workflowStepId !== stepID
       );
     },
   },
@@ -577,6 +581,11 @@ export const {
   addWorkdlowRelay,
   changeWorkflowRelayValue,
   removeWorkflowRelay,
+
+  //INFO SCREEN
+  addInfoScreen,
+  changeInfoScreenValue,
+  removeInfoScreen,
 
   //LIST-VIEW
   addListView,

@@ -83,7 +83,6 @@ const Sheet = ({ existingWorkflow }) => {
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
-    console.log({ _nodes, _edges });
     updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
 
@@ -138,7 +137,6 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    console.log(workflowToPost);
     postWorkflowCall(workflowToPost).then((res) =>
       res ? router.push("/workflows") : null
     );

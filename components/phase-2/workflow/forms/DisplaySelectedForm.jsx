@@ -8,6 +8,7 @@ import ScannerDialogForm from "./scanner-dialog-form";
 import ModalDialogForm from "./modal-dialog-form";
 import WorkflowForm from "./workflow-form";
 import WorkflowRelayForm from "./workflow-relay-form";
+import InfoScreenForm from "./info-screen-form";
 
 const DisplaySelectedForm = ({ selectedNode }) => {
   const workflowSteps = useSelector((state) => state.workflow.workflowSteps);
@@ -75,6 +76,14 @@ const DisplaySelectedForm = ({ selectedNode }) => {
   } else if (viewType === viewTypeConstants.WORKFLOW_RELAY) {
     return (
       <WorkflowRelayForm
+        key={stepID}
+        stepID={stepID}
+        workflowStepValues={selectedWorkflowStep}
+      />
+    );
+  } else if (viewType === viewTypeConstants.INFO_SCREEN) {
+    return (
+      <InfoScreenForm
         key={stepID}
         stepID={stepID}
         workflowStepValues={selectedWorkflowStep}

@@ -87,6 +87,7 @@ export const viewTypeConstants = {
   SCANNER_DIALOG_NFC: "ScannerDialogNFC",
   SCANNER_DIALOG_QR: "ScannerDialogQR",
   WORKFLOW_RELAY: "WorkflowRelay",
+  INFO_SCREEN: "InfoScreen",
   LAUNCH_DATASET_FUNCTION: "LaunchDatasetFunction",
   LAUNCH_ENTITY_FUNCTION: "LaunchEntityFunction",
   LAUNCH_MODULE: "LaunchModule",
@@ -119,6 +120,7 @@ export const workflowStepTypeIds = {
   ATTACHMENT_VIEW: 5,
   SCANNER_DIALOG: 6,
   WORKFLOW_RELAY: 7,
+  INFO_SCREEN: 8,
   LAUNCH_WORKFLOW: 99,
 };
 
