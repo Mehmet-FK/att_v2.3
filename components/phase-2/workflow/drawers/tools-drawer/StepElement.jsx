@@ -31,20 +31,13 @@ const StepElement = ({ tool }) => {
 
     e.dataTransfer.effectAllowed = "move";
   };
-
+  const stepElementStyle = {
+    transform: "scale(0.8)",
+  };
   return (
     <Box
       sx={{
-        position: "relative",
-        display: "grid",
-        placeItems: "center",
-        transform: "scale(0.6)",
-        cursor: "pointer",
         bgcolor: "Background",
-        padding: "5px",
-        width: "7rem",
-        height: "7rem",
-        borderRadius: "10px",
       }}
       className={css.tool_element}
       title={tool.caption}
@@ -52,34 +45,57 @@ const StepElement = ({ tool }) => {
       draggable
     >
       <Typography
+        className={css.tooltext}
         sx={{
           textTransform: "capitalize",
-          color: "WindowText",
-          textAlign: "center",
           fontSize: "0.7em",
         }}
       >
         {tool.caption}
       </Typography>
 
-      {tool.name === "ListView" && <ListShape />}
-      {tool.name === "TileView" && <TileShape />}
-      {tool.name === "RecordView" && <RecordShape />}
-      {tool.name === "ModalDialog" && <ModalShape />}
-      {tool.name === "CaptureImage" && <ImageShape />}
-      {tool.name === "AttachmentView" && <AttachmentShape />}
-      {tool.name === "ScannerDialogNFC" && <NFCScannerShape />}
-      {tool.name === "ScannerDialogQR" && <QRScannerShape />}
-      {tool.name === "WorkflowRelay" && <WorkflowRelayShape />}
-      {tool.name === "InfoScreen" && <InfoScreenShape />}
+      {tool.name === "ListView" && <ListShape style={stepElementStyle} />}
+      {tool.name === "TileView" && <TileShape style={stepElementStyle} />}
+      {tool.name === "RecordView" && <RecordShape style={stepElementStyle} />}
+      {tool.name === "ModalDialog" && <ModalShape style={stepElementStyle} />}
+      {tool.name === "CaptureImage" && <ImageShape style={stepElementStyle} />}
+      {tool.name === "AttachmentView" && (
+        <AttachmentShape style={stepElementStyle} />
+      )}
+      {tool.name === "ScannerDialogNFC" && (
+        <NFCScannerShape style={stepElementStyle} />
+      )}
+      {tool.name === "ScannerDialogQR" && (
+        <QRScannerShape style={stepElementStyle} />
+      )}
+      {tool.name === "WorkflowRelay" && (
+        <WorkflowRelayShape style={stepElementStyle} />
+      )}
+      {tool.name === "InfoScreen" && (
+        <InfoScreenShape style={stepElementStyle} />
+      )}
 
-      {tool.name === "LaunchDatasetFunction" && <LaunchDatasetShape />}
-      {tool.name === "LaunchEntityFunction" && <LaunchEntityShape />}
-      {tool.name === "LaunchModule" && <LaunchModuleShape />}
-      {tool.name === "LaunchElementDefaultFunction" && <LaunchDefaultShape />}
-      {tool.name === "LaunchGroupView" && <LaunchGroupShape />}
-      {tool.name === "LaunchDefaultListView" && <LaunchDefaultListViewShape />}
-      {tool.name === "LaunchHub" && <LaunchWorkflowHubShape />}
+      {tool.name === "LaunchDatasetFunction" && (
+        <LaunchDatasetShape style={stepElementStyle} />
+      )}
+      {tool.name === "LaunchEntityFunction" && (
+        <LaunchEntityShape style={stepElementStyle} />
+      )}
+      {tool.name === "LaunchModule" && (
+        <LaunchModuleShape style={stepElementStyle} />
+      )}
+      {tool.name === "LaunchElementDefaultFunction" && (
+        <LaunchDefaultShape style={stepElementStyle} />
+      )}
+      {tool.name === "LaunchGroupView" && (
+        <LaunchGroupShape style={stepElementStyle} />
+      )}
+      {tool.name === "LaunchDefaultListView" && (
+        <LaunchDefaultListViewShape style={stepElementStyle} />
+      )}
+      {tool.name === "LaunchHub" && (
+        <LaunchWorkflowHubShape style={stepElementStyle} />
+      )}
     </Box>
   );
 };

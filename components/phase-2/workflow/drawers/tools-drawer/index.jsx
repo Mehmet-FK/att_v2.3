@@ -68,10 +68,10 @@ const ToolsDrawer = () => {
     { name: "TileView", caption: "Tile View", type: "view" },
     { name: "RecordView", caption: "Record View", type: "view" },
     { name: "ModalDialog", caption: "Modal Dialog", type: "view" },
-    { name: "CaptureImage", caption: "Capture Image View", type: "view" },
+    { name: "CaptureImage", caption: "Capture Image", type: "view" },
     { name: "AttachmentView", caption: "Attachment View", type: "view" },
-    { name: "ScannerDialogNFC", caption: "NFC Scanner Dialog", type: "view" },
-    { name: "ScannerDialogQR", caption: "QR Scanner Dialog", type: "view" },
+    { name: "ScannerDialogNFC", caption: "NFC Scanner ", type: "view" },
+    { name: "ScannerDialogQR", caption: "QR Scanner ", type: "view" },
     { name: "WorkflowRelay", caption: "WorkflowRelay", type: "view" },
     { name: "InfoScreen", caption: "Info Screen", type: "view" },
   ];

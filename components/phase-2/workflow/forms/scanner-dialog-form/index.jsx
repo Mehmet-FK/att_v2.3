@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import css from "@/styles/workflow-forms-styles/record-view-form.module.css";
-import { scannerTypeConstants } from "@/helpers/Constants";
+import {
+  scannerTypeConstants,
+  viewTypeConstants,
+  workflowStepTypeIds,
+} from "@/helpers/Constants";
 import ScannerDialogFormBase from "./ScannerDialogFormBase";
 import ViewHeaderForm from "../header-form";
 
@@ -61,6 +65,7 @@ const ScannerDialogForm = ({ stepID, workflowStepValues }) => {
         <div className={css.header_form_wrapper}>
           <ViewHeaderForm
             viewId={viewId}
+            viewType={workflowStepTypeIds.SCANNER_DIALOG}
             entityFields={entityFields}
             defaultExpanded={true}
           />

@@ -9,6 +9,7 @@ import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import RecordViewFieldsModal from "./recordview-fields/RecordViewFieldsModal";
 import RecordViewFunctionsModal from "./recordview-functions/RecordViewFunctionsModal";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
+import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 
 const RecordViewForm = ({ stepID, workflowStepValues }) => {
   const recordViews = useSelector((state) => state.workflow.recordViews);
@@ -143,6 +144,16 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
                   width: "100%",
                 }}
               />
+              <CheckBox
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                checked={recordViewValues?.cacheOnSubmit}
+                label="cacheOnSubmit"
+                name="cacheOnSubmit"
+                sx={{
+                  width: "100%",
+                }}
+              />
 
               <Button
                 variant="contained"
@@ -150,7 +161,7 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
                 onClick={() => setOpenRecordFieldsModal(true)}
                 fullWidth
               >
-                open record fields
+                RECORD FELDER
               </Button>
               <Button
                 variant="contained"
@@ -158,7 +169,7 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
                 onClick={() => setOpenRecordFunctionsModal(true)}
                 fullWidth
               >
-                open record functions
+                FUNKTIONEN
               </Button>
             </div>
           </div>
@@ -168,6 +179,7 @@ const RecordViewForm = ({ stepID, workflowStepValues }) => {
         <div className={css.header_form_wrapper}>
           <ViewHeaderForm
             viewId={viewId}
+            viewType={workflowStepTypeIds.RECORDVIEW}
             entityFields={entityFields}
             defaultExpanded={false}
           />

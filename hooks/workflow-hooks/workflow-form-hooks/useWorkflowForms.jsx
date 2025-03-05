@@ -56,6 +56,15 @@ import {
   removeWorkflowRelay,
   addWorkdlowRelay,
   changeWorkflowRelayValue,
+  addListViewDefaultFilter,
+  changeListViewDefaultFilterValue,
+  removeListViewDefaultFilter,
+  removeDefaultFilterByListViewID,
+  removeFilterDefinitionByListViewID,
+  removeFunctionsByRecordViewID,
+  removeRecordViewFieldsByRecordViewID,
+  removeRowsByHeaderID,
+  removeColumnsByRowID,
 } from "@/redux/slices/workflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -115,7 +124,7 @@ const useWorkflowForms = () => {
     dispatch(changeWorkflowValue({ value, name }));
   };
 
-  // WORKFLOW-STEP
+  //! WORKFLOW-STEP
 
   const createWorkflowStep = (stepID) => {
     const step = {
@@ -140,7 +149,7 @@ const useWorkflowForms = () => {
     updateSelectedStep("");
   };
 
-  // LAUNCH-ELEMENT
+  //! LAUNCH-ELEMENT
 
   const createLaunchElementOnDrop = (launchType, workflowStepId) => {
     const template = {
@@ -162,7 +171,7 @@ const useWorkflowForms = () => {
     dispatch(removeLaunchElement({ workflowStepId }));
   };
 
-  // LIST-VIEW-ELEMENT-ROW
+  //! LIST-VIEW-ELEMENT-ROW
 
   const createListViewElementRow = (listViewElementId) => {
     const template = {
@@ -192,7 +201,7 @@ const useWorkflowForms = () => {
     dispatch(removeListViewElementRowByRowId({ rowId: listViewElementRowId }));
   };
 
-  // LIST-VIEW-ELEMENT
+  //! LIST-VIEW-ELEMENT
 
   const createListViewElement = (listViewElementId) => {
     const template = {
@@ -215,7 +224,7 @@ const useWorkflowForms = () => {
     dispatch(removeListViewElement({ elementId: listViewElementId }));
   };
 
-  // LIST-VIEW
+  //! LIST-VIEW
 
   const createListViewOnDrop = (workflowStepId) => {
     const listViewId = workflowStepId + "-listview";
@@ -250,14 +259,48 @@ const useWorkflowForms = () => {
     const listViewId = listViewToDelete.listViewId;
     const listViewElementId = listViewToDelete.listViewElementId;
 
+    // Header
     const headerId = findHeaderByViewId(listViewId);
     deleteViewHeader(headerId);
-    dispatch(removeLaunchElement({ workflowStepId }));
 
+    // Element
     deleteListViewElement(listViewElementId);
+
+    //Filter Definition
+    deleteFilterDefinitionByListViewID(listViewId);
+
+    //DefaultFilter
+    deleteDefaultFilterByListViewID(listViewId);
+
     dispatch(removeListView({ viewId: listViewId }));
   };
-  // LIST-VIEW-FILTER-DEFINITION
+
+  //! LIST-VIEW-DEFAULT-FILTER
+  const createListViewDefaultFilter = (listviewID) => {
+    const filterID = generateRandomId("lv-default-filter", null);
+    const filterTemplate = {
+      listViewDefaultFilterId: filterID,
+      listViewId: listviewID,
+      fieldId: "",
+      filterValue: "",
+    };
+
+    dispatch(addListViewDefaultFilter({ defaultFilter: filterTemplate }));
+  };
+
+  const updateDefaultListViewFilterValue = (name, value, filterId) => {
+    dispatch(changeListViewDefaultFilterValue({ name, value, filterId }));
+  };
+
+  const deleteDefaultListViewFilter = (filterId) => {
+    dispatch(removeListViewDefaultFilter({ filterId }));
+  };
+
+  const deleteDefaultFilterByListViewID = (listViewId) => {
+    dispatch(removeDefaultFilterByListViewID({ listViewId }));
+  };
+
+  //! LIST-VIEW-FILTER-DEFINITION
 
   const createListViewFilterDefinition = (listViewId) => {
     const filterDefinitionTemplate = {
@@ -287,8 +330,11 @@ const useWorkflowForms = () => {
     dispatch(removeListViewFilterDefinition({ definitionID }));
   };
 
-  // RECORD-VIEW
+  const deleteFilterDefinitionByListViewID = (listViewId) => {
+    dispatch(removeFilterDefinitionByListViewID({ listViewId }));
+  };
 
+  //! RECORD-VIEW
   const createRecordViewOnDrop = (workflowStepId) => {
     const recordViewId = workflowStepId + "-recordview";
     const headerId = `${recordViewId}-vh`;
@@ -301,6 +347,7 @@ const useWorkflowForms = () => {
       isEditable: false,
       showMenue: true,
       createNewDataset: false,
+      cacheOnSubmit: false,
     };
     createWorkflowStep(workflowStepId);
     dispatch(addRecordView({ recordView: template }));
@@ -319,12 +366,20 @@ const useWorkflowForms = () => {
     const recordViewToDelete = findViewByStepId(recordViews, workflowStepId);
     const recordViewId = recordViewToDelete.recordViewId;
 
+    //Header
     const headerId = findHeaderByViewId(recordViewId);
     deleteViewHeader(headerId);
+
+    //Record Fields
+    deleteFieldsByRecordViewID(recordViewId);
+
+    //Record Functions
+    deleteFunctionsByRecordViewID(recordViewId);
+
     dispatch(removeRecordView({ viewId: recordViewId }));
   };
 
-  // RECORD-VIEW-FIELDS
+  //! RECORD-VIEW-FIELDS
 
   const createRecordViewField = (recordViewId) => {
     const generatedID = generateRandomId(null, "-record-field");
@@ -357,15 +412,26 @@ const useWorkflowForms = () => {
     dispatch(removeRecordViewField({ fieldID }));
   };
 
-  // RECORD-VIEW-FUNCTIONS
+  const deleteFieldsByRecordViewID = (recordViewId) => {
+    dispatch(removeRecordViewFieldsByRecordViewID({ recordViewId }));
+  };
+
+  //! RECORD-VIEW-FUNCTIONS
 
   const updateAllRecordViewFunctions = (recordViewId, recordFunctions) => {
     dispatch(changeAllRecordViewFunctions({ recordViewId, recordFunctions }));
   };
 
-  // VIEW-HEADER
+  const deleteFunctionsByRecordViewID = (recordViewId) => {
+    dispatch(removeFunctionsByRecordViewID({ recordViewId }));
+  };
+
+  //! VIEW-HEADER
   const createViewHeaderWithRowsAndColumns = (viewId, viewType, headerId) => {
+    //Header
     createViewHeader(viewId, viewType, headerId);
+
+    //Header Row and Columns
     createViewHeaderRow(headerId);
   };
 
@@ -388,14 +454,15 @@ const useWorkflowForms = () => {
   };
 
   const deleteViewHeader = (viewHeaderId) => {
-    const headerRowIds = headerRows
-      .filter((vhr) => vhr.headerId === viewHeaderId)
-      .flatMap((vhr) => vhr.headerRowId);
-    const headerColumnIds = headerColumns
-      .filter((vhc) => headerRowIds.includes(vhc.headerRowID))
-      .flatMap((vhc) => vhc.headerColumnId);
-    headerRowIds.forEach((vhrId) => deleteViewHeaderRow(vhrId));
-    headerColumnIds.forEach((vhcId) => deleteViewHeaderColumn(vhcId));
+    const filteredRows = headerRows.filter(
+      (vhr) => vhr.headerId === viewHeaderId
+    );
+    //Delete Header Rows
+    deleteRowsByHeaderID(viewHeaderId);
+
+    //Delete Header Columns
+    filteredRows.forEach((row) => deleteColumnsByRowID(row.headerRowId));
+
     dispatch(
       removeViewHeader({
         viewHeaderId: viewHeaderId,
@@ -413,40 +480,64 @@ const useWorkflowForms = () => {
     };
 
     dispatch(addViewHeaderRow({ viewHeaderRow: template }));
-    createViewHeaderColumn(rowId);
-    createViewHeaderColumn(rowId);
+
+    //Column 1
+    const column1 = {
+      columnValue: "user.userName",
+      columnType: 3,
+      colSpan: 2,
+      rowSpan: 1,
+      textAlignment: 0,
+      fontFamily: 3,
+    };
+    createViewHeaderColumn(rowId, column1);
+    //Column 2
+    const column2 = {
+      columnValue: "user.number",
+      columnType: 3,
+      colSpan: 1,
+      rowSpan: 1,
+      textAlignment: 1,
+      fontFamily: 7,
+    };
+    createViewHeaderColumn(rowId, column2);
   };
 
   const deleteViewHeaderRow = (rowId) => {
     dispatch(removeViewHeaderRow({ rowId }));
   };
+  const deleteRowsByHeaderID = (headerID) => {
+    console.log({ headerID });
+    dispatch(removeRowsByHeaderID({ headerID }));
+  };
 
   // VIEW-HEADER-COLUMN
-  const createViewHeaderColumn = (headerRowId) => {
+  const createViewHeaderColumn = (headerRowId, defaultColumn = {}) => {
     const columnId = () => generateRandomId("vhc-", null);
-    const template = {
-      headerRowID: headerRowId,
-      columnType: 3,
-      rowSpan: 1,
-      fontColor: "#FFFFFF",
-    };
 
-    const column = {
-      ...template,
+    const template = {
       headerColumnId: columnId(),
+      headerRowID: headerRowId,
       columnValue: "user.userName",
+      columnType: 3,
       colSpan: 2,
+      rowSpan: 1,
       textAlignment: 0,
       fontFamily: 3,
+      fontColor: "#FFFFFF",
+      ...defaultColumn,
     };
 
-    dispatch(addViewHeaderColumn({ viewHeaderColumn: column }));
+    dispatch(addViewHeaderColumn({ viewHeaderColumn: template }));
   };
   const updateViewHeaderColumnValue = (name, value, columnId) => {
     dispatch(changeViewHeaderColumnValue({ name, value, columnId }));
   };
   const deleteViewHeaderColumn = (columnId) => {
     dispatch(removeViewHeaderColumn({ columnId }));
+  };
+  const deleteColumnsByRowID = (rowID) => {
+    dispatch(removeColumnsByRowID({ rowID }));
   };
 
   // SCANNER-DIALOG
@@ -758,8 +849,12 @@ const useWorkflowForms = () => {
     //RECORD_VIEW_FUNCTION
     updateAllRecordViewFunctions,
 
-    //LIST-VIEW-FILTER-DEFINITION
+    //LSTVIEW DEFAULT FILTER
 
+    createListViewDefaultFilter,
+    updateDefaultListViewFilterValue,
+    deleteDefaultListViewFilter,
+    //LIST-VIEW-FILTER-DEFINITION
     createListViewFilterDefinition,
     updateFilterDefinitionValue,
     deleteFilterDefinition,

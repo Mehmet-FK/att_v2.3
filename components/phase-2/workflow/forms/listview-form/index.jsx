@@ -10,6 +10,8 @@ import CheckBox from "../common-form-elements/CheckBox";
 import AutoCompleteSelect from "../common-form-elements/AutoCompleteSelect";
 import ListViewFilterDefinitions from "./ListViewFilterDefinitions";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
+import ListViewDefaultFilter from "./ListViewDefaultFilter";
+import { viewTypeConstants, workflowStepTypeIds } from "@/helpers/Constants";
 
 const ListViewForm = ({ stepID, workflowStepValues }) => {
   const listViews = useSelector((state) => state.workflow?.listViews);
@@ -146,6 +148,7 @@ const ListViewForm = ({ stepID, workflowStepValues }) => {
       <div className={css.header_form_wrapper}>
         <ViewHeaderForm
           viewId={viewId}
+          viewType={workflowStepTypeIds.LISTVIEW}
           entityFields={entityFields}
           defaultExpanded={false}
         />
@@ -165,6 +168,15 @@ const ListViewForm = ({ stepID, workflowStepValues }) => {
             entityFields={entityFields}
           />
         </div>
+      </div>
+      <div className={css.flex_row} style={{ paddingInline: "10px" }}>
+        <div className={css.section_container}>
+          <ListViewDefaultFilter
+            entityFields={entityFields}
+            listViewId={viewId}
+          />
+        </div>
+        <div className={css.section_container}></div>
       </div>
     </div>
   );

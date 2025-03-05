@@ -1,6 +1,6 @@
 import IconSelect from "@/components/form-elements/IconSelect";
 import css from "@/styles/workflow-forms-styles/header-form.module.css";
-import { TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import ViewHeaderRow from "./ViewHeaderRow";
 import { useSelector } from "react-redux";
@@ -9,7 +9,12 @@ import ColorPicker from "../common-form-elements/ColorPicker";
 import Accordion from "@/components/ui-components/Accordion";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 
-const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
+const ViewHeaderForm = ({
+  viewId,
+  entityFields,
+  viewType,
+  defaultExpanded,
+}) => {
   const [confirmModalValues, setConfirmModalValues] = useState({
     isOpen: false,
     dialogTitle: "",
@@ -21,10 +26,14 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
   const { headerRows, headers, selectedStepId } = useSelector(
     (state) => state.workflow
   );
-  const { createViewHeaderRow, updateViewHeaderValue } = useWorkflowForms();
+  const {
+    createViewHeaderWithRowsAndColumns,
+    createViewHeaderRow,
+    updateViewHeaderValue,
+  } = useWorkflowForms();
   const header = useMemo(
     () => headers.find((h) => h.viewId === viewId),
-    [selectedStepId]
+    [selectedStepId, headers]
   );
 
   const viewHeaderRows = useMemo(
@@ -33,6 +42,11 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
   );
 
   const [headerValues, setHeaderValues] = useState(header);
+
+  const handleCreateViewHeader = () => {
+    const headerID = viewId + "-vh";
+    createViewHeaderWithRowsAndColumns(viewId, viewType, headerID);
+  };
 
   const addViewHeaderRow = () => {
     const headerId = header.headerId;
@@ -64,9 +78,6 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
     [viewHeaderRows, entityFields]
   );
 
-  useEffect(() => {
-    setHeaderValues(header);
-  }, [selectedStepId]);
   return (
     <>
       <ConfirmModal
@@ -77,71 +88,86 @@ const ViewHeaderForm = ({ viewId, entityFields, defaultExpanded }) => {
         <Accordion
           headerProps={{ sx: { fontSize: "smaller", paddingBlock: "0" } }}
           header={"Header"}
+          accordionProps={{
+            disabled: !header === undefined,
+          }}
         >
-          <div className={css.flex_column}>
-            <div className={css.flex_row}>
-              <div className={css.flex_column}>
-                <TextField
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={headerValues?.caption || ""}
-                  variant="outlined"
-                  size="medium"
-                  label="Caption"
-                  name="caption"
-                  fullWidth
-                />
-                <IconSelect
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  value={headerValues?.defaultIcon || ""}
-                  name={"defaultIcon"}
-                />
-              </div>
-              <div className={css.flex_column}>
-                <ColorPicker
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  value={headerValues?.gradientStart || "#000000"}
-                  label="Gradient Start"
-                  name="gradientStart"
-                  fullWidth
-                />
-                <ColorPicker
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  value={headerValues?.gradientEnd || "#000000"}
-                  label="Gradient End"
-                  name="gradientEnd"
-                  fullWidth
-                />
-              </div>
-            </div>
-
-            <Accordion
-              headerProps={{ sx: { fontSize: "smaller", paddingBlock: "0" } }}
-              bodyProps={{ sx: { paddingTop: "0" } }}
-              header={"Header Zeilen"}
+          {!header && (
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleCreateViewHeader}
+              fullWidth
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  rowGap: "5px",
-                }}
+              Header hinzufügen
+            </Button>
+          )}
+          {header && (
+            <div className={css.flex_column}>
+              <div className={css.flex_row}>
+                <div className={css.flex_column}>
+                  <TextField
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={headerValues?.caption || ""}
+                    variant="outlined"
+                    size="medium"
+                    label="Caption"
+                    name="caption"
+                    fullWidth
+                  />
+                  <IconSelect
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    value={headerValues?.defaultIcon || ""}
+                    name={"defaultIcon"}
+                  />
+                </div>
+                <div className={css.flex_column}>
+                  <ColorPicker
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    value={headerValues?.gradientStart || "#000000"}
+                    label="Gradient Start"
+                    name="gradientStart"
+                    fullWidth
+                  />
+                  <ColorPicker
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    value={headerValues?.gradientEnd || "#000000"}
+                    label="Gradient End"
+                    name="gradientEnd"
+                    fullWidth
+                  />
+                </div>
+              </div>
+
+              <Accordion
+                headerProps={{ sx: { fontSize: "smaller", paddingBlock: "0" } }}
+                bodyProps={{ sx: { paddingTop: "0" } }}
+                header={"Header Zeilen"}
               >
-                {MemoViewHeaderRows}
-              </div>
-              <div>
-                <button
-                  disabled={viewHeaderRows.length > 4}
-                  onClick={addViewHeaderRow}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    rowGap: "5px",
+                  }}
                 >
-                  add row
-                </button>
-              </div>
-            </Accordion>
-          </div>
+                  {MemoViewHeaderRows}
+                </div>
+                <div>
+                  <button
+                    disabled={viewHeaderRows.length > 4}
+                    onClick={addViewHeaderRow}
+                  >
+                    add row
+                  </button>
+                </div>
+              </Accordion>
+            </div>
+          )}
         </Accordion>
       </div>
     </>

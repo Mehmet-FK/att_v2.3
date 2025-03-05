@@ -26,7 +26,6 @@ const ColumnValueInput = ({
       ...headerColumnValueVariables,
       ...(entityFields ? entityFields : []),
     ];
-    console.log(entityFieldsForSelect);
     return (
       <CustomSelect
         handleChange={handleChange}
@@ -81,7 +80,6 @@ const ViewHeaderColumn = ({
 
   const openConfirmModalToDelete = () => {
     const columnId = columnValues.headerColumnId;
-    console.log(columnValues);
     const temp = {
       isOpen: true,
       dialogTitle: "Löschen!",

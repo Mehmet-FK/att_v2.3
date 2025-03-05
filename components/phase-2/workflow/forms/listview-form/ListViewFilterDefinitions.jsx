@@ -68,7 +68,7 @@ const FilterDefinitionForm = ({
             </div>
           </CardContent>
         </Card>
-      </ElementBadge>{" "}
+      </ElementBadge>
     </div>
   );
 };

@@ -20,6 +20,7 @@ const _initialState = {
   workflowRelays: [],
   scannerDialogs: [],
   listViews: [],
+  listViewDefaultFilters: [],
   listViewElements: [],
   listViewElementRows: [],
   listViewFilterDefinitions: [],
@@ -180,6 +181,14 @@ const workflowSlice = createSlice({
         (rvf) => rvf.recordViewFieldId !== fieldID
       );
     },
+    removeRecordViewFieldsByRecordViewID: (
+      state,
+      { payload: { recordViewId } }
+    ) => {
+      state.recordViewFields = state.recordViewFields.filter(
+        (rvf) => rvf.recordViewId !== recordViewId
+      );
+    },
 
     //! RECORD-VIEW-FUNCTION
     changeAllRecordViewFunctions: (
@@ -190,6 +199,12 @@ const workflowSlice = createSlice({
         (rvf) => rvf.recordViewId !== recordViewId
       );
       state.recordViewFunctions = otherFunctions.concat(recordFunctions);
+    },
+
+    removeFunctionsByRecordViewID: (state, { payload: { recordViewId } }) => {
+      state.recordViewFunctions = state.recordViewFunctions.filter(
+        (rvf) => rvf.recordViewId !== recordViewId
+      );
     },
 
     //! LIST-VIEW
@@ -266,7 +281,36 @@ const workflowSlice = createSlice({
       );
     },
 
-    //! LIST-VIEW-FILTER-DEFINITION
+    //! LISTVIEW-DEFAULT-FILTER
+    addListViewDefaultFilter: (state, { payload: { defaultFilter } }) => {
+      state.listViewDefaultFilters.push(defaultFilter);
+    },
+    changeListViewDefaultFilterValue: (
+      state,
+      { payload: { name, value, filterId } }
+    ) => {
+      state.listViewDefaultFilters = state.listViewDefaultFilters.map(
+        (filter) => {
+          if (filter.listViewDefaultFilterId === filterId) {
+            return { ...filter, [name]: value };
+          } else {
+            return filter;
+          }
+        }
+      );
+    },
+    removeListViewDefaultFilter: (state, { payload: { filterId } }) => {
+      state.listViewDefaultFilters = state.listViewDefaultFilters.filter(
+        (filter) => filter.listViewDefaultFilterId !== filterId
+      );
+    },
+    removeDefaultFilterByListViewID: (state, { payload: { listViewId } }) => {
+      state.listViewDefaultFilters = state.listViewDefaultFilters.filter(
+        (filter) => filter.listViewId !== listViewId
+      );
+    },
+
+    //! LISTVIEW-FILTER-DEFINITION
     addListViewFilterDefinition: (state, { payload: { filterDefinition } }) => {
       state.listViewFilterDefinitions.push(filterDefinition);
     },
@@ -290,6 +334,16 @@ const workflowSlice = createSlice({
         (lvfd) => lvfd.filterDefinitionId !== definitionID
       );
     },
+
+    removeFilterDefinitionByListViewID: (
+      state,
+      { payload: { listViewId } }
+    ) => {
+      state.listViewFilterDefinitions = state.listViewFilterDefinitions.filter(
+        (lvfd) => lvfd.listViewId !== listViewId
+      );
+    },
+
     addViewHeader: (state, { payload: { viewHeader } }) => {
       state.headers.push(viewHeader);
     },
@@ -329,8 +383,11 @@ const workflowSlice = createSlice({
       state.headerRows = state.headerRows.filter(
         (vhr) => vhr.headerRowId !== rowId
       );
-      state.headerColumns = state.headerColumns.filter(
-        (vhc) => vhc.headerRowID !== rowId
+    },
+
+    removeRowsByHeaderID: (state, { payload: { headerID } }) => {
+      state.headerRows = state.headerRows.filter(
+        (vhr) => vhr.headerId !== headerID
       );
     },
 
@@ -357,6 +414,13 @@ const workflowSlice = createSlice({
       );
     },
 
+    removeColumnsByRowID: (state, { payload: { rowID } }) => {
+      state.headerColumns = state.headerColumns.filter(
+        (vhc) => vhc.headerRowID !== rowID
+      );
+    },
+
+    //! SCANNER DIALOG
     addScannerDialog: (state, { payload: { scannerDialog } }) => {
       state.scannerDialogs.push(scannerDialog);
     },
@@ -448,53 +512,58 @@ const workflowSlice = createSlice({
 });
 export const {
   setWorkflowToInitial,
-  addWorkflowStep,
-  addLaunchElement,
-
-  addRecordViewField,
-  addListView,
-  addListViewElement,
-  addListViewElementRow,
-  addViewHeader,
-  addViewHeaderRow,
-  addViewHeaderColumn,
-  addScannerDialog,
-  changeNodesEdgesAndViewport,
   changeWorkflowValue,
+  updateTotalWorkflow,
+  changeNodesEdgesAndViewport,
+
+  // WORKFLOW STEP
+  addWorkflowStep,
+  updateSelectedStep,
   changeWorkflowStepValue,
   changeNextAndPreviousStep,
+  removeWorkflowStep,
+
+  // LAUNCH ELEMENT
+  addLaunchElement,
   changeLaunchElementValue,
+  removeLaunchElement,
 
   // RECORD-VIEW
   addRecordView,
   changeRecordViewValue,
   removeRecordView,
+
   // RECORD-VIEW-FIELDS
+  addRecordViewField,
   changeAllRecordViewFields,
   changeRecordViewFieldValue,
+  removeRecordViewFieldsByRecordViewID,
+  removeRecordViewField,
 
   // RECORD-VIEW-FUNCTIONS
   changeAllRecordViewFunctions,
+  removeFunctionsByRecordViewID,
 
-  changeListViewValue,
-  changeListViewElementValue,
-  changeListViewElementRowValue,
+  // VIEW HEADER
+  addViewHeader,
   changeViewHeaderValue,
-  changeViewHeaderRowValue,
-  changeViewHeaderColumnValue,
-  changeScannerDialogValue,
-  updateSelectedStep,
-  updateTotalWorkflow,
-  removeWorkflowStep,
-  removeLaunchElement,
-  removeListView,
-  removeRecordViewField,
-  removeListViewElement,
-  removeListViewElementRowByElementId,
-  removeListViewElementRowByRowId,
   removeViewHeader,
+
+  // VIEW HEADER-ROW
+  addViewHeaderRow,
+  changeViewHeaderRowValue,
   removeViewHeaderRow,
+  removeRowsByHeaderID,
+
+  // VIEW HEADER-COLUMN
+  addViewHeaderColumn,
+  changeViewHeaderColumnValue,
   removeViewHeaderColumn,
+  removeColumnsByRowID,
+
+  // SCANNER DIALOG
+  addScannerDialog,
+  changeScannerDialogValue,
   removeScannerDialog,
 
   //MODAL DIALOG
@@ -508,9 +577,33 @@ export const {
   addWorkdlowRelay,
   changeWorkflowRelayValue,
   removeWorkflowRelay,
+
+  //LIST-VIEW
+  addListView,
+  changeListViewValue,
+  removeListView,
+
+  //LIST-VIEW-ELEMENT
+  addListViewElement,
+  changeListViewElementValue,
+  removeListViewElement,
+
+  //LIST-VIEW-ELEMENT-ROW
+  addListViewElementRow,
+  changeListViewElementRowValue,
+  removeListViewElementRowByElementId,
+  removeListViewElementRowByRowId,
+
+  //LIST-VIEW-DEFAULT-FILTER
+  addListViewDefaultFilter,
+  changeListViewDefaultFilterValue,
+  removeListViewDefaultFilter,
+  removeDefaultFilterByListViewID,
+
   //LIST-VIEW-FILTER-DEFINITION
   addListViewFilterDefinition,
   changeListViewFilterDefinitionValue,
   removeListViewFilterDefinition,
+  removeFilterDefinitionByListViewID,
 } = workflowSlice.actions;
 export default workflowSlice.reducer;

@@ -1,14 +1,20 @@
 import css from "@/styles/workflow-forms-styles/workflow-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TextField } from "@mui/material";
+import ViewHeaderForm from "../header-form";
+import { workflowStepTypeIds } from "@/helpers/Constants";
 
-const LaunchElementForm = () => {
+const LaunchElementForm = ({ entityId }) => {
   const launchElements = useSelector((state) => state.workflow.launchElements);
+  const entities = useSelector((state) => state.attensam.data?.entities);
 
-  const { updateLaunchElementValue, updateWorkflowStepValue } =
-    useWorkflowForms();
+  const {
+    updateLaunchElementValue,
+    updateWorkflowStepValue,
+    prepareEntityFields,
+  } = useWorkflowForms();
 
   const launchElement = launchElements.length > 0 ? launchElements[0] : null;
   const [launchElementValues, setLaunchElementValues] = useState(launchElement);
@@ -31,14 +37,19 @@ const LaunchElementForm = () => {
     handleBlur(e);
   };
 
+  const entityFields = useMemo(
+    () => prepareEntityFields(entities, entityId),
+    [entityId, entities]
+  );
+
   useEffect(() => {
     setLaunchElementValues(launchElement);
   }, [launchElement?.launchElementId]);
 
   return (
-    <div className={css.flex_row}>
+    <>
       {launchElement && (
-        <>
+        <div className={css.form_container}>
           <TextField
             onChange={handleChange}
             onBlur={handleWorkflowStepBlur}
@@ -63,9 +74,19 @@ const LaunchElementForm = () => {
           />
           <div style={{ width: "100%" }} />
           <div style={{ width: "100%" }} />
-        </>
+        </div>
       )}
-    </div>
+      {launchElement?.launchType === 4 && (
+        <div className={css.header_form_wrapper}>
+          <ViewHeaderForm
+            viewId={launchElement?.launchElementId}
+            viewType={workflowStepTypeIds.LAUNCH_WORKFLOW}
+            entityFields={entityFields}
+            defaultExpanded={false}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

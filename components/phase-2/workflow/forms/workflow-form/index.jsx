@@ -40,134 +40,132 @@ const WorkflowForm = ({}) => {
     setWorkflowFormValues(workflowState);
   }, [workflowState]);
   return (
-    <div className={css.form_container}>
-      <div className={css.flex_column}>
-        <div className={css.flex_row}>
-          <TextField
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={workflowFormValues?.name || ""}
-            variant="outlined"
-            size="medium"
-            label="Name"
-            name="name"
-            fullWidth
-            style={{ userSelect: "none" }}
-          />
-          <TextField
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={workflowFormValues?.caption || ""}
-            variant="outlined"
-            size="medium"
-            label="Caption"
-            name="caption"
-            fullWidth
-          />
-          <TextField
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={workflowFormValues?.description || ""}
-            variant="outlined"
-            size="medium"
-            label="Beschreibung"
-            name="description"
-            fullWidth
-          />
-
-          <AutoCompleteSelect
-            mainProps={{
-              handleChange: handleChange,
-              handleBlur: handleBlur,
-              preferences: {
-                key: "id",
-                caption: "caption",
-                image: "icon",
-                title: "path",
-                filterKeys: ["id", "caption", "path"],
-              },
-              options: autoCompleteWorkflows || [],
-              name: "parentWorkflowId",
-              value: workflowFormValues?.parentWorkflowId || "",
-              label: "Parent Workflow",
-            }}
-            helperProps={{
-              className: css.form_control,
-              placeholder: "test placeholder",
-            }}
-          />
-        </div>
-        <div className={css.flex_row}>
-          <IconSelect
-            size={"medium"}
-            handleChange={handleChange}
-            handleBlur={handleBlur}
-            value={workflowFormValues?.icon || ""}
-          />
-
-          <CustomSelect
-            handleChange={handleChange}
-            handleBlur={handleBlur}
-            value={workflowFormValues?.permissionType || ""}
-            label="Berechtigungstyp"
-            name="permissionType"
-            preferences={{ key: "id", caption: "caption" }}
-            options={workflowPermissionTypes}
-          />
-
-          <AutoCompleteSelect
-            mainProps={{
-              handleChange: handleChange,
-              handleBlur: handleBlur,
-              preferences: {
-                key: "id",
-                caption: "caption",
-                filterKeys: ["id", "caption", "name"],
-              },
-              options: autoCompleteEntities,
-              name: "entityId",
-              value: workflowFormValues?.entityId,
-              label: "Entität",
-            }}
-            helperProps={{
-              className: css.form_control,
-              // fullWidth: true,
-            }}
-          />
-
+    <>
+      <div className={css.form_container}>
+        <div className={css.flex_column}>
           <div className={css.flex_row}>
-            <CheckBox
-              sx={{
-                width: "50%",
-              }}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              name="isActive"
-              checked={workflowFormValues?.isActive || false}
-              label="isActive"
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={workflowFormValues?.name || ""}
+              variant="outlined"
+              size="medium"
+              label="Name"
+              name="name"
+              fullWidth
+              style={{ userSelect: "none" }}
             />
-            <CheckBox
-              sx={{
-                width: "50%",
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={workflowFormValues?.caption || ""}
+              variant="outlined"
+              size="medium"
+              label="Caption"
+              name="caption"
+              fullWidth
+            />
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={workflowFormValues?.description || ""}
+              variant="outlined"
+              size="medium"
+              label="Beschreibung"
+              name="description"
+              fullWidth
+            />
+
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: {
+                  key: "id",
+                  caption: "caption",
+                  image: "icon",
+                  title: "path",
+                  filterKeys: ["id", "caption", "path"],
+                },
+                options: autoCompleteWorkflows || [],
+                name: "parentWorkflowId",
+                value: workflowFormValues?.parentWorkflowId || "",
+                label: "Parent Workflow",
               }}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              name="isProduction"
-              checked={workflowFormValues?.isProduction || false}
-              label="isProduction"
+              helperProps={{
+                className: css.form_control,
+                placeholder: "test placeholder",
+              }}
             />
           </div>
+          <div className={css.flex_row}>
+            <IconSelect
+              size={"medium"}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={workflowFormValues?.icon || ""}
+            />
+
+            <CustomSelect
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={workflowFormValues?.permissionType || ""}
+              label="Berechtigungstyp"
+              name="permissionType"
+              preferences={{ key: "id", caption: "caption" }}
+              options={workflowPermissionTypes}
+            />
+
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: {
+                  key: "id",
+                  caption: "caption",
+                  filterKeys: ["id", "caption", "name"],
+                },
+                options: autoCompleteEntities,
+                name: "entityId",
+                value: workflowFormValues?.entityId,
+                label: "Entität",
+              }}
+              helperProps={{
+                className: css.form_control,
+                // fullWidth: true,
+              }}
+            />
+
+            <div className={css.flex_row}>
+              <CheckBox
+                sx={{
+                  width: "50%",
+                }}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                name="isActive"
+                checked={workflowFormValues?.isActive || false}
+                label="isActive"
+              />
+              <CheckBox
+                sx={{
+                  width: "50%",
+                }}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                name="isProduction"
+                checked={workflowFormValues?.isProduction || false}
+                label="isProduction"
+              />
+            </div>
+          </div>
+
+          <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
+          <Divider />
         </div>
-
-        {/* <LaunchElementSection /> */}
-
-        <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
-        <Divider />
-        <div className={css.flex_row} style={{ paddingBlock: "5px" }} />
-
-        <LaunchElementForm />
       </div>
-    </div>
+      <LaunchElementForm entityId={workflowFormValues?.entityId} />
+    </>
   );
 };
 

@@ -1,9 +1,21 @@
 .tool_element {
   transition: all ease 0.2s;
+  display: grid;
+  place-items: center;
+  transform: scale(0.7);
+  cursor: pointer;
+  width: 5rem;
+  border-radius: 10px;
 }
+
 .tool_element:hover {
-  transform: translateY(1px);
+  transform: scale(1);
 }
+
+/* .tool_element:hover .tooltext {
+  display: none;
+} */
+
 .open_button {
   position: absolute;
   left: -30px;

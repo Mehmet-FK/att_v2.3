@@ -1,5 +1,6 @@
 .form_container {
   display: flex;
+
   column-gap: 5px;
   padding: 10px 8px;
 }
@@ -17,4 +18,11 @@
 .form_control {
   min-width: 120;
   width: 100%;
+}
+.header_form_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  row-gap: 5px;
 }
