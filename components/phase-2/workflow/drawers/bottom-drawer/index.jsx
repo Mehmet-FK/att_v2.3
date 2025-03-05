@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import DrawerHead from "./DrawerHead";
 import DisplaySelectedForm from "../../forms/DisplaySelectedForm";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 const defaultOpenHeight = 350;
 const minHeight = 45;
@@ -15,6 +16,7 @@ const maxHeight = 850;
 const drawerHeaderHeight = "25px";
 
 const BottomDrawer = ({
+  isLoading,
   onSubmit,
   handleDeleteWorkflow,
   onSave,
@@ -124,6 +126,13 @@ const BottomDrawer = ({
 
   return (
     <>
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <ConfirmModal
         confirmModalValues={confirmModalValues}
         setConfirmModalValues={setConfirmModalValues}
@@ -158,7 +167,6 @@ const BottomDrawer = ({
         <Box
           sx={{
             display: newHeight > 100 ? "block" : "none",
-            opacity: newHeight / 350,
             overflow: "auto",
             paddingBlock: "8px",
             height: `calc(100% - ${drawerHeaderHeight})`,

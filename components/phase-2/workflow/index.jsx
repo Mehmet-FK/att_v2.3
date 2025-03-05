@@ -43,6 +43,7 @@ const Sheet = ({ existingWorkflow }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [bottomDrawerExpanded, setBottomDrawerExpanded] = useState(false);
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const [openRestoreConfirmDialog, setOpenRestoreConfirmDialog] =
     useState(false);
@@ -129,6 +130,7 @@ const Sheet = ({ existingWorkflow }) => {
   }, [nodes, edges, reactFlowInstance, router.events]);
 
   const handleSubmit = () => {
+    setSubmitLoading(true);
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
@@ -137,9 +139,9 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    postWorkflowCall(workflowToPost).then((res) =>
-      res ? router.push("/workflows") : null
-    );
+    postWorkflowCall(workflowToPost)
+      .then((res) => (res ? router.push("/workflows") : null))
+      .finally((res) => setSubmitLoading(false));
   };
 
   const handleDeleteWorkflow = () => {
@@ -167,7 +169,12 @@ const Sheet = ({ existingWorkflow }) => {
   }, [existingWorkflow]);
 
   return (
-    <div style={{ width: "100vw", height: "100%" }}>
+    <div
+      style={{
+        width: "100vw",
+        height: "100%",
+      }}
+    >
       <RestoreWorkflowConfirmDialog
         open={openRestoreConfirmDialog}
         setOpen={setOpenRestoreConfirmDialog}
@@ -207,6 +214,7 @@ const Sheet = ({ existingWorkflow }) => {
       <AutoCompleteWorkflowProvider>
         <AutoCompleteEntityProvider>
           <BottomDrawer
+            isLoading={submitLoading}
             onSubmit={handleSubmit}
             handleDeleteWorkflow={handleDeleteWorkflow}
             onSave={onSave}
