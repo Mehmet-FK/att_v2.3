@@ -175,7 +175,6 @@ const useWorkflow = () => {
     const edges = getEdges();
 
     const sourceExists = edges.find((edge) => edge.source === params.source);
-    console.log(edges);
     return sourceExists !== undefined;
   };
 
@@ -286,6 +285,21 @@ const useWorkflow = () => {
       !isConditionEdge
     )
       return false;
+
+    if (isConditionEdge) {
+      const nextStepType =
+        params.sourceHandle === "a_top"
+          ? "nextStepOnConfirm"
+          : "nextStepOnCancel";
+
+      setNodes((nodes) =>
+        nodes.map((nd) =>
+          nd.id === params.source
+            ? { ...nd, [nextStepType]: params.target }
+            : nd
+        )
+      );
+    }
 
     const edgeType = isConditionEdge ? "smoothstep" : "floating";
 
@@ -512,7 +526,6 @@ const useWorkflow = () => {
         nodesMap[target].previousStep = source;
       }
     });
-    console.log({ nodesMap });
     const launchNode = Object.values(nodesMap).find(
       (node) =>
         node.type === "launch" || (node.type !== "group" && !node.previousStep)
@@ -553,7 +566,6 @@ const useWorkflow = () => {
   };
 
   const updateNodeId = (node, step) => {
-    console.log({ step });
     const nodeData = node?.data;
     const stepID = step?.workflowStepId;
 
@@ -596,7 +608,7 @@ const useWorkflow = () => {
 
     return tempEdge;
   };
-
+  /* 
   const updateEdgeAndNodeIds = (orderedSteps, orderedNodes, edges) => {
     const updatedNodes = [];
     const updatedEdges = [];
@@ -627,9 +639,71 @@ const useWorkflow = () => {
       }
     });
     return { updatedNodes, updatedEdges };
+  }; */
+
+  const updateModalDialogNode = (node, step) => {
+    const nextStepOnConfirm = node.nextStepOnConfirm;
+    const nextStepOnCancel = node.nextStepOnCancel;
+  };
+
+  const updateEdgeAndNodeIds = (workflowSteps, nodes, edges) => {
+    const nodesMap = nodes
+      .map((nd) => ({ ...nd, id: nd.id + "101" }))
+      .toHashMap("name");
+
+    const updatedNodes = [];
+    const updatedEdges = [];
+
+    workflowSteps.forEach((step) => {
+      const node = nodesMap[step.name];
+      if (node) {
+        nodesMap[step.name].id = step.workflowStepId;
+      }
+
+      const isModalDialog = node.viewType === "ModalDialog";
+      if (isModalDialog) {
+      } else {
+      }
+    });
+    console.log(nodes);
+    console.log(nodesMap);
+    return { updatedNodes, updatedEdges };
   };
 
   const restoreExistingRemoteWorkflowByNodesAndEdges = (
+    existingWorkflow,
+    _setNodes,
+    _setEdges
+  ) => {
+    const {
+      nodes: nodesStringified,
+      edges: edgesStringified,
+      workflowSteps,
+    } = existingWorkflow;
+
+    const { ok, nodes, edges } = parseNodesAndEdgesFromString(
+      nodesStringified,
+      edgesStringified
+    );
+
+    if (!ok) return false;
+
+    const { updatedNodes, updatedEdges } = updateEdgeAndNodeIds(
+      workflowSteps,
+      nodes,
+      edges
+    );
+
+    const launchWrapperNode = nodes.find((n) => n.id === "launch-group");
+    updatedNodes.unshift(launchWrapperNode);
+
+    _setNodes(updatedNodes);
+    _setEdges(updatedEdges);
+
+    return true;
+  };
+
+  /* const restoreExistingRemoteWorkflowByNodesAndEdges = (
     existingWorkflow,
     _setNodes,
     _setEdges
@@ -664,6 +738,7 @@ const useWorkflow = () => {
 
     return true;
   };
+ */
 
   const restoreExistingRemoteWorkflowBySteps = (
     existingWorkflow,
@@ -751,6 +826,8 @@ const useWorkflow = () => {
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
     initializeWorkflowLabel,
+
+    updateEdgeAndNodeIds,
   };
 };
 

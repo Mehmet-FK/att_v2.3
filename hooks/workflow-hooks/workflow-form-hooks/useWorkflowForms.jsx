@@ -135,7 +135,7 @@ const useWorkflowForms = () => {
     const step = {
       workflowStepId: stepID,
       workflowID: workflowId,
-      name: "",
+      name: stepID,
       nextStep: "",
       previousStep: "",
     };
@@ -161,7 +161,7 @@ const useWorkflowForms = () => {
       launchElementId: workflowStepId + "-launch",
       workflowStepId: workflowStepId,
       launchType: parseInt(launchType),
-      name: "",
+      name: workflowStepId,
       description: "",
     };
     createWorkflowStep(workflowStepId);
@@ -850,11 +850,41 @@ const useWorkflowForms = () => {
     }
   };
 
+  const assignStepNamesToNodes = (workflowSteps, nodes) => {
+    const nodesMap = nodes.toHashMap("id");
+
+    workflowSteps.forEach((wfs) => {
+      if (nodesMap[wfs.workflowStepId]) {
+        nodesMap[wfs.workflowStepId].name = wfs.name;
+      }
+    });
+    return Object.values(nodesMap);
+  };
+
+  const updateEdgesToMatchNodes = (nodes, edges) => {
+    const nodesMap = nodes.toHashMap("id");
+    const updatedEdges = edges.flatMap((edg) => {
+      const edge = { ...edg };
+      const sourceNode = nodesMap[edg.source];
+      const targetNode = nodesMap[edg.target];
+
+      if (!sourceNode || !targetNode) return [];
+      edge.sourceID = sourceNode.name;
+      edge.targetID = targetNode.name;
+      return edge;
+    });
+    return updatedEdges;
+  };
+
   const prepareWorkflowStateForPost = (nodes, edges, viewport) => {
     const tempWorkflow = { ...workflow };
     delete tempWorkflow.selectedStepId;
-    tempWorkflow.edges = JSON.stringify(edges);
-    tempWorkflow.nodes = JSON.stringify(nodes);
+
+    const updatedNodes = assignStepNamesToNodes(workflowSteps, nodes);
+    const updatedEdges = updateEdgesToMatchNodes(nodes, edges);
+
+    tempWorkflow.edges = JSON.stringify(updatedEdges);
+    tempWorkflow.nodes = JSON.stringify(updatedNodes);
     tempWorkflow.viewport = JSON.stringify(viewport);
     return tempWorkflow;
   };

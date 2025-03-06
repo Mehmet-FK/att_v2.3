@@ -66,6 +66,7 @@ const Sheet = ({ existingWorkflow }) => {
     isValidConnection,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
+    updateEdgeAndNodeIds,
   } = useWorkflow();
 
   const {
@@ -82,6 +83,7 @@ const Sheet = ({ existingWorkflow }) => {
     const isConnected = addEdgeAndUpdateHistoryOnConnect(params);
 
     if (!isConnected) return;
+
     setPreviousAndNextStepsOnConnect(params);
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
@@ -132,7 +134,7 @@ const Sheet = ({ existingWorkflow }) => {
   }, [nodes, edges, reactFlowInstance, router.events]);
 
   const handleSubmit = () => {
-    setSubmitLoading(true);
+    // setSubmitLoading(true);
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
@@ -141,9 +143,14 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    postWorkflowCall(workflowToPost)
-      .then((res) => (res ? router.push("/workflows") : null))
-      .finally((res) => setSubmitLoading(false));
+    updateEdgeAndNodeIds(
+      workflowToPost.workflowSteps,
+      JSON.parse(workflowToPost.nodes)
+    );
+
+    // postWorkflowCall(workflowToPost)
+    //   .then((res) => (res ? router.push("/workflows") : null))
+    //   .finally((res) => setSubmitLoading(false));
   };
 
   const handleDeleteWorkflow = () => {
