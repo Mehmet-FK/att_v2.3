@@ -61,8 +61,6 @@ const workflowSlice = createSlice({
     },
 
     updateTotalWorkflow: (state, { payload: { workflow } }) => {
-      console.log({ updateTotalWorkflow: new Date() });
-
       for (const key in workflow) {
         state[key] = workflow[key];
       }

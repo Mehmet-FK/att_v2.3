@@ -175,6 +175,7 @@ const useWorkflow = () => {
     const edges = getEdges();
 
     const sourceExists = edges.find((edge) => edge.source === params.source);
+    console.log(edges);
     return sourceExists !== undefined;
   };
 
@@ -276,11 +277,15 @@ const useWorkflow = () => {
   };
 
   const addEdgeAndUpdateHistoryOnConnect = (params) => {
-    // if (targetAlreadyExist(params) || sourceAlreadyExist(params)) return;
-
     const conditionEdgeIds = ["a_top", "a_bottom"];
 
     const isConditionEdge = conditionEdgeIds.includes(params.sourceHandle);
+
+    if (
+      (targetAlreadyExist(params) || sourceAlreadyExist(params)) &&
+      !isConditionEdge
+    )
+      return false;
 
     const edgeType = isConditionEdge ? "smoothstep" : "floating";
 
@@ -298,6 +303,7 @@ const useWorkflow = () => {
       )
     );
     saveToHistory();
+    return true;
   };
 
   const restoreExistingLaunchElement = (existingWorkflow) => {

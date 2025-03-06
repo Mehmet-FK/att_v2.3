@@ -79,7 +79,9 @@ const Sheet = ({ existingWorkflow }) => {
   } = useWorkflowForms();
 
   const onConnect = (params) => {
-    addEdgeAndUpdateHistoryOnConnect(params);
+    const isConnected = addEdgeAndUpdateHistoryOnConnect(params);
+
+    if (!isConnected) return;
     setPreviousAndNextStepsOnConnect(params);
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();

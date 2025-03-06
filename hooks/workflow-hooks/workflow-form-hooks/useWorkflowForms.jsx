@@ -78,6 +78,7 @@ const useWorkflowForms = () => {
   const {
     selectedStepId,
     workflowId,
+    workflowSteps,
     recordViews,
     scannerDialogs,
     listViews,
@@ -788,6 +789,17 @@ const useWorkflowForms = () => {
         changeNextStepOnCancel({
           nextStepId: nextStepID,
           stepId: workflowStepID,
+        })
+      );
+    }
+
+    const wfs = workflowSteps.find((wfs) => wfs.workflowStepId === nextStepID);
+    if (wfs?.previousStep === "") {
+      dispatch(
+        changeWorkflowStepValue({
+          name: "previousStep",
+          value: workflowStepID,
+          stepId: nextStepID,
         })
       );
     }
