@@ -59,6 +59,17 @@ const InfoScreenForm = ({ stepID, workflowStepValues }) => {
     updateWorkflowStepValue(name, value, stepID);
   };
 
+  const submitCacheOptions = useMemo(
+    () => [
+      { id: "timecapture", caption: "Zeiterfassung-Kommen" },
+      ...workflowSteps.map((wfs) => ({
+        id: wfs.workflowStepId,
+        caption: `(${wfs.workflowStepId}) - ${wfs.name}`,
+      })),
+    ],
+    [workflowSteps]
+  );
+
   return (
     <>
       <div className={css.flex_column} style={{ paddingInline: "10px" }}>
@@ -119,11 +130,10 @@ const InfoScreenForm = ({ stepID, workflowStepValues }) => {
                 label="submitCache"
                 name="submitCache"
                 preferences={{
-                  key: "workflowStepId",
-                  value: "workflowStepId",
-                  caption: "workflowStepId",
+                  key: "id",
+                  caption: "caption",
                 }}
-                options={workflowSteps}
+                options={submitCacheOptions}
               />
             </div>
           </div>
