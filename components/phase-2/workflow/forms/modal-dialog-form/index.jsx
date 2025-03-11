@@ -98,7 +98,7 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
           <CustomSelect
             handleChange={handleChange}
             handleBlur={handleBlur}
-            value={modalDialogValues?.fieldId}
+            value={modalDialogValues?.fieldId || 0}
             label="Feld"
             name="fieldId"
             preferences={{ key: "id", caption: "caption" }}

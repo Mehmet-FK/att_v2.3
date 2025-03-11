@@ -66,7 +66,6 @@ const Sheet = ({ existingWorkflow }) => {
     isValidConnection,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
-    updateEdgeAndNodeIds,
   } = useWorkflow();
 
   const {
@@ -77,6 +76,7 @@ const Sheet = ({ existingWorkflow }) => {
     updatePreviousAndNextStepOnDeleteEdge,
     updateNodesEdgesAndViewport,
     prepareWorkflowStateForPost,
+    validateWorkflowForSubmit,
   } = useWorkflowForms();
 
   const onConnect = (params) => {
@@ -143,14 +143,12 @@ const Sheet = ({ existingWorkflow }) => {
       _edges,
       _viewport
     );
-    updateEdgeAndNodeIds(
-      workflowToPost.workflowSteps,
-      JSON.parse(workflowToPost.nodes)
-    );
 
-    // postWorkflowCall(workflowToPost)
-    //   .then((res) => (res ? router.push("/workflows") : null))
-    //   .finally((res) => setSubmitLoading(false));
+    const isValidationOK = validateWorkflowForSubmit(workflowToPost);
+    if (!isValidationOK) return;
+    postWorkflowCall(workflowToPost)
+      .then((res) => (res ? router.push("/workflows") : null))
+      .finally((res) => setSubmitLoading(false));
   };
 
   const handleDeleteWorkflow = () => {

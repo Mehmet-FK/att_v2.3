@@ -3,6 +3,7 @@ import {
   viewTypeConstants,
   workflowStepTypeIds,
 } from "@/helpers/Constants";
+import { toastErrorNotify } from "@/helpers/ToastNotify";
 import {
   addLaunchElement,
   addListView,
@@ -889,6 +890,37 @@ const useWorkflowForms = () => {
     return tempWorkflow;
   };
 
+  const validateWorkflowSteps = (workflowSteps) => {
+    let validationFlag = true;
+    const uniqueNames = new Map();
+    const duplicateNames = [];
+
+    workflowSteps.forEach((wfs) => {
+      const stepName = wfs.name.replaceAll(" ", "");
+      if (!uniqueNames[stepName]) {
+        uniqueNames[stepName] = true;
+      } else {
+        duplicateNames.push(wfs.name);
+      }
+    });
+
+    duplicateNames.forEach((dpn) => {
+      toastErrorNotify(`Workflow Step Name ${dpn} ist nicht eindeutig!! `);
+      validationFlag = false;
+    });
+
+    return validationFlag;
+  };
+
+  const validateWorkflowForSubmit = (workflow) => {
+    let validationFlag = true;
+
+    const workflowSteps = workflow.workflowSteps;
+    validationFlag = validateWorkflowSteps(workflowSteps);
+
+    return validationFlag;
+  };
+
   return {
     //HELPER-FUNCTIONS
     prepareEntityFields,
@@ -924,6 +956,7 @@ const useWorkflowForms = () => {
     setPreviousAndNextStepsOnConnect,
     updatePreviousAndNextStepOnDeleteEdge,
     prepareWorkflowStateForPost,
+    validateWorkflowForSubmit,
 
     //RECORD_VIEW_FIELD
     createRecordViewField,
