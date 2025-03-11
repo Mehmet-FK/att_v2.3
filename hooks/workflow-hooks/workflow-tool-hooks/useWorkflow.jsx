@@ -33,6 +33,8 @@ const useWorkflow = () => {
   //Creates random id
   const generateID = (type) => `${type}_${idRef.current++}`;
 
+  const getUniqueID = () => "id" + Math.random().toString(16).slice(2);
+
   const randomPositions = (x, y, xMax = 1000, yMax = 500) => {
     const getRandomValue = (max) => Math.floor(Math.random() * (max / 10)) * 10;
 
@@ -493,6 +495,7 @@ const useWorkflow = () => {
 
   const createRegularEdge = (node) => {
     return {
+      id: getUniqueID(),
       source: node.id,
       sourceHandle: "a",
       target: node.nextStep,
@@ -507,6 +510,7 @@ const useWorkflow = () => {
 
   const createNewEdge = (sourceId, sourceHandle, target, edgeType) => {
     return {
+      id: getUniqueID(),
       source: sourceId,
       sourceHandle: sourceHandle,
       target: target,
