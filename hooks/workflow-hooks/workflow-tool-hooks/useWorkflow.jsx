@@ -661,7 +661,6 @@ const useWorkflow = () => {
     createdNodes = createdNodes.concat(infoScreens ? infoScreens : []);
 
     const createdEdges = createEdgesBySteps(existingWorkflow);
-    console.log(createdEdges);
     _setNodes((nds) => nds.concat(createdNodes));
     _setEdges((eds) => eds.concat(createdEdges));
   };

@@ -22,7 +22,7 @@ const IconSelect = ({
   showUpload,
   helperProps,
 }) => {
-  const icons = useSelector((state) => state.attensam.data?.icons || []);
+  const icons = useSelector((state) => state.attensam.data?.icons);
   const [openIconUploadModal, setOpenIconUploadModal] = useState(false);
 
   const [inputValue, setInputValue] = useState("");
@@ -168,7 +168,7 @@ const IconSelect = ({
       )}
       <Autocomplete
         {...helperProps}
-        options={icons}
+        options={icons || []}
         value={selectedValue}
         onChange={(event, newValue) => handleChangeLocal(newValue)}
         getOptionKey={(opt) => opt[optKey]}
