@@ -121,6 +121,8 @@ const ViewHeaderForm = ({
                     handleBlur={handleBlur}
                     value={headerValues?.defaultIcon || ""}
                     name={"defaultIcon"}
+                    fullWidth={true}
+                    showUpload={true}
                   />
                 </div>
                 <div className={css.flex_column}>

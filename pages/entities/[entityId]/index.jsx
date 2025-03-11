@@ -14,7 +14,8 @@ const Entity = () => {
 
   const entities = useSelector((state) => state.attensam.data?.entities);
 
-  const { getEntityDefinitionsCall, getEntitiesCall } = useAttensamCalls();
+  const { getEntityDefinitionsCall, getEntitiesCall, getAllIconsCall } =
+    useAttensamCalls();
 
   const { clearEntityDefinition } = useEntityForm();
 
@@ -40,10 +41,9 @@ const Entity = () => {
   }, [entityId]);
 
   useEffect(() => {
-    if (!entities) {
-      getEntitiesCall();
-    }
-  }, [entities]);
+    getAllIconsCall();
+    getEntitiesCall();
+  }, []);
 
   return (
     <div className="page-wrapper">

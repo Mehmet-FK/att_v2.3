@@ -99,7 +99,9 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const filterOptions = useMemo(() => {
     const unifiedValue = (option) =>
       optFilterKeys?.map((key) => option[key])?.join(" ");
+
     if (!optFilterKeys) return createFilterOptions();
+
     return createFilterOptions({
       matchFrom: "any",
       stringify: (option) => unifiedValue(option),
@@ -109,11 +111,6 @@ const AutoCompleteSelect = ({ mainProps, helperProps }) => {
   const selectedValue = useMemo(() => {
     return options.find((opt) => opt[optKey] == value) || null;
   }, [value, options]);
-
-  // useEffect(() => {
-  //   const tempSelectedValue = options.find((opt) => opt[optKey] == value);
-  //   setSelectedValue(tempSelectedValue);
-  // }, [value]);
 
   return (
     <Autocomplete

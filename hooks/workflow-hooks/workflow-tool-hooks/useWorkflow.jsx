@@ -553,7 +553,6 @@ const useWorkflow = () => {
   };
 
   const updateNodeId = (node, step) => {
-    console.log({ step });
     const nodeData = node?.data;
     const stepID = step?.workflowStepId;
 

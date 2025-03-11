@@ -133,6 +133,29 @@ const useAttensamCalls = () => {
     return responseFlag;
   };
 
+  const uploadNewIconCall = async (iconFormData) => {
+    let responseFlag = false;
+
+    try {
+      const { data } = await axiosFormData.post(
+        "/api/Icon/createAndUpdate",
+        iconFormData
+      );
+      console.log({ iconUploadResponse: data });
+      toastSuccessNotify("Icon wurde erfolgreich gespeichert");
+
+      getAllIconsCall();
+
+      responseFlag = true;
+    } catch (error) {
+      toastErrorNotify(error?.response?.data || "Etwas ist schiefgelaufen!");
+      console.log(error);
+    } finally {
+      dispatch(stopLoading());
+    }
+    return responseFlag;
+  };
+
   //GET
   const getWorkflowsCall = () =>
     getAttData("/atina/api/Workflow?showPath=true", "workflows", true);
@@ -149,6 +172,8 @@ const useAttensamCalls = () => {
       "workflowHubs",
       true
     );
+  const getAllIconsCall = () =>
+    getAttData("/api/Icon/getAllIcons", "icons", true);
   const getEntityDefinitionsCall = (entityId) =>
     getAttData(
       `/api/Entity/GetEntityDefinitions?entityId=${entityId}`,
@@ -197,6 +222,9 @@ const useAttensamCalls = () => {
     postEntityCall,
     postFieldCall,
     postWorkflowCall,
+
+    getAllIconsCall,
+    uploadNewIconCall,
 
     getWorkflowsCall,
     getWorkflowDefinitionsCall,

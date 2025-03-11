@@ -80,6 +80,7 @@ const FieldProperty = ({ property, setConfirmModalValues }) => {
                 name={"differingIcon"}
                 size="small"
                 label="differingIcon"
+                fullWidth={true}
               />
               <IconSelect
                 handleChange={handleChange}
@@ -88,6 +89,7 @@ const FieldProperty = ({ property, setConfirmModalValues }) => {
                 name={"differingListviewItemIcon"}
                 size="small"
                 label="differingListviewItemIcon"
+                fullWidth={true}
               />
             </div>
             <div className={css.flex_row}>

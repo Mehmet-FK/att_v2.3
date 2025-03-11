@@ -1,4 +1,4 @@
-import { Divider, TextField } from "@mui/material";
+import { Button, Divider, IconButton, TextField } from "@mui/material";
 import css from "@/styles/workflow-forms-styles/workflow-form.module.css";
 import useWorkflowForms from "@/hooks/workflow-hooks/workflow-form-hooks/useWorkflowForms";
 import IconSelect from "@/components/form-elements/IconSelect";
@@ -11,12 +11,14 @@ import LaunchElementForm from "../launch-element-from";
 import { workflowPermissionTypes } from "@/helpers/Enums";
 import { useAutoCompleteEntities } from "@/context/AutoCompleteEntityContext";
 import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
+import IconUploadModal from "@/components/ui-components/IconUploadModal";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 const WorkflowForm = ({}) => {
   const workflowState = useSelector((state) => state.workflow);
 
   const [workflowFormValues, setWorkflowFormValues] = useState(workflowState);
-
+  const [openIconUploadModal, setOpenIconUploadModal] = useState(false);
   const { updateWorkflowValue } = useWorkflowForms();
 
   const { autoCompleteEntities } = useAutoCompleteEntities();
@@ -41,6 +43,10 @@ const WorkflowForm = ({}) => {
   }, [workflowState]);
   return (
     <>
+      {/* <IconUploadModal
+        open={openIconUploadModal}
+        setOpen={setOpenIconUploadModal}
+      /> */}
       <div className={css.form_container}>
         <div className={css.flex_column}>
           <div className={css.flex_row}>
@@ -99,12 +105,23 @@ const WorkflowForm = ({}) => {
             />
           </div>
           <div className={css.flex_row}>
-            <IconSelect
-              size={"medium"}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={workflowFormValues?.icon || ""}
-            />
+            <div
+              className={css.flex_row}
+              style={{ display: "flex", alignItems: "center" }}
+            >
+              <IconSelect
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                name="icon"
+                value={workflowFormValues?.icon}
+                label="Icon"
+                fullWidth={true}
+                showUpload={true}
+                helperProps={{
+                  className: css.form_control,
+                }}
+              />
+            </div>
 
             <CustomSelect
               handleChange={handleChange}

@@ -18,6 +18,7 @@ const WorkflowManager = () => {
     getWorkflowDefinitionsCall,
     getViewTypes,
     getLaunchTypes,
+    getAllIconsCall,
     getEntitiesCall,
     getWorkflowsCall,
     getWorkflowHubsCall,
@@ -46,12 +47,11 @@ const WorkflowManager = () => {
       fetchWorkflowDefinition();
     }
   }, []);
-  //! DANGER RESET THIS AFTER TESTING
-  // }, [router.query.workflowId]);
 
   useEffect(() => {
     getViewTypes();
     getLaunchTypes();
+    getAllIconsCall();
     getWorkflowHubsCall();
     if (!entitiesRemote) {
       getEntitiesCall();

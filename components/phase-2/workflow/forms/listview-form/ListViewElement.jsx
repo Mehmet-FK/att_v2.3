@@ -71,6 +71,8 @@ const ListViewElement = ({ element, entityFields }) => {
             handleChange={handleChange}
             handleBlur={handleBlur}
             value={elementValues?.icon || ""}
+            showUpload={true}
+            fullWidth={true}
           />
           <div className={css.flex_column}>
             {elementRows.map((row) => (
