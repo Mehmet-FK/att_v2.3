@@ -1,6 +1,8 @@
 import css from "@/styles/workflow-comp-styles.module.css";
 import styled from "@emotion/styled";
 import { grey } from "@mui/material/colors";
+import { useState } from "react";
+import HiddenAPIModal from "./HiddenAPIModal";
 
 const Puller = styled("div")(({ theme }) => ({
   width: 30,
@@ -11,6 +13,8 @@ const Puller = styled("div")(({ theme }) => ({
   top: 8,
   left: "calc(50% - 15px)",
   zIndex: 10,
+  transition: "background 0.3s ease-in-out, transform 0.2s ease-in-out ",
+  "&:hover": { backgroundColor: "#4260b8", transform: "scale(1.2)" },
 }));
 
 const DrawerHead = ({
@@ -24,6 +28,8 @@ const DrawerHead = ({
   label,
   drawerHeaderHeight,
 }) => {
+  const [openFetchModal, setOpenFetchModal] = useState(false);
+
   return (
     <div
       className={css.fixed_tab}
@@ -31,7 +37,8 @@ const DrawerHead = ({
       onClick={handleDoubleClick}
       style={{ height: drawerHeaderHeight + "px" }}
     >
-      <Puller />
+      <HiddenAPIModal open={openFetchModal} setOpen={setOpenFetchModal} />
+      <Puller onClick={() => setOpenFetchModal(true)} />
 
       <div
         className={css.console_btn_wrapper}

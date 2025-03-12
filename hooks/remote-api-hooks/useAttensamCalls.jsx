@@ -219,10 +219,10 @@ const useAttensamCalls = () => {
   const deleteEntityCall = (id) => deleteAttData(`/api/Entity/${id}`);
   const deleteFieldCall = (id) => deleteAttData(`/api/Field/${id}`);
   return {
+    getAttData,
     postEntityCall,
     postFieldCall,
     postWorkflowCall,
-
     getAllIconsCall,
     uploadNewIconCall,
 

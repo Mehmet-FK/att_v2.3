@@ -4,9 +4,10 @@ import ReactFlow, {
   useNodesState,
   ConnectionMode,
   useReactFlow,
+  reconnectEdge,
 } from "reactflow";
 import nodeTypes from "@/components/phase-2/workflow/nodes/node-components/NodeTypes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "reactflow/dist/style.css";
 import useWorkflow from "@/hooks/workflow-hooks/workflow-tool-hooks/useWorkflow";
 import edgeTypes from "@/components/phase-2/workflow/edges/EdgeTypes";
@@ -78,6 +79,12 @@ const Sheet = ({ existingWorkflow }) => {
     prepareWorkflowStateForPost,
     validateWorkflowForSubmit,
   } = useWorkflowForms();
+
+  const onReconnect = useCallback(
+    (oldEdge, newConnection) =>
+      setEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
+    []
+  );
 
   const onConnect = (params) => {
     const isConnected = addEdgeAndUpdateHistoryOnConnect(params);
@@ -193,6 +200,7 @@ const Sheet = ({ existingWorkflow }) => {
         nodes={nodes}
         edges={edges}
         onConnect={onConnect}
+        onReconnect={onReconnect}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeDragStop={(e, n) => onNodeDragStop(e, n, updateSelectedStep)}

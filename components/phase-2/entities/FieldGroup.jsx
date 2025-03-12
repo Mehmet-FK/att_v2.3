@@ -55,7 +55,11 @@ const FieldGroup = ({ field, setConfirmModalValues }) => {
   const handleBlur = (e) => {
     const { name, value, type, checked } = e.target;
 
-    const inputValue = type === "checkbox" ? checked : value;
+    let inputValue = type === "checkbox" ? checked : value;
+
+    if (name === "linkedEntityId") {
+      inputValue = inputValue?.toString();
+    }
 
     updateEntityFieldValue(name, inputValue, field.fieldId);
   };

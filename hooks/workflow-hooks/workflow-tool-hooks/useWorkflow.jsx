@@ -520,6 +520,7 @@ const useWorkflow = () => {
       style: { strokeWidth: 2 },
       sourceID: sourceId,
       targetID: target,
+      reconnectable: "target",
     };
   };
 
@@ -693,8 +694,6 @@ const useWorkflow = () => {
     }
   };
 
-  const initializeWorkflowLabel = () => {};
-
   useEffect(() => {
     document.addEventListener("keydown", onKeydown);
     return () => {
@@ -719,8 +718,6 @@ const useWorkflow = () => {
     createNewReqularNode,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
-    initializeWorkflowLabel,
-
     updateEdgeAndNodeIds,
   };
 };
