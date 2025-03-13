@@ -40,7 +40,7 @@ const HiddenAPIModal = ({ open, setOpen }) => {
             >
               <TextField
                 size="small"
-                label="Endpoint"
+                label="Response"
                 value={response || ""}
                 name="caption"
                 variant="outlined"

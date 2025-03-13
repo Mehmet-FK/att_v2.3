@@ -38,7 +38,12 @@ const DrawerHead = ({
       style={{ height: drawerHeaderHeight + "px" }}
     >
       <HiddenAPIModal open={openFetchModal} setOpen={setOpenFetchModal} />
-      <Puller onClick={() => setOpenFetchModal(true)} />
+      <Puller
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpenFetchModal(true);
+        }}
+      />
 
       <div
         className={css.console_btn_wrapper}

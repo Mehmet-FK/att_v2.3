@@ -138,19 +138,31 @@ const InfoScreenForm = ({ stepID, workflowStepValues }) => {
             </div>
           </div>
 
-          <TextField
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={infoScreenValues?.infoText || ""}
-            variant="outlined"
-            size="medium"
-            label="Benutzer Informationstext"
-            name="infoText"
-            placeholder="Möchten Sie..."
-            multiline
-            rows={5}
-            fullWidth
-          />
+          <div className={css.flex_column}>
+            <TextField
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={infoScreenValues?.infoText || ""}
+              variant="outlined"
+              size="medium"
+              label="Benutzer Informationstext"
+              name="infoText"
+              placeholder="Möchten Sie..."
+              multiline
+              rows={2}
+              fullWidth
+            />
+            <TextField
+              onChange={handleChange}
+              onBlur={handleWorkflowStepBlur}
+              value={infoScreenValues?.infoTextVariables || ""}
+              variant="outlined"
+              size="medium"
+              label="Informationstext Variablen"
+              name="infoTextVariables"
+              fullWidth
+            />
+          </div>
         </div>
       </div>
       <div className={css.header_form_wrapper}>
