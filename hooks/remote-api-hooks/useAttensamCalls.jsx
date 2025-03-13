@@ -8,14 +8,28 @@ import {
 import { toastErrorNotify, toastSuccessNotify } from "@/helpers/ToastNotify";
 import { signOut } from "next-auth/react";
 import useAxios from "./useAxios";
+import { useRef } from "react";
 
 const useAttensamCalls = () => {
   const { axiosWithToken, axiosFormData } = useAxios();
   const dispatch = useDispatch();
+  const requestLoadingStack = useRef([]);
+
+  const startRequestAndLoading = (url = "placeholderURL") => {
+    dispatch(fetchStart());
+    requestLoadingStack.current.push(url);
+  };
+
+  const stopRequestAndLoading = () => {
+    if (requestLoadingStack.current.length === 1) {
+      dispatch(stopLoading());
+    }
+    requestLoadingStack.current.pop();
+  };
 
   //BASE GET CALL
   const getAttData = async (url, dataName, reduxFlag) => {
-    dispatch(fetchStart());
+    startRequestAndLoading(url);
     try {
       const { data } = await axiosWithToken.get(url);
 
@@ -26,13 +40,13 @@ const useAttensamCalls = () => {
     } catch (error) {
       dispatch(fetchFail({ message: error?.response?.status }));
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
   };
 
   //  PUT CALL FOR UPDATE
   const putAttData = async (url, formData) => {
-    dispatch(fetchStart());
+    startRequestAndLoading(url);
 
     try {
       const { data } = await axiosFormData.put(url, formData);
@@ -42,13 +56,14 @@ const useAttensamCalls = () => {
       console.log(error.response);
       toastErrorNotify(error?.response?.data);
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
   };
 
   // DELETE CALL
   const deleteAttData = async (url) => {
     let isSuccess = false;
+    startRequestAndLoading(url);
     try {
       const { data } = await axiosWithToken.delete(url);
       toastSuccessNotify(data);
@@ -57,12 +72,12 @@ const useAttensamCalls = () => {
       console.log(error);
       toastErrorNotify("Etwas ist schiefgelaufen");
     }
-    dispatch(stopLoading());
+    stopRequestAndLoading();
   };
 
   const deleteWorkflowCall = async (workflowId) => {
     let responseFlag = false;
-
+    startRequestAndLoading();
     try {
       console.log({ workflowId });
       const { data } = await axiosWithToken.post(
@@ -75,13 +90,14 @@ const useAttensamCalls = () => {
       toastErrorNotify(error?.response?.data || "Etwas ist schiefgelaufen!");
       console.log({ error });
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
     return responseFlag;
   };
 
   //  POST CALL
   const postAttData = async (url, formData) => {
+    startRequestAndLoading(url);
     try {
       const { data } = await axiosFormData.post(url, formData);
 
@@ -90,14 +106,14 @@ const useAttensamCalls = () => {
       toastErrorNotify(error?.response?.data);
       // console.log(error);
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
   };
 
   //TODO: Refactoring is needed
   const postWorkflowCall = async (formData) => {
     let responseFlag = false;
-
+    startRequestAndLoading();
     try {
       console.log({ POST_Workflow: formData });
       const { data } = await axiosWithToken.post(
@@ -110,13 +126,13 @@ const useAttensamCalls = () => {
     } catch (error) {
       toastErrorNotify(error?.response?.data);
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
     return responseFlag;
   };
   const postEntityCall = async (entityData) => {
     let responseFlag = false;
-
+    startRequestAndLoading();
     try {
       const { data } = await axiosWithToken.post(
         "/api/Entity/CreateAndUpdateEntity",
@@ -128,14 +144,14 @@ const useAttensamCalls = () => {
       toastErrorNotify(error?.response?.data || "Etwas ist schiefgelaufen!");
       console.log(error);
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
     return responseFlag;
   };
 
   const uploadNewIconCall = async (iconFormData) => {
     let responseFlag = false;
-
+    startRequestAndLoading();
     try {
       const { data } = await axiosFormData.post(
         "/api/Icon/createAndUpdate",
@@ -151,7 +167,7 @@ const useAttensamCalls = () => {
       toastErrorNotify(error?.response?.data || "Etwas ist schiefgelaufen!");
       console.log(error);
     } finally {
-      dispatch(stopLoading());
+      stopRequestAndLoading();
     }
     return responseFlag;
   };
