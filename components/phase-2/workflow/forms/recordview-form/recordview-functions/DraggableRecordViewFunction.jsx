@@ -74,7 +74,7 @@ const DraggableRecordViewFunction = ({
 
   const isDraggedOver = functionFormValues.isDraggedOver;
   const functionID = functionFormValues.recordViewFunctionId;
-
+  // console.log(functionFormValues);
   return (
     <DragItemContainer
       isDraggedOver={isDraggedOver}
