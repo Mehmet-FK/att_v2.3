@@ -108,7 +108,7 @@ export const launchTypes = [
   },
   { id: 4, type: "LaunchGroupView", caption: "Group View" },
   { id: 5, type: "LaunchDefaultListView", caption: "Default List View" },
-  { id: 6, type: "LaunchHub ", caption: "Launch Hub" },
+  { id: 6, type: "LaunchHub", caption: "Launch Hub" },
 ];
 
 export const workflowStepTypeIds = {

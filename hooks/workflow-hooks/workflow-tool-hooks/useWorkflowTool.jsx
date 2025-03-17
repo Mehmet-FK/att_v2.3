@@ -11,7 +11,7 @@ import {
 } from "@/helpers/Constants";
 
 const KEY_WORKFLOW_LOCALSTORAGE = "atina-flow";
-const useWorkflow = () => {
+const useWorkflowTool = () => {
   const { setViewport, getIntersectingNodes } = useReactFlow();
   const { restoreWorkflowState } = useWorkflowForms();
   const {
@@ -314,10 +314,48 @@ const useWorkflow = () => {
           style: { strokeWidth: 2 },
           sourceID: params.source,
           targetID: params.target,
+          interactionWidth: 25,
         },
         eds
       )
     );
+    saveToHistory();
+    return true;
+  };
+
+  const updateEdgeAndHistoryOnReconnect = (params, reconnectCallback) => {
+    const conditionEdgeIds = ["a_top", "a_bottom"];
+
+    const isConditionEdge = conditionEdgeIds.includes(params.sourceHandle);
+    const isTargetHandleConditional = conditionEdgeIds.includes(
+      params.targetHandle
+    );
+
+    if (
+      targetAlreadyExist(params) &&
+      !isConditionEdge &&
+      !isTargetHandleConditional
+    )
+      return false;
+
+    if (isConditionEdge) {
+      const nextStepType =
+        params.sourceHandle === "a_top"
+          ? "nextStepOnConfirm"
+          : "nextStepOnCancel";
+
+      setNodes((nodes) =>
+        nodes.map((nd) =>
+          nd.id === params.source
+            ? { ...nd, [nextStepType]: params.target }
+            : nd
+        )
+      );
+    }
+
+    const edgeType = isConditionEdge ? "smoothstep" : "floating";
+
+    reconnectCallback();
     saveToHistory();
     return true;
   };
@@ -505,6 +543,7 @@ const useWorkflow = () => {
       style: { strokeWidth: 2 },
       sourceID: node.id,
       targetID: node.nextStep,
+      interactionWidth: 25,
     };
   };
 
@@ -520,7 +559,7 @@ const useWorkflow = () => {
       style: { strokeWidth: 2 },
       sourceID: sourceId,
       targetID: target,
-      reconnectable: "target",
+      interactionWidth: 25,
     };
   };
 
@@ -718,8 +757,9 @@ const useWorkflow = () => {
     createNewReqularNode,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
+    updateEdgeAndHistoryOnReconnect,
     updateEdgeAndNodeIds,
   };
 };
 
-export default useWorkflow;
+export default useWorkflowTool;

@@ -9,7 +9,7 @@ import ReactFlow, {
 import nodeTypes from "@/components/phase-2/workflow/nodes/node-components/NodeTypes";
 import { useCallback, useEffect, useState } from "react";
 import "reactflow/dist/style.css";
-import useWorkflow from "@/hooks/workflow-hooks/workflow-tool-hooks/useWorkflow";
+import useWorkflowTool from "@/hooks/workflow-hooks/workflow-tool-hooks/useWorkflowTool";
 import edgeTypes from "@/components/phase-2/workflow/edges/EdgeTypes";
 import BottomDrawer from "./drawers/bottom-drawer";
 import ToolsDrawer from "./drawers/tools-drawer";
@@ -67,7 +67,8 @@ const Sheet = ({ existingWorkflow }) => {
     isValidConnection,
     addNodeAndUpdateHistoryOnDrop,
     addEdgeAndUpdateHistoryOnConnect,
-  } = useWorkflow();
+    updateEdgeAndHistoryOnReconnect,
+  } = useWorkflowTool();
 
   const {
     createViewOnDrop,
@@ -80,15 +81,20 @@ const Sheet = ({ existingWorkflow }) => {
     validateWorkflowForSubmit,
   } = useWorkflowForms();
 
-  const onReconnect = useCallback(
-    (oldEdge, newConnection) =>
-      setEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
-    []
-  );
+  const onReconnect = (oldEdge, newConnection) => {
+    const reconnectCallback = () =>
+      setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
+
+    const isConnected = updateEdgeAndHistoryOnReconnect(
+      newConnection,
+      reconnectCallback
+    );
+
+    setPreviousAndNextStepsOnConnect(newConnection);
+  };
 
   const onConnect = (params) => {
     const isConnected = addEdgeAndUpdateHistoryOnConnect(params);
-
     if (!isConnected) return;
 
     setPreviousAndNextStepsOnConnect(params);

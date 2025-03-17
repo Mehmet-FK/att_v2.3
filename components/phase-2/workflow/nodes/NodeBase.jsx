@@ -17,6 +17,7 @@ const NodeBase = ({ data, isConnectable, shape }) => {
   const nodeLabel = data?.label;
   const isModalDialogNode = nodeType === viewTypeConstants.MODALDIALOG;
   const isLaunchNode = null;
+
   return (
     <>
       <Box

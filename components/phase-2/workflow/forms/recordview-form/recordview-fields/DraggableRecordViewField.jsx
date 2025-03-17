@@ -42,7 +42,6 @@ const DraggableRecordViewField = ({
   const handleChange = (e) => {
     const { value, name, type, checked } = e.target;
     const newValue = type === "checkbox" ? checked : value;
-
     setFieldFormValues((prev) => ({ ...prev, [name]: newValue }));
   };
 
