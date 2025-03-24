@@ -600,6 +600,51 @@ const useWorkflowTool = () => {
     return node;
   };
 
+  const findVIewIDByWorkflowStep = (stepID, existingWorkflow) => {
+    const views = [
+      {
+        name: "launchElements",
+        accessor: "launchElementId",
+      },
+      {
+        name: "workflowRelays",
+        accessor: "workflowRelayId",
+      },
+      {
+        name: "scannerDialogs",
+        accessor: "scannerDialogId",
+      },
+      {
+        name: "infoScreens",
+        accessor: "infoScreenId",
+      },
+      {
+        name: "listViews",
+        accessor: "listViewId",
+      },
+      {
+        name: "recordViews",
+        accessor: "recordViewId",
+      },
+      {
+        name: "modalDialogs",
+        accessor: "modalDialogId",
+      },
+    ];
+
+    let viewID = "";
+
+    for (const view of views) {
+      const viewList = existingWorkflow[view.name];
+      const res = viewList.find((v) => v.workflowStepId === stepID);
+      if (res) {
+        viewID = res[view.accessor];
+        break;
+      }
+    }
+    return viewID;
+  };
+
   const updateEdgeAndNodeIds = (existingWorkflow, nodes) => {
     const workflowSteps = existingWorkflow.workflowSteps;
     const modalDialogs = existingWorkflow.modalDialogs;
@@ -610,12 +655,15 @@ const useWorkflowTool = () => {
       const stepName = step.name.replaceAll(" ", "");
 
       const node = nodesMap[stepName];
-
       if (node) {
+        const viewID = findVIewIDByWorkflowStep(
+          step.workflowStepId,
+          existingWorkflow
+        );
         const nodeData = {
           ...node.data,
           nodeId: step.workflowStepId,
-          viewId: step.workflowStepId,
+          viewId: viewID,
         };
         nodesMap[stepName].id = step.workflowStepId;
         nodesMap[stepName].nextStep = step.nextStep;

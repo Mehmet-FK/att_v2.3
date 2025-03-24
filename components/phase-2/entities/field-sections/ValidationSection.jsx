@@ -109,7 +109,7 @@ const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
                 <TextField
                   size="small"
                   label="minValue"
-                  value={validationFormValues?.minValue || ""}
+                  value={validationFormValues?.minValue || null}
                   name="minValue"
                   variant="outlined"
                   onChange={handleChange}
@@ -121,7 +121,7 @@ const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
                 <TextField
                   size="small"
                   label="maxValue"
-                  value={validationFormValues?.maxValue || ""}
+                  value={validationFormValues?.maxValue || null}
                   name="maxValue"
                   variant="outlined"
                   onChange={handleChange}
@@ -144,7 +144,7 @@ const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
                 <TextField
                   size="small"
                   label="Regex"
-                  value={validationFormValues?.regex || ""}
+                  value={validationFormValues?.regex || null}
                   name="regex"
                   variant="outlined"
                   onChange={handleChange}
@@ -154,7 +154,7 @@ const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
                 <TextField
                   size="small"
                   label="maxLength"
-                  value={validationFormValues?.maxLength || ""}
+                  value={validationFormValues?.maxLength || null}
                   name="maxLength"
                   variant="outlined"
                   onChange={handleChange}

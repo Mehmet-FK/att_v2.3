@@ -668,7 +668,7 @@ const useWorkflowForms = () => {
   };
   const deleteInfoScreen = (workflowStepId) => {
     const infoScreeToDelete = findViewByStepId(infoScreens, workflowStepId);
-    const screenID = infoScreeToDelete.infoScreenId;
+    const screenID = infoScreeToDelete?.infoScreenId;
 
     //Header
     const headerId = findHeaderByViewId(screenID);
