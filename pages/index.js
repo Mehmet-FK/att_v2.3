@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import css from "@/styles/dashboard-styles/dashboard-card.module.css";
 import Card from "@/components/ui-components/DashboardCard";
 
-export default function Home() {
+export default function Home({ isAtinaAdmin }) {
   return (
     <>
       <Head>
@@ -38,30 +38,34 @@ export default function Home() {
               defaultIconUrl: "/assets/dashboard-icons/users.svg",
             }}
           />
-          <Card
-            cardInfo={{
-              url: "/workflows",
+          {isAtinaAdmin && (
+            <>
+              <Card
+                cardInfo={{
+                  url: "/workflows",
 
-              caption: "Workflows",
-              defaultIconUrl: "/assets/dashboard-icons/workflows.svg",
-            }}
-          />
-          <Card
-            cardInfo={{
-              url: "/entities",
+                  caption: "Workflows",
+                  defaultIconUrl: "/assets/dashboard-icons/workflows.svg",
+                }}
+              />
+              <Card
+                cardInfo={{
+                  url: "/entities",
 
-              caption: "Entitäten",
-              defaultIconUrl: "/assets/dashboard-icons/entities.svg",
-            }}
-          />
+                  caption: "Entitäten",
+                  defaultIconUrl: "/assets/dashboard-icons/entities.svg",
+                }}
+              />
+            </>
+          )}
         </div>
       </div>
     </>
   );
 }
+
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
-
   if (!session) {
     return {
       redirect: {
@@ -71,7 +75,9 @@ export const getServerSideProps = async (context) => {
     };
   }
 
+  const isAtinaAdmin = session?.user?.userInfo?.userId === 5573;
+
   return {
-    props: { session },
+    props: { session, isAtinaAdmin },
   };
 };

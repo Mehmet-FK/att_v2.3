@@ -80,12 +80,22 @@ export default Workflow;
 
 export const getServerSideProps = async (context) => {
   const session = await getSession(context);
-
+  const isAtinaAdmin = session?.user?.userInfo?.userId === 5573;
   if (!session) {
     return {
       redirect: {
         destination: "/auth/login",
         permanent: false,
+      },
+    };
+  } else if (!isAtinaAdmin) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+      props: {
+        session,
       },
     };
   }

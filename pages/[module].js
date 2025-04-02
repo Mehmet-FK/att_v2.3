@@ -36,6 +36,10 @@ export const getServerSideProps = async (context) => {
   }
 
   return {
+    redirect: {
+      destination: "/",
+      permanent: false,
+    },
     props: {
       session,
     },

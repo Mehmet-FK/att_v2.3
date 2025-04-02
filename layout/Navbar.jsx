@@ -19,7 +19,7 @@ const Navbar = ({ handleDrawerOpen, toggleTheme, open }) => {
   };
 
   const userAvatar = user?.avatar;
-  const avatar = userAvatar
+  const avatar = userAvatar?.url
     ? userAvatar?.url + "?" + userAvatar?.lastEdited
     : "/assets/emptyAvatar.jpg";
   return (
