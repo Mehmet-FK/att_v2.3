@@ -154,7 +154,7 @@ const InfoScreenForm = ({ stepID, workflowStepValues }) => {
             />
             <TextField
               onChange={handleChange}
-              onBlur={handleWorkflowStepBlur}
+              onBlur={handleBlur}
               value={infoScreenValues?.infoTextVariables || ""}
               variant="outlined"
               size="medium"

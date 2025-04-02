@@ -652,6 +652,7 @@ const useWorkflowForms = () => {
       submitCache: null,
       title: "",
       infoText: "",
+      infoTextVariables: "",
     };
 
     createWorkflowStep(workflowStepId);
@@ -667,8 +668,8 @@ const useWorkflowForms = () => {
     dispatch(changeInfoScreenValue({ name, value, screenID }));
   };
   const deleteInfoScreen = (workflowStepId) => {
-    const infoScreeToDelete = findViewByStepId(infoScreens, workflowStepId);
-    const screenID = infoScreeToDelete?.infoScreenId;
+    const infoScreenToDelete = findViewByStepId(infoScreens, workflowStepId);
+    const screenID = infoScreenToDelete?.infoScreenId;
 
     //Header
     const headerId = findHeaderByViewId(screenID);
