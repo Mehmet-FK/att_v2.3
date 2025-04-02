@@ -1,5 +1,5 @@
 import css from "@/styles/modals.module.css";
-import RolesList_phase2 from "./RolesList_phase2";
+import RolesList_phase2 from "./RolesList";
 import { useState } from "react";
 import useTableDataCalls from "@/hooks/remote-api-hooks/useTableDataCalls";
 import { Button, Card, IconButton, Modal, Typography } from "@mui/material";
