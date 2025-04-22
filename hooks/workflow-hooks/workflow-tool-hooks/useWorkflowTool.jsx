@@ -494,6 +494,28 @@ const useWorkflowTool = () => {
     return createdInfoScreenNodes;
   };
 
+  const restoreExistingWorkflowRelays = (existingWorkflow) => {
+    const workflowRelays = existingWorkflow.workflowRelays;
+
+    if (!workflowRelays.length) return null;
+
+    const createdWorkflowRelayNodes = [];
+    workflowRelays.forEach((screen) => {
+      const viewType = viewTypeConstants.WORKFLOW_RELAY;
+      const caption = "Workflow Relay";
+      const position = randomPositions(950, 400);
+      const newNode = createNewReqularNode(
+        viewType,
+        caption,
+        position,
+        screen.workflowStepId,
+        screen.workflowRelayId
+      );
+      createdWorkflowRelayNodes.push(newNode);
+    });
+    return createdWorkflowRelayNodes;
+  };
+
   const createEdgesBySteps = (existingWorkflow) => {
     const workflowSteps = existingWorkflow?.workflowSteps;
     const modalDialogs = existingWorkflow?.modalDialogs;
@@ -752,6 +774,9 @@ const useWorkflowTool = () => {
     const infoScreens = restoreExistingInfoScreens(existingWorkflow);
     createdNodes = createdNodes.concat(infoScreens ? infoScreens : []);
 
+    const workflowRelays = restoreExistingWorkflowRelays(existingWorkflow);
+    createdNodes = createdNodes.concat(workflowRelays ? workflowRelays : []);
+
     const createdEdges = createEdgesBySteps(existingWorkflow);
     _setNodes((nds) => nds.concat(createdNodes));
     _setEdges((eds) => eds.concat(createdEdges));
@@ -763,6 +788,7 @@ const useWorkflowTool = () => {
     _setEdges
   ) => {
     let isParseSuccessfull = false;
+    console.log({ existingWorkflow });
 
     if (existingWorkflow?.nodes && existingWorkflow?.edges) {
       isParseSuccessfull = restoreExistingRemoteWorkflowByNodesAndEdges(

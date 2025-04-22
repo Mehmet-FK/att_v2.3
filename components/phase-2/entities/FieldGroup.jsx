@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import css from "@/styles/entity-styles/entities-comp.module.css";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CheckBox from "../workflow/forms/common-form-elements/CheckBox";
 import AutoCompleteSelect from "../workflow/forms/common-form-elements/AutoCompleteSelect";
 import CustomSelect from "../workflow/forms/common-form-elements/CustomSelect";
