@@ -7,6 +7,7 @@ import PageHeader from "@/components/ui-components/PageHeader";
 import DashboardSkeletonLoader from "@/components/ui-components/DashboardSkeletonLoader";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 import WorkflowDashboardFilters from "@/components/phase-2/dashboard-components/WorkflowDashboardFilters";
+import { useRouter } from "next/router";
 
 const multiSortWorkflows = (array) => {
   const tmpArray = [...array];
