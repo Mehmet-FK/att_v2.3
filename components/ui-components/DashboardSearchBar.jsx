@@ -29,8 +29,6 @@ const DashboardSearchBar = ({
   const filterItems = (_itemsState, term) => {
     const lowerCaseSearchTerm = term.toLowerCase();
 
-    updateQueryParam(FILTER_TYPE, lowerCaseSearchTerm);
-
     if (!_itemsState) return;
     return _itemsState.filter((item) =>
       filterKeys.some((key) => {
@@ -50,6 +48,7 @@ const DashboardSearchBar = ({
   const debouncedFilter = useCallback(
     debounce((term) => {
       const result = filterItems(itemsState, term);
+      updateQueryParam(FILTER_TYPE, term);
       setItemsState(result);
     }, 300),
     [itemsState]
@@ -63,7 +62,12 @@ const DashboardSearchBar = ({
   const router = useRouter();
   useEffect(() => {
     if (router.isReady && !isLoading) {
-      setSearchTerm(router.query.search || "");
+      const query = router.query.search;
+      if (query !== undefined) {
+        setSearchTerm(query);
+        const result = filterItems(itemsState, query);
+        setItemsState(result);
+      }
     }
   }, [router.isReady, router.query, isLoading]);
 
