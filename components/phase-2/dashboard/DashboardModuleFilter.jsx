@@ -1,5 +1,6 @@
 import common_css from "@/styles/common-style.module.css";
 import { Divider } from "@mui/material";
+import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
 const OptionCard = ({ optionValues, handleOptionClick, styles }) => {
@@ -23,15 +24,16 @@ const OptionCard = ({ optionValues, handleOptionClick, styles }) => {
     </span>
   );
 };
-const FILTER_TYPE = "module-filter";
+const FILTER_TYPE = "modules";
 const DashboardModuleFilter = ({
   moduleFilterOptions,
   itemsState,
   setItemsState,
-  setFilterType,
-  filterType,
+  updateQueryParam,
+  isLoading,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const router = useRouter();
 
   const getSubWorkflows = (selectedModule) => {
     const workflowIDs = selectedModule.workflows
@@ -53,8 +55,6 @@ const DashboardModuleFilter = ({
   }, [selectedOptions, moduleFilterOptions]);
 
   const resetFilterStates = () => {
-    if (!setFilterType) return;
-
     if (selectedOptions.length > 0) {
       console.log("resetFilterStates(MODULE);");
       setSelectedOptions([]);
@@ -72,12 +72,7 @@ const DashboardModuleFilter = ({
     const optionsUpdated = selectedOptions.concat(option);
     setSelectedOptions(optionsUpdated);
     filterWorkflowsByPath(optionsUpdated);
-
-    if (!setFilterType) return;
-
-    if (filterType !== FILTER_TYPE) {
-      setFilterType(FILTER_TYPE);
-    }
+    updateModulesQuery(optionsUpdated);
   };
 
   const handleOptionRemove = (option) => {
@@ -91,11 +86,36 @@ const DashboardModuleFilter = ({
     }
     setSelectedOptions(optionsUpdated);
     filterWorkflowsByPath(optionsUpdated);
+    updateModulesQuery(optionsUpdated);
   };
 
-  if (filterType !== FILTER_TYPE) {
-    resetFilterStates();
-  }
+  const updateModulesQuery = (options) => {
+    const modulesQuery = options.flatMap((opt) => opt.id)?.join("-");
+    updateQueryParam(FILTER_TYPE, modulesQuery);
+  };
+
+  const parseModulesQuery = (query) => {
+    if (!query) return [];
+    const moduleIDs = query.split("-");
+    const modules = itemsState.filter((opt) => {
+      return moduleIDs.includes(opt.id);
+    });
+    return modules;
+  };
+
+  useEffect(() => {
+    if (router.isReady && !isLoading) {
+      const query = router.query.modules;
+
+      if (query !== undefined) {
+        const parsedModules = parseModulesQuery(query);
+        setSelectedOptions(parsedModules);
+        filterWorkflowsByPath(parsedModules);
+      } else {
+        setSelectedOptions([]);
+      }
+    }
+  }, [router.isReady, router.query, isLoading]);
 
   return (
     <div

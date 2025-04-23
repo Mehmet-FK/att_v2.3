@@ -2,47 +2,67 @@ import css from "@/styles/dashboard-styles/filter-navigation.module.css";
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-const FILTER_TYPE = "navigation-filter";
+const FILTER_TYPE = "launchType";
 const DEFAULT_OPTION = -1;
 const DEFAULT_VALUE = 0;
 const DashboardFilterNavigation = ({
-  value,
-  setValue,
+  itemsState,
+  setItemsState,
   filterNavigations,
-  handleFilter,
-  setFilterType,
-  filterType,
+  updateQueryParam,
+  isLoading,
 }) => {
-  const resetFilterState = () => {
-    if (!setFilterType) return;
+  const [value, setValue] = useState(0);
 
-    if (value !== DEFAULT_VALUE) {
-      console.log("resetFilterStates(NAVIGATION);");
-      setValue(DEFAULT_VALUE);
+  const router = useRouter();
+
+  const handleFilter = (value) => {
+    if (value === -1) {
+      setItemsState(itemsState);
+    } else {
+      const temp = itemsState?.filter(
+        (item) => parseInt(item.launchType) === value || value === ""
+      );
+      setItemsState(temp);
     }
   };
-
-  if (filterType !== FILTER_TYPE) {
-    resetFilterState();
-  }
 
   const handleChange = (option) => {
     handleFilter(option.id);
-
-    if (!setFilterType) return;
-
-    if (filterType !== FILTER_TYPE) {
-      setFilterType(FILTER_TYPE);
-    }
+    updateQueryParam(FILTER_TYPE, option.id);
   };
+
+  const getInitialValue = (query) => {
+    if (query !== undefined) {
+      return filterNavigations.findIndex((opt) => opt.id === parseInt(query));
+    }
+    return DEFAULT_VALUE;
+  };
+
+  useEffect(() => {
+    if (router.isReady && !isLoading) {
+      const query = router.query.launchType;
+
+      if (query !== undefined) {
+        const initValue = getInitialValue(query);
+        setValue(initValue);
+        handleFilter(parseInt(query));
+      } else {
+        setValue(DEFAULT_VALUE);
+      }
+    }
+  }, [router.isReady, router.query, isLoading]);
+
   return (
     <Box className={css.container}>
       <BottomNavigation
         showLabels
         value={value}
         className={css.navigation_wrapper}
-        onChange={(event, newValue) => {
+        onChange={(e, newValue) => {
           setValue(newValue);
         }}
       >

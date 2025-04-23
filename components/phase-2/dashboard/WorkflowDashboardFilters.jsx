@@ -1,8 +1,10 @@
 import DashboardFilterNavigation from "@/components/ui-components/DashboardFilterNavigation";
 import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DashboardModuleFilter from "./DashboardModuleFilter";
 import { CustomSvgIcon } from "@/layout/layout_helpers";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 const launchTypeFilterOptions = [
   {
@@ -112,18 +114,17 @@ const WorkflowDashboardFilters = ({
   modules,
   sortedWorkflows,
 }) => {
-  const [workflowLaunchType, setWorkflowLaunchType] = useState(0);
-  const [filterType, setFilterType] = useState(null);
-
-  const filterByLaunchType = (value) => {
-    if (value === -1) {
-      setExistingWorkflows(sortedWorkflows);
-    } else {
-      const temp = sortedWorkflows?.filter(
-        (wf) => parseInt(wf.launchType) === value || value === ""
-      );
-      setExistingWorkflows(temp);
-    }
+  const router = useRouter();
+  const isLoading = useSelector((state) => state.attensam.loading);
+  const updateQueryParam = (filterType, param) => {
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: { [filterType]: param },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   const moduleFilterOptions = useMemo(
@@ -140,28 +141,26 @@ const WorkflowDashboardFilters = ({
   return (
     <>
       <DashboardFilterNavigation
-        value={workflowLaunchType}
-        setValue={setWorkflowLaunchType}
+        itemsState={sortedWorkflows}
+        setItemsState={setExistingWorkflows}
         filterNavigations={launchTypeFilterOptions}
-        handleFilter={filterByLaunchType}
-        setFilterType={setFilterType}
-        filterType={filterType}
+        updateQueryParam={updateQueryParam}
+        isLoading={isLoading}
       />
       <DashboardSearchBar
         itemsState={sortedWorkflows}
         setItemsState={setExistingWorkflows}
         filterKeys={["id", "caption", "path", "name"]}
         addNewLink="/workflows/new"
-        filter={{ key: "launchType", value: workflowLaunchType }}
-        setFilterType={setFilterType}
-        filterType={filterType}
+        updateQueryParam={updateQueryParam}
+        isLoading={isLoading}
       />
       <DashboardModuleFilter
         moduleFilterOptions={moduleFilterOptions}
         itemsState={sortedWorkflows}
         setItemsState={setExistingWorkflows}
-        setFilterType={setFilterType}
-        filterType={filterType}
+        updateQueryParam={updateQueryParam}
+        isLoading={isLoading}
       />
     </>
   );

@@ -788,7 +788,6 @@ const useWorkflowTool = () => {
     _setEdges
   ) => {
     let isParseSuccessfull = false;
-    console.log({ existingWorkflow });
 
     if (existingWorkflow?.nodes && existingWorkflow?.edges) {
       isParseSuccessfull = restoreExistingRemoteWorkflowByNodesAndEdges(
