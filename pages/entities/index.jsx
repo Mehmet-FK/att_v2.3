@@ -8,12 +8,26 @@ import Card from "@/components/ui-components/DashboardCard";
 import PageHeader from "@/components/ui-components/PageHeader";
 import DashboardSearchBar from "@/components/ui-components/DashboardSearchBar";
 import DashboardSkeletonLoader from "@/components/ui-components/DashboardSkeletonLoader";
+import { useRouter } from "next/router";
 
 const Entities = () => {
   const entities = useSelector((state) => state.attensam.data?.entities);
   const { getEntitiesCall, getFieldTypes, getViewsCall } = useAttensamCalls();
+  const isLoading = useSelector((state) => state.attensam.loading);
 
   const [existingEntities, setExistingEntities] = useState([]);
+
+  const router = useRouter();
+  const updateQueryParam = (filterType, param) => {
+    router.replace(
+      {
+        pathname: router.pathname,
+        query: { [filterType]: param },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   useEffect(() => {
     if (!entities) {
@@ -38,6 +52,8 @@ const Entities = () => {
           setItemsState={setExistingEntities}
           filterKeys={["id", "name", "caption"]}
           addNewLink="/entities/new"
+          updateQueryParam={updateQueryParam}
+          isLoading={isLoading}
         />
         <div className={css.gridContainer}>
           {existingEntities?.map((entity) => (
