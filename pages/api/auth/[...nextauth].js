@@ -59,14 +59,9 @@ export const authOptions = {
       const datetime = logSessionUpdate();
 
       if (user) {
-        console.log("First Login");
-        console.log(datetime);
-
         return { ...token, ...user };
       }
       if (trigger === "update" && session?.user?.token) {
-        console.log("Update after expiration");
-        console.log(datetime);
         return {
           ...token,
           token: session.user.token,

@@ -6,7 +6,6 @@ import { useState } from "react";
 import AutoCompleteSelect from "../../common-form-elements/AutoCompleteSelect";
 import ElementBadge from "../../common-form-elements/ElementBadge";
 import DragItemContainer from "../../common-form-elements/DragItemContainer";
-// import { useAutoCompleteWorkflows } from "@/context/AutoCompleteWorkflowContext";
 
 const DraggableRecordViewFunction = ({
   index,
@@ -74,7 +73,6 @@ const DraggableRecordViewFunction = ({
 
   const isDraggedOver = functionFormValues.isDraggedOver;
   const functionID = functionFormValues.recordViewFunctionId;
-  // console.log(functionFormValues);
   return (
     <DragItemContainer
       isDraggedOver={isDraggedOver}

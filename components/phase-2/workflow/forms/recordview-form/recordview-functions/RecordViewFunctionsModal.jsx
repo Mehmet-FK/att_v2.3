@@ -83,7 +83,9 @@ const RecordViewFunctionsModal = ({ open, setOpen, recordViewId }) => {
   };
 
   const handleAddRecordFunction = () => {
-    const newSortOrder = recordFunctions.at(-1)?.sortOrder + 1;
+    const newSortOrder = recordFunctions.at(-1)?.sortOrder + 1 || 0;
+    console.log({ recordFunctions });
+    console.log({ newSortOrder });
     const generatedID = generateRandomId("record-function-", null);
     const newRecordFunction = {
       ...recordFunctionTemplate,

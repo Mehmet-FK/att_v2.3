@@ -95,7 +95,6 @@ const entitySlice = createSlice({
     },
 
     removeEntitySorting: (state, { payload: { sortingID } }) => {
-      console.log(sortingID);
       state.entitySortings = state.entitySortings.filter(
         (sortingRule) => sortingRule.entitySortingId !== sortingID
       );
@@ -131,7 +130,6 @@ const entitySlice = createSlice({
     },
 
     addMultipleFieldOptions: (state, { payload: { newFieldOptions } }) => {
-      console.log({ newFieldOptions });
       state.fieldOptions = [...state.fieldOptions, ...newFieldOptions];
     },
 

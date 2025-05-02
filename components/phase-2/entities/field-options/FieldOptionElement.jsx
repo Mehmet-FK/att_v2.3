@@ -41,7 +41,6 @@ const FieldOptionElement = ({
     if (nullFieldsList.includes(name) && !value) {
       newValue = null;
     }
-    console.log({ [name]: newValue });
     updateFieldOptionValue(name, newValue, optionID);
   };
 

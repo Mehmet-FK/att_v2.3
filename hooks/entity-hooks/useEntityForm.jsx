@@ -141,11 +141,6 @@ const useEntityForm = () => {
       findFieldPropertyByFieldID(fieldID)?.listViewPropertyId;
     const validationIdToDelete =
       findValidationByFieldID(fieldID)?.fieldValidationId;
-    console.log({
-      sortingIdToDelete,
-      fieldPropertyIdToDelete,
-      validationIdToDelete,
-    });
     deleteEntitySorting(sortingIdToDelete);
     deleteFieldProperty(fieldPropertyIdToDelete);
     deleteFieldValidationById(validationIdToDelete);
@@ -214,7 +209,6 @@ const useEntityForm = () => {
   };
 
   const updateEntitySortingValue = (name, value, sortingID) => {
-    console.log({ name, value, sortingID });
     dispatch(changeEntitySortingValue({ name, value, sortingID }));
   };
 
@@ -248,7 +242,6 @@ const useEntityForm = () => {
   };
 
   const updateFieldPropertyValue = (name, value, propertyID) => {
-    console.log({ name, value, propertyID });
     dispatch(changeFieldPropertyValue({ name, value, propertyID }));
   };
 

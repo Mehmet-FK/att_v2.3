@@ -125,7 +125,6 @@ const NodeHandles = ({ isConnectable, isConditionNode, isLaunchNode }) => {
           type={handle.type}
           className={handleStyles[handle.positionType]}
           position={handle.position}
-          onClick={() => console.log({ handle })}
           id={handle.id}
           isConnectable={isConnectable}
           style={{

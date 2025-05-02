@@ -52,7 +52,6 @@ const ScannerDialogFormBase = ({
   const handleWorkflowStepBlur = (e) => {
     const { name, value } = e.target;
     const stepID = scannerDialogValues?.workflowStepId;
-    console.log({ name, value, stepID });
     updateWorkflowStepValue(name, value, stepID);
     handleBlur(e);
   };

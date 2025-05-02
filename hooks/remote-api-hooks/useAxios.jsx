@@ -69,7 +69,6 @@ const useAxios = () => {
           callRefreshSubscribers(currentSubscribers, newAccessToken);
           originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
           toastSessionUpdateNotify();
-          console.log("Session Updated!");
           return axiosInstanceBase(originalRequest);
         } catch (refreshError) {
           dispatch(setSessionExpired({ isSessionExpired: true }));

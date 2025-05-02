@@ -8,7 +8,6 @@ const useSessionStorage = () => {
 
   const setSessionFlagForWorkflow = () => {
     sessionStorage.setItem(WORKFOW_SESSION, "wf-session");
-    console.log("set Session");
   };
 
   return {

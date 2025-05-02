@@ -60,7 +60,6 @@ const FieldOptionsSection = ({
 
   const handlePasteOptions = async (e) => {
     const cells = await parseClipboardText(window, e);
-    console.log({ cells });
     const newFieldOptions = [];
     if (cells?.length < 1) return;
     cells.forEach((cell) => {
@@ -76,7 +75,6 @@ const FieldOptionsSection = ({
 
       newFieldOptions.push(template);
     });
-    console.log({ parsedCells: cells });
 
     createMultipleFieldOptions(newFieldOptions);
   };

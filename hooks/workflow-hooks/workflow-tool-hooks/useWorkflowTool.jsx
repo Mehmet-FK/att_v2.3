@@ -97,7 +97,6 @@ const useWorkflowTool = () => {
       undoStackRef.current.push(newState);
       redoStackRef.current = [];
     } else if (didWorkflowChange()) {
-      console.log("update workflow of latest state");
       updateWorkflowOfLatestState();
     }
   }, [getNodes(), getEdges()]);

@@ -50,7 +50,6 @@ const useAttensamCalls = () => {
 
     try {
       const { data } = await axiosFormData.put(url, formData);
-      // console.log(data);
       toastSuccessNotify(data);
     } catch (error) {
       console.log(error.response);
@@ -79,11 +78,9 @@ const useAttensamCalls = () => {
     let responseFlag = false;
     startRequestAndLoading();
     try {
-      console.log({ workflowId });
       const { data } = await axiosWithToken.post(
         `/atina/api/Workflow/DeleteWorkflow?id=${workflowId}`
       );
-      console.log(data);
       toastSuccessNotify("Workflow wurde erfolgreich gelöscht");
       responseFlag = true;
     } catch (error) {
@@ -115,13 +112,11 @@ const useAttensamCalls = () => {
     let responseFlag = false;
     startRequestAndLoading();
     try {
-      console.log({ POST_Workflow: formData });
       const { data } = await axiosWithToken.post(
         "/atina/api/Workflow/CreateAndUpdateWorkflow",
         formData
       );
-      console.log(data);
-      toastSuccessNotify("Element wurde erfolgreich angelegt");
+      toastSuccessNotify("Element wurde erfolgreich gespeichert");
       responseFlag = true;
     } catch (error) {
       toastErrorNotify(error?.response?.data);
@@ -157,7 +152,6 @@ const useAttensamCalls = () => {
         "/api/Icon/createAndUpdate",
         iconFormData
       );
-      console.log({ iconUploadResponse: data });
       toastSuccessNotify("Icon wurde erfolgreich gespeichert");
 
       getAllIconsCall();

@@ -114,8 +114,8 @@ const WorkflowDashboardFilters = ({
   modules,
   sortedWorkflows,
 }) => {
-  const router = useRouter();
   const isLoading = useSelector((state) => state.attensam.loading);
+  const router = useRouter();
   const updateQueryParam = (filterType, param) => {
     router.replace(
       {

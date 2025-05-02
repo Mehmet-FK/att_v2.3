@@ -35,8 +35,6 @@ const useTableDataCalls = () => {
       toastErrorNotify(`Etwas ist schiefgelaufen.. `);
       const { message } = err;
       dispatch(fetchFail({ message }));
-      // console.log(err);
-      // console.log(message);
       error = err;
     } finally {
       setTimeout(() => {

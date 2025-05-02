@@ -41,7 +41,6 @@ const workflowSlice = createSlice({
   initialState: _initialState,
   reducers: {
     setWorkflowToInitial: () => {
-      console.log({ setWorkflowToInitial: new Date() });
       return _initialState;
     },
 

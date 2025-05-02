@@ -160,7 +160,7 @@ const Sheet = ({ existingWorkflow }) => {
     const isValidationOK = validateWorkflowForSubmit(workflowToPost);
     if (!isValidationOK) return;
     postWorkflowCall(workflowToPost)
-      .then((res) => (res ? router.push("/workflows") : null))
+      .then((res) => (res ? router.back() : null))
       .finally((res) => setSubmitLoading(false));
   };
 

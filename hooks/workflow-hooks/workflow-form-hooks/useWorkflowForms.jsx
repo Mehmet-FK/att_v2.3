@@ -709,7 +709,6 @@ const useWorkflowForms = () => {
   };
 
   const updateWorkflowRelayValue = (name, value, relayId) => {
-    console.log({ name, value, relayId });
     dispatch(changeWorkflowRelayValue({ name, value, relayId }));
   };
 

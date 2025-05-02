@@ -16,7 +16,6 @@ const CopyPasteContextMenu = ({ contextMenu, handleClose, handlePaste }) => {
   const contextMenuRef = useRef(null);
 
   useOnClickOutside(contextMenuRef, handleClose);
-  console.log({ contextMenu });
 
   const handlePasteOnClick = (e) => {
     handlePaste(e);

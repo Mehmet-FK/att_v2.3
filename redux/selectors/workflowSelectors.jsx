@@ -5,7 +5,6 @@ const selectRecordViews = (state) => state.workflow.recordViews;
 
 const selectWorkflowStep = (workflowStepId) =>
   createSelector([selectWorkflowSteps], (workflowSteps) => {
-    console.log("selectWorkflowStep - selector calculating!");
     const step = workflowSteps.find(
       (step) => step.workflowStepId === workflowStepId
     );

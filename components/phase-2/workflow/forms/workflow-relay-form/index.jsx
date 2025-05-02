@@ -36,7 +36,6 @@ const WorkflowRelayForm = ({ stepID, workflowStepValues }) => {
     const { name, value, type, checked } = e.target;
 
     const relayId = workflowRelay?.workflowRelayId;
-    console.log(e.target);
     const inputValue = JSON.stringify(value);
     updateWorkflowRelayValue(name, inputValue, relayId);
   };
