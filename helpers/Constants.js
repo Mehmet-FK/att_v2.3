@@ -129,6 +129,11 @@ export const scannerTypeConstants = {
   QR_CODE: 1,
 };
 
+export const scannerActionConstants = {
+  ENTITY: 0,
+  ONLINE: 1,
+};
+
 export const tableNameConstants = {
   BOOKINGS: "bookings",
   USERS: "users",

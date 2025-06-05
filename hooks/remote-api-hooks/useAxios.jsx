@@ -99,7 +99,7 @@ const useAxios = () => {
   const axiosWithToken = axios.create({
     baseURL: BASE_URL,
     headers: {
-      Authorization: `Bearer ${session.user?.token}`,
+      Authorization: `Bearer ${session?.user?.token}`,
       Accept: "/*",
       "Content-Type": "application/json",
     },
@@ -108,7 +108,7 @@ const useAxios = () => {
   const axiosFormData = axios.create({
     baseURL: BASE_URL,
     headers: {
-      Authorization: `Bearer ${session.user?.token}`,
+      Authorization: `Bearer ${session?.user?.token}`,
       Accept: "/*",
       "Content-Type": "multipart/from-data",
     },
@@ -117,7 +117,7 @@ const useAxios = () => {
   const axiosTableDataPhase1 = axios.create({
     baseURL: "https://pro.attensam.at/atina/",
     headers: {
-      Authorization: `Bearer ${session.user?.token}`,
+      Authorization: `Bearer ${session?.user?.token}`,
       Accept: "/*",
       "Content-Type": "application/json",
     },

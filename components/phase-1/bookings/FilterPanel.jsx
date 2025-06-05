@@ -24,7 +24,7 @@ import {
   pageTitleConstants,
   tableNameConstants,
 } from "@/helpers/Constants";
-import AutoCompleteSelect from "@/components/phase-2/workflow/forms/common-form-elements/AutoCompleteSelect";
+import AutoCompleteSelect from "@/components/ui-components/AutoCompleteSelect";
 // import useFilters from "@/hooks/useFilters";
 const bookingsFilterParams = {
   bookingType: null,

@@ -4,9 +4,9 @@ import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
-import useEntityForm from "@/hooks/entity-hooks/useEntityForm";
-import EntityForm from "@/components/phase-2/entities";
+import useEntityForm from "@/entity-manager/hooks/useEntityForm";
 import { useSelector } from "react-redux";
+import EntityForm from "@/entity-manager";
 
 const Entity = () => {
   const router = useRouter();
