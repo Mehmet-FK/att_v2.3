@@ -3,6 +3,8 @@ import CustomSelect from "@/components/ui-components/CustomSelect";
 import ElementBadge from "@/components/ui-components/ElementBadge";
 import { Card, CardContent, TextField } from "@mui/material";
 import Divider from "@mui/material/Divider";
+import ConditionOperatorOptions from "@/workflow-manager/models/modal-dialog/ConditionOperatorOptions";
+import { useState } from "react";
 
 const ConditionalFieldForm = ({
   fieldFormValues,
@@ -11,8 +13,22 @@ const ConditionalFieldForm = ({
   openConfirmModalToDelete,
   entityFields,
 }) => {
+  const [conditionOperators, setConditionOperators] = useState([]);
   const fieldUpdateID = fieldFormValues?.modalDialogFieldId;
-  console.log(fieldUpdateID);
+  const prepareOperatorOptions = (fieldID) => {
+    const selected = entityFields?.find((f) => f.id === fieldID);
+    const operatorOptions = new ConditionOperatorOptions(selected?.type);
+    setConditionOperators(operatorOptions.get());
+  };
+  if (conditionOperators.length < 1) {
+    prepareOperatorOptions(fieldFormValues?.conditionFieldId);
+  }
+
+  const handleChangeConditionField = (e) => {
+    const selectedFieldId = e.target.value;
+    prepareOperatorOptions(selectedFieldId);
+    handleChange(e, fieldUpdateID);
+  };
   return (
     <div style={{ width: "100%" }}>
       <ElementBadge
@@ -26,7 +42,7 @@ const ConditionalFieldForm = ({
                   WHEN
                 </span>
                 <CustomSelect
-                  handleChange={(e) => handleChange(e, fieldUpdateID)}
+                  handleChange={handleChangeConditionField}
                   handleBlur={handleBlur}
                   value={fieldFormValues?.conditionFieldId}
                   label="Bedingungsfeld"
@@ -43,12 +59,7 @@ const ConditionalFieldForm = ({
                   name="conditionOperator"
                   size="small"
                   //   preferences={{ key: "id", caption: "caption" }}
-                  options={[
-                    "IS_EQUAL",
-                    "IS_EMPTY",
-                    "IS_NULL",
-                    "IS_GREATER_THAN",
-                  ]}
+                  options={conditionOperators}
                 />
                 <TextField
                   onChange={(e) => handleChange(e, fieldUpdateID)}

@@ -49,7 +49,7 @@ const ModalDialogForm = ({ stepID, workflowStepValues }) => {
 
   const entityFieldsForAutoSelect = useMemo(
     () => prepareEntityFields(entities, entityId),
-    [modalDialogValues?.modalDialogId, entities]
+    [modalDialogValues?.modalDialogId, entityId]
   );
 
   return (

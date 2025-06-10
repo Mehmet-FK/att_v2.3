@@ -4,7 +4,7 @@ import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import React, { useState } from "react";
 import ConditionalFieldForm from "./ConditionalFieldForm";
 import { Button } from "@mui/material";
-import { ModalDialogFieldUpdate } from "@/workflow-manager/models/ModalDialog";
+import ModalDialogFieldUpdate from "@/workflow-manager/models/modal-dialog/ModalDialogFieldUpdate";
 
 const ModalDialogFieldUpdates = ({
   fieldUpdates,
@@ -55,7 +55,6 @@ const ModalDialogFieldUpdates = ({
 
     setFieldUpdateValues((prev) =>
       prev.map((field) => {
-        console.log(field);
         if (field.modalDialogFieldId === fieldUpdateID) {
           return { ...field, [name]: newValue };
         } else {
@@ -90,6 +89,7 @@ const ModalDialogFieldUpdates = ({
           >
             {fieldUpdateValues.map((fieldUpdate) => (
               <ConditionalFieldForm
+                key={fieldUpdate?.modalDialogFieldId}
                 fieldFormValues={fieldUpdate}
                 handleChange={handleChange}
                 handleBlur={handleBlur}

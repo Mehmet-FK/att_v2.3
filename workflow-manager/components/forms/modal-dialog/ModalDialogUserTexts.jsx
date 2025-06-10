@@ -2,9 +2,9 @@ import css from "@/styles/workflow-forms-styles/list-view-form.module.css";
 import Accordion from "@/components/ui-components/Accordion";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import React, { useState } from "react";
-import { ModalDialogUserText } from "@/workflow-manager/models/ModalDialog";
 import ConditionalTextForm from "./ConditionalTextForm";
 import { Button } from "@mui/material";
+import ModalDialogUserText from "@/workflow-manager/models/modal-dialog/ModalDialogUserText";
 
 const ModalDialogUserTextOptions = ({
   userTextoptions,
@@ -56,7 +56,6 @@ const ModalDialogUserTextOptions = ({
 
     setUserTextOptionValues((prev) =>
       prev.map((textOption) => {
-        console.log(textOption);
         if (textOption.modalDialogUserTextId === textOptionID) {
           return { ...textOption, [name]: newValue };
         } else {
@@ -91,6 +90,7 @@ const ModalDialogUserTextOptions = ({
           >
             {userTextOptionValues.map((textOption) => (
               <ConditionalTextForm
+                key={textOption?.modalDialogUserTextId}
                 textOptionValues={textOption}
                 handleChange={handleChange}
                 handleBlur={handleBlur}

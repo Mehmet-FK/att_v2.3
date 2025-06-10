@@ -3,6 +3,8 @@ import CustomSelect from "@/components/ui-components/CustomSelect";
 import ElementBadge from "@/components/ui-components/ElementBadge";
 import { Card, CardContent, TextField } from "@mui/material";
 import Divider from "@mui/material/Divider";
+import { useState } from "react";
+import ConditionOperatorOptions from "@/workflow-manager/models/modal-dialog/ConditionOperatorOptions";
 
 const ConditionalTextForm = ({
   textOptionValues,
@@ -11,7 +13,25 @@ const ConditionalTextForm = ({
   openConfirmModalToDelete,
   entityFields,
 }) => {
+  const [conditionOperators, setConditionOperators] = useState([]);
+
   const textOptionID = textOptionValues?.modalDialogUserTextId;
+
+  const prepareOperatorOptions = (fieldID) => {
+    const selected = entityFields?.find((f) => f.id === fieldID);
+    const operatorOptions = new ConditionOperatorOptions(selected?.type);
+    setConditionOperators(operatorOptions.get());
+  };
+
+  if (conditionOperators.length < 1) {
+    prepareOperatorOptions(textOptionValues?.conditionFieldId);
+  }
+
+  const handleChangeConditionField = (e) => {
+    const selectedFieldId = e.target.value;
+    prepareOperatorOptions(selectedFieldId);
+    handleChange(e, textOptionID);
+  };
 
   return (
     <div style={{ width: "100%" }}>
@@ -26,7 +46,7 @@ const ConditionalTextForm = ({
                   WHEN
                 </span>
                 <CustomSelect
-                  handleChange={(e) => handleChange(e, textOptionID)}
+                  handleChange={handleChangeConditionField}
                   handleBlur={handleBlur}
                   value={textOptionValues?.conditionFieldId}
                   label="Bedingungsfeld"
@@ -42,12 +62,7 @@ const ConditionalTextForm = ({
                   label="Operator"
                   name="conditionOperator"
                   size="small"
-                  options={[
-                    "IS_EQUAL",
-                    "IS_EMPTY",
-                    "IS_NULL",
-                    "IS_GREATER_THAN",
-                  ]}
+                  options={conditionOperators}
                 />
                 <TextField
                   onChange={(e) => handleChange(e, textOptionID)}

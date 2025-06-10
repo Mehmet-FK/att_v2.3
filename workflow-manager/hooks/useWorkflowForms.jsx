@@ -84,7 +84,7 @@ import RecordViewField from "../models/RecordViewField";
 import ViewHeader from "../models/ViewHeader";
 import ViewHeaderRow from "../models/ViewHeaderRow";
 import ViewHeaderColumn from "../models/ViewHeaderColumn";
-import ModalDialog from "../models/ModalDialog";
+import ModalDialog from "../models/modal-dialog/ModalDialog";
 import InfoScreen from "../models/InfoScreen";
 import ScannerDialog from "../models/ScannerDialog";
 import WorkflowRelay from "../models/WorkflowRelay";
@@ -116,12 +116,14 @@ const useWorkflowForms = () => {
 
   const prepareEntityFields = (entities, entityId) => {
     const selectedEntity = entities?.find((entity) => entity.id === entityId);
+
     if (!selectedEntity) return [];
     return selectedEntity.fields.map((field) => ({
       id: field.id,
       fieldCaption: field.caption,
       fieldGroupName: field.groupName,
       caption: field.name,
+      type: field.type,
     }));
   };
 
