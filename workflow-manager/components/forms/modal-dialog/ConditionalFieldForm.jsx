@@ -20,6 +20,7 @@ const ConditionalFieldForm = ({
     const operatorOptions = new ConditionOperatorOptions(selected?.type);
     setConditionOperators(operatorOptions.get());
   };
+
   if (conditionOperators.length < 1) {
     prepareOperatorOptions(fieldFormValues?.conditionFieldId);
   }
@@ -58,7 +59,7 @@ const ConditionalFieldForm = ({
                   label="Operator"
                   name="conditionOperator"
                   size="small"
-                  //   preferences={{ key: "id", caption: "caption" }}
+                  preferences={{ key: "name", caption: "caption" }}
                   options={conditionOperators}
                 />
                 <TextField

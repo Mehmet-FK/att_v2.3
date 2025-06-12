@@ -4,29 +4,87 @@ class ConditionOperatorOptions {
   #dateTypes = [5, 6, 7];
 
   #stringOperators = [
-    "ist gleich",
-    "ist ungleich",
-    "enthält",
-    "enthält nicht",
-    "ist nicht leer",
+    {
+      name: "STR_EQUALS",
+      caption: "ist gleich",
+    },
+    {
+      name: "STR_NOT_EQUALS",
+      caption: "ist ungleich",
+    },
+    {
+      name: "STR_CONTAINS",
+      caption: "enthält",
+    },
+    {
+      name: "STR_NOT_CONTAINS",
+      caption: "enthält nicht",
+    },
+    {
+      name: "STR_IS_EMPTY",
+      caption: "ist leer",
+    },
+    {
+      name: "STR_NOT_EMPTY",
+      caption: "ist nicht leer",
+    },
   ];
 
   #integerOperators = [
-    "größer",
-    "größer gleich",
-    "kleiner",
-    "kleiner gleich",
-    "ist gleich",
-    "ist ungleich",
-    "ist leer",
+    {
+      name: "NUM_GREATER_THAN",
+      caption: "größer",
+    },
+    {
+      name: "NUM_GREATER_THAN_OR_EQUAL",
+      caption: "größer gleich",
+    },
+    {
+      name: "NUM_LESS_THAN",
+      caption: "ist kleiner",
+    },
+    {
+      name: "NUM_LESS_THAN_OR_EQUAL",
+      caption: "kleiner gleich",
+    },
+    {
+      name: "NUM_EQUALS",
+      caption: "ist gleich",
+    },
+    {
+      name: "NUM_NOT_EQUALS",
+      caption: "ist ungleich",
+    },
+    {
+      name: "NUM_IS_EMPTY",
+      caption: "ist leer",
+    },
   ];
   #dateOperators = [
-    "größer",
-    "größer gleich",
-    "kleiner",
-    "kleiner gleich",
-    "ist gleich",
-    "ist ungleich",
+    {
+      name: "DATE_AFTER",
+      caption: "größer",
+    },
+    {
+      name: "DATE_AFTER_OR_EQUAL",
+      caption: "größer gleich",
+    },
+    {
+      name: "DATE_BEFORE",
+      caption: "ist kleiner",
+    },
+    {
+      name: "DATE_BEFORE_OR_EQUAL",
+      caption: "kleiner gleich",
+    },
+    {
+      name: "DATE_EQUALS",
+      caption: "ist gleich",
+    },
+    {
+      name: "DATE_NOT_EQUALS",
+      caption: "ist ungleich",
+    },
   ];
 
   constructor(type = 0) {

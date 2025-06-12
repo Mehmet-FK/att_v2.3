@@ -126,12 +126,16 @@ export default function App({ Component, pageProps }) {
     const x = localStorage.getItem("theme");
     setMode(x ? x : "light");
   }, []);
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <SessionProvider session={pageProps.session}>
-          {/* <SessionHandler /> */}
+        <SessionProvider
+          session={pageProps.session}
+          refetchOnWindowFocus={false}
+          refetchWhenOffline={false}
+        >
+          <ToastContainer />
+          <CssBaseline />
           <SessionExpiredModal />
           {router.pathname.includes("login") && <Component {...pageProps} />}
           {!router.pathname.includes("login") && <Loading />}
@@ -140,9 +144,7 @@ export default function App({ Component, pageProps }) {
               <Component {...pageProps} />
             </Layout>
           )}
-          <ToastContainer />
         </SessionProvider>
-        <CssBaseline />
       </ThemeProvider>
     </Provider>
   );

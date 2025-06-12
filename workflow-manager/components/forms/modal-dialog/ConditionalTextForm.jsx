@@ -58,7 +58,8 @@ const ConditionalTextForm = ({
                 <CustomSelect
                   handleChange={(e) => handleChange(e, textOptionID)}
                   handleBlur={handleBlur}
-                  value={textOptionValues?.conditionOperator || "IS_EMPTY"}
+                  value={textOptionValues?.conditionOperator || ""}
+                  preferences={{ key: "name", caption: "caption" }}
                   label="Operator"
                   name="conditionOperator"
                   size="small"

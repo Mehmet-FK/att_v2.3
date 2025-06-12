@@ -22,9 +22,11 @@ const logSessionUpdate = () => {
 };
 
 export const authOptions = {
-  // session: {
-  //   strategy: "jwt",
-  // },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
 
   providers: [
     CredentialsProvider({
@@ -41,6 +43,13 @@ export const authOptions = {
               password,
             }
           );
+          console.log(
+            "======================================================================="
+          );
+          console.log("LOGIN POST ->", new Date());
+          console.log(
+            "======================================================================="
+          );
           return data;
         } catch (error) {
           let code = error?.response?.status || "";
@@ -56,8 +65,6 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      const datetime = logSessionUpdate();
-
       if (user) {
         return { ...token, ...user };
       }
