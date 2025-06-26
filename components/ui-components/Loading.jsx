@@ -6,32 +6,31 @@ import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-const Loading = ({ init }) => {
+const Loading = () => {
   const router = useRouter();
-  const [isRouting, setIsRouting] = useState(init == undefined ? true : init);
+  const [isRouting, setIsRouting] = useState(false);
   const isLoading = useSelector((state) => state.attensam.loading);
-  const previousURLRef = useRef();
 
   const handleStart = (url) => {
-    const previousURL = previousURLRef.current;
-    const isQueryChanged = url.includes("?") && previousURL?.includes("?");
+    const isOnlyQueryChanged = url.includes("?"); //&& !previousURL?.includes("?");
 
-    if (!isQueryChanged) {
+    if (!isOnlyQueryChanged) {
       setIsRouting(true);
     }
   };
 
   const handleComplete = (url) => {
-    previousURLRef.current = url;
     setTimeout(() => {
       setIsRouting(false);
     }, 300);
   };
 
-  const handleError = (error) => {
-    setTimeout(() => {
-      setIsRouting(false);
-    }, 300);
+  const handleError = (error, url) => {
+    if (!error.cancelled) {
+      setTimeout(() => {
+        setIsRouting(false);
+      }, 300);
+    }
   };
 
   useEffect(() => {
@@ -45,14 +44,9 @@ const Loading = ({ init }) => {
     };
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsRouting(false);
-    }, 400);
-  }, [router.pathname]);
-
+  const animationTimeout = { enter: 150, exit: 500 };
   return (
-    <Fade in={isRouting || isLoading} timeout={{ enter: 150, exit: 500 }}>
+    <Fade in={isRouting || isLoading} timeout={animationTimeout}>
       <Backdrop
         sx={{
           backgroundColor: "#000000ef",
@@ -61,6 +55,7 @@ const Loading = ({ init }) => {
           zIndex: (theme) => theme.zIndex.drawer + 3,
           margin: "-5rem",
         }}
+        timeout={animationTimeout}
         open={isRouting || isLoading}
       >
         <CircularProgress color="inherit" size={45} />

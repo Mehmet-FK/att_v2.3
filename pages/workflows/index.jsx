@@ -36,7 +36,6 @@ const Workflow = () => {
   const [existingWorkflows, setExistingWorkflows] = useState(sortedWorkflows);
 
   useEffect(() => {
-    // if (workflows) return;
     getWorkflowsCall();
     getModulesCall();
   }, []);
