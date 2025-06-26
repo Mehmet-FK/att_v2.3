@@ -40,10 +40,6 @@ const WorkflowForm = ({}) => {
   }, [workflowState]);
   return (
     <>
-      {/* <IconUploadModal
-        open={openIconUploadModal}
-        setOpen={setOpenIconUploadModal}
-      /> */}
       <div className={css.form_container}>
         <div className={css.flex_column}>
           <div className={css.flex_row}>
@@ -78,27 +74,15 @@ const WorkflowForm = ({}) => {
               name="description"
               fullWidth
             />
-
-            <AutoCompleteSelect
-              mainProps={{
-                handleChange: handleChange,
-                handleBlur: handleBlur,
-                preferences: {
-                  key: "id",
-                  caption: "caption",
-                  image: "icon",
-                  title: "path",
-                  filterKeys: ["id", "caption", "path"],
-                },
-                options: autoCompleteWorkflows || [],
-                name: "parentWorkflowId",
-                value: workflowFormValues?.parentWorkflowId || "",
-                label: "Parent Workflow",
+            <CheckBox
+              sx={{
+                width: "50%",
               }}
-              helperProps={{
-                className: css.form_control,
-                placeholder: "test placeholder",
-              }}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              name="isActive"
+              checked={workflowFormValues?.isActive || false}
+              label="isActive"
             />
           </div>
           <div className={css.flex_row}>
@@ -120,16 +104,26 @@ const WorkflowForm = ({}) => {
               />
             </div>
 
-            <CustomSelect
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              value={workflowFormValues?.permissionType || ""}
-              label="Berechtigungstyp"
-              name="permissionType"
-              preferences={{ key: "id", caption: "caption" }}
-              options={workflowPermissionTypes}
+            <AutoCompleteSelect
+              mainProps={{
+                handleChange: handleChange,
+                handleBlur: handleBlur,
+                preferences: {
+                  key: "id",
+                  caption: "caption",
+                  image: "icon",
+                  title: "path",
+                  filterKeys: ["id", "caption", "path"],
+                },
+                options: autoCompleteWorkflows || [],
+                name: "parentWorkflowId",
+                value: workflowFormValues?.parentWorkflowId || "",
+                label: "Parent Workflow",
+              }}
+              helperProps={{
+                className: css.form_control,
+              }}
             />
-
             <AutoCompleteSelect
               mainProps={{
                 handleChange: handleChange,
@@ -150,28 +144,16 @@ const WorkflowForm = ({}) => {
               }}
             />
 
-            <div className={css.flex_row}>
-              <CheckBox
-                sx={{
-                  width: "50%",
-                }}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                name="isActive"
-                checked={workflowFormValues?.isActive || false}
-                label="isActive"
-              />
-              <CheckBox
-                sx={{
-                  width: "50%",
-                }}
-                handleChange={handleChange}
-                handleBlur={handleBlur}
-                name="isProduction"
-                checked={workflowFormValues?.isProduction || false}
-                label="isProduction"
-              />
-            </div>
+            <CheckBox
+              sx={{
+                width: "50%",
+              }}
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              name="isProduction"
+              checked={workflowFormValues?.isProduction || false}
+              label="isProduction"
+            />
           </div>
 
           <div className={css.flex_row} style={{ paddingBlock: "5px" }} />

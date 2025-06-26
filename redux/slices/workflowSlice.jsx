@@ -10,7 +10,6 @@ const _initialState = {
   icon: "",
   isActive: true,
   isProduction: false,
-  permissionType: "0",
   parentWorkflowId: "",
   edges: [],
   nodes: [],

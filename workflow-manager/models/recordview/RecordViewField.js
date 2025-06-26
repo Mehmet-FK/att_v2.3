@@ -1,8 +1,8 @@
-import BaseModel from "./BaseModel";
+import BaseModel from "../BaseModel";
 
 class RecordViewField extends BaseModel {
   constructor({
-    recordFieldId = null,
+    recordViewFieldId = null,
     recordViewId,
     fieldId = null,
     caption = "",
@@ -15,10 +15,11 @@ class RecordViewField extends BaseModel {
     imageGroupCaption = null,
     imageType = null,
     sortOrder = null,
+    isDraggedOver = false,
   }) {
     super();
     this.recordViewFieldId =
-      recordFieldId ?? this.generateId(null, "-record-field");
+      recordViewFieldId ?? this.generateId(null, "-record-field");
     this.recordViewId = recordViewId;
     this.fieldId = fieldId;
     this.caption = caption;
@@ -31,6 +32,7 @@ class RecordViewField extends BaseModel {
     this.imageGroupCaption = imageGroupCaption;
     this.imageType = imageType;
     this.sortOrder = sortOrder;
+    this.isDraggedOver = isDraggedOver;
   }
 }
 

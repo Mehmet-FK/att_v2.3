@@ -7,13 +7,14 @@ import useWorkflowForms from "@/workflow-manager/hooks/useWorkflowForms";
 import DraggableRecordViewField from "./DraggableRecordViewField";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import useDragAndDropUtils from "@/hooks/utility-hooks/useDragAndDropUtils";
+import RecordViewField from "@/workflow-manager/models/recordview/RecordViewField";
 
 const recordFieldTemplate = {
   recordViewFieldId: "",
   recordViewId: "",
   fieldId: null,
   caption: "",
-  groupName: "",
+  groupname: "",
   differingCaption: null,
   differingGroupName: null,
   isDefault: false,
@@ -57,14 +58,20 @@ const RecordViewFieldsModal = ({
   const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
 
   //TODO: Refactoring is needed
-  const handleAddRecordView = () => {
+  const handleAddRecordField = () => {
     const newSortOrder = fields.at(-1)?.sortOrder + 1;
-    const newRecordViewField = {
-      ...recordFieldTemplate,
-      recordViewFieldId: generateRandomId("record-field-", null),
+    const newRecordViewField = new RecordViewField({
       recordViewId,
       sortOrder: newSortOrder,
-    };
+    }).toObject();
+
+    // {
+    //   ...recordFieldTemplate,
+    //   recordViewFieldId: generateRandomId("record-field-", null),
+    //   recordViewId,
+    //   sortOrder: newSortOrder,
+    // };
+    console.log([...fields, newRecordViewField]);
     setFields([...fields, newRecordViewField]);
   };
 
@@ -113,16 +120,6 @@ const RecordViewFieldsModal = ({
     updateAllRecordViewFields(recordViewId, fields);
     setOpen(false);
   };
-  //TODO: Remove useEffect if possible
-  // useEffect(() => {
-  //   const filteredRecordViewFields = recordViewFields?.filter(
-  //     (rvf) => rvf.recordViewId === recordViewId
-  //   );
-
-  //   if (!filteredRecordViewFields) return;
-
-  //   setFields(filteredRecordViewFields);
-  // }, [recordViewId]);
 
   return (
     <>
@@ -161,7 +158,7 @@ const RecordViewFieldsModal = ({
                 ))}
               </div>
 
-              <Button onClick={handleAddRecordView} variant="contained">
+              <Button onClick={handleAddRecordField} variant="contained">
                 Recordview Feld anlegen
               </Button>
             </div>

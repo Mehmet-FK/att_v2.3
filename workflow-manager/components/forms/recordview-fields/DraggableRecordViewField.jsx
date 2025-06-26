@@ -28,12 +28,11 @@ const DraggableRecordViewField = ({
 
     const selectedField = entityFields?.find((field) => field.id === fieldID);
     if (!selectedField) return;
-
     const tempField = {
       ...fieldFormValues,
       fieldId: fieldID,
       caption: selectedField.fieldCaption,
-      groupName: selectedField.fieldGroupName,
+      groupname: selectedField.fieldGroupName,
     };
     setFieldFormValues(tempField);
     changeRecordFieldTotally(tempField);
@@ -140,11 +139,11 @@ const DraggableRecordViewField = ({
                   fullWidth
                 />
                 <TextField
-                  value={fieldFormValues?.groupName || ""}
+                  value={fieldFormValues?.groupname || ""}
                   variant="outlined"
                   size="small"
                   label="Gruppenname"
-                  name="groupName"
+                  name="groupname"
                   disabled
                   fullWidth
                 />

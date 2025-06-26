@@ -74,16 +74,16 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import WorkflowStep from "../models/WorkflowStep";
 import LaunchElement from "../models/LaunchElement";
-import ListViewElementRow from "../models/ListViewElementRow";
-import ListViewElement from "../models/ListViewElement";
-import ListView from "../models/ListView";
-import ListViewFilterDefinition from "../models/ListViewFilterDefinition";
-import ListViewDefaultFilterDefinition from "../models/ListViewDefaultFilterDefinition";
-import RecordView from "../models/RecordView";
-import RecordViewField from "../models/RecordViewField";
-import ViewHeader from "../models/ViewHeader";
-import ViewHeaderRow from "../models/ViewHeaderRow";
-import ViewHeaderColumn from "../models/ViewHeaderColumn";
+import ListViewElementRow from "../models/listview/ListViewElementRow";
+import ListViewElement from "../models/listview/ListViewElement";
+import ListView from "../models/listview/ListView";
+import ListViewFilterDefinition from "../models/listview/ListViewFilterDefinition";
+import ListViewDefaultFilterDefinition from "../models/listview/ListViewDefaultFilterDefinition";
+import RecordView from "../models/recordview/RecordView";
+import RecordViewField from "../models/recordview/RecordViewField";
+import ViewHeader from "../models/view-header/ViewHeader";
+import ViewHeaderRow from "../models/view-header/ViewHeaderRow";
+import ViewHeaderColumn from "../models/view-header/ViewHeaderColumn";
 import ModalDialog from "../models/modal-dialog/ModalDialog";
 import InfoScreen from "../models/InfoScreen";
 import ScannerDialog from "../models/ScannerDialog";
@@ -355,8 +355,8 @@ const useWorkflowForms = () => {
   };
 
   //! RECORD-VIEW-FIELDS
-  const createRecordViewField = (recordViewId) => {
-    const recordField = new RecordViewField({ recordViewId }).toObject();
+  const createRecordViewField = (recordViewFieldId) => {
+    const recordField = new RecordViewField({ recordViewFieldId }).toObject();
     dispatch(addRecordViewField({ newRecordField: recordField }));
   };
 

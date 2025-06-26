@@ -12,6 +12,7 @@ class ModalDialogUserText extends BaseModel {
     this.modalDialogUserTextId =
       modalDialogUserTextId ?? this.generateId("user-text-", null);
     this.conditionFieldId = conditionFieldId;
+    this.conditionFieldName = "";
     this.conditionOperator = conditionOperator;
     this.conditionValue = conditionValue;
     this.userText = userText;

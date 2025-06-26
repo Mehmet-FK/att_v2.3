@@ -15,8 +15,10 @@ class ModalDialogFieldUpdate extends BaseModel {
       modalDialogFieldId ?? this.generateId("dialog-field-", null);
     this.hasCondition = hasCondition;
     this.updateFieldId = updateFieldId;
+    this.updateFieldName = "";
     this.fieldValue = fieldValue;
     this.conditionFieldId = conditionFieldId;
+    this.conditionFieldName = "";
     this.conditionOperator = conditionOperator;
     this.conditionValue = conditionValue;
   }

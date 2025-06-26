@@ -1,4 +1,4 @@
-import BaseModel from "./BaseModel";
+import BaseModel from "../BaseModel";
 
 class ViewHeaderRow extends BaseModel {
   constructor({ headerRowId = null, headerId, rowAlignment = 0 }) {

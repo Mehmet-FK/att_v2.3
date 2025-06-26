@@ -1,4 +1,4 @@
-import BaseModel from "./BaseModel";
+import BaseModel from "../BaseModel";
 
 class ListViewElement extends BaseModel {
   constructor({ listViewElementId, icon = "" }) {
