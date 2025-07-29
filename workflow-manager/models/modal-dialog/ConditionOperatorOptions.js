@@ -85,11 +85,25 @@ class ConditionOperatorOptions {
       name: "DATE_NOT_EQUALS",
       caption: "ist ungleich",
     },
+    {
+      name: "DATE_EMPTY",
+      caption: "ist leer",
+    },
+    {
+      name: "DATE_NOT_EMPTY",
+      caption: "ist nicht leer",
+    },
+    {
+      name: "DATE_TODAY",
+      caption: "ist heute",
+    },
   ];
 
   constructor(type = 0) {
     if (this.#integerTypes.includes(type)) {
       this.operators = this.#integerOperators;
+    } else if (this.#dateTypes.includes(type)) {
+      this.operators = this.#dateOperators;
     } else if (this.#dateTypes.includes(type)) {
       this.operators = this.#dateOperators;
     } else {

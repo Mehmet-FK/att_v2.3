@@ -160,6 +160,8 @@ const InfoScreenForm = ({ stepID, workflowStepValues }) => {
               size="medium"
               label="Informationstext Variablen"
               name="infoTextVariables"
+              multiline
+              rows={2}
               fullWidth
             />
           </div>
