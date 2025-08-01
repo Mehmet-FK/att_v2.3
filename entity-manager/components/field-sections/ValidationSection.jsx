@@ -89,106 +89,114 @@ const ValidationSection = ({ fieldID, setConfirmModalValues }) => {
           header={"Validation"}
         >
           {validationExists && (
-            <>
-              <div className={css.flex_row}>
-                <DateInput
-                  filterValue={validationFormValues}
-                  setFilterValue={setValidationFormValues}
-                  label="minDate"
-                  name="minDate"
-                  handleBlur={handleBlur}
-                />
-                <DateInput
-                  filterValue={validationFormValues}
-                  setFilterValue={setValidationFormValues}
-                  label="maxDate"
-                  name="maxDate"
-                  handleBlur={handleBlur}
-                />
+            <div className={css.flex_row}>
+              <div className={css.flex_column}>
+                <div className={css.flex_row}>
+                  <div className={css.flex_column}>
+                    <DateInput
+                      filterValue={validationFormValues}
+                      setFilterValue={setValidationFormValues}
+                      label="minDate"
+                      name="minDate"
+                      handleBlur={handleBlur}
+                    />
+                    <DateInput
+                      filterValue={validationFormValues}
+                      setFilterValue={setValidationFormValues}
+                      label="maxDate"
+                      name="maxDate"
+                      handleBlur={handleBlur}
+                    />
+                    <TextField
+                      size="small"
+                      label="Pattern"
+                      value={validationFormValues?.pattern || ""}
+                      name="pattern"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                    />
+                  </div>
+                  <div className={css.flex_column}>
+                    <TextField
+                      size="small"
+                      label="minValue"
+                      value={validationFormValues?.minValue || null}
+                      name="minValue"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      type="number"
+                      fullWidth
+                    />
 
-                <TextField
-                  size="small"
-                  label="minValue"
-                  value={validationFormValues?.minValue || null}
-                  name="minValue"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  type="number"
-                  fullWidth
-                />
-
-                <TextField
-                  size="small"
-                  label="maxValue"
-                  value={validationFormValues?.maxValue || null}
-                  name="maxValue"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  type="number"
-                  fullWidth
-                />
+                    <TextField
+                      size="small"
+                      label="maxValue"
+                      value={validationFormValues?.maxValue || null}
+                      name="maxValue"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      type="number"
+                      fullWidth
+                    />
+                    <TextField
+                      size="small"
+                      label="maxLength"
+                      value={validationFormValues?.maxLength || null}
+                      name="maxLength"
+                      variant="outlined"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      type="number"
+                      fullWidth
+                    />
+                  </div>
+                </div>
+                <div className={css.flex_row}>
+                  <CheckBox
+                    name="isReadOnly"
+                    checked={validationFormValues?.isReadOnly}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    label="isReadOnly"
+                  />
+                  <CheckBox
+                    name="showByDefault"
+                    checked={validationFormValues?.showByDefault}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    label="showByDefault"
+                  />
+                  <CheckBox
+                    name="required"
+                    checked={validationFormValues?.required}
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    label="required"
+                  />
+                  {/* <div style={{ width: "100%", border: "2px solid red" }} /> */}
+                </div>
               </div>
-              <div className={css.flex_row}>
+              <div className={css.flex_column}>
                 <TextField
                   size="small"
-                  label="Pattern"
-                  value={validationFormValues?.pattern || ""}
-                  name="pattern"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  fullWidth
-                />
-                <TextField
-                  size="small"
-                  label="Regex"
+                  label="Default Value"
                   value={validationFormValues?.regex || null}
                   name="regex"
                   variant="outlined"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  multiline
+                  rows={9}
                   fullWidth
                 />
-                <TextField
-                  size="small"
-                  label="maxLength"
-                  value={validationFormValues?.maxLength || null}
-                  name="maxLength"
-                  variant="outlined"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  type="number"
-                  fullWidth
-                />
-                <div style={{ width: "100%" }} />
+
+                {/* <div style={{ width: "100%" }} /> */}
               </div>
-              <div className={css.flex_row}>
-                <CheckBox
-                  name="isReadOnly"
-                  checked={validationFormValues?.isReadOnly}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  label="isReadOnly"
-                />
-                <CheckBox
-                  name="showByDefault"
-                  checked={validationFormValues?.showByDefault}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  label="showByDefault"
-                />
-                <CheckBox
-                  name="required"
-                  checked={validationFormValues?.required}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  label="required"
-                />
-                <div style={{ width: "100%" }} />
-              </div>
-            </>
+            </div>
           )}
         </Accordion>
       </ElementBadge>
