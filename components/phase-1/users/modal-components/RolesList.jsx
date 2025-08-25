@@ -67,6 +67,12 @@ const nfcRoleDefinitions = [
     icon: "https://apl.attensam.at/icons/Kontrollgang_Modul_Icon.png",
     workflows: null,
   },
+  {
+    id: "NFC_13",
+    caption: "GB Zeiterfassung",
+    icon: "https://apl.attensam.at/icons/GB_Zeiterfassung_module.png",
+    workflows: null,
+  },
 ];
 
 const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
