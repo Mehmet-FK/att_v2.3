@@ -102,6 +102,8 @@ const useWorkflowTool = () => {
   }, [getNodes(), getEdges()]);
 
   const onUndo = useCallback(() => {
+    console.log("undo");
+    console.log(redoStackRef.current);
     if (undoStackRef.current.length < 1) return;
     let currentState = rfInstance.toObject();
     currentState = { ...currentState, workflow };
@@ -112,6 +114,8 @@ const useWorkflowTool = () => {
   }, [undoStackRef.current, getNodes(), getEdges(), workflow]);
 
   const onRedo = useCallback(() => {
+    console.log("redo");
+    console.log(redoStackRef.current);
     if (redoStackRef.current.length < 1) return;
 
     const nextState = redoStackRef.current.pop();
@@ -122,28 +126,40 @@ const useWorkflowTool = () => {
   }, [redoStackRef.current, getNodes(), getEdges()]);
 
   const onKeydown = (e) => {
+    if (e.target != document.body) return;
+    e.preventDefault();
     if (e.key === "z" && e.ctrlKey) onUndo();
     if (e.key === "y" && e.ctrlKey) onRedo();
+    if (e.key === "s" && e.ctrlKey) onSave(e);
   };
 
-  const onSave = useCallback(() => {
-    if (rfInstance) {
-      const workflowToLocalStorage = { ...workflow };
+  const onSave = useCallback(
+    (e) => {
+      e.preventDefault();
+      console.log("onSave");
+      if (rfInstance) {
+        const workflowToLocalStorage = { ...workflow };
 
-      workflowToLocalStorage.nodes = rfInstance.getNodes();
-      workflowToLocalStorage.edges = rfInstance.getEdges();
-      workflowToLocalStorage.viewport = rfInstance.getViewport();
+        workflowToLocalStorage.nodes = rfInstance.getNodes();
+        workflowToLocalStorage.edges = rfInstance.getEdges();
+        workflowToLocalStorage.viewport = rfInstance.getViewport();
 
-      setDataToLocalStorage(KEY_WORKFLOW_LOCALSTORAGE, workflowToLocalStorage);
-    }
+        setDataToLocalStorage(
+          KEY_WORKFLOW_LOCALSTORAGE,
+          workflowToLocalStorage
+        );
+      }
 
-    toastSuccessNotify("Entwurf wurde erfolgreich gespeichert");
-  }, [rfInstance, workflow]);
+      toastSuccessNotify("Entwurf wurde erfolgreich gespeichert");
+    },
+    [rfInstance, workflow]
+  );
 
   const restoreWorkflowFromLocalStorage = () => {
     const workflowLocalStorage = getDataFromLocalStorage(
       KEY_WORKFLOW_LOCALSTORAGE
     );
+    console.log(workflowLocalStorage);
     if (!workflowLocalStorage) return;
 
     const { x = 0, y = 0, zoom = 1 } = workflowLocalStorage?.viewport;

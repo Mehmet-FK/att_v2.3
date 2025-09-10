@@ -6,6 +6,7 @@ import DrawerHead from "./DrawerHead";
 import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import { Backdrop, CircularProgress } from "@mui/material";
 import DisplaySelectedForm from "@/workflow-manager/components/forms/DisplaySelectedForm";
+import HiddenAPIModal from "./HiddenAPIModal";
 
 const defaultOpenHeight = 350;
 const minHeight = 45;
@@ -33,6 +34,8 @@ const BottomDrawer = ({
     confirmFunction: null,
   });
 
+  const [openFetchModal, setOpenFetchModal] = useState(false);
+
   const workflowId = useSelector((state) => state.workflow.workflowId);
   const selectedStepId = useSelector((state) => state.workflow.selectedStepId);
 
@@ -52,7 +55,7 @@ const BottomDrawer = ({
 
   const handleClose = () => setOpen(false);
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e) => {
     setIsResizing(true);
     resizeStartHeightRef.current = newHeight;
   };
@@ -76,7 +79,6 @@ const BottomDrawer = ({
   const handleMouseMove = (e) => {
     if (!isResizing) return;
     const resizeStartHeight = resizeStartHeightRef.current;
-
     const offsetY =
       e.clientY - (document.body.offsetHeight - resizeStartHeight);
 
@@ -129,7 +131,7 @@ const BottomDrawer = ({
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-
+      <HiddenAPIModal open={openFetchModal} setOpen={setOpenFetchModal} />
       <ConfirmModal
         confirmModalValues={confirmModalValues}
         setConfirmModalValues={setConfirmModalValues}
@@ -160,6 +162,7 @@ const BottomDrawer = ({
           onDelete={openConfirmModalToDelete}
           onSave={onSave}
           restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
+          setOpenFetchModal={setOpenFetchModal}
         />
         <Box
           sx={{
