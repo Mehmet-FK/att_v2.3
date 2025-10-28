@@ -351,21 +351,22 @@ const useColumns = () => {
       accessor: "FileCounter",
       Header: "Bilder",
     },
+    {
+      accessor: "Tenant",
+      Header: "Mandant",
+    },
 
     {
       accessor: "Username",
       Header: "Benutzername",
-      // width: 100,
     },
     {
       accessor: "Firstname",
       Header: "Vorname",
-      // width: 100,
     },
     {
       accessor: "Lastname",
       Header: "Nachname",
-      // width: 100,
     },
     {
       accessor: "BookingType",

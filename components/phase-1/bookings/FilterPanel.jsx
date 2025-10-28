@@ -33,7 +33,7 @@ const bookingsFilterParams = {
   zip: null,
   city: null,
   country: null,
-
+  tenant: null,
   username: null,
   dateFrom: null,
   dateTo: null,
@@ -235,6 +235,45 @@ const BookingsFilter = ({ setTriggerAPICall }) => {
                   >
                     <CheckIcon />
                     <span>Gesendet</span>
+                  </Typography>
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item md={12 / 5}>
+            <FormControl
+              sx={{ minWidth: 120, width: "calc(100% - 5px)" }}
+              size="small"
+            >
+              <InputLabel id="tenant">Mandant</InputLabel>
+              <Select
+                sx={{
+                  width: "100%",
+                  maxHeight: "2rem",
+                }}
+                size="small"
+                labelId="tenant"
+                id="demo-select-small"
+                value={filterVal?.tenant || ""}
+                label="Mandant"
+                onChange={(e) =>
+                  setFilterVal({ ...filterVal, tenant: e.target.value })
+                }
+              >
+                <MenuItem value={""}>
+                  <Typography component="em" sx={{ fontSize: "0.7rem" }}>
+                    None
+                  </Typography>
+                </MenuItem>
+
+                <MenuItem value="Echtmandant">
+                  <Typography sx={{ fontSize: "0.7rem" }}>
+                    Echtmandant
+                  </Typography>
+                </MenuItem>
+                <MenuItem value="Testmandant">
+                  <Typography sx={{ fontSize: "0.7rem" }}>
+                    Testmandant
                   </Typography>
                 </MenuItem>
               </Select>
