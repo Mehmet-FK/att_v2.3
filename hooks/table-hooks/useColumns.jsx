@@ -66,11 +66,11 @@ const useColumns = () => {
       accessor: "username",
       Header: "benutzername",
     },
-    {
-      accessor: "passwordHash",
-      Header: "kennwort",
-      Cell: () => "*******",
-    },
+    // {
+    //   accessor: "passwordHash",
+    //   Header: "kennwort",
+    //   Cell: () => "*******",
+    // },
     {
       accessor: "personnelnumber",
       Header: "personalnummer",
@@ -83,17 +83,6 @@ const useColumns = () => {
       accessor: "lastname",
       Header: "nachname",
     },
-
-    /*  {
-      Header: "bild",
-      // width: 150,
-      Cell: (row) => (
-        <Avatar
-          sx={{ ...tableStyles.tr.image, margin: "auto" }}
-          src={`data:image/png;base64,${row.original?.image}`}
-        />
-      ),
-    }, */
   ];
   const ItemsTableOrderColumns = [
     {
