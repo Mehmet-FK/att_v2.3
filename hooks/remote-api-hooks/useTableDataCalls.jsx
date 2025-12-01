@@ -25,7 +25,8 @@ const useTableDataCalls = () => {
     let res = null;
     let error = null;
 
-    const axiosVersion = version === 1 ? axiosTableDataPhase1 : axiosWithToken;
+    const axiosVersion = version === 1 ? axiosWithToken : axiosWithToken;
+    // const axiosVersion = version === 1 ? axiosTableDataPhase1 : axiosWithToken;
 
     try {
       const { data } = await axiosVersion.get(url);
@@ -48,7 +49,8 @@ const useTableDataCalls = () => {
   //!--------------- POST CALL --------------
   const postAtinaData = async (url, params) => {
     try {
-      const x = await axiosTableDataPhase1.post(`${url}`, params);
+      const x = await axiosWithToken.post(`${url}`, params);
+      // const x = await axiosTableDataPhase1.post(`${url}`, params);
       toastSuccessNotify(`Erfolgreich durchgeführt..`);
     } catch (error) {
       toastErrorNotify(`Etwas ist schiefgelaufen.. `);
@@ -75,7 +77,8 @@ const useTableDataCalls = () => {
 
   const putAtinaData = async (url, info) => {
     try {
-      await axiosTableDataPhase1.put(`${url}/${info.id}`, info);
+      // await axiosTableDataPhase1.put(`${url}/${info.id}`, info);
+      await axiosWithToken.put(`${url}/${info.id}`, info);
       // toastSuccessNotify(`Etwas ist schiefgelaufen..`);
     } catch (err) {
       const { message } = err;

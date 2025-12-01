@@ -17,7 +17,7 @@ import { tableNameConstants } from "@/helpers/Constants";
 const DownloadCSV = ({ rawData, fileName, type, table }) => {
   const date = new Date().toJSON().slice(0, 10).replaceAll("-", "");
   const [url, setUrl] = useState("");
-  const { axiosTableDataPhase1 } = useAxios();
+  const { axiosTableDataPhase1, axiosWithToken } = useAxios();
   const { filterParams } = useSelector(
     (state) => state.tableUtils[table] || state.tableUtils.tableTemplate
   );
@@ -87,7 +87,8 @@ const DownloadCSV = ({ rawData, fileName, type, table }) => {
     }
 
     try {
-      axiosTableDataPhase1(url + filterParams).then((res) => {
+      // axiosTableDataPhase1(url + filterParams).then((res) => {
+      axiosWithToken(url + filterParams).then((res) => {
         convertJsonToCsv(res?.data?.entries);
       });
       // convertJsonToCsv(response?.data);

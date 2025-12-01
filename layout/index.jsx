@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { getSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/slices/settingsSlice";
+import { setSelectedEnvironment, setUser } from "@/redux/slices/settingsSlice";
 import { useEffect, useState } from "react";
 import { DrawerHeader } from "./layout_helpers";
 import Navbar from "./Navbar";
@@ -21,6 +21,7 @@ export default function Layout({ children, toggleTheme }) {
   const getSessionData = async () => {
     const session = await getSession();
     const user = session?.user;
+    console.log(session);
     const credentials = {
       avatar: user?.avatar,
       roles: user?.roles,
@@ -30,6 +31,7 @@ export default function Layout({ children, toggleTheme }) {
     };
 
     dispatch(setUser({ user: credentials }));
+    dispatch(setSelectedEnvironment({ environment: user.environment }));
   };
 
   useEffect(() => {

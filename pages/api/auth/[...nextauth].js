@@ -36,7 +36,6 @@ export const authOptions = {
       async authorize(credentials, req) {
         const { username, password, environment } = credentials;
         const url = `https://${environment}/atina/AtinaUsers/login`;
-        console.log({ url });
         try {
           const { data } = await axios.post(url, {
             username,
@@ -64,7 +63,6 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      console.log({ token });
       if (user) {
         return { ...token, ...user };
       }
