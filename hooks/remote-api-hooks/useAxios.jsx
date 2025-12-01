@@ -9,7 +9,7 @@ import { useRef } from "react";
 import { useDispatch } from "react-redux";
 
 const useAxios = () => {
-  const BASE_URL = "https://apl.attensam.at";
+  const BASE_URL = "https://pro.attensam.at";
 
   const isRefreshingRef = useRef(false);
   const refreshSubscribersRef = useRef([]);
@@ -28,7 +28,7 @@ const useAxios = () => {
 
   const refreshTokenCall = async (token, refreshToken) => {
     return await axios.post(
-      "https://apl.attensam.at/atina/AtinaUsers/refresh",
+      "https://pro.attensam.at/atina/AtinaUsers/refresh",
       {
         accessToken: token,
         refreshToken: refreshToken,
@@ -124,7 +124,7 @@ const useAxios = () => {
   });
 
   const axiosTableDataPhase2 = axios.create({
-    baseURL: "https://apl.attensam.at/",
+    baseURL: "https://pro.attensam.at/",
   });
 
   axiosWithToken.interceptors.response.use(

@@ -37,7 +37,7 @@ export const authOptions = {
         const { username, password } = credentials;
         try {
           const { data } = await axios.post(
-            `https://apl.attensam.at/atina/AtinaUsers/login`,
+            `https://pro.attensam.at/atina/AtinaUsers/login`,
             {
               username,
               password,

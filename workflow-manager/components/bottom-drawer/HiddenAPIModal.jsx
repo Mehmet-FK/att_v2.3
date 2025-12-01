@@ -51,7 +51,7 @@ const HiddenAPIModal = ({ open, setOpen }) => {
               <TextField
                 label="Endpoint"
                 value={endpoint || ""}
-                placeholder="https://apl.attensam.at"
+                placeholder="https://pro.attensam.at"
                 name="caption"
                 variant="outlined"
                 onChange={(e) => setEndpoint(e.target.value)}
