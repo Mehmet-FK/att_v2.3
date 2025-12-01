@@ -5,6 +5,7 @@ const settingsSlice = createSlice({
 
   initialState: {
     sessionExpired: false,
+    selectedEnvironment: "pro.attensam.at",
     user: {
       userId: null,
       firstname: "",
@@ -23,8 +24,12 @@ const settingsSlice = createSlice({
     setSessionExpired: (state, { payload: { isSessionExpired } }) => {
       state.sessionExpired = isSessionExpired;
     },
+    setSelectedEnvironment: (state, { payload: { environment } }) => {
+      state.selectedEnvironment = environment;
+    },
   },
 });
 
-export const { setTheme, setUser, setSessionExpired } = settingsSlice.actions;
+export const { setTheme, setUser, setSessionExpired, setSelectedEnvironment } =
+  settingsSlice.actions;
 export default settingsSlice.reducer;

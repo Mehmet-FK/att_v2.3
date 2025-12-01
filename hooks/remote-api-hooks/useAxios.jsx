@@ -5,11 +5,17 @@ import {
 import { setSessionExpired } from "@/redux/slices/settingsSlice";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useEffectEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const useAxios = () => {
-  const BASE_URL = "https://apl.attensam.at";
+  const selectedEnv = useSelector(
+    (state) => state.settings.selectedEnvironment
+  );
+
+  const BASE_URL = `https://${selectedEnv}`;
+  // const BASE_URL = "https://apl.attensam.at";
 
   const isRefreshingRef = useRef(false);
   const refreshSubscribersRef = useRef([]);
@@ -27,13 +33,10 @@ const useAxios = () => {
   };
 
   const refreshTokenCall = async (token, refreshToken) => {
-    return await axios.post(
-      "https://apl.attensam.at/atina/AtinaUsers/refresh",
-      {
-        accessToken: token,
-        refreshToken: refreshToken,
-      }
-    );
+    return await axios.post(`${BASE_URL}/atina/AtinaUsers/refresh`, {
+      accessToken: token,
+      refreshToken: refreshToken,
+    });
   };
 
   const retryAPICallAfterUnauthorizedResponse = async (
@@ -115,7 +118,7 @@ const useAxios = () => {
   });
 
   const axiosTableDataPhase1 = axios.create({
-    baseURL: "https://pro.attensam.at/atina/",
+    baseURL: BASE_URL,
     headers: {
       Authorization: `Bearer ${session?.user?.token}`,
       Accept: "/*",
@@ -124,7 +127,7 @@ const useAxios = () => {
   });
 
   const axiosTableDataPhase2 = axios.create({
-    baseURL: "https://apl.attensam.at/",
+    baseURL: BASE_URL,
   });
 
   axiosWithToken.interceptors.response.use(

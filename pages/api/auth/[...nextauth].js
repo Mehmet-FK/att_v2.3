@@ -34,15 +34,14 @@ export const authOptions = {
       credentials: {},
 
       async authorize(credentials, req) {
-        const { username, password } = credentials;
+        const { username, password, environment } = credentials;
+        const url = `https://${environment}/atina/AtinaUsers/login`;
+        console.log({ url });
         try {
-          const { data } = await axios.post(
-            `https://apl.attensam.at/atina/AtinaUsers/login`,
-            {
-              username,
-              password,
-            }
-          );
+          const { data } = await axios.post(url, {
+            username,
+            password,
+          });
           console.log(
             "======================================================================="
           );
@@ -50,7 +49,7 @@ export const authOptions = {
           console.log(
             "======================================================================="
           );
-          return data;
+          return { ...data, environment };
         } catch (error) {
           let code = error?.response?.status || "";
           console.log({ error });
@@ -65,6 +64,7 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
+      console.log({ token });
       if (user) {
         return { ...token, ...user };
       }

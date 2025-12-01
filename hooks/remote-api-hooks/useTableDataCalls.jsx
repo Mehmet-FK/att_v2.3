@@ -15,6 +15,7 @@ import {
 
 const useTableDataCalls = () => {
   const dispatch = useDispatch();
+
   const { axiosTableDataPhase1, axiosWithToken } = useAxios();
 
   //!--------------- GET CALL --------------
@@ -179,11 +180,15 @@ const useTableDataCalls = () => {
   //* BOOKINGS
 
   const getBookingTypes = () =>
-    getAtinaData("api/AtinaMasterData/GetBookingTypes", "bookingTypes", 1);
+    getAtinaData(
+      "atina/api/AtinaMasterData/GetBookingTypes",
+      "bookingTypes",
+      1
+    );
 
   const getMobileBookingsData = (params = "") => {
     getAtinaData(
-      "api/AtinaMobileBookings?showPagination=true&" + params,
+      "atina/api/AtinaMobileBookings?showPagination=true&" + params,
       tableNameConstants.BOOKINGS,
       1
     );
@@ -196,7 +201,7 @@ const useTableDataCalls = () => {
     type = itemTableTypeConstants.ORDER
   ) =>
     getAtinaData(
-      `api/AtinaItems/SearchByKeyValue?ItemType=${type}&onlyWithTagId=false&showPagination=true&` +
+      `atina/api/AtinaItems/SearchByKeyValue?ItemType=${type}&onlyWithTagId=false&showPagination=true&` +
         params,
       tableNameConstants.ITEMS,
       1
@@ -206,13 +211,17 @@ const useTableDataCalls = () => {
 
   const getUsersData = (params = "") =>
     getAtinaData(
-      "/AtinaUsers?showPagination=true&" + params,
+      "/atina/AtinaUsers?showPagination=true&" + params,
       tableNameConstants.USERS,
       1
     );
 
   const getWorkflowsForUserRoles = () =>
-    getAtinaData("/api/Workflow/GetWorkflowsForUserRoles", "userRoles", 1);
+    getAtinaData(
+      "/atina/api/Workflow/GetWorkflowsForUserRoles",
+      "userRoles",
+      1
+    );
 
   return {
     //Bookings

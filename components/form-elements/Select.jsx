@@ -11,11 +11,16 @@ const Select = ({
   onBlur,
   width,
   disabled,
+  sxContainer,
+  sxSelect,
 }) => {
   const handleChange = onChange ? onChange : () => null;
   const handleBlur = onBlur ? onBlur : () => null;
   return (
-    <FormControl disabled={disabled} sx={{ width: width ? width : "auto" }}>
+    <FormControl
+      disabled={disabled}
+      sx={{ width: width ? width : "auto", ...sxContainer }}
+    >
       <InputLabel size="small" id={label + "ID"}>
         {label}
       </InputLabel>
@@ -27,6 +32,7 @@ const Select = ({
         label={label}
         onChange={handleChange}
         onBlur={handleBlur}
+        sx={sxSelect}
       >
         {children}
       </MuiSelect>

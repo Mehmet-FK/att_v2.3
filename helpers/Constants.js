@@ -1,3 +1,13 @@
+export const environments = [
+  {
+    name: "Testmandant",
+    url: "apl.attensam.at",
+  },
+  {
+    name: "Echtmandant",
+    url: "pro.attensam.at",
+  },
+];
 export const settlement = [
   "Amstetten",
   "Graz",
