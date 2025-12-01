@@ -206,17 +206,13 @@ const useTableDataCalls = () => {
 
   const getUsersData = (params = "") =>
     getAtinaData(
-      "/atina/AtinaUsers?showPagination=true&" + params,
+      "/AtinaUsers?showPagination=true&" + params,
       tableNameConstants.USERS,
-      2
+      1
     );
 
   const getWorkflowsForUserRoles = () =>
-    getAtinaData(
-      "/atina/api/Workflow/GetWorkflowsForUserRoles",
-      "userRoles",
-      2
-    );
+    getAtinaData("/api/Workflow/GetWorkflowsForUserRoles", "userRoles", 1);
 
   return {
     //Bookings

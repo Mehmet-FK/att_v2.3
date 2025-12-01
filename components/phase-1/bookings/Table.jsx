@@ -147,7 +147,7 @@ const BookingsTable = () => {
             <BookingsTableRow
               rowData={data}
               colIDs={shownColumns}
-              key={index}
+              key={data?.BookingID || index}
               widths={columnWidths}
             />
           ))}

@@ -63,7 +63,7 @@ const ItemsTable = () => {
     useSelector(
       (state) => state.tableUtils?.items || state.tableUtils.tableTemplate
     );
-
+  console.log({ items });
   const tableColumns = useMemo(() => {
     if (itemType === itemTableTypeConstants.ORDER) {
       return ItemsTableOrderColumns;
