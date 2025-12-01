@@ -15,6 +15,7 @@ import {
 
 const useTableDataCalls = () => {
   const dispatch = useDispatch();
+
   const { axiosTableDataPhase1, axiosWithToken } = useAxios();
 
   //!--------------- GET CALL --------------
@@ -24,7 +25,8 @@ const useTableDataCalls = () => {
     let res = null;
     let error = null;
 
-    const axiosVersion = version === 1 ? axiosTableDataPhase1 : axiosWithToken;
+    const axiosVersion = version === 1 ? axiosWithToken : axiosWithToken;
+    // const axiosVersion = version === 1 ? axiosTableDataPhase1 : axiosWithToken;
 
     try {
       const { data } = await axiosVersion.get(url);
@@ -47,7 +49,8 @@ const useTableDataCalls = () => {
   //!--------------- POST CALL --------------
   const postAtinaData = async (url, params) => {
     try {
-      const x = await axiosTableDataPhase1.post(`${url}`, params);
+      const x = await axiosWithToken.post(`${url}`, params);
+      // const x = await axiosTableDataPhase1.post(`${url}`, params);
       toastSuccessNotify(`Erfolgreich durchgeführt..`);
     } catch (error) {
       toastErrorNotify(`Etwas ist schiefgelaufen.. `);
@@ -74,7 +77,8 @@ const useTableDataCalls = () => {
 
   const putAtinaData = async (url, info) => {
     try {
-      await axiosTableDataPhase1.put(`${url}/${info.id}`, info);
+      // await axiosTableDataPhase1.put(`${url}/${info.id}`, info);
+      await axiosWithToken.put(`${url}/${info.id}`, info);
       // toastSuccessNotify(`Etwas ist schiefgelaufen..`);
     } catch (err) {
       const { message } = err;
@@ -179,11 +183,15 @@ const useTableDataCalls = () => {
   //* BOOKINGS
 
   const getBookingTypes = () =>
-    getAtinaData("api/AtinaMasterData/GetBookingTypes", "bookingTypes", 1);
+    getAtinaData(
+      "atina/api/AtinaMasterData/GetBookingTypes",
+      "bookingTypes",
+      1
+    );
 
   const getMobileBookingsData = (params = "") => {
     getAtinaData(
-      "api/AtinaMobileBookings?showPagination=true&" + params,
+      "atina/api/AtinaMobileBookings?showPagination=true&" + params,
       tableNameConstants.BOOKINGS,
       1
     );
@@ -196,7 +204,7 @@ const useTableDataCalls = () => {
     type = itemTableTypeConstants.ORDER
   ) =>
     getAtinaData(
-      `api/AtinaItems/SearchByKeyValue?ItemType=${type}&onlyWithTagId=false&showPagination=true&` +
+      `atina/api/AtinaItems/SearchByKeyValue?ItemType=${type}&onlyWithTagId=false&showPagination=true&` +
         params,
       tableNameConstants.ITEMS,
       1
@@ -206,13 +214,17 @@ const useTableDataCalls = () => {
 
   const getUsersData = (params = "") =>
     getAtinaData(
-      "/AtinaUsers?showPagination=true&" + params,
+      "/atina/AtinaUsers?showPagination=true&" + params,
       tableNameConstants.USERS,
       1
     );
 
   const getWorkflowsForUserRoles = () =>
-    getAtinaData("/api/Workflow/GetWorkflowsForUserRoles", "userRoles", 1);
+    getAtinaData(
+      "/atina/api/Workflow/GetWorkflowsForUserRoles",
+      "userRoles",
+      1
+    );
 
   return {
     //Bookings

@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "@/redux/slices/settingsSlice";
+import { setSelectedEnvironment, setUser } from "@/redux/slices/settingsSlice";
 
 const SessionHandler = () => {
   const { data: session, status } = useSession();
   const dispatch = useDispatch();
 
+  console.log(session);
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
       // Update Redux store with session data
@@ -21,6 +22,7 @@ const SessionHandler = () => {
           },
         })
       );
+      // dispatch(setSelectedEnvironment({environment:session.}))
     } else if (status === "unauthenticated" && session?.user) {
       // Clear Redux store when user logs out
       dispatch(

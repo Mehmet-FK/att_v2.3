@@ -34,15 +34,13 @@ export const authOptions = {
       credentials: {},
 
       async authorize(credentials, req) {
-        const { username, password } = credentials;
+        const { username, password, environment } = credentials;
+        const url = `https://${environment}/atina/AtinaUsers/login`;
         try {
-          const { data } = await axios.post(
-            `https://pro.attensam.at/atina/AtinaUsers/login`,
-            {
-              username,
-              password,
-            }
-          );
+          const { data } = await axios.post(url, {
+            username,
+            password,
+          });
           console.log(
             "======================================================================="
           );
@@ -50,7 +48,7 @@ export const authOptions = {
           console.log(
             "======================================================================="
           );
-          return data;
+          return { ...data, environment };
         } catch (error) {
           let code = error?.response?.status || "";
           console.log({ error });
