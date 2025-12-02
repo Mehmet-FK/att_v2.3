@@ -8,11 +8,19 @@ import ProfileMenu from "@/components/menus/ProfileMenu";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { environments } from "@/helpers/Constants";
 
 const Navbar = ({ handleDrawerOpen, toggleTheme, open }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const user = useSelector((state) => state.settings.user);
+  const environmentUrl = useSelector(
+    (state) => state.settings.selectedEnvironment
+  );
+
+  const environmentName = environments.find(
+    (env) => env.url == environmentUrl
+  )?.name;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -61,17 +69,30 @@ const Navbar = ({ handleDrawerOpen, toggleTheme, open }) => {
               alignItems: "center",
             }}
           >
-            <Typography
-              variant="h5"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                textTransform: "capitalize",
-                fontSize: "1rem",
-              }}
-            >
-              {`${user?.firstname} ${user?.lastname}`}
-            </Typography>{" "}
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  textTransform: "capitalize",
+                  fontSize: "1rem",
+                }}
+              >
+                {`${user?.firstname} ${user?.lastname}`}
+              </Typography>{" "}
+              <Typography
+                variant="h6"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  textTransform: "capitalize",
+                  fontSize: "0.7rem",
+                }}
+              >
+                {environmentName}
+              </Typography>{" "}
+            </div>
             <Image
               onClick={handleClick}
               src={avatar}
