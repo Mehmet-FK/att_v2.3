@@ -18,25 +18,24 @@ export default function Layout({ children, toggleTheme }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const getSessionData = async () => {
-    const session = await getSession();
-    const user = session?.user;
-    console.log(session);
-    const credentials = {
-      avatar: user?.avatar,
-      roles: user?.roles,
-      refreshToken: user?.refreshToken,
-      token: user?.token,
-      ...user?.userInfo,
-    };
+  // const getSessionData = async () => {
+  //   const session = await getSession();
+  //   const user = session?.user;
+  //   const credentials = {
+  //     avatar: user?.avatar,
+  //     roles: user?.roles,
+  //     refreshToken: user?.refreshToken,
+  //     token: user?.token,
+  //     ...user?.userInfo,
+  //   };
 
-    dispatch(setUser({ user: credentials }));
-    dispatch(setSelectedEnvironment({ environment: user.environment }));
-  };
+  //   dispatch(setUser({ user: credentials }));
+  //   dispatch(setSelectedEnvironment({ environment: user.environment }));
+  // };
 
-  useEffect(() => {
-    getSessionData();
-  }, []);
+  // useEffect(() => {
+  //   getSessionData();
+  // }, []);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

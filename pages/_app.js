@@ -7,10 +7,11 @@ import { useRouter } from "next/router";
 import { Provider } from "react-redux";
 import CssBaseline from "@mui/material/CssBaseline";
 import { SessionProvider, getSession } from "next-auth/react";
-import store from "@/redux/app/store";
+// import store from "@/redux/app/store";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/ui-components/Loading";
 import SessionExpiredModal from "@/components/ui-components/SessionExpiredModal";
+import Providers from "@/redux/Provider";
 // import Providers from "@/redux/Provider";
 
 function isFunction(func) {
@@ -127,25 +128,29 @@ export default function App({ Component, pageProps }) {
     setMode(x ? x : "light");
   }, []);
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
+    <Providers
+      theme={theme}
+      // store={store}
+      session={pageProps.session}
+    >
+      {/* <ThemeProvider theme={theme}>
         <SessionProvider
           session={pageProps.session}
           refetchOnWindowFocus={false}
           refetchWhenOffline={false}
-        >
-          <ToastContainer />
-          <CssBaseline />
-          <SessionExpiredModal />
-          {router.pathname.includes("login") && <Component {...pageProps} />}
-          {!router.pathname.includes("login") && <Loading />}
-          {!router.pathname.includes("login") && (
-            <Layout toggleTheme={toggleTheme}>
-              <Component {...pageProps} />
-            </Layout>
-          )}
-        </SessionProvider>
-      </ThemeProvider>
-    </Provider>
+        > */}
+      <ToastContainer />
+      <CssBaseline />
+      <SessionExpiredModal />
+      {router.pathname.includes("login") && <Component {...pageProps} />}
+      {!router.pathname.includes("login") && <Loading />}
+      {!router.pathname.includes("login") && (
+        <Layout toggleTheme={toggleTheme}>
+          <Component {...pageProps} />
+        </Layout>
+      )}
+      {/* </SessionProvider>
+      </ThemeProvider> */}
+    </Providers>
   );
 }

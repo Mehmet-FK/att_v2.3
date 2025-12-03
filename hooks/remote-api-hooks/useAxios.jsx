@@ -1,26 +1,17 @@
-import {
-  toastErrorNotify,
-  toastSessionUpdateNotify,
-} from "@/helpers/ToastNotify";
+import { toastSessionUpdateNotify } from "@/helpers/ToastNotify";
 import { setSessionExpired } from "@/redux/slices/settingsSlice";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useEffectEvent } from "react";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useRef } from "react";
+import { useDispatch } from "react-redux";
 
 const useAxios = () => {
-  const selectedEnv = useSelector(
-    (state) => state.settings.selectedEnvironment
-  );
-
-  const BASE_URL = `https://${selectedEnv}`;
-  // const BASE_URL = "https://apl.attensam.at";
+  const { data: session, update: updateSession } = useSession();
+  const { environment } = session.user;
+  const BASE_URL = `https://${environment}`;
 
   const isRefreshingRef = useRef(false);
   const refreshSubscribersRef = useRef([]);
-
-  const { data: session, update: updateSession } = useSession();
 
   const dispatch = useDispatch();
 
@@ -44,6 +35,8 @@ const useAxios = () => {
     axiosInstanceBase
   ) => {
     const originalRequest = error.config;
+
+    console.log(error.config.baseUrl);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (!isRefreshingRef.current) {

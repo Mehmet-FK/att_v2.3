@@ -5,7 +5,8 @@ const settingsSlice = createSlice({
 
   initialState: {
     sessionExpired: false,
-    selectedEnvironment: "pro.attensam.at",
+    selectedEnvironment: null,
+    // selectedEnvironment: "pro.attensam.at",
     user: {
       userId: null,
       firstname: "",
