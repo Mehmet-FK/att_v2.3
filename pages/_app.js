@@ -6,7 +6,6 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import { Provider } from "react-redux";
 import CssBaseline from "@mui/material/CssBaseline";
-import { SessionProvider, getSession } from "next-auth/react";
 // import store from "@/redux/app/store";
 import { ToastContainer } from "react-toastify";
 import Loading from "@/components/ui-components/Loading";

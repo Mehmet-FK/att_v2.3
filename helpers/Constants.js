@@ -86,64 +86,6 @@ export const userRoles = [
   },
 ];
 
-export const viewTypeConstants = {
-  LISTVIEW: "ListView",
-  TILEVIEW: "TileView",
-  RECORDVIEW: "RecordView",
-  MODALDIALOG: "ModalDialog",
-  CAPTURE_IMAGE: "CaptureImage",
-  ATTACHMENT_VIEW: "AttachmentView",
-  SCANNER_DIALOG: "ScannerDialog",
-  SCANNER_DIALOG_NFC: "ScannerDialogNFC",
-  SCANNER_DIALOG_QR: "ScannerDialogQR",
-  WORKFLOW_RELAY: "WorkflowRelay",
-  INFO_SCREEN: "InfoScreen",
-  LAUNCH_DATASET_FUNCTION: "LaunchDatasetFunction",
-  LAUNCH_ENTITY_FUNCTION: "LaunchEntityFunction",
-  LAUNCH_MODULE: "LaunchModule",
-  LAUNCH_ELEMENT_DEFAULT_FUNCTION: "LaunchElementDefaultFunction",
-  LAUNCH_GROUPVIEW: "LaunchGroupView",
-  LAUNCH_DEAFULT_LISTVIEW: "LaunchDefaultListView",
-  LAUNCH_HUB: "LaunchHub",
-};
-
-export const launchTypes = [
-  { id: 0, type: "LaunchDatasetFunction", caption: "Dataset Function" },
-  { id: 1, type: "LaunchEntityFunction", caption: "Entity Function" },
-  { id: 2, type: "LaunchModule", caption: "Module" },
-  {
-    id: 3,
-    type: "LaunchElementDefaultFunction",
-    caption: "Element Default Function",
-  },
-  { id: 4, type: "LaunchGroupView", caption: "Group View" },
-  { id: 5, type: "LaunchDefaultListView", caption: "Default List View" },
-  { id: 6, type: "LaunchHub", caption: "Launch Hub" },
-];
-
-export const workflowStepTypeIds = {
-  LISTVIEW: 0,
-  TILEVIEW: 1,
-  RECORDVIEW: 2,
-  MODAL_DIALOG: 3,
-  CAPTURE_IMAGE: 4,
-  ATTACHMENT_VIEW: 5,
-  SCANNER_DIALOG: 6,
-  WORKFLOW_RELAY: 7,
-  INFO_SCREEN: 8,
-  LAUNCH_WORKFLOW: 99,
-};
-
-export const scannerTypeConstants = {
-  NFC: 0,
-  QR_CODE: 1,
-};
-
-export const scannerActionConstants = {
-  ENTITY: 0,
-  ONLINE: 1,
-};
-
 export const tableNameConstants = {
   BOOKINGS: "bookings",
   USERS: "users",

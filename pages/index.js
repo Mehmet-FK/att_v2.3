@@ -38,26 +38,6 @@ export default function Home({ isAtinaAdmin }) {
               defaultIconUrl: "/assets/dashboard-icons/users.svg",
             }}
           />
-          {isAtinaAdmin && (
-            <>
-              <Card
-                cardInfo={{
-                  url: "/workflows",
-
-                  caption: "Workflows",
-                  defaultIconUrl: "/assets/dashboard-icons/workflows.svg",
-                }}
-              />
-              <Card
-                cardInfo={{
-                  url: "/entities",
-
-                  caption: "Entitäten",
-                  defaultIconUrl: "/assets/dashboard-icons/entities.svg",
-                }}
-              />
-            </>
-          )}
         </div>
       </div>
     </>

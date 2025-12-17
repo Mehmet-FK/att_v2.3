@@ -46,29 +46,6 @@ const drawerList = [
     nav: "/users",
   },
 ];
-const drawerListAdmin = [
-  ...drawerList,
-  {
-    text: "Workflows",
-    icon: (
-      <CustomSvgIcon
-        src={"/assets/dashboard-icons/workflows.svg"}
-        styles={{ width: "23px" }}
-      />
-    ),
-    nav: "/workflows",
-  },
-  {
-    text: "Entitäten",
-    icon: (
-      <CustomSvgIcon
-        src={"/assets/dashboard-icons/entities.svg"}
-        styles={{ width: "23px" }}
-      />
-    ),
-    nav: "/entities",
-  },
-];
 
 const LayoutDrawer = ({ open, handleDrawerClose }) => {
   const theme = useTheme();
@@ -88,11 +65,9 @@ const LayoutDrawer = ({ open, handleDrawerClose }) => {
       </DrawerHeader>
       <Divider />
       <List>
-        {(user?.userId === 5573 ? drawerListAdmin : drawerList).map(
-          (element) => (
-            <ListElement elementInfo={element} open={open} key={element.text} />
-          )
-        )}
+        {drawerList.map((element) => (
+          <ListElement elementInfo={element} open={open} key={element.text} />
+        ))}
       </List>
 
       <Divider />
