@@ -5,23 +5,30 @@ import { useEffect, useMemo, useState } from "react";
 
 const OptionCard = ({ optionValues, handleOptionClick, styles }) => {
   return (
-    <span
-      onClick={() => handleOptionClick(optionValues)}
+    <div
       style={{
         minHeight: "2rem",
         paddingInline: "8px",
         backgroundColor: "#ccc5",
         border: "1px solid #3335",
-        fontSize: "0.6em",
         borderRadius: "5px",
         display: "flex",
         alignItems: "center",
+        columnGap: "5px",
         cursor: "pointer",
         ...styles,
       }}
     >
-      {optionValues.caption}
-    </span>
+      <img src={optionValues?.icon} width={"20"} height={"20"} />
+      <span
+        onClick={() => handleOptionClick(optionValues)}
+        style={{
+          fontSize: "0.6em",
+        }}
+      >
+        {optionValues.caption}
+      </span>
+    </div>
   );
 };
 const FILTER_TYPE = "modules";
@@ -34,14 +41,13 @@ const DashboardModuleFilter = ({
 }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const router = useRouter();
-
   const getSubWorkflows = (selectedModule) => {
     const workflowIDs = selectedModule.workflows
       ? selectedModule.workflows.filter((wfID) => wfID !== selectedModule.id)
       : [];
 
     const subworkflows = itemsState.filter((item) =>
-      workflowIDs.includes(item.id)
+      workflowIDs.includes(item.id),
     );
     return subworkflows;
   };
@@ -77,7 +83,7 @@ const DashboardModuleFilter = ({
 
   const handleOptionRemove = (option) => {
     const indexOfSelected = selectedOptions.findIndex(
-      (element) => element.id === option.id
+      (element) => element.id === option.id,
     );
     let optionsUpdated = [];
 
@@ -109,6 +115,7 @@ const DashboardModuleFilter = ({
 
       if (query !== undefined) {
         const parsedModules = parseModulesQuery(query);
+
         setSelectedOptions(parsedModules);
         filterWorkflowsByPath(parsedModules);
       } else {

@@ -123,7 +123,7 @@ const WorkflowDashboardFilters = ({
         query: { [filterType]: param },
       },
       undefined,
-      { shallow: true }
+      { shallow: true },
     );
   };
 
@@ -133,9 +133,10 @@ const WorkflowDashboardFilters = ({
         id: m.id,
         name: m.name,
         caption: m.caption,
+        icon: m.icon,
         workflows: m.workflows,
       })),
-    [modules]
+    [modules],
   );
 
   return (
