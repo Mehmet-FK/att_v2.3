@@ -32,7 +32,7 @@ const useAxios = () => {
 
   const retryAPICallAfterUnauthorizedResponse = async (
     error,
-    axiosInstanceBase
+    axiosInstanceBase,
   ) => {
     const originalRequest = error.config;
 
@@ -98,6 +98,7 @@ const useAxios = () => {
       Authorization: `Bearer ${session?.user?.token}`,
       Accept: "/*",
       "Content-Type": "application/json",
+      "X-Client": "workflowmanager",
     },
   });
 
@@ -126,16 +127,17 @@ const useAxios = () => {
   axiosWithToken.interceptors.response.use(
     (response) => response, // Forward successful responses
     async (error) =>
-      retryAPICallAfterUnauthorizedResponse(error, axiosWithToken)
+      retryAPICallAfterUnauthorizedResponse(error, axiosWithToken),
   );
   axiosFormData.interceptors.response.use(
     (response) => response, // Forward successful responses
-    async (error) => retryAPICallAfterUnauthorizedResponse(error, axiosFormData)
+    async (error) =>
+      retryAPICallAfterUnauthorizedResponse(error, axiosFormData),
   );
   axiosTableDataPhase1.interceptors.response.use(
     (response) => response, // Forward successful responses
     async (error) =>
-      retryAPICallAfterUnauthorizedResponse(error, axiosTableDataPhase1)
+      retryAPICallAfterUnauthorizedResponse(error, axiosTableDataPhase1),
   );
 
   return {
