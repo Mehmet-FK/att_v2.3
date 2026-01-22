@@ -135,7 +135,7 @@ const useWorkflowTool = () => {
 
   const onSave = useCallback(
     (e) => {
-      e.preventDefault();
+      e?.preventDefault();
       console.log("onSave");
       if (rfInstance) {
         const workflowToLocalStorage = { ...workflow };
@@ -146,18 +146,18 @@ const useWorkflowTool = () => {
 
         setDataToLocalStorage(
           KEY_WORKFLOW_LOCALSTORAGE,
-          workflowToLocalStorage
+          workflowToLocalStorage,
         );
       }
 
       toastSuccessNotify("Entwurf wurde erfolgreich gespeichert");
     },
-    [rfInstance, workflow]
+    [rfInstance, workflow],
   );
 
   const restoreWorkflowFromLocalStorage = () => {
     const workflowLocalStorage = getDataFromLocalStorage(
-      KEY_WORKFLOW_LOCALSTORAGE
+      KEY_WORKFLOW_LOCALSTORAGE,
     );
     console.log(workflowLocalStorage);
     if (!workflowLocalStorage) return;
@@ -173,7 +173,7 @@ const useWorkflowTool = () => {
 
   const isWorkflowExistingInLocalStorage = () => {
     const workflowLocalStorage = getDataFromLocalStorage(
-      KEY_WORKFLOW_LOCALSTORAGE
+      KEY_WORKFLOW_LOCALSTORAGE,
     );
 
     return workflowLocalStorage !== null;
@@ -245,7 +245,7 @@ const useWorkflowTool = () => {
         nodes.map((n) => {
           if (n.id === node.id) n = node;
           return n;
-        })
+        }),
       );
     }
     saveToHistory();
@@ -313,8 +313,8 @@ const useWorkflowTool = () => {
         nodes.map((nd) =>
           nd.id === params.source
             ? { ...nd, [nextStepType]: params.target }
-            : nd
-        )
+            : nd,
+        ),
       );
     }
 
@@ -331,8 +331,8 @@ const useWorkflowTool = () => {
           targetID: params.target,
           interactionWidth: 25,
         },
-        eds
-      )
+        eds,
+      ),
     );
     saveToHistory();
     return true;
@@ -343,7 +343,7 @@ const useWorkflowTool = () => {
 
     const isConditionEdge = conditionEdgeIds.includes(params.sourceHandle);
     const isTargetHandleConditional = conditionEdgeIds.includes(
-      params.targetHandle
+      params.targetHandle,
     );
 
     if (
@@ -363,8 +363,8 @@ const useWorkflowTool = () => {
         nodes.map((nd) =>
           nd.id === params.source
             ? { ...nd, [nextStepType]: params.target }
-            : nd
-        )
+            : nd,
+        ),
       );
     }
 
@@ -379,7 +379,7 @@ const useWorkflowTool = () => {
     const launchElement = existingWorkflow.launchElements[0];
     if (!launchElement) return null;
     const viewType = launchTypes.find(
-      (lt) => lt.id === launchElement.launchType
+      (lt) => lt.id === launchElement.launchType,
     )?.type;
     const caption = viewType; //TODO: refoctoring is needed
     const nodeId = launchElement.workflowStepId;
@@ -388,7 +388,7 @@ const useWorkflowTool = () => {
       viewType,
       caption,
       nodeId,
-      viewId
+      viewId,
     );
 
     return newLaunchNode;
@@ -411,7 +411,7 @@ const useWorkflowTool = () => {
         caption,
         position,
         lv.workflowStepId,
-        lv.listViewId
+        lv.listViewId,
       );
       createdListViewsNodes.push(newNode);
     });
@@ -433,7 +433,7 @@ const useWorkflowTool = () => {
         caption,
         position,
         rv.workflowStepId,
-        rv.recordViewId
+        rv.recordViewId,
       );
       createdRecordViewNodes.push(newNode);
     });
@@ -454,7 +454,7 @@ const useWorkflowTool = () => {
         caption,
         position,
         md.workflowStepId,
-        md.modalDialogId
+        md.modalDialogId,
       );
       createdModalDialogNodes.push(newNode);
     });
@@ -480,7 +480,7 @@ const useWorkflowTool = () => {
         caption,
         position,
         sc.workflowStepId,
-        sc.scannerDialogId
+        sc.scannerDialogId,
       );
       createdScannerDialogNodes.push(newNode);
     });
@@ -502,7 +502,7 @@ const useWorkflowTool = () => {
         caption,
         position,
         screen.workflowStepId,
-        screen.infoScreenId
+        screen.infoScreenId,
       );
       createdInfoScreenNodes.push(newNode);
     });
@@ -524,7 +524,7 @@ const useWorkflowTool = () => {
         caption,
         position,
         screen.workflowStepId,
-        screen.workflowRelayId
+        screen.workflowRelayId,
       );
       createdWorkflowRelayNodes.push(newNode);
     });
@@ -606,14 +606,14 @@ const useWorkflowTool = () => {
         node.id,
         "a_top",
         node.nextStepOnConfirm,
-        "smoothstep"
+        "smoothstep",
       );
 
       const edgeOnCancel = createNewEdge(
         node.id,
         "a_bottom",
         node.nextStepOnCancel,
-        "smoothstep"
+        "smoothstep",
       );
 
       return [edgeOnConfirm, edgeOnCancel];
@@ -624,7 +624,7 @@ const useWorkflowTool = () => {
 
   const updateModalDialogNode = (node, step, dialogs) => {
     const dialog = dialogs.find(
-      (d) => d.workflowStepId === step.workflowStepId
+      (d) => d.workflowStepId === step.workflowStepId,
     );
 
     const nextStepOnConfirm = dialog?.nextStepOnConfirm;
@@ -695,7 +695,7 @@ const useWorkflowTool = () => {
       if (node) {
         const viewID = findVIewIDByWorkflowStep(
           step.workflowStepId,
-          existingWorkflow
+          existingWorkflow,
         );
         const nodeData = {
           ...node.data,
@@ -712,7 +712,7 @@ const useWorkflowTool = () => {
         const dialog = updateModalDialogNode(
           nodesMap[stepName],
           step,
-          modalDialogs
+          modalDialogs,
         );
         nodesMap[stepName] = dialog;
       }
@@ -737,14 +737,14 @@ const useWorkflowTool = () => {
   const restoreExistingRemoteWorkflowByNodesAndEdges = (
     existingWorkflow,
     _setNodes,
-    _setEdges
+    _setEdges,
   ) => {
     const { nodes: nodesStringified, edges: edgesStringified } =
       existingWorkflow;
 
     const { ok, nodes, edges } = parseNodesAndEdgesFromString(
       nodesStringified,
-      edgesStringified
+      edgesStringified,
     );
 
     if (!ok) return false;
@@ -752,7 +752,7 @@ const useWorkflowTool = () => {
     const { updatedNodes, updatedEdges } = updateEdgeAndNodeIds(
       existingWorkflow,
       nodes,
-      edges
+      edges,
     );
 
     const launchWrapperNode = nodes.find((n) => n.id === "launch-group");
@@ -767,7 +767,7 @@ const useWorkflowTool = () => {
   const restoreExistingRemoteWorkflowBySteps = (
     existingWorkflow,
     _setNodes,
-    _setEdges
+    _setEdges,
   ) => {
     let createdNodes = [];
 
@@ -800,7 +800,7 @@ const useWorkflowTool = () => {
   const restoreExistingRemoteWorkflow = (
     existingWorkflow,
     _setNodes,
-    _setEdges
+    _setEdges,
   ) => {
     let isParseSuccessfull = false;
 
@@ -808,7 +808,7 @@ const useWorkflowTool = () => {
       isParseSuccessfull = restoreExistingRemoteWorkflowByNodesAndEdges(
         existingWorkflow,
         _setNodes,
-        _setEdges
+        _setEdges,
       );
     }
 
@@ -816,7 +816,7 @@ const useWorkflowTool = () => {
       restoreExistingRemoteWorkflowBySteps(
         existingWorkflow,
         _setNodes,
-        _setEdges
+        _setEdges,
       );
     }
   };

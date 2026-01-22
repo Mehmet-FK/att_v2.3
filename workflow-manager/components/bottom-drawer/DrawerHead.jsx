@@ -1,3 +1,4 @@
+import SpeedDialTooltipOpen from "@/components/ui-components/CustomSpeedDial";
 import css from "@/styles/workflow-comp-styles.module.css";
 import styled from "@emotion/styled";
 import { grey } from "@mui/material/colors";
@@ -16,6 +17,7 @@ const Puller = styled("div")(({ theme }) => ({
 }));
 
 const DrawerHead = ({
+  onExport,
   onSubmit,
   onDelete,
   onSave,
@@ -55,12 +57,19 @@ const DrawerHead = ({
             pointerEvents: pointerEvents,
           }}
         >
+          {/* <div
+            className={css.console_btn}
+            style={{ userSelect: "none", color: "#000" }}
+            onClick={onExport}
+          >
+            Export
+          </div>
           <div
             className={css.console_btn}
             style={{ userSelect: "none", color: "#000" }}
             onClick={onSubmit}
           >
-            Send
+            Submit
           </div>
           <div
             className={css.console_btn}
@@ -82,7 +91,7 @@ const DrawerHead = ({
             onClick={onDelete}
           >
             Löschen
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

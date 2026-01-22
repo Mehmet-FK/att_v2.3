@@ -7,6 +7,7 @@ import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import { Backdrop, CircularProgress } from "@mui/material";
 import DisplaySelectedForm from "@/workflow-manager/components/forms/DisplaySelectedForm";
 import HiddenAPIModal from "./HiddenAPIModal";
+import SpeedDialTooltipOpen from "@/components/ui-components/CustomSpeedDial";
 
 const defaultOpenHeight = 350;
 const minHeight = 45;
@@ -16,6 +17,7 @@ const drawerHeaderHeight = "25px";
 const BottomDrawer = ({
   isLoading,
   onSubmit,
+  onExport,
   handleDeleteWorkflow,
   onSave,
   restoreWorkflowFromLocalStorage,
@@ -158,9 +160,6 @@ const BottomDrawer = ({
           drawerHeaderHeight={drawerHeaderHeight}
           pointerEvents={newHeight < 80 && "none"}
           label={drawerHeadLabel}
-          onSubmit={onSubmit}
-          onDelete={openConfirmModalToDelete}
-          onSave={onSave}
           restoreWorkflowFromLocalStorage={restoreWorkflowFromLocalStorage}
           setOpenFetchModal={setOpenFetchModal}
         />

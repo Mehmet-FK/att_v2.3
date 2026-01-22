@@ -20,6 +20,17 @@ import useSessionStorage from "@/hooks/storage-hooks/useSessionStorage";
 import useAttensamCalls from "@/hooks/remote-api-hooks/useAttensamCalls";
 import { AutoCompleteWorkflowProvider } from "@/context/AutoCompleteWorkflowContext";
 import { AutoCompleteEntityProvider } from "@/context/AutoCompleteEntityContext";
+import {
+  createWorkflowJsonFile,
+  retrieveContentOfJsonFile,
+} from "./utils/exportableWorkflowService";
+import CustomSpeedDial from "@/components/ui-components/CustomSpeedDial";
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
+import RestoreIcon from "@mui/icons-material/Restore";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 
 const initialNodes = [
   {
@@ -69,8 +80,8 @@ const Sheet = ({ existingWorkflow }) => {
     addEdgeAndUpdateHistoryOnConnect,
     updateEdgeAndHistoryOnReconnect,
   } = useWorkflowTool();
-
   const {
+    restoreWorkflowState,
     createViewOnDrop,
     deleteWorkflowStep,
     updateSelectedStep,
@@ -87,7 +98,7 @@ const Sheet = ({ existingWorkflow }) => {
 
     const isConnected = updateEdgeAndHistoryOnReconnect(
       newConnection,
-      reconnectCallback
+      reconnectCallback,
     );
 
     setPreviousAndNextStepsOnConnect(newConnection);
@@ -129,9 +140,6 @@ const Sheet = ({ existingWorkflow }) => {
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
-    console.log(deletedNodes);
-    // console.log({ nodes: _nodes });
-    // const remainingNodes = _nodes.filter(nd=> )
     updateNodesEdgesAndViewport(_nodes, _edges, _viewport);
   };
   const handleDeleteEdge = (deletedEdges) => {
@@ -154,14 +162,13 @@ const Sheet = ({ existingWorkflow }) => {
   }, [nodes, edges, reactFlowInstance, router.events]);
 
   const handleSubmit = () => {
-    // setSubmitLoading(true);
     const _viewport = reactFlowInstance.getViewport();
     const _edges = reactFlowInstance.getEdges();
     const _nodes = reactFlowInstance.getNodes();
     const workflowToPost = prepareWorkflowStateForPost(
       _nodes,
       _edges,
-      _viewport
+      _viewport,
     );
 
     const isValidationOK = validateWorkflowForSubmit(workflowToPost);
@@ -174,9 +181,59 @@ const Sheet = ({ existingWorkflow }) => {
   const handleDeleteWorkflow = () => {
     const { workflowId } = router.query;
     deleteWorkflowCall(workflowId).then((res) =>
-      res ? router.push("/workflows") : null
+      res ? router.push("/workflows") : null,
     );
   };
+
+  const handleExportWorkflow = () => {
+    const _viewport = reactFlowInstance.getViewport();
+    const _edges = reactFlowInstance.getEdges();
+    const _nodes = reactFlowInstance.getNodes();
+    const workflowToExport = prepareWorkflowStateForPost(
+      _nodes,
+      _edges,
+      _viewport,
+    );
+    createWorkflowJsonFile(workflowToExport, (downloadURL) => {
+      const downloadDate = new Date().toJSON().slice(0, 10).replaceAll("-", "");
+      const { caption, workflowId } = workflowToExport;
+      const wfCaption = caption.replaceAll(" ", "-");
+      const filename = `${downloadDate}_${wfCaption}_${workflowId}.json`;
+      const link = document.createElement("a");
+      link.href = downloadURL;
+      link.download = filename;
+      link.click();
+    });
+  };
+
+  const handleImportWorkflowFromJsonFile = () => {
+    updateSelectedStep("");
+    retrieveContentOfJsonFile((content) => {
+      restoreExistingRemoteWorkflow(content, setNodes, setEdges);
+      restoreWorkflowState(content);
+    });
+  };
+
+  const speedDialActions = [
+    { icon: <DeleteIcon />, name: "Löschen", onclick: handleDeleteWorkflow },
+    {
+      icon: <FileDownloadIcon />,
+      name: "Export",
+      onclick: handleExportWorkflow,
+    },
+    {
+      icon: <FileUploadIcon />,
+      name: "Import",
+      onclick: handleImportWorkflowFromJsonFile,
+    },
+    {
+      icon: <RestoreIcon />,
+      name: "Wiederherstellen",
+      onclick: restoreWorkflowFromLocalStorage,
+    },
+    { icon: <BookmarkAddIcon />, name: "Lokal Speichern", onclick: onSave },
+    { icon: <SaveIcon />, name: "Speichern", onclick: handleSubmit },
+  ];
 
   useEffect(() => {
     if (
@@ -238,11 +295,13 @@ const Sheet = ({ existingWorkflow }) => {
       </ReactFlow>
 
       <ToolsDrawer />
+      <CustomSpeedDial actions={speedDialActions} />
 
       <AutoCompleteWorkflowProvider>
         <AutoCompleteEntityProvider>
           <BottomDrawer
             isLoading={submitLoading}
+            onExport={handleExportWorkflow}
             onSubmit={handleSubmit}
             handleDeleteWorkflow={handleDeleteWorkflow}
             onSave={onSave}

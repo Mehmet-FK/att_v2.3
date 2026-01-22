@@ -9,23 +9,6 @@ import ConfirmModal from "@/components/ui-components/ConfirmModal";
 import useDragAndDropUtils from "@/hooks/utility-hooks/useDragAndDropUtils";
 import RecordViewField from "@/workflow-manager/models/recordview/RecordViewField";
 
-const recordFieldTemplate = {
-  recordViewFieldId: "",
-  recordViewId: "",
-  fieldId: null,
-  caption: "",
-  groupname: "",
-  differingCaption: null,
-  differingGroupName: null,
-  isDefault: false,
-  isReadOnly: false,
-  imageMode: null,
-  imageGroupCaption: null,
-  imageType: null,
-  sortOrder: null,
-  isDraggedOver: false,
-};
-
 const RecordViewFieldsModal = ({
   open,
   setOpen,
@@ -33,9 +16,9 @@ const RecordViewFieldsModal = ({
   entityFields,
 }) => {
   const recordViewFields = useSelector(
-    (state) => state.workflow.recordViewFields
+    (state) => state.workflow.recordViewFields,
   );
-
+  console.log({ recordViewFields });
   const filteredRecordViewFields = useMemo(() => {
     return recordViewFields?.filter((rvf) => rvf.recordViewId === recordViewId);
   }, [recordViewFields, recordViewId]);
@@ -52,7 +35,7 @@ const RecordViewFieldsModal = ({
 
   const { assignSortOrderAndDragIndicator, ...dragUtils } = useDragAndDropUtils(
     fields,
-    setFields
+    setFields,
   );
 
   const { updateAllRecordViewFields, generateRandomId } = useWorkflowForms();
