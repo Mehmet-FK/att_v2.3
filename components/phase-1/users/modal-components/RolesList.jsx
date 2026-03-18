@@ -75,7 +75,13 @@ const nfcRoleDefinitions = [
   // },
 ];
 
-const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
+const WfSection = ({
+  workflow,
+  data,
+  roleIds,
+  setInputVal,
+  ancestorIds = [],
+}) => {
   const subWorkflows = workflow.workflows;
   const [expanded, setExpanded] = useState(false);
   const user = useSelector((state) => state.settings.user);
@@ -102,20 +108,32 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
   const handleClick = (e) => {
     e.stopPropagation();
     if (e.target.checked) {
-      const checkedIDs = checkAllSubWorkflows(workflow, new Array());
+      const descendantIds = checkAllSubWorkflows(workflow, new Array());
+
+      // Upward propagation: add all ancestor IDs too
+      const toAdd = Array.from(new Set([...ancestorIds, ...descendantIds]));
+
       setInputVal((pre) => ({
         ...pre,
-        roleIds: Array.from(new Set([...pre.roleIds, ...checkedIDs])),
+        roleIds: Array.from(new Set([...pre.roleIds, ...toAdd])),
       }));
     } else {
-      setInputVal((pre) => ({
-        ...pre,
-        roleIds: [
-          ...pre.roleIds.filter(
-            (x) => !checkAllSubWorkflows(workflow, new Array()).includes(x)
-          ),
-        ],
+      const descendantIds = checkAllSubWorkflows(workflow, []);
+      // On uncheck, only remove this node + its descendants
+      // Ancestors remain checked (siblings may still be selected)
+      setInputVal((prev) => ({
+        ...prev,
+        roleIds: prev.roleIds.filter((id) => !descendantIds.includes(id)),
       }));
+
+      // setInputVal((pre) => ({
+      //   ...pre,
+      //   roleIds: [
+      //     ...pre.roleIds.filter(
+      //       (x) => !checkAllSubWorkflows(workflow, new Array()).includes(x)
+      //     ),
+      //   ],
+      // }));
     }
   };
 
@@ -126,9 +144,12 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
           <ArrowDropDownIcon />
         </IconButton>
       ),
-    [subWorkflows]
+    [subWorkflows],
   );
 
+  // Build the ancestor chain for children: current node's ancestors + itself
+
+  const childAncestorIds = [...ancestorIds, workflow.id];
   return (
     <>
       <Accordion
@@ -185,6 +206,7 @@ const WfSection = ({ workflow, data, roleIds, setInputVal }) => {
               data={data}
               roleIds={roleIds}
               setInputVal={setInputVal}
+              ancestorIds={childAncestorIds}
             />
           );
         })}
@@ -197,7 +219,8 @@ const RolesList_phase2 = ({ inputVal, setInputVal }) => {
   const userRoles = useSelector((state) => state.attensam.data?.userRoles);
 
   const roleIds = inputVal.roleIds;
-
+  console.log({ nfcRoleDefinitions });
+  console.log({ userRoles });
   return (
     <div style={{ padding: 0 }}>
       {nfcRoleDefinitions.map((item) => (
